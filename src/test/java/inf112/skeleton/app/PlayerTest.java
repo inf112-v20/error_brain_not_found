@@ -1,8 +1,5 @@
 package inf112.skeleton.app;
 
-import com.badlogic.gdx.graphics.Texture;
-import inf112.skeleton.app.Player;
-import inf112.skeleton.app.Position;
 import org.junit.Before;
 import org.junit.Test;
 
