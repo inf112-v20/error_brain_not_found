@@ -2,30 +2,32 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.tiled.*;
+import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import inf112.skeleton.app.Player;
-import inf112.skeleton.app.Position;
 
 
 public class Board implements ApplicationListener {
 
-    Sprite sprite;
-    Player player;
-    TiledMap tiledMap;
-    SpriteBatch batch;
-    OrthographicCamera camera;
-    TiledMapRenderer tiledMapRenderer;
+    private Player player;
+    private Texture texture;
+    private SpriteBatch batch;
+    private Sprite playerSprite;
+    private OrthographicCamera camera;
+    private TiledMapRenderer tiledMapRenderer;
+    private TiledMap tiledMap;
 
     public void makePlayer(int x, int y) {
         player = new Player(new Position(x, y));
-        sprite = new Sprite(new Texture("src/main/java/inf112/skeleton/app/images/Arrow.png"));
-        sprite.setPosition(x * 32, y * 32);
+        playerSprite = new Sprite(texture);
+
     }
 
     @Override
@@ -36,11 +38,12 @@ public class Board implements ApplicationListener {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, w, h);
         camera.update();
-        tiledMap = new TmxMapLoader().load("src/main/java/inf112/skeleton/app/images/kart.tmx");
+
+        tiledMap = new TmxMapLoader().load("src/main/java/inf112/skeleton/app/assets/kart.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
+        texture = new Texture("src/main/java/inf112/skeleton/app/assets/arrow.png");
         batch = new SpriteBatch();
-        makePlayer(3, 3);
     }
 
     @Override
@@ -53,12 +56,23 @@ public class Board implements ApplicationListener {
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
         camera.update();
         tiledMapRenderer.setView(camera);
         tiledMapRenderer.render();
-        if (sprite != null) {
+
+        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            int x = (int) Math.floor(Gdx.input.getX()/32.0)*32;
+            int y = (int) Math.floor((Gdx.graphics.getHeight() - Gdx.input.getY())/32.0)*32;
+
+            if (player == null) { makePlayer(x/32, y/32); }
+            player.getPosition().setPosition(x/32, y/32);
+            playerSprite.setPosition(x, y);
+        }
+
+        if (playerSprite != null) {
             batch.begin();
-            sprite.draw(batch);
+            playerSprite.draw(batch);
             batch.end();
         }
     }

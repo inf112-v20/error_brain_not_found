@@ -1,9 +1,9 @@
 package inf112.skeleton.app;
 
-import com.badlogic.gdx.graphics.Texture;
 
 public class Player {
-    Position position;
+
+    private Position position;
 
     public Player(Position position) {
         this.position = position;
