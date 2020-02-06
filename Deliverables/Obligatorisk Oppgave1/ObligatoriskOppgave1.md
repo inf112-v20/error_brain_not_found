@@ -86,7 +86,7 @@ Various elements from project methodologies:
 * Scrum
     * Cross-functional team.
     * Meetings / team updates after each iteration.
-        * Rationale: With a cross-functional team, we have defined roles where each person has their area of 
+        * Reason: With a cross-functional team, we have defined roles where each person has their area of 
         responsibility. What we want to achieve with this is a more orderly progress, as it hopefully limits more work 
         on the same task. In order for everything to be coordinated, we must try to have meetings after each iteration.
         
@@ -100,7 +100,7 @@ Communication between meetings: Slack.
 Workflow: As describe in ``Task 1``.
 Common docs: Google drive.
 
-#### Userstorys
+#### User stories
 Story: As a player I will be able to see a board. So that I can see the board to play on.  
 Acceptance criteria: 
 * Given that the board shows a cell, the board has only one in height and one in width (one cell). 
@@ -133,5 +133,26 @@ How to get there: Board must receive an input from the pointer so that it can se
 
 ## Summary
 
-* What we could do better:
-We could communicate better in the beginning of the project, . 
+* What worked?
+
+We have done what the task tells us to do, we managed to show a board an place a player on it. We also made user
+stories, and tasks according to these. 
+
+* What did not work?
+
+We had some communication problems in the beginning, and we should have
+defined who should do what more clearly by using issues more.
+When trying to test the board it did not work out, because you need to 
+run the application in order to get information from it. 
+
+* Is there something we should de better to next mandatory assignment?
+
+Make the tasks for each member of the team more clearer, and create more user stories
+for the tasks. 
+
+* Are you satisfied with your work, is there something that you could not do?
+
+It was a bit hard to learn LibGDX right away, so it was a bit back and 
+fourth. The tests written seems ok, but we could not test the board. The 
+tester wants to learn a bit more about mocking before trying to write tests for 
+the board. 
