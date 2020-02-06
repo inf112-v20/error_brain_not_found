@@ -12,7 +12,7 @@ suppose to. Responsibility to create and get the Project Board up and running, a
 
 ### Magnus Tønnessen
 Role: Customer Contact  
-Skills: Good to code. Structured and organized. See the whole of the product.  
+Skills: Good at programming. Structured and organized. See the whole of the product.  
 Expertise: INF100, INF101, INF102, INF122.  
 Main tasks: The teams's main domain expert. Make sure the end product meets the requirements and expectations (High
  level requirements) we have.
@@ -33,7 +33,7 @@ so he can be the one to talk to if anyone need help to understand something that
 
 ### Abdul Hamed Yadgari
 Role: Refactoring lead  
-Skills: Fast learner, and get't thing done. Know how to code.  
+Skills: Fast learner, and get things done. Know how to code.  
 Expertise: Inf100, inf115, Inf101  
 Main tasks: Checks the code for errors, and try to clean-up code.
 
@@ -92,7 +92,7 @@ Various elements from project methodologies:
         
  
 Using gitFlow; one ``master``-branch only for iterations. ``develop`` is used for day to day developing, and this 
-branch are the one pushed to ``master``-branch mandatory assignments. Every feature have there owen ``feature``-branch.
+branch is the one pushed to ``master``-branch mandatory assignments. Every feature have their own ``feature``-branch.
  
    
 Meetings: We decided to have one extra meeting every week to check the status of the project.  
@@ -100,8 +100,10 @@ Communication between meetings: Slack.
 Workflow: As describe in ``Task 1``.
 Common docs: Google drive.
 
+
 #### User stories
-Story: As a player I will be able to see a board. So that I can see the board to play on.  
+Story: As a player I want to see a board, to be able to know what's happening in the game.  
+
 Acceptance criteria: 
 * Given that the board shows a cell, the board has only one in height and one in width (one cell). 
 * Given that a board appears, when the board has no robots / items on it, all cells are empty.
@@ -110,8 +112,7 @@ Acceptance criteria:
 How to get there: Make a ``Board``-class, with cells. We have to have methods that can get dimensions from 
 the board.  
 
-Story: As a player I will be able to place the chip where I want it to start. So that the chip should start where it 
-should.  
+Story: As a player I want to be able to place the player where I want it to start. 
 Acceptance criteria: 
 * Given that I have a robot and a board, when I place the robot on the board, then the board has a 
 robot on it.  
@@ -121,11 +122,11 @@ whats on the cells, and be able to put something on the board.
 
 Story: As a player I want to be able to press the mouse so that the robot moves.  
 Acceptance criteria: 
-* Given that I have a robot on the board, when I click on a tile the player moves there.
+* Given that I have a player on the board, when I click on a tile the player moves there.
 How to get there: Implement ``mouseListener``, that are able to get positions and return it to the board, and update the
  ``player / robot`` positions.  
 
-Story: As a player, I will be able to move the pointer over the board in such a way that the cell under the pointer is 
+Story: As a player I want to be able to move the pointer over the board in such a way that the cell under the pointer is 
 highlighted. Then I can be sure that the piece is placed where I want.  
 Acceptance criteria: 
 * Given that I want to place a robot, when I place the pointer over a given cell, that cell should be highlighted.   
@@ -135,7 +136,7 @@ How to get there: Board must receive an input from the pointer so that it can se
 
 * What worked?
 
-We have done what the task tells us to do, we managed to show a board an place a player on it. We also made user
+We have done what the task tells us to do, we managed to show a board and place a player on it. We also made user
 stories, and tasks according to these. 
 
 * What did not work?
