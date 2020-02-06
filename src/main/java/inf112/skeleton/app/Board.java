@@ -17,15 +17,13 @@ import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 public class Board implements ApplicationListener {
 
-    Player player;
-    Texture texture;
-    SpriteBatch batch;
-    Sprite playerSprite;
-    OrthographicCamera camera;
-    TiledMapRenderer tiledMapRenderer;
-
-    TiledMap tiledMap;
-    TiledMapTileLayer boardLayer;
+    private Player player;
+    private Texture texture;
+    private SpriteBatch batch;
+    private Sprite playerSprite;
+    private OrthographicCamera camera;
+    private TiledMapRenderer tiledMapRenderer;
+    private TiledMap tiledMap;
 
     public void makePlayer(int x, int y) {
         player = new Player(new Position(x, y));
@@ -44,7 +42,6 @@ public class Board implements ApplicationListener {
         tiledMap = new TmxMapLoader().load("src/main/java/inf112/skeleton/app/images/kart.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
-        boardLayer = (TiledMapTileLayer) tiledMap.getLayers().get("board");
         texture = new Texture("src/main/java/inf112/skeleton/app/images/arrow.png");
         batch = new SpriteBatch();
     }

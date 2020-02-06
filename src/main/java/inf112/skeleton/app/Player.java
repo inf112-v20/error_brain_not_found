@@ -2,7 +2,7 @@ package inf112.skeleton.app;
 
 
 public class Player {
-    Position position;
+    private Position position;
 
     public Player(Position position) {
         this.position = position;
