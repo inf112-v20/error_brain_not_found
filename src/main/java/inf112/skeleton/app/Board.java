@@ -38,10 +38,10 @@ public class Board implements ApplicationListener {
         camera.setToOrtho(false, w, h);
         camera.update();
 
-        tiledMap = new TmxMapLoader().load("src/main/java/inf112/skeleton/app/images/kart.tmx");
+        tiledMap = new TmxMapLoader().load("src/main/java/inf112/skeleton/app/assets/kart.tmx");
         tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
-        texture = new Texture("src/main/java/inf112/skeleton/app/images/arrow.png");
+        texture = new Texture("src/main/java/inf112/skeleton/app/assets/arrow.png");
         batch = new SpriteBatch();
     }
 
