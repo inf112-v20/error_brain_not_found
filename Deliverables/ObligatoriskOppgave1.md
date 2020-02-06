@@ -133,3 +133,5 @@ How to get there: Board must receive an input from the pointer so that it can se
 
 ##Summary
 
+* What we could do better:
+We could communicate better in the beginning of the project, . 
