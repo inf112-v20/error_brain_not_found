@@ -7,12 +7,6 @@ import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
-        /*
-        For later
-         */
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double width = screenSize.getWidth();
-        double height = screenSize.getHeight();
 
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
         cfg.title = "robo-rally";
