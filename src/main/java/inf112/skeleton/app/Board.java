@@ -27,6 +27,7 @@ public class Board implements ApplicationListener {
     public void makePlayer(int x, int y) {
         player = new Player(new Position(x, y));
         playerSprite = new Sprite(texture);
+
     }
 
     @Override
