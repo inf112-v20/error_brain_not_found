@@ -15,14 +15,26 @@ public class PlayerTest {
 
     @Before
     public void setUp() {
-        Position pos = new Position(0,0);
-        Player player = new Player(pos);
+        pos = new Position(0,0);
+        player = new Player(pos);
     }
 
     @Test
     public void positionGivenToPlayerIsSameAsPlayerGives() {
         assertEquals(0, player.getPosition().getX());
 
+    }
+
+    @Test
+    public void whenNewXCoordinateIsGivenPlayersCoordinatesChanged() {
+        player.setPosition(new Position(1,0));
+        assertEquals(1, player.getPosition().getX());
+    }
+
+    @Test
+    public void whenNewYCoordinateIsGivenPlayersCoordinatesChanged() {
+        player.setPosition(new Position(0, 1));
+        assertEquals(1, player.getPosition().getY());
     }
 
 }

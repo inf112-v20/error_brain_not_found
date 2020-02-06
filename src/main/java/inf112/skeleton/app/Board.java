@@ -23,8 +23,8 @@ public class Board implements ApplicationListener {
     TiledMapRenderer tiledMapRenderer;
 
     public void makePlayer(int x, int y) {
-        player = new Player(new Position(x, y), new Texture("src/main/java/inf112/skeleton/app/images/Arrow.png"));
-        sprite = new Sprite(player.getTexture());
+        player = new Player(new Position(x, y));
+        sprite = new Sprite(new Texture("src/main/java/inf112/skeleton/app/images/Arrow.png"));
         sprite.setPosition(x * 32, y * 32);
     }
 
