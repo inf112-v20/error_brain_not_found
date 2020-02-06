@@ -4,18 +4,17 @@ import com.badlogic.gdx.graphics.Texture;
 
 public class Player {
     Position position;
-    Texture texture;
 
-    public Player(Position position, Texture texture) {
+    public Player(Position position) {
         this.position = position;
-        this.texture = texture;
+    }
+
+    public void setPosition(Position pos) {
+        this.position = pos;
     }
 
     public Position getPosition() {
         return position;
     }
 
-    public Texture getTexture() {
-        return texture;
-    }
 }
