@@ -1,8 +1,8 @@
-#Mandatory Assignment 1
-###TEAM: error_no_brain_found
+# Mandatory Assignment 1
+### TEAM: error_no_brain_found
 
-##Task 1
-###Mathias Skallerud Jacobsen
+## Task 1
+### Mathias Skallerud Jacobsen
 Role: Team leader  
 Skills: Good to have control over people, and dare to say if someone is not doing what they are supposed to. Relatively
  good to code. Trying to get an overview of situations.  
@@ -10,28 +10,28 @@ Expertise: INF100, INF101, INF142, INF143, INF102.
 Main tasks: Have overall control of the team. Make sure people do what they are supposed to, in the time-space they are 
 suppose to. Responsibility to create and get the Project Board up and running, and keep it up to date.
 
-###Magnus Tønnessen
+### Magnus Tønnessen
 Role: Customer Contact  
 Skills: Good to code. Structured and organized. See the whole of the product.  
 Expertise: INF100, INF101, INF102, INF122.  
 Main tasks: The teams's main domain expert. Make sure the end product meets the requirements and expectations (High
  level requirements) we have.
 
-###Jenny Strømmen
+### Jenny Strømmen
 Role: Lead Tester  
 Skills: Good at making tests and code in general.  
 Expertise: INF100, INF101, INF102, INF122, INF142, INF234  
 Main tasks: The team's main tester. She will be responsible for 'testing code', and that the test tests what it is 
 suppose to. 
 
-###Duy Kenny Vinh Nguyen
+### Duy Kenny Vinh Nguyen
 Role: Lead Designer  
 Skills: 'Okey' at coding. Does what he is asked to do.   
 Expertise: INF100, INF101  
 Main tasks: The teams main lead on design / graphics. Responsible for knowing the most of the GUI (libgdx), 
 so he can be the one to talk to if anyone need help to understand something that is libGDX-special.
 
-###Abdul Hamed Yadgari
+### Abdul Hamed Yadgari
 Role: Refactoring lead  
 Skills: Fast learner, and get't thing done. Know how to code.  
 Expertise: Inf100, inf115, Inf101  
@@ -39,11 +39,11 @@ Main tasks: Checks the code for errors, and try to clean-up code.
 
 
 
-##Task 2
+## Task 2
 Overall goal: To be able to play a digital version of RoboRally against another (AI or player), with set rules and a 
 working board and responds to input.  
 
-####High level requirements: 
+#### High level requirements: 
 |                      |                             |                  |
 | -------------------- |:---------------------------:| ----------------:|
 | Game board           | Move robots                 | Game over        |
@@ -58,7 +58,7 @@ working board and responds to input.
 | Rounds               | Priority moves              |
 | Phase                | Damaged robots              |
 
-#####Requirements for first iteration:       
+##### Requirements for first iteration:       
 1. We have a board.
     * Able to see the the board.
 2. We have a playing piece.
@@ -69,7 +69,7 @@ working board and responds to input.
 
 
 
-##Task 3
+## Task 3
 Various elements from project methodologies:  
 
 * XP
@@ -100,7 +100,7 @@ Communication between meetings: Slack.
 Workflow: As describe in ``Task 1``.
 Common docs: Google drive.
 
-####Userstorys
+#### Userstorys
 Story: As a player I will be able to see a board. So that I can see the board to play on.  
 Acceptance criteria: 
 * Given that the board shows a cell, the board has only one in height and one in width (one cell). 
@@ -131,7 +131,7 @@ Acceptance criteria:
 * Given that I want to place a robot, when I place the pointer over a given cell, that cell should be highlighted.   
 How to get there: Board must receive an input from the pointer so that it can select a current cell.  
 
-##Summary
+## Summary
 
 * What we could do better:
 We could communicate better in the beginning of the project, . 

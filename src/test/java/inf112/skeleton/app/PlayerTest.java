@@ -1,4 +1,4 @@
-package inf112.skeleton.app.board;
+package inf112.skeleton.app;
 
 import com.badlogic.gdx.graphics.Texture;
 import inf112.skeleton.app.Player;

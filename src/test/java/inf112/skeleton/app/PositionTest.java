@@ -1,4 +1,4 @@
-package inf112.skeleton.app.board;
+package inf112.skeleton.app;
 
 import inf112.skeleton.app.Position;
 import org.junit.Before;
