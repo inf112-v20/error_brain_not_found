@@ -1,94 +1,77 @@
 package inf112.skeleton.app;
 
-import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
-import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
+import java.util.ArrayList;
 
-public class Board implements ApplicationListener {
 
-    private Player player;
-    private Texture texture;
-    private SpriteBatch batch;
-    private Sprite playerSprite;
-    private OrthographicCamera camera;
-    private TiledMapRenderer tiledMapRenderer;
-    private TiledMap tiledMap;
+public class Board {
 
-    public void makePlayer(int x, int y) {
-        player = new Player(new Position(x, y));
-        playerSprite = new Sprite(texture);
+    private TiledMap map;
 
-    }
+    private TiledMapTileLayer startLayer;
+    private TiledMapTileLayer flagLayer;
+    private TiledMapTileLayer holeLayer;
+    private TiledMapTileLayer wallLayer;
+    private TiledMapTileLayer groundLayer;
 
-    @Override
-    public void create() {
-        float w = Gdx.graphics.getWidth();
-        float h = Gdx.graphics.getHeight();
+    private ArrayList<Player> startPos; // Need to be changed
 
-        camera = new OrthographicCamera();
-        camera.setToOrtho(false, w, h);
-        camera.update();
+    private OrthogonalTiledMapRenderer mapRenderer;
 
-        tiledMap = new TmxMapLoader().load("src/main/java/inf112/skeleton/app/assets/kart.tmx");
-        tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
 
-        texture = new Texture("src/main/java/inf112/skeleton/app/assets/arrow.png");
-        batch = new SpriteBatch();
-    }
+    public void createBoard(String mapPath){
+        TmxMapLoader.Parameters parameters = new TmxMapLoader.Parameters();
+        parameters.flipY = true;
 
-    @Override
-    public void resize(int i, int i1) {
+        this.map = new TmxMapLoader().load(mapPath, parameters);
+        this.startLayer = (TiledMapTileLayer) map.getLayers().get("Start");
+        this.flagLayer =(TiledMapTileLayer) map.getLayers().get("Flag");
+        this.holeLayer =(TiledMapTileLayer) map.getLayers().get("Hole");
+        this.wallLayer =(TiledMapTileLayer) map.getLayers().get("Wall");
+        this.groundLayer = (TiledMapTileLayer) map.getLayers().get("Ground");
+
+        mapRenderer = new OrthogonalTiledMapRenderer(map);
 
     }
+    public void render(OrthographicCamera camera) {
+        mapRenderer.setView(camera);
+        mapRenderer.render();
+    }
 
-    @Override
-    public void render() {
-        Gdx.gl.glClearColor(0, 0, 0, 0);
-        Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        camera.update();
-        tiledMapRenderer.setView(camera);
-        tiledMapRenderer.render();
-
-        if(Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            int x = (int) Math.floor(Gdx.input.getX()/32.0)*32;
-            int y = (int) Math.floor((Gdx.graphics.getHeight() - Gdx.input.getY())/32.0)*32;
-
-            if (player == null) { makePlayer(x/32, y/32); }
-            player.getPosition().setPosition(x/32, y/32);
-            playerSprite.setPosition(x, y);
-        }
-
-        if (playerSprite != null) {
-            batch.begin();
-            playerSprite.draw(batch);
-            batch.end();
+    public void findStartLayer(){
+        for (int x = 0; x < startLayer.getWidth(); x++) {
+            for (int y = 0; y < startLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = startLayer.getCell(x,y);
+                if (cell != null){
+                    startPos.add(new Player(new Position(x,y)));
+                }
+            }
         }
     }
 
-    @Override
-    public void pause() {
-
+    public TiledMapTileLayer getStartLayer() {
+        return startLayer;
     }
 
-    @Override
-    public void resume() {
-
+    public TiledMapTileLayer getFlagLayer() {
+        return flagLayer;
     }
 
-    @Override
-    public void dispose() {
+    public TiledMapTileLayer getHoleLayer() {
+        return holeLayer;
+    }
 
+    public TiledMapTileLayer getWallLayer() {
+        return wallLayer;
+    }
+
+    public TiledMapTileLayer getGroundLayer() {
+        return groundLayer;
     }
 }
