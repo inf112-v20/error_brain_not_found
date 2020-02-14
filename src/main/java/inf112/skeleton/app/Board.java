@@ -1,70 +1,64 @@
 package inf112.skeleton.app;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.assets.loaders.resolvers.ExternalFileHandleResolver;
+import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 
 import java.util.ArrayList;
 
-
 public class Board {
 
-    private TiledMap map;
+    private TiledMap tiledMap;
 
-    private TiledMapTileLayer startLayer;
+    private TiledMapTileLayer playerLayer;
     private TiledMapTileLayer flagLayer;
-    private TiledMapTileLayer holeLayer;
     private TiledMapTileLayer wallLayer;
+    private TiledMapTileLayer laserLayer;
     private TiledMapTileLayer groundLayer;
+
+    private int boardWidth;
+    private int boardHeight;
 
     private ArrayList<Player> startPos; // Need to be changed
 
-    private OrthogonalTiledMapRenderer mapRenderer;
+    public Board(String mapPath) {
 
+        this.tiledMap = new TmxMapLoader().load("assets/kart.tmx");
 
-    public void createBoard(String mapPath){
-        TmxMapLoader.Parameters parameters = new TmxMapLoader.Parameters();
-        parameters.flipY = true;
+        this.playerLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Player");
+        this.flagLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Flag");
+        this.laserLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Laser");
+        this.wallLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Wall");
+        this.groundLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Ground");
 
-        this.map = new TmxMapLoader().load(mapPath, parameters);
-        this.startLayer = (TiledMapTileLayer) map.getLayers().get("Start");
-        this.flagLayer =(TiledMapTileLayer) map.getLayers().get("Flag");
-        this.holeLayer =(TiledMapTileLayer) map.getLayers().get("Hole");
-        this.wallLayer =(TiledMapTileLayer) map.getLayers().get("Wall");
-        this.groundLayer = (TiledMapTileLayer) map.getLayers().get("Ground");
-
-        mapRenderer = new OrthogonalTiledMapRenderer(map);
-
-    }
-    public void render(OrthographicCamera camera) {
-        mapRenderer.setView(camera);
-        mapRenderer.render();
+        MapProperties properties = tiledMap.getProperties();
+        boardWidth = properties.get("width", Integer.class);
+        boardHeight = properties.get("height", Integer.class);
     }
 
-    public void findStartLayer(){
-        for (int x = 0; x < startLayer.getWidth(); x++) {
-            for (int y = 0; y < startLayer.getHeight(); y++) {
-                TiledMapTileLayer.Cell cell = startLayer.getCell(x,y);
-                if (cell != null){
+    public void findStartLayer() {
+        for (int x = 0; x < playerLayer.getWidth(); x++) {
+            for (int y = 0; y < playerLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = playerLayer.getCell(x,y);
+                if (cell != null) {
                     startPos.add(new Player(new Position(x,y)));
                 }
             }
         }
     }
 
-    public TiledMapTileLayer getStartLayer() {
-        return startLayer;
+    public TiledMapTileLayer getPlayerLayer() {
+        return playerLayer;
     }
 
     public TiledMapTileLayer getFlagLayer() {
         return flagLayer;
     }
 
-    public TiledMapTileLayer getHoleLayer() {
-        return holeLayer;
+    public TiledMapTileLayer getLaserLayer() {
+        return laserLayer;
     }
 
     public TiledMapTileLayer getWallLayer() {
@@ -74,4 +68,10 @@ public class Board {
     public TiledMapTileLayer getGroundLayer() {
         return groundLayer;
     }
+
+    public TiledMap getMap() { return tiledMap; }
+
+    public int getWidth() { return boardWidth; }
+
+    public int getHeight() { return boardHeight; }
 }
