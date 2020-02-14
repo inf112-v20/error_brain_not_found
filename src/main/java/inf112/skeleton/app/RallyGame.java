@@ -3,70 +3,39 @@ package inf112.skeleton.app;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.Game;
+import inf112.skeleton.app.screens.GameScreen;
 
 public class RallyGame extends Game {
 
     public Board board;
+    public SpriteBatch batch;
 
-    private OrthogonalTiledMapRenderer tiledMapRenderer;
-    private TiledMapTileLayer.Cell player;
-    private Screen screen;
-
-    public RallyGame(){
-        this.board = new Board();
-    }
-
-    @Override
     public void create() {
-        float GDX_GRAPHICS_WIDTH = Gdx.graphics.getWidth();
-        float GDX_GRAPHICS_HEIGHT = Gdx.graphics.getHeight();
-        TiledMap tiledMap = new TmxMapLoader().load("src/main/java/inf112/skeleton/app/assets/kart.tmx");
-
-        float w = Gdx.graphics.getWidth();
-        float h = Gdx.graphics.getHeight();
-
-        OrthographicCamera camera = new OrthographicCamera();
-        camera.setToOrtho(false, GDX_GRAPHICS_WIDTH, GDX_GRAPHICS_HEIGHT);
-        camera.update();
-
-        //tiledMap = new TmxMapLoader().load("src/main/java/inf112/skeleton/app/assets/kart.tmx");
-        this.tiledMapRenderer = new OrthogonalTiledMapRenderer(tiledMap);
-
-        Texture textureArrow = new Texture("src/main/java/inf112/skeleton/app/assets/arrow.png");
-
+        this.batch = new SpriteBatch();
+        this.board = new Board("assets/kart.tmx");
+        this.setScreen(new GameScreen(this));
     }
 
-
-    @Override
-    public void resize(int width, int height) {
-
+    public void render() {
+        super.render();
     }
 
-    @Override
-    public void pause() {
-
-    }
-
-    @Override
-    public void resume() {
-
-    }
-
-    @Override
     public void dispose() {
-
+        batch.dispose();
     }
 
-    @Override
-    public void setScreen(Screen screen) {
-        super.setScreen(screen);
+    public Board getBoard() {
+        return this.board;
     }
 }

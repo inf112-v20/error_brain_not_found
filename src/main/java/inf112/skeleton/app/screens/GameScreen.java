@@ -1,0 +1,73 @@
+package inf112.skeleton.app.screens;
+
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
+import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import inf112.skeleton.app.Board;
+import inf112.skeleton.app.RallyGame;
+
+public class GameScreen implements Screen {
+
+    private final RallyGame game;
+    private final Board board;
+
+    OrthographicCamera camera;
+    TiledMapRenderer mapRenderer;
+
+    public GameScreen(RallyGame game) {
+        camera = new OrthographicCamera();
+
+        this.game = game;
+        this.board = game.getBoard();
+
+        camera.setToOrtho(false, board.getWidth() * 300, board.getHeight() * 300);
+
+        this.mapRenderer = new OrthogonalTiledMapRenderer(game.getBoard().getMap());
+        mapRenderer.setView(camera);
+    }
+
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    /**
+    float v has to be 10 / 255f
+     */
+    public void render(float v) {
+        Gdx.gl.glClearColor(v, v, v,0);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        camera.update();
+        game.batch.setProjectionMatrix(camera.combined);
+
+        game.batch.begin();
+        mapRenderer.render();
+        game.batch.end();
+    }
+
+    @Override
+    public void resize(int i, int i1) {
+    }
+
+    @Override
+    public void pause() {
+    }
+
+    @Override
+    public void resume() {
+    }
+
+    @Override
+    public void hide() {
+    }
+
+    @Override
+    public void dispose() {
+    }
+}
