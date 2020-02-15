@@ -1,6 +1,7 @@
 package inf112.skeleton.app;
 
 
+
 public class Player {
 
     private Position position;
