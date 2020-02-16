@@ -7,7 +7,8 @@ public class Deck {
     private Stack<ProgramCard> deck;
 
     public Deck(){
-        //TODO: The deck can be make in the constructor or the constructor can call a func (?)
+        //TODO: The deck can be made in the constructor or the constructor can call a func (?). Need to see the
+        // rule-book for have many of the different cards there are in the deck.
     }
 
     /** @return the size of the deck */
