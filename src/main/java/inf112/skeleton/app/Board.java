@@ -91,7 +91,12 @@ public class Board {
         players.add(new Player(new Position(x,y)));
     }
 
-
+    /**
+     * Moves the player from current position one tile in the direction it's facing.
+     * Removes the cell its currently on and moves the content of that cell to the cell it moves to.
+     * Also updates the fields in player
+     * @param player that is suppose to move
+     */
     public void movePlayer(Player player){
         Position playerPosition = player.getPosition();
         Direction playerDirection = player.getDirection();
