@@ -97,7 +97,7 @@ public class Board {
      * Also updates the fields in player
      * @param player that is suppose to move
      */
-    public void movePlayer(Player player) throws Exception {
+    public void movePlayer(Player player) {
         Position playerPosition = player.getPosition();
         Direction playerDirection = player.getDirection();
 
@@ -119,7 +119,7 @@ public class Board {
                 playerPosition.setY(playerPosition.getY() - 1);
                 break;
             default:
-                throw new Exception("No enum detected");
+                return;
         }
 
         player.setPosition(playerPosition);
