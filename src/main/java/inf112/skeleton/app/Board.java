@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import inf112.skeleton.app.enums.Direction;
 
 import java.util.ArrayList;
 
@@ -40,6 +41,7 @@ public class Board {
         boardHeight = properties.get("height", Integer.class);
 
         addPlayersToStartPositions(2);
+        movePlayer(players.get(0));
     }
 
     /**
@@ -88,6 +90,35 @@ public class Board {
         playerLayer.setCell(x, y, cell);
         players.add(new Player(new Position(x,y)));
     }
+
+
+    public void movePlayer(Player player){
+        Position playerPosition = player.getPosition();
+        Direction playerDirection = player.getDirection();
+
+        TiledMapTileLayer.Cell cell = playerLayer.getCell(playerPosition.getX(), playerPosition.getY());
+
+        playerLayer.setCell(playerPosition.getX(), playerPosition.getY(), new TiledMapTileLayer.Cell());
+
+        switch (playerDirection){
+            case NORTH:
+                playerPosition.setY(playerPosition.getY()+ 1);
+                break;
+            case EAST:
+                playerPosition.setX(playerPosition.getX() + 1);
+                break;
+            case WEST:
+                playerPosition.setX(playerPosition.getX() - 1);
+                break;
+            case SOUTH:
+                playerPosition.setY(playerPosition.getY() - 1);
+                break;
+        }
+
+        player.setPosition(playerPosition);
+        playerLayer.setCell(playerPosition.getX(),playerPosition.getY(), cell);
+    }
+
 
     /** @return list of all players */
     public ArrayList<Player> getPlayers() {
