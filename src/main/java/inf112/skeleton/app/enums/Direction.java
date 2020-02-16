@@ -6,25 +6,35 @@ public enum Direction {
     NORTH,
     SOUTH;
 
-    public Direction turnLeft(){
+    /**
+     * Turns the {@link Direction} left.
+     *
+     * @return {@link Direction} after left transformation.
+     */
+    public Direction turnLeft() {
         return getDirection(NORTH, WEST, SOUTH, EAST);
     }
 
-    public Direction turnRight(){
+    /**
+     * Turns the {@link Direction} right.
+     *
+     * @return {@link Direction} after right transformation.
+     */
+    public Direction turnRight() {
         return getDirection(SOUTH, EAST, NORTH, WEST);
     }
 
     /**
      * Help function instead of duplicate code
-     * @param baseCaseEAST The direction its supposed to be if the case is EAST.
-     * @param baseCaseNORTH The direction its supposed to be if the case is NORTH.
-     * @param baseCaseWEST The direction its supposed to be if the case is WEST.
-     * @param baseCaseSOUT The direction its supposed to be if the case is SOUTH.
-     * @return The right facing after a given turn.
      *
+     * @param baseCaseEAST  The direction it's supposed to be if the case is EAST.
+     * @param baseCaseNORTH The direction it's supposed to be if the case is NORTH.
+     * @param baseCaseWEST  The direction it's supposed to be if the case is WEST.
+     * @param baseCaseSOUT  The direction it's supposed to be if the case is SOUTH.
+     * @return The right facing after a given transformation.
      */
     private Direction getDirection(Direction baseCaseEAST, Direction baseCaseNORTH, Direction baseCaseWEST, Direction baseCaseSOUT) {
-        switch (this){
+        switch (this) {
             case EAST:
                 return baseCaseEAST;
             case NORTH:

@@ -21,7 +21,7 @@ public class Board {
     private int boardWidth;
     private int boardHeight;
 
-    private ArrayList<Player> players; // Need to be changed
+    private ArrayList<Player> players;
 
     public Board(String mapPath) {
 
@@ -78,8 +78,8 @@ public class Board {
      * Add a player to the player layer in coordinate (x, y) and
      * add that player to the list of players
      *
-     * @param x x coordinate
-     * @param y y coordinte
+     * @param x coordinate
+     * @param y coordinate
      */
     public void addPlayer(int x, int y) {
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
@@ -89,37 +89,37 @@ public class Board {
         players.add(new Player(new Position(x,y)));
     }
 
-    /**
-     * @return list of all players
-     */
+    /** @return list of all players */
     public ArrayList<Player> getPlayers() {
         return players;
     }
 
-
+    /** @return {@link TiledMapTileLayer} of player layer */
     public TiledMapTileLayer getPlayerLayer() {
         return playerLayer;
     }
-
+    /** @return  {@link TiledMapTileLayer} of flag layer */
     public TiledMapTileLayer getFlagLayer() {
         return flagLayer;
     }
-
+    /** @return {@link TiledMapTileLayer} of laser layer */
     public TiledMapTileLayer getLaserLayer() {
         return laserLayer;
     }
-
+    /** @return {@link TiledMapTileLayer} of wall layer */
     public TiledMapTileLayer getWallLayer() {
         return wallLayer;
     }
-
+    /** @return {@link TiledMapTileLayer} of ground layer */
     public TiledMapTileLayer getGroundLayer() {
         return groundLayer;
     }
-
+    /** @return the {@link TiledMap} */
     public TiledMap getMap() { return tiledMap; }
 
+    /** @return width of the board */
     public int getWidth() { return boardWidth; }
 
+    /** @return height of the board*/
     public int getHeight() { return boardHeight; }
 }
