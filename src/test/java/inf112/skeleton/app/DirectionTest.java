@@ -22,6 +22,15 @@ public class DirectionTest {
     }
 
     @Test
+    public void whenInitialisedRightValueIsGiven(){
+        assertEquals(Direction.WEST,west);
+        assertEquals(Direction.NORTH,north);
+        assertEquals(Direction.EAST,east);
+        assertEquals(Direction.SOUTH,south);
+
+    }
+
+    @Test
     public void turningLeftTest() {
         west = west.turnLeft();
         north = north.turnLeft();
