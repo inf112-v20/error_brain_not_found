@@ -8,8 +8,8 @@ public class Main {
 
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
         cfg.title = "robo-rally";
-        cfg.width = 500;
-        cfg.height = 500;
+        cfg.width = 800;
+        cfg.height = 800;
 
         new LwjglApplication(new RallyGame(), cfg);
     }
