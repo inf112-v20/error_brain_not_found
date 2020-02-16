@@ -48,7 +48,7 @@ public class Board {
      * Check all cells on map for start positions and add a new player to that
      * position based on number of players
      *
-     * @param numPlayers number of robots playing
+     * @param numPlayers number of robots playing, between 1-8
      */
     public void addPlayersToStartPositions(int numPlayers) {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
