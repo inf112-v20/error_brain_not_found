@@ -14,8 +14,8 @@ public class GameScreen implements Screen {
     private final RallyGame game;
     private final Board board;
 
-    OrthographicCamera camera;
-    TiledMapRenderer mapRenderer;
+    private OrthographicCamera camera;
+    private TiledMapRenderer mapRenderer;
 
     public GameScreen(final RallyGame game) {
         camera = new OrthographicCamera();

@@ -11,8 +11,8 @@ public class MenuScreen implements Screen {
 
     private final RallyGame game;
 
-    OrthographicCamera camera;
-    Texture background;
+    private OrthographicCamera camera;
+    private Texture background;
 
     public MenuScreen(final RallyGame game) {
         this.game = game;
