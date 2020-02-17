@@ -91,6 +91,22 @@ public class Board {
         players.add(new Player(new Position(x,y)));
     }
 
+    public boolean canGo(Player player) {
+        Position position = player.getPosition();
+        Direction direction = player.getDirection();
+
+        if (direction == Direction.EAST) {
+            return position.getX() < boardWidth - 1;
+        } else if (direction == Direction.WEST) {
+            return position.getX() > 0;
+        } else if (direction == Direction.NORTH) {
+            return position.getY() < boardHeight - 1;
+        } else if (direction == Direction.SOUTH) {
+            return position.getY() > 0;
+        }
+        return false;
+    }
+
     /**
      * Moves the player from current position one tile in the direction it's facing.
      * Removes the cell its currently on and moves the content of that cell to the cell it moves to.
@@ -98,13 +114,15 @@ public class Board {
      * @param player that is suppose to move
      */
     public void movePlayer(Player player) {
+        if (!canGo(player)) {
+            return;
+        }
         Position playerPosition = player.getPosition();
         Direction playerDirection = player.getDirection();
 
         TiledMapTileLayer.Cell cell = playerLayer.getCell(playerPosition.getX(), playerPosition.getY());
 
         playerLayer.setCell(playerPosition.getX(), playerPosition.getY(), new TiledMapTileLayer.Cell());
-
         switch (playerDirection){
             case NORTH:
                 playerPosition.setY(playerPosition.getY()+ 1);
