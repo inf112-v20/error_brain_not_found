@@ -38,5 +38,11 @@ public class DeckTest {
         }
     }
 
+    @Test
+    public void whenACardIsDrawnTheSizeIsDecreasedByOne() {
+        deck.drawCard();
+        assertEquals(NUMBER_OF_CARDS-1, deck.deckSize());
+    }
+
 
 }
