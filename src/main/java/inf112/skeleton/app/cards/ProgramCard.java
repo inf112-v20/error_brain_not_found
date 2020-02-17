@@ -27,4 +27,8 @@ public class ProgramCard {
     public Rotate getRotate() {
         return rotate;
     }
+
+    public String getName() {
+        return name;
+    }
 }
