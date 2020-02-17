@@ -1,5 +1,6 @@
 package inf112.skeleton.app;
 
+import inf112.skeleton.app.enums.Direction;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,6 +33,11 @@ public class PlayerTest {
     public void whenNewYCoordinateIsGivenPlayersCoordinatesChanged() {
         player.setPosition(new Position(0, 1));
         assertEquals(1, player.getPosition().getY());
+    }
+
+    @Test
+    public void whenNewPlayerIsMadeDirectionIsSetToEast() {
+        assertEquals(Direction.EAST, player.getDirection());
     }
 
 }
