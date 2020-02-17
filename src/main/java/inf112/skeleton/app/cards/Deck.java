@@ -36,11 +36,6 @@ public class Deck {
             ProgramCard card = new ProgramCard(priority, 0, Rotate.UTURN, "U-Turn");
             deck.push(card);
         }
-        for (int i = 0; i < 18; i++) {
-            priority += 20;
-            ProgramCard card = new ProgramCard(priority, 1, Rotate.NONE, "Move 1");
-            deck.push(card);
-        }
         // Making Move 2 (12) and Move 3 (6) and Move 1 (12) cards
         boolean notGoodVariableName = true;
         for (int i = 0; i < 30; i++) {
