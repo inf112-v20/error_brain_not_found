@@ -9,7 +9,6 @@ public class Deck {
     private Stack<ProgramCard> deck;
 
     public Deck() {
-
         makeNewDeck();
         shuffleDeck();
     }
@@ -20,6 +19,7 @@ public class Deck {
     public void makeNewDeck() {
         deck = new Stack<>();
         int priority = 0;
+
         // Making RotateR (18) and RotateL (18) cards
         for (int i = 0; i < 36; i++) {
             ProgramCard card;
@@ -36,8 +36,6 @@ public class Deck {
             ProgramCard card = new ProgramCard(priority, 0, Rotate.UTURN, "U-Turn");
             deck.push(card);
         }
-        // TODO: Finne en måte å koble den sammen med MOVE 2 og MOVE 3.
-
         for (int i = 0; i < 18; i++) {
             priority += 20;
             ProgramCard card = new ProgramCard(priority, 1, Rotate.NONE, "Move 1");
@@ -68,7 +66,6 @@ public class Deck {
             ProgramCard card = new ProgramCard(priority, 1, Rotate.NONE, "Move 1");
             deck.push(card);
         }
-
     }
 
     /**
