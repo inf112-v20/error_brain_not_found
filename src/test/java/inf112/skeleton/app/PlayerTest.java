@@ -41,8 +41,13 @@ public class PlayerTest {
     }
 
     @Test
-    public void whenPlayersDirectionIsTurnedLeftItGivesExpectedDirection() {
+    public void whenPlayersStartDirectionIsTurnedLeftItGivesNorthDirection() {
         assertEquals(Direction.NORTH, player.getDirection().turnLeft());
+    }
+
+    @Test
+    public void whenPlayersStartDirectionIsTurnedRightItGivesSouthDirection() {
+        assertEquals(Direction.SOUTH, player.getDirection().turnRight());
     }
 
 }
