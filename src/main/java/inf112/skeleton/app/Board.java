@@ -104,7 +104,7 @@ public class Board {
         } else if (direction == Direction.SOUTH) {
             return position.getY() > 0;
         }
-        return true;
+        return false;
     }
 
     /**
