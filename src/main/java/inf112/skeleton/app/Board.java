@@ -53,7 +53,7 @@ public class Board {
     public void addPlayersToStartPositions(int numPlayers) {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
-                TiledMapTileLayer.Cell cell = groundLayer.getCell(x,y);
+                TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
                 int ID = cell.getTile().getId();
                 if (ID == 121) {
                     addPlayer(x, y);
@@ -88,7 +88,7 @@ public class Board {
         TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("player");
         cell.setTile(tileSet.getTile(137));
         playerLayer.setCell(x, y, cell);
-        players.add(new Player(new Position(x,y)));
+        players.add(new Player(new Position(x, y)));
     }
 
     public boolean canGo(Player player) {
@@ -111,6 +111,7 @@ public class Board {
      * Moves the player from current position one tile in the direction it's facing.
      * Removes the cell its currently on and moves the content of that cell to the cell it moves to.
      * Also updates the fields in player
+     *
      * @param player that is suppose to move
      */
     public void movePlayer(Player player) {
@@ -123,9 +124,9 @@ public class Board {
         TiledMapTileLayer.Cell cell = playerLayer.getCell(playerPosition.getX(), playerPosition.getY());
 
         playerLayer.setCell(playerPosition.getX(), playerPosition.getY(), new TiledMapTileLayer.Cell());
-        switch (playerDirection){
+        switch (playerDirection) {
             case NORTH:
-                playerPosition.setY(playerPosition.getY()+ 1);
+                playerPosition.setY(playerPosition.getY() + 1);
                 break;
             case EAST:
                 playerPosition.setX(playerPosition.getX() + 1);
@@ -141,41 +142,70 @@ public class Board {
         }
 
         player.setPosition(playerPosition);
-        playerLayer.setCell(playerPosition.getX(),playerPosition.getY(), cell);
+        playerLayer.setCell(playerPosition.getX(), playerPosition.getY(), cell);
     }
 
 
-    /** @return list of all players */
+    /**
+     * @return list of all players
+     */
     public ArrayList<Player> getPlayers() {
         return players;
     }
 
-    /** @return {@link TiledMapTileLayer} of player layer */
+    /**
+     * @return {@link TiledMapTileLayer} of player layer
+     */
     public TiledMapTileLayer getPlayerLayer() {
         return playerLayer;
     }
-    /** @return  {@link TiledMapTileLayer} of flag layer */
+
+    /**
+     * @return {@link TiledMapTileLayer} of flag layer
+     */
     public TiledMapTileLayer getFlagLayer() {
         return flagLayer;
     }
-    /** @return {@link TiledMapTileLayer} of laser layer */
+
+    /**
+     * @return {@link TiledMapTileLayer} of laser layer
+     */
     public TiledMapTileLayer getLaserLayer() {
         return laserLayer;
     }
-    /** @return {@link TiledMapTileLayer} of wall layer */
+
+    /**
+     * @return {@link TiledMapTileLayer} of wall layer
+     */
     public TiledMapTileLayer getWallLayer() {
         return wallLayer;
     }
-    /** @return {@link TiledMapTileLayer} of ground layer */
+
+    /**
+     * @return {@link TiledMapTileLayer} of ground layer
+     */
     public TiledMapTileLayer getGroundLayer() {
         return groundLayer;
     }
-    /** @return the {@link TiledMap} */
-    public TiledMap getMap() { return tiledMap; }
 
-    /** @return width of the board */
-    public int getWidth() { return boardWidth; }
+    /**
+     * @return the {@link TiledMap}
+     */
+    public TiledMap getMap() {
+        return tiledMap;
+    }
 
-    /** @return height of the board*/
-    public int getHeight() { return boardHeight; }
+    /**
+     * @return width of the board
+     */
+    public int getWidth() {
+        return boardWidth;
+    }
+
+    /**
+     * @return height of the board
+     */
+    public int getHeight() {
+        return boardHeight;
+    }
 }

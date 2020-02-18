@@ -8,7 +8,7 @@ public class CardHand {
     private ArrayList<ProgramCard> hand = new ArrayList<>();
 
     // TODO: Check rulebook for for what decide how many card a player can have.
-    public CardHand(Deck deck, int slots){
+    public CardHand(Deck deck, int slots) {
         for (int i = 0; i < slots; i++) {
             hand.add(deck.drawCard());
         }

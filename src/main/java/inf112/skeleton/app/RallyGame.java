@@ -1,10 +1,10 @@
 package inf112.skeleton.app;
 
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.Game;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.screens.MenuScreen;
@@ -47,7 +47,9 @@ public class RallyGame extends Game {
         super.render();
     }
 
-    public void dispose() { batch.dispose(); }
+    public void dispose() {
+        batch.dispose();
+    }
 
     public Board getBoard() {
         return this.board;
