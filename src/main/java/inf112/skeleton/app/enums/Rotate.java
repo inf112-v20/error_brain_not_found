@@ -4,5 +4,5 @@ public enum Rotate {
     RIGHT,
     LEFT,
     UTURN,
-    NONE;
+    NONE
 }
