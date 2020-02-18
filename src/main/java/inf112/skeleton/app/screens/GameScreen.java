@@ -31,26 +31,6 @@ public class GameScreen implements Screen {
 
         this.mapRenderer = new OrthogonalTiledMapRenderer(game.getBoard().getMap());
         mapRenderer.setView(camera);
-        Gdx.input.setInputProcessor(new InputAdapter() {
-            @Override
-            public boolean keyUp(int keycode) {
-                Player player = game.board.getPlayers().get(0);
-                if (keycode == Input.Keys.RIGHT) {
-                    player.setDirection(Direction.EAST);
-                }
-                if (keycode == Input.Keys.LEFT) {
-                    player.setDirection(Direction.WEST);
-                }
-                if (keycode == Input.Keys.UP) {
-                    player.setDirection(Direction.NORTH);
-                }
-                if (keycode == Input.Keys.DOWN) {
-                    player.setDirection(Direction.SOUTH);
-                }
-                game.board.movePlayer(player);
-                return super.keyDown(keycode);
-            }
-        });
     }
 
     @Override
