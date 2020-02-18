@@ -9,7 +9,7 @@ public class ProgramCard {
 
     private Rotate rotate;
 
-    public ProgramCard(int priority, int distance, Rotate rotate, String name){
+    public ProgramCard(int priority, int distance, Rotate rotate, String name) {
         this.priority = priority;
         this.distance = distance;
         this.rotate = rotate;
