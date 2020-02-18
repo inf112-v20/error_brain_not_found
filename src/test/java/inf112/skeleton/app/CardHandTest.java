@@ -24,5 +24,7 @@ public class CardHandTest {
     }
 
     @Test
-    public void whenHandIsMade
+    public void whenHandIsMadeFirstCardIsNotNull() {
+        // Can not get cards yet
+    }
 }
