@@ -17,7 +17,7 @@ public class RallyGame extends Game {
 
     public void create() {
         this.batch = new SpriteBatch();
-        this.board = new Board("assets/kart.tmx");
+        this.board = new Board();
         this.setScreen(new MenuScreen(this));
         this.deck = new Deck();
 
@@ -27,15 +27,14 @@ public class RallyGame extends Game {
                 Player player = board.getPlayers().get(0);
                 if (keycode == Input.Keys.RIGHT) {
                     player.setDirection(Direction.EAST);
-                }
-                if (keycode == Input.Keys.LEFT) {
+                } else if (keycode == Input.Keys.LEFT) {
                     player.setDirection(Direction.WEST);
-                }
-                if (keycode == Input.Keys.UP) {
+                } else if (keycode == Input.Keys.UP) {
                     player.setDirection(Direction.NORTH);
-                }
-                if (keycode == Input.Keys.DOWN) {
+                } else if (keycode == Input.Keys.DOWN) {
                     player.setDirection(Direction.SOUTH);
+                } else {
+                    return super.keyDown(keycode);
                 }
                 board.movePlayer(player);
                 return super.keyDown(keycode);

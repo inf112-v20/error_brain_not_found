@@ -24,6 +24,10 @@ public class Board {
 
     private ArrayList<Player> players;
 
+    public Board() {
+        this("assets/kart.tmx");
+    }
+
     public Board(String mapPath) {
 
         this.players = new ArrayList<>();
