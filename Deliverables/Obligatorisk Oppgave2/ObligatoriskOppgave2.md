@@ -1,14 +1,15 @@
-* Walls 
-Skal ikke kunne gå gjennom veggen
+* Walls: 
+A player can not go through a wall
 
-Brukerhistorie:
-Som spiller vil jeg at veggen skal stoppe meg slik at jeg ikke kan gå gjennom veggen, slik at jeg kan følge spillereglene.
+User-story:
+As a player I want that the wall stop me, so that I can not go in that direction, such that I have a challange in
+make the route.
 
-Akseptansekriterier: 
-Gitt at jeg møter en vegg, så skal jeg ikke kunne gå gjennom den.
+Acceptance-criteria: 
+Given that I am facing a wall, I will not be able to go through it.
 
-Arbeidsoppgaver:
-Lager en sjekk canGo() som forteller om vi er på en vegg i den retningen. 
+Tasks:
+Make a check canGo() that tells if we are facing a wall.
 
 * Game board 
 Hvis du går utenfor så dør du 
