@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
+import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
 
 import java.util.ArrayList;
@@ -45,7 +46,6 @@ public class Board {
         boardHeight = properties.get("height", Integer.class);
 
         addPlayersToStartPositions(2);
-        movePlayer(players.get(0));
     }
 
     /**
@@ -92,21 +92,21 @@ public class Board {
         TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("player");
         cell.setTile(tileSet.getTile(137));
         playerLayer.setCell(x, y, cell);
-        players.add(new Player(new Position(x, y)));
+        players.add(new Player(new Vector2(x, y)));
     }
 
     public boolean canGo(Player player) {
-        Position position = player.getPosition();
+        Vector2 position = player.getPosition();
         Direction direction = player.getDirection();
 
         if (direction == Direction.EAST) {
-            return position.getX() < boardWidth - 1;
+            return position.x < boardWidth - 1;
         } else if (direction == Direction.WEST) {
-            return position.getX() > 0;
+            return position.x > 0;
         } else if (direction == Direction.NORTH) {
-            return position.getY() < boardHeight - 1;
+            return position.y < boardHeight - 1;
         } else if (direction == Direction.SOUTH) {
-            return position.getY() > 0;
+            return position.y > 0;
         }
         return false;
     }
@@ -122,31 +122,31 @@ public class Board {
         if (!canGo(player)) {
             return;
         }
-        Position playerPosition = player.getPosition();
+        Vector2 playerPosition = player.getPosition();
         Direction playerDirection = player.getDirection();
 
-        TiledMapTileLayer.Cell cell = playerLayer.getCell(playerPosition.getX(), playerPosition.getY());
+        TiledMapTileLayer.Cell cell = playerLayer.getCell((int) playerPosition.x, (int) playerPosition.y);
 
-        playerLayer.setCell(playerPosition.getX(), playerPosition.getY(), new TiledMapTileLayer.Cell());
+        playerLayer.setCell((int) playerPosition.x, (int) playerPosition.y, new TiledMapTileLayer.Cell());
         switch (playerDirection) {
             case NORTH:
-                playerPosition.setY(playerPosition.getY() + 1);
+                playerPosition.set(playerPosition.x, playerPosition.y + 1);
                 break;
             case EAST:
-                playerPosition.setX(playerPosition.getX() + 1);
+                playerPosition.set(playerPosition.x + 1, playerPosition.y);
                 break;
             case WEST:
-                playerPosition.setX(playerPosition.getX() - 1);
+                playerPosition.set(playerPosition.x - 1, playerPosition.y);
                 break;
             case SOUTH:
-                playerPosition.setY(playerPosition.getY() - 1);
+                playerPosition.set(playerPosition.x, playerPosition.y - 1);
                 break;
             default:
                 return;
         }
 
         player.setPosition(playerPosition);
-        playerLayer.setCell(playerPosition.getX(), playerPosition.getY(), cell);
+        playerLayer.setCell((int) playerPosition.x, (int) playerPosition.y, cell);
     }
 
 

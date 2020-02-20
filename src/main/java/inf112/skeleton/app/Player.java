@@ -1,29 +1,30 @@
 package inf112.skeleton.app;
 
 
+import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
 
 public class Player {
 
-    private Position position;
+    private Vector2 position;
     private Direction direction;
 
-    public Player(Position position) {
+    public Player(Vector2 position) {
         this.position = position;
         direction = Direction.EAST;
     }
 
     /**
-     * @return the {@link Position} to the player
+     * @return the {@link Vector2} to the player
      */
-    public Position getPosition() {
+    public Vector2 getPosition() {
         return position;
     }
 
     /**
      * Set's the position to the player
      */
-    public void setPosition(Position pos) {
+    public void setPosition(Vector2 pos) {
         this.position = pos;
     }
 
