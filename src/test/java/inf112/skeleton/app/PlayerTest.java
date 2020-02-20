@@ -1,5 +1,6 @@
 package inf112.skeleton.app;
 
+import inf112.skeleton.app.enums.Direction;
 import com.badlogic.gdx.math.Vector2;
 import org.junit.Before;
 import org.junit.Test;
@@ -33,6 +34,21 @@ public class PlayerTest {
     public void whenNewYCoordinateIsGivenPlayersCoordinatesChanged() {
         player.setPosition(new Vector2(0, 1));
         assertEquals(1, player.getPosition().y, 0.01);
+    }
+
+    @Test
+    public void whenNewPlayerIsMadeDirectionIsSetToEast() {
+        assertEquals(Direction.EAST, player.getDirection());
+    }
+
+    @Test
+    public void whenPlayersStartDirectionIsTurnedLeftItGivesNorthDirection() {
+        assertEquals(Direction.NORTH, player.getDirection().turnLeft());
+    }
+
+    @Test
+    public void whenPlayersStartDirectionIsTurnedRightItGivesSouthDirection() {
+        assertEquals(Direction.SOUTH, player.getDirection().turnRight());
     }
 
 }
