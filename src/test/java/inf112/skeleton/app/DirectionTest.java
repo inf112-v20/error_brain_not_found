@@ -71,4 +71,24 @@ public class DirectionTest {
         assertEquals(Direction.WEST, south.turnRight());
     }
 
+    @Test
+    public void whenNorthIsTurned360DegreesItWillBeNorthAfterwards() {
+        assertEquals(Direction.NORTH, north.turnRight().turnRight().turnRight().turnRight());
+    }
+
+    @Test
+    public void whenSouthIsTurned360DegreesItWillBeSouthAfterwards() {
+        assertEquals(Direction.SOUTH, south.turnRight().turnRight().turnRight().turnRight());
+    }
+
+    @Test
+    public void whenEastIsTurned360DegreesItWillBeEastAfterwards() {
+        assertEquals(Direction.EAST, east.turnRight().turnRight().turnRight().turnRight());
+    }
+
+    @Test
+    public void whenWestIsTurned360DegreesItWillBeWestAfterwards() {
+        assertEquals(Direction.WEST, west.turnRight().turnRight().turnRight().turnRight());
+    }
+
 }
