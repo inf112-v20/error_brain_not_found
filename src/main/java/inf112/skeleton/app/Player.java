@@ -4,8 +4,6 @@ package inf112.skeleton.app;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
 
-import java.util.Vector;
-
 public class Player {
 
     private Vector2 position;
