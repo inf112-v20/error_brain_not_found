@@ -33,8 +33,12 @@ public class DirectionTest {
 
     @Test
     public void whenWestIsTurnedLeftNewDirectionIsSouth() {
-        west = west.turnLeft();
-        assertEquals(Direction.SOUTH, west);
+        assertEquals(Direction.SOUTH, west.turnLeft());
+    }
+
+    @Test
+    public void whenNorthIsTurnedLeftNewDirectionIsWest() {
+        assertEquals(Direction.WEST, north.turnLeft());
     }
 
     @Test
