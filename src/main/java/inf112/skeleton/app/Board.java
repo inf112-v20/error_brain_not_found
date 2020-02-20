@@ -25,7 +25,7 @@ public class Board {
     private ArrayList<Player> players;
 
     public Board() {
-        this("assets/kart.tmx");
+        this("assets/testMap.tmx");
     }
 
     public Board(String mapPath) {
