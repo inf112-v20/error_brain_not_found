@@ -11,26 +11,28 @@ Given that I am facing a wall, I will not be able to go through it.
 Tasks:
 Make a check canGo() that tells if we are facing a wall.
 
-* Game board 
-Hvis du går utenfor så dør du 
 
-Brukerhistorie:
-Som spiller vil jeg at når jeg går utenfor brettet så respawner jeg et sted slik at jeg kan fortsette spillet.
+* Game board:
+If you get outside the board you get respawned.
 
-Akseptansekriterie:
-Hvis jeg går utenfor brettet, så skal jeg respawne på spawnlocation.
+User-story:
+As a player I want to be respawned when I go outside the board, such that I can continue the game.
 
-Arbeidsoppgaver:
-Lage en sjekk som sier om man er utenfor brettet. Lagre spillerinformasjon i spilleren. En metode som plasserer spiler på respawnsted.
+Acceptance-criteria: 
+If I go outside the board, then I will respawn in a spawn location on the board.
 
-* Playing piece 
-Playere kan ikke gå på hverandre
+Tasks:
+Make a check that says if you are outside the board. Store the playerinformation. A method that places player on respawn-place.
 
-Brukerhistorie:
-Som spiller vil jeg at når jeg prøver å gå på en annen spiller så går ikke det, siden jeg vil kunne dytte den.
+* Playing piece:
+Player can not be on same cell
 
-Akseptansekriterier: 
-Hvis jeg prøver å gå på en spiller, så flytter den på seg når jeg går på den. 
+User-story:
+As a player I want to not be able to be on same cell as another player, so that I can push it.
 
-Arbeidsoppgaver:
-Lage en sjekk som sier hvis det er en spiller på cellen du prøver å gå på. En metode som flytter spillerene til der de skal.
+Acceptance-criteria:  
+If I try to walk on another player, then it moves away from me.
+
+Tasks:
+Make a check that says if a player is on the cell the player tries to move to. A method that moves the player til 
+where it should be.
