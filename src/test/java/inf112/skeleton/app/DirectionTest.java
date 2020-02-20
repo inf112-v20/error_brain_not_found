@@ -5,6 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class DirectionTest {
 
@@ -28,6 +29,12 @@ public class DirectionTest {
         assertEquals(Direction.EAST,east);
         assertEquals(Direction.SOUTH,south);
 
+    }
+
+    @Test
+    public void whenWestIsTurnedLeftNewDirectionIsSouth() {
+        west = west.turnLeft();
+        assertEquals(Direction.SOUTH, west);
     }
 
     @Test

@@ -17,7 +17,7 @@ public class RallyGame extends Game {
 
     public void create() {
         this.batch = new SpriteBatch();
-        this.board = new Board();
+        this.board = new Board("assets/Risky_Exchange.tmx");
         this.setScreen(new MenuScreen(this));
         this.deck = new Deck();
 
