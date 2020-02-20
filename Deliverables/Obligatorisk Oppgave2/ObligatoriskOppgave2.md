@@ -4,14 +4,14 @@
 A player can not go through a wall
 
 User-story:
-As a player I want that the wall stop me, so that I can not go in that direction, such that I have a challange in
-make the route.
+As a player I want the wall to stop me, such that I can not continue in that direction, such that it will be a challenge 
+getting to the flags.
 
 Acceptance-criteria: 
 Given that I am facing a wall, I will not be able to go through it.
 
 Tasks:
-Make a check canGo() that tells if we are facing a wall.
+Make a check canGo() that tells if the player is facing a wall.
 
 
 #### Game board:
@@ -30,7 +30,7 @@ Make a check that says if you are outside the board. Store the playerinformation
 Player can not be on same cell
 
 User-story:
-As a player I want to not be able to be on same cell as another player, so that I can push it.
+As a player I want to not be able to be on same cell as another player, so that I can push the other player.
 
 Acceptance-criteria:  
 If I try to walk on another player, then it moves away from me.
