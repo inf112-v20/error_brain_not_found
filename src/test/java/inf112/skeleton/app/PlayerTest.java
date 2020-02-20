@@ -20,20 +20,20 @@ public class PlayerTest {
 
     @Test
     public void positionGivenToPlayerIsSameAsPlayerGives() {
-        assertEquals(0, player.getPosition().x);
+        assertEquals(0, player.getPosition().x, 0.01);
 
     }
 
     @Test
     public void whenNewXCoordinateIsGivenPlayersCoordinatesChanged() {
         player.setPosition(new Vector2(1,0));
-        assertEquals(1, player.getPosition().x);
+        assertEquals(1, player.getPosition().x, 0.01);
     }
 
     @Test
     public void whenNewYCoordinateIsGivenPlayersCoordinatesChanged() {
         player.setPosition(new Vector2(0, 1));
-        assertEquals(1, player.getPosition().y);
+        assertEquals(1, player.getPosition().y, 0.01);
     }
 
     @Test
