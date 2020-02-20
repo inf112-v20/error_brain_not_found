@@ -1,4 +1,6 @@
-* Walls: 
+### User stories
+
+#### Walls: 
 A player can not go through a wall
 
 User-story:
@@ -12,7 +14,7 @@ Tasks:
 Make a check canGo() that tells if we are facing a wall.
 
 
-* Game board:
+#### Game board:
 If you get outside the board you get respawned.
 
 User-story:
@@ -24,7 +26,7 @@ If I go outside the board, then I will respawn in a spawn location on the board.
 Tasks:
 Make a check that says if you are outside the board. Store the playerinformation. A method that places player on respawn-place.
 
-* Playing piece:
+#### Playing piece:
 Player can not be on same cell
 
 User-story:
