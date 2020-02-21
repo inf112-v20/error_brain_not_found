@@ -9,12 +9,11 @@ import static org.junit.Assert.assertEquals;
 
 public class PlayerTest {
 
-    private Vector2 pos;
     private Player player;
 
     @Before
     public void setUp() {
-        pos = new Vector2(0,0);
+        Vector2 pos = new Vector2(0,0);
         player = new Player(pos);
     }
 
