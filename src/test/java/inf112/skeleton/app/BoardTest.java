@@ -104,6 +104,7 @@ public class BoardTest {
         //assertTrue(board.playerIsOutsideBoard(player));
     }
 
+
     @Test
     public void whenPlayerMovesOutsideBoardOnLeftSideItShouldBeAccepted() {
         player.setPosition(new Vector2(0, 0));
@@ -132,6 +133,12 @@ public class BoardTest {
         assertTrue(board.canGo(player));
     }
 
-
+    @Test
+    public void whenPlayerIsMovedPlayerHasChangedCoordinates() {
+        Vector2 startPosition = new Vector2(player.getPosition().x, player.getPosition().y);
+        player.setDirection(Direction.EAST);
+        board.movePlayer(player);
+        assertNotEquals(startPosition, player.getPosition());
+    }
 
 }
