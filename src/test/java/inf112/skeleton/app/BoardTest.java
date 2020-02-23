@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL20;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 
@@ -28,5 +29,10 @@ public class BoardTest {
     @Test
     public void whenBoardIsInitializedMapIsNotNull() {
         assertNotNull(board.getMap());
+    }
+
+    @Test
+    public void whenBoardIsInitializedItHasTwoPlayers() {
+        assertEquals(2, board.getPlayers().size());
     }
 }
