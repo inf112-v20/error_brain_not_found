@@ -12,17 +12,18 @@ import static org.mockito.Mockito.mock;
 
 public class BoardTest {
 
-    Board board;
+    private Board board;
+    private final int NUMBER_OF_PLAYERS_WHEN_STARTING_GAME = 2;
+
+    //Make a headless application in order to initialize the board. Does not show.
+    private HeadlessApplication app = new HeadlessApplication(new EmptyApplication());
 
     @Before
     public void setUp() {
-
-        //Make a headless application in order to initialize the board. Does not show.
         //Mock OpenGL
         Gdx.gl = mock(GL20.class);
-        new HeadlessApplication(new EmptyApplication());
 
-        board = new Board("assets/Risky_Exchange.tmx");
+        this.board = new Board("assets/Risky_Exchange.tmx");
     }
 
 
@@ -32,7 +33,13 @@ public class BoardTest {
     }
 
     @Test
-    public void whenBoardIsInitializedItHasTwoPlayers() {
-        assertEquals(2, board.getPlayers().size());
+    public void whenBoardIsInitializedItHasCorrectNumberOfPlayers() {
+        assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME, board.getPlayers().size());
+    }
+
+    @Test
+    public void whenAPlayerIsAddedTheBoardHasIncrementedPlayersByOne() {
+        board.addPlayer(0,0);
+        assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME + 1, board.getPlayers().size());
     }
 }
