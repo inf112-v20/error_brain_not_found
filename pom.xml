@@ -52,7 +52,16 @@
       <version>2.0.2-beta</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>com.badlogicgames.gdx</groupId>
+      <artifactId>gdx-backend-headless</artifactId>
+      <version>1.6.2</version>
+    </dependency>
+
   </dependencies>
+
+
 
   <build>
     <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
