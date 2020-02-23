@@ -14,6 +14,8 @@ public class BoardTest {
 
     private Board board;
     private final int NUMBER_OF_PLAYERS_WHEN_STARTING_GAME = 2;
+    private final int BOARD_WIDTH = 16;
+    private final int BOARD_HEIGHT = 12;
 
     //Make a headless application in order to initialize the board. Does not show.
     private HeadlessApplication app = new HeadlessApplication(new EmptyApplication());
@@ -41,5 +43,15 @@ public class BoardTest {
     public void whenAPlayerIsAddedTheBoardHasIncrementedPlayersByOne() {
         board.addPlayer(0,0);
         assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME + 1, board.getPlayers().size());
+    }
+
+    @Test
+    public void whenBoardIsInitBoardWidthIsTheSameAsExpected() {
+        assertEquals(BOARD_WIDTH, board.getWidth());
+    }
+
+    @Test
+    public void whenBoardIsInitBoardHeightIsTheSameAsExpected() {
+        assertEquals(BOARD_HEIGHT, board.getHeight());
     }
 }
