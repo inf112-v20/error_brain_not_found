@@ -2,6 +2,9 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.ApplicationListener;
 
+/**
+ * Make an application that does nothing so the board can be tested.
+ */
 public class EmptyApplication implements ApplicationListener {
 
     public void create() {
