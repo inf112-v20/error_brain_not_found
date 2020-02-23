@@ -104,5 +104,11 @@ public class BoardTest {
         //assertTrue(board.playerIsOutsideBoard(player));
     }
 
+    @Test
+    public void whenPlayerMovesOutsideBoardOneLeftSideItShouldBeAccepted() {
+        player.setPosition(new Vector2(0, 0));
+        player.setDirection(Direction.WEST);
+        assertTrue(board.canGo(player));
+    }
 
 }
