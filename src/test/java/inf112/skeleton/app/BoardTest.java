@@ -63,12 +63,46 @@ public class BoardTest {
     /**
      * Test the check if a player is outside the board after a move, so
      * it can be respawned.
+     *
+     * When board.playerIsOutsideBoard(player) is implemented in Board it should return true
+     * when the player moves outside.
+     *
       */
     @Test
     public void whenPlayerIsOutsideOnTopOfBoardItIsDetected() {
         player.setPosition(new Vector2(0, BOARD_HEIGHT-1));
         player.setDirection(Direction.NORTH);
-        board.movePlayer(player);
-        assertTrue(board.playerIsOutsideBoard(player));
+        //board.movePlayer(player);
+        assertFalse(board.canGo(player));
+        //assertTrue(board.playerIsOutsideBoard(player));
     }
+
+    @Test
+    public void whenPlayerIsOutsideOnRightSideOfBoardItIsDetected() {
+        player.setPosition(new Vector2(BOARD_WIDTH-1, 0));
+        player.setDirection(Direction.EAST);
+        //board.movePlayer(player);
+        assertFalse(board.canGo(player));
+        //assertTrue(board.playerIsOutsideBoard(player));
+    }
+
+    @Test
+    public void whenPlayerIsOutsideOnLeftSideOfBoardItIsDetected() {
+        player.setPosition(new Vector2(0, 0));
+        player.setDirection(Direction.WEST);
+        //board.movePlayer(player);
+        assertFalse(board.canGo(player));
+        //assertTrue(board.playerIsOutsideBoard(player));
+    }
+
+    @Test
+    public void whenPlayerIsOutsideUnderTheBoardItIsDetected() {
+        player.setPosition(new Vector2(0, 0));
+        player.setDirection(Direction.SOUTH);
+        //board.movePlayer(player);
+        assertFalse(board.canGo(player));
+        //assertTrue(board.playerIsOutsideBoard(player));
+    }
+
+
 }
