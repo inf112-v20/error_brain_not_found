@@ -7,6 +7,9 @@ import java.util.Stack;
 
 public class Deck {
     private Stack<ProgramCard> deck;
+    private int priority;
+    private ProgramCard card;
+    private boolean checker = true;
 
     public Deck() {
         makeNewDeck();
@@ -18,11 +21,10 @@ public class Deck {
      */
     public void makeNewDeck() {
         deck = new Stack<>();
-        int priority = 0;
+
 
         // Making RotateR (18) and RotateL (18) cards
         for (int i = 0; i < 36; i++) {
-            ProgramCard card;
             priority += 10;
             if (i % 2 == 0) {
                 card = new ProgramCard(priority, 0, Rotate.LEFT, "Rotate Left");
@@ -37,20 +39,17 @@ public class Deck {
             deck.push(card);
         }
         // Making Move 2 (12) and Move 3 (6) and Move 1 (12) cards
-        boolean notGoodVariableName = true;
         for (int i = 0; i < 30; i++) {
             priority += 10;
-            ProgramCard card;
-
             if (i % 3 == 0 && i < 18) {
                 card = new ProgramCard(priority, 3, Rotate.NONE, "Move 3");
             } else {
-                if (notGoodVariableName) {
+                if (checker) {
                     card = new ProgramCard(priority, 2, Rotate.NONE, "Move 2");
-                    notGoodVariableName = false;
+                    checker = false;
                 } else {
                     card = new ProgramCard(priority, 1, Rotate.NONE, "Move 1");
-                    notGoodVariableName = true;
+                    checker = true;
                 }
             }
             deck.push(card);
@@ -58,7 +57,7 @@ public class Deck {
         // Making the last 6 Move 1 cards
         for (int i = 0; i < 6; i++) {
             priority += 10;
-            ProgramCard card = new ProgramCard(priority, 1, Rotate.NONE, "Move 1");
+            card = new ProgramCard(priority, 1, Rotate.NONE, "Move 1");
             deck.push(card);
         }
     }
