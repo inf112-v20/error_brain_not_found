@@ -27,6 +27,9 @@ public class Board extends BoardLayers {
         addPlayersToStartPositions(2);
     }
 
+    /**
+     * Finds the where the flags are on the board and makes {@link Flag} objects.
+     */
     public void findFlags(){
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
