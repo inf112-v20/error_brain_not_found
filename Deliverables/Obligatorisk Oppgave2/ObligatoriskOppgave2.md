@@ -1,7 +1,5 @@
 ### User stories
 
-As a [type of user] I want [some particular feature] so that [some benefit] is received.
-
 #### Walls: 
 A player can not go through a wall
 
