@@ -1,17 +1,17 @@
 package inf112.skeleton.app;
 
-import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.gameObjects.Flag;
 
 import java.util.ArrayList;
 
 public class Board extends BoardLayers {
 
+    private final ArrayList<Flag> flags;
     private ArrayList<Player> players;
 
     public Board() {
@@ -22,8 +22,26 @@ public class Board extends BoardLayers {
         super(mapPath);
 
         this.players = new ArrayList<>();
-
+        this.flags = new ArrayList<>();
+        findFlags();
         addPlayersToStartPositions(2);
+    }
+
+    public void findFlags(){
+        for (int x = 0; x < groundLayer.getWidth(); x++) {
+            for (int y = 0; y < groundLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = flagLayer.getCell(x, y);
+                int ID = cell.getTile().getId();
+                if (ID == 55){
+                    flags.add(new Flag(1, x, y));
+                } else if (ID == 63){
+                    flags.add(new Flag(2, x, y));
+                } else if (ID == 71){
+                    flags.add(new Flag(3, x, y));
+                } //TODO: Find the last ID to the 4th flag
+
+            }
+        }
     }
 
     /**
