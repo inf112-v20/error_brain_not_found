@@ -20,47 +20,8 @@ public class Deck {
         deck = new Stack<>();
         int priority = 0;
 
-        // Making RotateR (18) and RotateL (18) cards
-        for (int i = 0; i < 36; i++) {
-            ProgramCard card;
-            priority += 10;
-            if (i % 2 == 0) {
-                card = new ProgramCard(priority, 0, Rotate.LEFT, "Rotate Left");
-            } else {
-                card = new ProgramCard(priority, 0, Rotate.RIGHT, "Rotate Right");
-            }
-            deck.push(card);
-        }
-        for (int i = 0; i < 6; i++) {
-            priority += 10;
-            ProgramCard card = new ProgramCard(priority, 0, Rotate.UTURN, "U-Turn");
-            deck.push(card);
-        }
-        // Making Move 2 (12) and Move 3 (6) and Move 1 (12) cards
-        boolean notGoodVariableName = true;
-        for (int i = 0; i < 30; i++) {
-            priority += 10;
-            ProgramCard card;
-
-            if (i % 3 == 0 && i < 18) {
-                card = new ProgramCard(priority, 3, Rotate.NONE, "Move 3");
-            } else {
-                if (notGoodVariableName) {
-                    card = new ProgramCard(priority, 2, Rotate.NONE, "Move 2");
-                    notGoodVariableName = false;
-                } else {
-                    card = new ProgramCard(priority, 1, Rotate.NONE, "Move 1");
-                    notGoodVariableName = true;
-                }
-            }
-            deck.push(card);
-        }
-        // Making the last 6 Move 1 cards
-        for (int i = 0; i < 6; i++) {
-            priority += 10;
-            ProgramCard card = new ProgramCard(priority, 1, Rotate.NONE, "Move 1");
-            deck.push(card);
-        }
+        priority = makeRotateCards(priority);
+        makeMoveCards(priority);
     }
 
     /**
@@ -84,4 +45,61 @@ public class Deck {
         return deck.pop();
     }
 
+    /**
+     * Makes all the rotating cards, RotateR (18), RotateL (18) and RotateU (6) cards.
+     * @param startPri is the priority number the last card made had.
+     * @return the priority number of the last card made
+     */
+    private int makeRotateCards(int startPri){
+        int priority = startPri;
+        for (int i = 0; i < 36; i++) {
+            ProgramCard card;
+            priority += 10;
+            if (i % 2 == 0) {
+                card = new ProgramCard(priority, 0, Rotate.LEFT, "Rotate Left");
+            } else {
+                card = new ProgramCard(priority, 0, Rotate.RIGHT, "Rotate Right");
+            }
+            deck.push(card);
+        }
+        for (int i = 0; i < 6; i++) {
+            priority += 10;
+            ProgramCard card = new ProgramCard(priority, 0, Rotate.UTURN, "U-Turn");
+            deck.push(card);
+        }
+        return priority;
+    }
+
+    /**
+     * Makes all the move cards, Move 1 (18), Move 2 (12) and Move 3 (6).
+     * @param startPri is the priority number of the last card made had.
+     */
+    private void makeMoveCards(int startPri){
+        int priority = startPri;
+        boolean notGoodVariableName = true;
+        for (int i = 0; i < 30; i++) {
+            priority += 10;
+            ProgramCard card;
+
+            // This is so the move tre cards not all get in the same range of priority.
+            if (i % 3 == 0 && i < 18) {
+                card = new ProgramCard(priority, 3, Rotate.NONE, "Move 3");
+            } else {
+                if (notGoodVariableName) {
+                    card = new ProgramCard(priority, 2, Rotate.NONE, "Move 2");
+                    notGoodVariableName = false;
+                } else {
+                    card = new ProgramCard(priority, 1, Rotate.NONE, "Move 1");
+                    notGoodVariableName = true;
+                }
+            }
+            deck.push(card);
+        }
+        // Making the last 6 Move 1 cards
+        for (int i = 0; i < 6; i++) {
+            priority += 10;
+            ProgramCard card = new ProgramCard(priority, 1, Rotate.NONE, "Move 1");
+            deck.push(card);
+        }
+    }
 }
