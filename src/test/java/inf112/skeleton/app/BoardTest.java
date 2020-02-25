@@ -19,15 +19,13 @@ public class BoardTest {
     private final int BOARD_HEIGHT = 12;
     private Player player;
 
-    //Make a headless application in order to initialize the board. Does not show.
-    private HeadlessApplication app = new HeadlessApplication(new EmptyApplication());
-
     @Before
     public void setUp() {
         //Mock OpenGL in order to use gdx.texture, gdx.tmxMapLoader etc without getting
         // nullpointerexception
         Gdx.gl = mock(GL20.class);
-
+        //Make a headless application in order to initialize the board. Does not show.
+        new HeadlessApplication(new EmptyApplication());
         this.board = new Board("assets/Risky_Exchange.tmx");
         this.player = new Player(new Vector2(0,0));
     }
@@ -40,6 +38,8 @@ public class BoardTest {
 
     @Test
     public void whenBoardIsInitializedItHasCorrectNumberOfPlayers() {
+
+
         assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME, board.getPlayers().size());
     }
 
