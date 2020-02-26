@@ -5,7 +5,7 @@
 Simple skeleton with libgdx. 
 
 ## How to run
-Run `src/main/java/inf112/skeleton/app/Main.java`
+Go to `src/main/java/inf112/skeleton/app/Main.java` and run `main` function.
 
 
 ## Known bugs
