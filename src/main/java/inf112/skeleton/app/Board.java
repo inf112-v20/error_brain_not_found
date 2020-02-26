@@ -1,27 +1,14 @@
 package inf112.skeleton.app;
 
-import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
 
 import java.util.ArrayList;
 
-public class Board {
-
-    private TiledMap tiledMap;
-
-    private TiledMapTileLayer playerLayer;
-    private TiledMapTileLayer flagLayer;
-    private TiledMapTileLayer wallLayer;
-    private TiledMapTileLayer laserLayer;
-    private TiledMapTileLayer groundLayer;
-
-    private int boardWidth;
-    private int boardHeight;
+public class Board extends BoardLayers {
 
     private ArrayList<Player> players;
 
@@ -30,20 +17,9 @@ public class Board {
     }
 
     public Board(String mapPath) {
+        super(mapPath);
 
         this.players = new ArrayList<>();
-
-        this.tiledMap = new TmxMapLoader().load(mapPath);
-
-        this.playerLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Player");
-        this.flagLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Flag");
-        this.laserLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Laser");
-        this.wallLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Wall");
-        this.groundLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Ground");
-
-        MapProperties properties = tiledMap.getProperties();
-        boardWidth = properties.get("width", Integer.class);
-        boardHeight = properties.get("height", Integer.class);
 
         addPlayersToStartPositions(2);
     }
@@ -79,6 +55,8 @@ public class Board {
             }
         }
     }
+
+
 
     /**
      * Add a player to the player layer in coordinate (x, y) and
@@ -193,13 +171,6 @@ public class Board {
     }
 
     /**
-     * @return the {@link TiledMap}
-     */
-    public TiledMap getMap() {
-        return tiledMap;
-    }
-
-    /**
      * @return width of the board
      */
     public int getWidth() {
@@ -211,5 +182,10 @@ public class Board {
      */
     public int getHeight() {
         return boardHeight;
+    }
+
+    @Override
+    public TiledMap getMap() {
+        return tiledMap;
     }
 }
