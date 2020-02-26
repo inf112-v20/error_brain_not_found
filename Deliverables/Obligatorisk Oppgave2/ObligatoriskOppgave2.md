@@ -31,6 +31,7 @@ Our roles are working fine, and we will stick with the roles we have previously 
 
 
 
+## Task 2
 
 ### User stories
 
@@ -83,3 +84,19 @@ Tasks:
 - Make a check that says if a player is on the cell the player tries to move to. 
 - A method that moves the player in the direction it is pushed. 
 - Tests to fulfill acceptance-criteria.
+
+### Prioritisation of tasks
+ 
+ 
+### Main criteria for MVP
+
+
+### Tasks done since last assignment
+
+
+### Known bugs in 
+
+## Task 3
+The project build, test and runs this way…
+
+### Manual test and how to run them
