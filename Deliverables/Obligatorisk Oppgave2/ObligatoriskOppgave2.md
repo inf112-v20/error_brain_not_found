@@ -7,18 +7,18 @@ The roles work fine. Maguns is doing a great work as Customer Contact and Mathia
 Our roles are working fine, and we will stick with the roles we have previously given.
 
 #### Team lead
-
+Has control of team and make sure that everybody do their assignments. 
 #### Customer Contact
-
+Has control of the project structure and the progress. 
 #### Lead Tester
-
+Make sure all functions work as they're supposed to, especially testing edge cases not thought of when they're written.
 #### Lead Designer 
-
+Responsible for all graphics, sounds and music. Also responsible for making all the maps.
 #### Refactoring lead
 
 
 ### Communication and group dynamic
-
+We communicate alot better than last time. 
 
 
 
