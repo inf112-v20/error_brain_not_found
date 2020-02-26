@@ -1,4 +1,4 @@
-# Mandtory Assignment 2 
+# Mandatory Assignment 2 
 Team: error_no_brain_found
 
 ## Task 1
