@@ -1,3 +1,37 @@
+# Mandatory Assignment 2 
+Team: error_no_brain_found
+
+## Task 1
+The roles work fine. Maguns is doing a great work as Customer Contact and Mathias is working fine as team lead.
+### Roles
+Our roles are working fine, and we will stick with the roles we have previously given.
+
+#### Team lead
+
+#### Customer Contact
+
+#### Lead Tester
+
+#### Lead Designer 
+
+#### Refactoring lead
+
+
+### Communication and group dynamic
+
+
+
+
+### Retrospective
+
+
+#### Improvement points from retrospective
+
+
+
+
+
+
 ### User stories
 
 #### Walls: 
