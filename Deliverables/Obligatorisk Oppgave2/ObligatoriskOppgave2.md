@@ -19,7 +19,8 @@ Responsible for all graphics, sounds and music. Also responsible for making all 
 
 ### Communication and group dynamic
 We communicate alot better than last time. 
-
+We discuss how we should do the project and the tests, and we're good at sharing knowledge.
+We communicate good as a team, and between the different roles.
 
 
 ### Retrospective
