@@ -4,6 +4,9 @@
 
 Simple skeleton with libgdx. 
 
+## How to run
+Run `src/main/java/inf112/skeleton/app/Main.java`
+
 
 ## Known bugs
 Currently throws "WARNING: An illegal reflective access operation has occurred", 
