@@ -29,20 +29,24 @@ public class Board extends BoardLayers {
 
     /**
      * Finds the where the flags are on the board and makes {@link Flag} objects.
+     * And puts them in to the flag array.
      */
     public void findFlags(){
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
-                TiledMapTileLayer.Cell cell = flagLayer.getCell(x, y);
-                int ID = cell.getTile().getId();
-                if (ID == 55){
-                    flags.add(new Flag(1, x, y));
-                } else if (ID == 63){
-                    flags.add(new Flag(2, x, y));
-                } else if (ID == 71){
-                    flags.add(new Flag(3, x, y));
-                } //TODO: Find the last ID to the 4th flag
-
+                try {
+                    TiledMapTileLayer.Cell cell = flagLayer.getCell(x, y);
+                    int ID = cell.getTile().getId();
+                    if (ID == 55) {
+                        flags.add(new Flag(1, x, y));
+                    } else if (ID == 63) {
+                        flags.add(new Flag(2, x, y));
+                    } else if (ID == 71) {
+                        flags.add(new Flag(3, x, y));
+                    } //TODO: Find the last ID to the 4th flag
+                } catch (Exception e){
+                    // There are so many nullPointers in this layer
+                }
             }
         }
     }
