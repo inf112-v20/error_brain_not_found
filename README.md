@@ -5,7 +5,8 @@
 Simple skeleton with libgdx. 
 
 ## How to run
-Go to `src/main/java/inf112/skeleton/app/Main.java` and run `main` function.
+Clone the reppo from github to you computer then:  
+Open the reppo and go to `src/main/java/inf112/skeleton/app/Main.java` and run `main` function.
 
 
 ## Known bugs

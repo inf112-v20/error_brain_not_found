@@ -136,7 +136,8 @@ etter obligen
 * The robot is stopped by walls, and respawned when outside board. 
 
 ### Tasks done since last assignment
-Made user stories and tests for everything, improved how the player moves, made flags and 
+Made user stories and tests for everything, improved how the player moves, made flags and gotten a understanding of how 
+board works. And made many changes to it.
 
 ### Known bugs in 
 Push player is wrong, when other players are in a corner
