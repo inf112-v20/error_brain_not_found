@@ -7,6 +7,7 @@ import inf112.skeleton.app.enums.Direction;
 public class Player {
 
     private final int playerNr;
+    private Vector2 backupPosition;
     private Vector2 position;
     private Direction direction;
 
@@ -14,6 +15,26 @@ public class Player {
         this.position = position;
         this.direction = Direction.EAST;
         this.playerNr = playerNr;
+        setBackupPosition(position);
+    }
+
+    /**
+     * Set new backup position
+     * @param backupPosition respawn position when damaged
+     */
+    public void setBackupPosition(Vector2 backupPosition) {
+        if (this.backupPosition == null) {
+            this.backupPosition = new Vector2(backupPosition.x, backupPosition.y);
+        } else {
+            this.backupPosition.set(backupPosition.x, backupPosition.y);
+        }
+    }
+
+    /**
+     * @return backup position
+     */
+    public Vector2 getBackupPosition() {
+        return backupPosition;
     }
 
     /**
@@ -32,7 +53,7 @@ public class Player {
      * Set's the position to the player
      */
     public void setPosition(Vector2 pos) {
-        this.position = pos;
+        this.position.set(pos.x, pos.y);
     }
 
     /**
