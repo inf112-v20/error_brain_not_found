@@ -10,7 +10,6 @@ public class Deck {
 
     private ProgramCard card;
     private int priority = 0;
-    private boolean checker = true;
 
     public Deck() {
         makeNewDeck();
@@ -79,6 +78,7 @@ public class Deck {
      */
     private void makeMoveCards(int startPri){
         int priority = startPri;
+        boolean checker = true;
         for (int i = 0; i < 30; i++) {
             priority += 10;
 
