@@ -54,9 +54,18 @@ experience. But this have gotten much better after they asked for help.
 * Still getting better at communication in between meetings, on Slack ang go and ask in person
 * Using git and get to know it well, and not be afraid for mess it up
 
+### Meeting minutes
+[Møte 1](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte)  
+[Møte 2](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-2.)  
+[Møte 3](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-3.)  
+
+We forgot to make meeting minutes for our first couple of meeting. That is why there are missing some. And we only have 
+one big meeting every week, and if there are need for it we have a stand-up meeting where we answer everything people 
+need answering.
+
 ## Task 2
 
-### User stories
+### User stories for requirements
 
 #### Walls: 
 A player can not go through a wall
@@ -109,7 +118,7 @@ Tasks:
 - Tests to fulfill acceptance-criteria.
 
 ### Prioritisation of tasks
-
+etter obligen
  
 ### Main criteria for MVP
 * The game should be able to run, show a board with starting robot and programcards to this robot.
@@ -122,7 +131,7 @@ Tasks:
 Made user stories and tests for everything, improved how the player moves, made flags and 
 
 ### Known bugs in 
-Push player is wrong
+Push player is wrong, when other players are in a corner
 Wrong start player
 
 ## Task 3
