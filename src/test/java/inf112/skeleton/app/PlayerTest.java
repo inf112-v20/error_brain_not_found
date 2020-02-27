@@ -1,7 +1,7 @@
 package inf112.skeleton.app;
 
-import inf112.skeleton.app.enums.Direction;
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.enums.Direction;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -14,7 +14,7 @@ public class PlayerTest {
     @Before
     public void setUp() {
         Vector2 pos = new Vector2(0,0);
-        player = new Player(pos);
+        player = new Player(pos, 1);
     }
 
     @Test
