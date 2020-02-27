@@ -1,28 +1,17 @@
 package inf112.skeleton.app;
 
-import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
-import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.gameObjects.Flag;
 
 import java.util.ArrayList;
 
-public class Board {
+public class Board extends BoardLayers {
 
-    private TiledMap tiledMap;
-
-    private TiledMapTileLayer playerLayer;
-    private TiledMapTileLayer flagLayer;
-    private TiledMapTileLayer wallLayer;
-    private TiledMapTileLayer laserLayer;
-    private TiledMapTileLayer groundLayer;
-
-    private int boardWidth;
-    private int boardHeight;
-
+    private final ArrayList<Flag> flags;
     private ArrayList<Player> players;
 
     public Board() {
@@ -30,22 +19,36 @@ public class Board {
     }
 
     public Board(String mapPath) {
+        super(mapPath);
 
         this.players = new ArrayList<>();
-
-        this.tiledMap = new TmxMapLoader().load(mapPath);
-
-        this.playerLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Player");
-        this.flagLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Flag");
-        this.laserLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Laser");
-        this.wallLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Wall");
-        this.groundLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Ground");
-
-        MapProperties properties = tiledMap.getProperties();
-        boardWidth = properties.get("width", Integer.class);
-        boardHeight = properties.get("height", Integer.class);
-
+        this.flags = new ArrayList<>();
+        findFlags();
         addPlayersToStartPositions(2);
+    }
+
+    /**
+     * Finds the where the flags are on the board and makes {@link Flag} objects.
+     * And puts them in to the flag array.
+     */
+    public void findFlags(){
+        for (int x = 0; x < groundLayer.getWidth(); x++) {
+            for (int y = 0; y < groundLayer.getHeight(); y++) {
+                try {
+                    TiledMapTileLayer.Cell cell = flagLayer.getCell(x, y);
+                    int ID = cell.getTile().getId();
+                    if (ID == 55) {
+                        flags.add(new Flag(1, x, y));
+                    } else if (ID == 63) {
+                        flags.add(new Flag(2, x, y));
+                    } else if (ID == 71) {
+                        flags.add(new Flag(3, x, y));
+                    } //TODO: Find the last ID to the 4th flag
+                } catch (Exception e){
+                    // There are so many nullPointers in this layer
+                }
+            }
+        }
     }
 
     /**
@@ -79,6 +82,8 @@ public class Board {
             }
         }
     }
+
+
 
     /**
      * Add a player to the player layer in coordinate (x, y) and
@@ -193,13 +198,6 @@ public class Board {
     }
 
     /**
-     * @return the {@link TiledMap}
-     */
-    public TiledMap getMap() {
-        return tiledMap;
-    }
-
-    /**
      * @return width of the board
      */
     public int getWidth() {
@@ -211,5 +209,10 @@ public class Board {
      */
     public int getHeight() {
         return boardHeight;
+    }
+
+    @Override
+    public TiledMap getMap() {
+        return tiledMap;
     }
 }
