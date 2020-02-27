@@ -66,7 +66,7 @@ public class Board extends BoardLayers {
                 if (ID == TileID.STARTPOS1.getId()) {
                     addPlayer(x, y, 1);
                 } else if (ID == TileID.STARTPOS2.getId() && numPlayers > 1) {
-                    addPlayer(x, y,2);
+                    addPlayer(x, y, 2);
                 } else if (ID == TileID.STARTPOS3.getId() && numPlayers > 2) {
                     addPlayer(x, y, 3);
                 } else if (ID == TileID.STARTPOS4.getId() && numPlayers > 3) {
@@ -155,7 +155,6 @@ public class Board extends BoardLayers {
             default:
                 return;
         }
-
         player.setPosition(playerPosition);
         updatePlayers();
     }
