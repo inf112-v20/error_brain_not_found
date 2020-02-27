@@ -2,6 +2,8 @@ package inf112.skeleton.app;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
 import org.junit.Before;
@@ -72,6 +74,7 @@ public class BoardTest {
         player.setPosition(new Vector2(0, BOARD_HEIGHT-1));
         player.setDirection(Direction.NORTH);
         board.movePlayer(player);
+        //TODO: make player is outside borders function in board
         //assertTrue(board.playerIsOutsideBoard(player));
     }
 
@@ -80,6 +83,7 @@ public class BoardTest {
         player.setPosition(new Vector2(BOARD_WIDTH-1, 0));
         player.setDirection(Direction.EAST);
         board.movePlayer(player);
+        //TODO: make player is outside borders function in board
         //assertTrue(board.playerIsOutsideBoard(player));
     }
 
@@ -88,6 +92,7 @@ public class BoardTest {
         player.setPosition(new Vector2(0, 0));
         player.setDirection(Direction.WEST);
         board.movePlayer(player);
+        //TODO: make player is outside borders function in board
         //assertTrue(board.playerIsOutsideBoard(player));
     }
 
@@ -96,6 +101,7 @@ public class BoardTest {
         player.setPosition(new Vector2(0, 0));
         player.setDirection(Direction.SOUTH);
         board.movePlayer(player);
+        //TODO: make player is outside borders function in board
         //assertTrue(board.playerIsOutsideBoard(player));
     }
 
@@ -111,6 +117,7 @@ public class BoardTest {
     public void whenPlayerMovesOutsideBoardOnRightSideItShouldBeAccepted() {
         player.setPosition(new Vector2(BOARD_WIDTH - 1, 0));
         player.setDirection(Direction.EAST);
+        //TODO: Make canGo accept player go outside board
         assertTrue(board.canGo(player));
     }
 
@@ -118,6 +125,7 @@ public class BoardTest {
     public void whenPlayerMovesOutsideBoardOnTopItShouldBeAccepted() {
         player.setPosition(new Vector2(0, BOARD_HEIGHT-1));
         player.setDirection(Direction.NORTH);
+        //TODO: Make canGo accept player go outside board
         assertTrue(board.canGo(player));
     }
 
@@ -125,6 +133,7 @@ public class BoardTest {
     public void whenPlayerMovesOutsideUnderBoardItShouldBeAccepted() {
         player.setPosition(new Vector2(0, 0));
         player.setDirection(Direction.SOUTH);
+        //TODO: Make canGo accept player go outside board
         assertTrue(board.canGo(player));
     }
 
@@ -135,5 +144,16 @@ public class BoardTest {
         board.movePlayer(player);
         assertNotEquals(startPosition, player.getPosition());
     }
+
+    @Test
+    public void whenPlayerIsMovedUpItHasMovedOneStep() {
+        Vector2 startPosition = new Vector2(player.getPosition().x, player.getPosition().y);
+        player.setDirection(Direction.NORTH);
+        board.movePlayer(player);
+        assertEquals((int) startPosition.y+1, (int) player.getPosition().y);
+    }
+
+
+
 
 }
