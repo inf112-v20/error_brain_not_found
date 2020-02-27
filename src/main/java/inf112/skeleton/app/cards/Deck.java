@@ -7,6 +7,7 @@ import java.util.Stack;
 
 public class Deck {
     private Stack<ProgramCard> deck;
+
     private ProgramCard card;
     private int priority = 0;
     private boolean notGoodVariableName = true;
@@ -21,6 +22,7 @@ public class Deck {
      */
     public void makeNewDeck() {
         deck = new Stack<>();
+
 
         priority = makeRotateCards(priority);
         makeMoveCards(priority);
@@ -84,12 +86,12 @@ public class Deck {
             if (i % 3 == 0 && i < 18) {
                 card = new ProgramCard(priority, 3, Rotate.NONE, "Move 3");
             } else {
-                if (notGoodVariableName) {
+                if (checker) {
                     card = new ProgramCard(priority, 2, Rotate.NONE, "Move 2");
-                    notGoodVariableName = false;
+                    checker = false;
                 } else {
                     card = new ProgramCard(priority, 1, Rotate.NONE, "Move 1");
-                    notGoodVariableName = true;
+                    checker = true;
                 }
             }
             deck.push(card);
