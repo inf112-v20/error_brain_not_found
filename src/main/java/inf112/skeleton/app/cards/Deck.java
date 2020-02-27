@@ -8,6 +8,9 @@ import java.util.Stack;
 public class Deck {
     private Stack<ProgramCard> deck;
 
+    private ProgramCard card;
+    private int priority = 0;
+
     public Deck() {
         makeNewDeck();
         shuffleDeck();
@@ -18,7 +21,7 @@ public class Deck {
      */
     public void makeNewDeck() {
         deck = new Stack<>();
-        int priority = 0;
+
 
         priority = makeRotateCards(priority);
         makeMoveCards(priority);
@@ -53,7 +56,6 @@ public class Deck {
     private int makeRotateCards(int startPri){
         int priority = startPri;
         for (int i = 0; i < 36; i++) {
-            ProgramCard card;
             priority += 10;
             if (i % 2 == 0) {
                 card = new ProgramCard(priority, 0, Rotate.LEFT, "Rotate Left");
@@ -64,7 +66,7 @@ public class Deck {
         }
         for (int i = 0; i < 6; i++) {
             priority += 10;
-            ProgramCard card = new ProgramCard(priority, 0, Rotate.UTURN, "U-Turn");
+            card = new ProgramCard(priority, 0, Rotate.UTURN, "U-Turn");
             deck.push(card);
         }
         return priority;
@@ -76,21 +78,20 @@ public class Deck {
      */
     private void makeMoveCards(int startPri){
         int priority = startPri;
-        boolean notGoodVariableName = true;
+        boolean checker = true;
         for (int i = 0; i < 30; i++) {
             priority += 10;
-            ProgramCard card;
 
             // This is so the move tre cards not all get in the same range of priority.
             if (i % 3 == 0 && i < 18) {
                 card = new ProgramCard(priority, 3, Rotate.NONE, "Move 3");
             } else {
-                if (notGoodVariableName) {
+                if (checker) {
                     card = new ProgramCard(priority, 2, Rotate.NONE, "Move 2");
-                    notGoodVariableName = false;
+                    checker = false;
                 } else {
                     card = new ProgramCard(priority, 1, Rotate.NONE, "Move 1");
-                    notGoodVariableName = true;
+                    checker = true;
                 }
             }
             deck.push(card);
@@ -98,7 +99,7 @@ public class Deck {
         // Making the last 6 Move 1 cards
         for (int i = 0; i < 6; i++) {
             priority += 10;
-            ProgramCard card = new ProgramCard(priority, 1, Rotate.NONE, "Move 1");
+            card = new ProgramCard(priority, 1, Rotate.NONE, "Move 1");
             deck.push(card);
         }
     }
