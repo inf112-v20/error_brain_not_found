@@ -5,6 +5,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.enums.TileID;
 import inf112.skeleton.app.gameObjects.Flag;
 
 import java.util.ArrayList;
@@ -13,17 +14,6 @@ public class Board extends BoardLayers {
 
     private final ArrayList<Flag> flags;
     private ArrayList<Player> players;
-    private int player1 = 121;
-    private int player2 = 122;
-    private int player3 = 123;
-    private int player4 = 124;
-    private int player5 = 129;
-    private int player6 = 130;
-    private int player7 = 131;
-    private int player8 = 132;
-
-    private int flag1 = 55;
-    private int flag2 = 63;
 
     public Board() {
         this("assets/testMap.tmx");
@@ -73,21 +63,21 @@ public class Board extends BoardLayers {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
                 int ID = cell.getTile().getId();
-                if (ID == player1) {
+                if (ID == TileID.STARTPOS1.getId()) {
                     addPlayer(x, y);
-                } else if (ID == player2 && numPlayers > 1) {
+                } else if (ID == TileID.STARTPOS2.getId() && numPlayers > 1) {
                     addPlayer(x, y);
-                } else if (ID == player3 && numPlayers > 2) {
+                } else if (ID == TileID.STARTPOS3.getId() && numPlayers > 2) {
                     addPlayer(x, y);
-                } else if (ID == player4 && numPlayers > 3) {
+                } else if (ID == TileID.STARTPOS4.getId() && numPlayers > 3) {
                     addPlayer(x, y);
-                } else if (ID == player5 && numPlayers > 4) {
+                } else if (ID == TileID.STARTPOS5.getId() && numPlayers > 4) {
                     addPlayer(x, y);
-                } else if (ID == player6 && numPlayers > 5) {
+                } else if (ID == TileID.STARTPOS6.getId() && numPlayers > 5) {
                     addPlayer(x, y);
-                } else if (ID == player7 && numPlayers > 6) {
+                } else if (ID == TileID.STARTPOS7.getId() && numPlayers > 6) {
                     addPlayer(x, y);
-                } else if (ID == player8 && numPlayers > 7) {
+                } else if (ID == TileID.STARTPOS8.getId() && numPlayers > 7) {
                     addPlayer(x, y);
                 }
             }
