@@ -6,13 +6,20 @@ import inf112.skeleton.app.enums.Direction;
 
 public class Player {
 
+    private final int playerNr;
     private Vector2 position;
     private Direction direction;
 
-    public Player(Vector2 position) {
+    public Player(Vector2 position, int playerNr) {
         this.position = position;
-        direction = Direction.EAST;
+        this.direction = Direction.EAST;
+        this.playerNr = playerNr;
     }
+
+    /**
+     * @return number of player
+     */
+    public int getPlayerNr() {return playerNr; }
 
     /**
      * @return the {@link Vector2} to the player
