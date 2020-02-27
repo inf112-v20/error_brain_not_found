@@ -164,7 +164,7 @@ Tasks:
 
 
 ### Prioritisation of tasks
-etter obligen
+For the next iteration we are focusing on getting some game-logic so we can start to have a turn in our game.
  
 ### Main criteria for MVP
 * The game should be able to run, show a board with starting robot and programcards to this robot.
@@ -178,10 +178,10 @@ Made user stories and tests for everything, improved how the player moves, made 
 board works. And made many changes to it.
 
 ### Known bugs in 
-Push player is wrong, when other players are in a corner
+Push player is wrong, when other players are in a corner  
 Wrong start player
 
 ## Task 3
-The project build, test and runs this way…
+See `README.md -> How to run` 
 
 ### Manual test and how to run them
