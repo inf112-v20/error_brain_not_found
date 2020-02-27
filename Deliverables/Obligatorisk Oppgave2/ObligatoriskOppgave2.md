@@ -185,3 +185,5 @@ Wrong start player
 See `README.md -> How to run` 
 
 ### Manual test and how to run them
+The menu-screen goes away after clicking on it. 
+* start the game then click somewhere on the screen. Then the game-screen should come.
