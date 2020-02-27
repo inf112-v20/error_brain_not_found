@@ -2,23 +2,31 @@
 Team: error_no_brain_found
 
 ## Task 1
-The roles work fine. Maguns is doing a great work as Customer Contact and Mathias is working fine as team lead.
+The roles work fine. Maguns is doing a great work as Customer Contact and Mathias is working fine as team lead. 
 ### Roles
 Our roles are working fine, and we will stick with the roles we have previously given.
 
 #### Team lead
-Has control of team and make sure that everybody do their assignments. 
+Have overall control of the team. Make sure people do what they are supposed to, in the time-space they are 
+suppose to. Responsibility to create and get the Project Board up and running, and keep it up to date. Make sure that 
+everybody do their assignments.  
+
 #### Customer Contact
-Has control of the project structure and the progress. 
+The teams's main domain expert. Make sure the end product meets the requirements and expectations (High
+ level requirements) we have. Also have a depth control of the project structure and the progress.
+  
 #### Lead Tester
 Make sure all functions work as they're supposed to, especially testing edge cases not thought of when they're written.
+Also responsible for good user stories to every requirement.
+
 #### Lead Designer 
 Responsible for all graphics, sounds and music. Also responsible for making all the maps.
-#### Refactoring lead
 
+#### Refactoring lead
+Checks the code for errors, and try to clean-up code. Making code easy to read for others.
 
 ### Communication and group dynamic
-We communicate a lot better than last time. 
+We communicate a lot better than last time, something we go more in depth in `Retrospective`. 
 We discuss how we should do the project and the tests, and we're good at sharing knowledge.
 We communicate good as a team, and between the different roles.
 
