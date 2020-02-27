@@ -140,6 +140,21 @@ Tasks:
 - Make a function that swaps the position to two cards. 
 - Make tests for when cards are swapped.
 
+#### Several Boards:
+
+User-story:  
+As a player I want to be able to choose what board I want to play on, so that I can get a new challenge in the game. 
+
+Acceptance-criteria:  
+- If I pick a board, this is the board that will show on the screen.
+- If I pick a different board, the same tiles will have the same functions as the previous one. 
+
+Tasks:   
+- Make several boards.
+- Make tests for when a board is picked, this is the board that is actually used by the game. 
+   
+
+
 ### Prioritisation of tasks
 etter obligen
  
