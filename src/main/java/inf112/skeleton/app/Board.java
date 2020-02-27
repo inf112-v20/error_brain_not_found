@@ -64,21 +64,21 @@ public class Board extends BoardLayers {
                 TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
                 int ID = cell.getTile().getId();
                 if (ID == TileID.STARTPOS1.getId()) {
-                    addPlayer(x, y);
+                    addPlayer(x, y, 1);
                 } else if (ID == TileID.STARTPOS2.getId() && numPlayers > 1) {
-                    addPlayer(x, y);
+                    addPlayer(x, y, 2);
                 } else if (ID == TileID.STARTPOS3.getId() && numPlayers > 2) {
-                    addPlayer(x, y);
+                    addPlayer(x, y, 3);
                 } else if (ID == TileID.STARTPOS4.getId() && numPlayers > 3) {
-                    addPlayer(x, y);
+                    addPlayer(x, y, 4);
                 } else if (ID == TileID.STARTPOS5.getId() && numPlayers > 4) {
-                    addPlayer(x, y);
+                    addPlayer(x, y, 5);
                 } else if (ID == TileID.STARTPOS6.getId() && numPlayers > 5) {
-                    addPlayer(x, y);
+                    addPlayer(x, y, 6);
                 } else if (ID == TileID.STARTPOS7.getId() && numPlayers > 6) {
-                    addPlayer(x, y);
+                    addPlayer(x, y, 7);
                 } else if (ID == TileID.STARTPOS8.getId() && numPlayers > 7) {
-                    addPlayer(x, y);
+                    addPlayer(x, y, 8);
                 }
             }
         }
@@ -155,7 +155,6 @@ public class Board extends BoardLayers {
             default:
                 return;
         }
-
         player.setPosition(playerPosition);
         updatePlayers();
     }

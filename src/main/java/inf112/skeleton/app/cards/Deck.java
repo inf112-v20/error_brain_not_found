@@ -10,7 +10,7 @@ public class Deck {
 
     private ProgramCard card;
     private int priority = 0;
-    private boolean notGoodVariableName = true;
+    private boolean checker = true;
 
     public Deck() {
         makeNewDeck();
