@@ -24,11 +24,12 @@ We communicate good as a team, and between the different roles.
 
 
 ### Retrospective
-Our project structure started out a bit unorganized, but we manged to clean it up early. And after that we have only
-become better day by day. Until now we have gotten a working board and we are able to move the player around on it. We 
-have used a lot of time to catch everyone up to date on how the board in `libGDX` work. People have struggled on 
-getting their head around how parts of `libGDX` work and how to use them with our code. We have used some time on
-sharing our knowledge, so everyone feel comfortable to write code and understanding what to get from `libGDX`.
+Our project structure started out a bit unorganized, people started with requirements on their own and the team felt 
+left out. Since they didnt want to do something that was already working on, but we manged to clean it up early. And 
+after that we have become better day by day. Until now we have gotten a working board and we are able to move the player 
+around on it. We have used a lot of time to catch everyone up to date on how the board in `libGDX` work. People have 
+struggled on getting their head around how parts of `libGDX` work and how to use them with our code. We have used some 
+time on sharing our knowledge, so everyone feel comfortable to write code and understanding what to get from `libGDX`.
 
 In meetings we have tried to do some pair-programming. When we are working on the project outside of meetings, and get 
 stuck on a problem we try to ask someone in the team to see the problem and if their able to help. If they have time we 
@@ -43,13 +44,15 @@ each other to complete in a given time.
 
 We can still be a better at communication, get a better communication flow through the week. 
 
-
+Git has been a bottleneck in this project. There are some in the group that understand the basics on how to use git, but
+most of the had never used git before and didnt in the start ask for explaining. So that made it hard for them to start, 
+but after they asked for an explaining they are starting to get confident with it. But its still a way to go. Small tasks
+takes longer then it needs to, just because people are afraid to start and this is since they don't 100% have they git 
+experience. But this have gotten much better after they asked for help.  
 
 #### Improvement points from retrospective
-
-
-
-
+* Still getting better at communication in between meetings, on Slack ang go and ask in person
+* Using git and get to know it well, and not be afraid for mess it up
 
 ## Task 2
 
