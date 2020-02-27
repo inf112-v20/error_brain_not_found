@@ -1,7 +1,7 @@
 # INF112 Maven template 
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2681b622f0f64c85b70112115c4eae89)](https://app.codacy.com/gh/inf112-v20/error_brain_not_found?utm_source=github.com&utm_medium=referral&utm_content=inf112-v20/error_brain_not_found&utm_campaign=Badge_Grade_Settings)
-
+[![Build Status](https://travis-ci.com/inf112-v20/error_brain_not_found.svg?branch=develop)](https://travis-ci.com/inf112-v20/error_brain_not_found)
 Simple skeleton with libgdx. 
 
 ## How to run
