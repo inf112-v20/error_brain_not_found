@@ -112,10 +112,33 @@ in the same direction it was pushed.
 - If I try to go on the same cell as another player, the player will move in the 
 same direction it was pushed. 
 
+#### Programcards:
+Show programcards and let the player draw cards, and making program.
+
+User-story:
+As a player I want to be able to draw cards, so that I can plan the program for the robot.
+
+Acceptance-criteria:
+- If I draw cards, I will have the correct amount of cards given to me.
+- Given that I have drawn cards, I will have them displayed on the screen.
+
 Tasks:
-- Make a check that says if a player is on the cell the player tries to move to. 
-- A method that moves the player in the direction it is pushed. 
-- Tests to fulfill acceptance-criteria.
+- Make a function that let the player draw cards from the deck.
+- Test that the function draws the correct amount of cards and delegate them to correct player.
+- Make a function that displays the cards on the screen.
+
+
+User-story:     
+As a player I want to be able to rearrange the cards, so that I can make a program for the robot.
+
+Acceptance-criteria:
+- If I pick up one card, I can decide where to put this card down again.
+- When I put one card on top of the other, the cards will swap position. 
+
+Tasks:
+- Make a function that takes input from user and tells if a user picks up a card. 
+- Make a function that swaps the position to two cards. 
+- Make tests for when cards are swapped.
 
 ### Prioritisation of tasks
 etter obligen
