@@ -13,6 +13,7 @@ public class Board extends BoardLayers {
 
     private final ArrayList<Flag> flags;
     private ArrayList<Player> players;
+    private Player player1;
 
     public Board() {
         this("assets/testMap.tmx");
@@ -63,21 +64,21 @@ public class Board extends BoardLayers {
                 TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
                 int ID = cell.getTile().getId();
                 if (ID == 121) {
-                    addPlayer(x, y);
+                    addPlayer(x, y, 1);
                 } else if (ID == 122 && numPlayers > 1) {
-                    addPlayer(x, y);
+                    addPlayer(x, y, 2);
                 } else if (ID == 123 && numPlayers > 2) {
-                    addPlayer(x, y);
+                    addPlayer(x, y, 3);
                 } else if (ID == 124 && numPlayers > 3) {
-                    addPlayer(x, y);
+                    addPlayer(x, y, 4);
                 } else if (ID == 129 && numPlayers > 4) {
-                    addPlayer(x, y);
+                    addPlayer(x, y, 5);
                 } else if (ID == 130 && numPlayers > 5) {
-                    addPlayer(x, y);
+                    addPlayer(x, y, 6);
                 } else if (ID == 131 && numPlayers > 6) {
-                    addPlayer(x, y);
+                    addPlayer(x, y, 7);
                 } else if (ID == 132 && numPlayers > 7) {
-                    addPlayer(x, y);
+                    addPlayer(x, y, 8);
                 }
             }
         }
@@ -92,12 +93,21 @@ public class Board extends BoardLayers {
      * @param x coordinate
      * @param y coordinate
      */
-    public void addPlayer(int x, int y) {
+    public void addPlayer(int x, int y, int playerNumber) {
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
         TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("player");
         cell.setTile(tileSet.getTile(137));
         playerLayer.setCell(x, y, cell);
-        players.add(new Player(new Vector2(x, y)));
+        players.add(new Player(new Vector2(x, y), playerNumber));
+    }
+
+    public Player getPlayer1() {
+        for (Player player : players) {
+            if (player.getPlayerNr() == 1) {
+                return player;
+            }
+        }
+        return players.get(0);
     }
 
     public boolean canGo(Player player) {

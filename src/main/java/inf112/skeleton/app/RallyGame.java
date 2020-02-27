@@ -24,7 +24,7 @@ public class RallyGame extends Game {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyUp(int keycode) {
-                Player player = board.getPlayers().get(0);
+                Player player = board.getPlayer1();
                 if (keycode == Input.Keys.RIGHT) {
                     player.setDirection(Direction.EAST);
                 } else if (keycode == Input.Keys.LEFT) {
