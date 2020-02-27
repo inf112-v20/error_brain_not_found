@@ -32,30 +32,28 @@ public class BoardTest {
 
 
     @Test
-    public void whenBoardIsInitializedMapIsNotNull() {
+    public void whenBoardIsInitializedMapIsNotNullTest() {
         assertNotNull(board.getMap());
     }
 
     @Test
-    public void whenBoardIsInitializedItHasCorrectNumberOfPlayers() {
-
-
+    public void whenBoardIsInitializedItHasCorrectNumberOfPlayersTest() {
         assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME, board.getPlayers().size());
     }
 
     @Test
-    public void whenAPlayerIsAddedTheBoardHasIncrementedPlayersByOne() {
+    public void whenAPlayerIsAddedTheBoardHasIncrementedPlayersByOneTest() {
         board.addPlayer(0,0, 1);
         assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME + 1, board.getPlayers().size());
     }
 
     @Test
-    public void whenBoardIsInitBoardWidthIsTheSameAsExpected() {
+    public void whenBoardIsInitBoardWidthIsTheSameAsExpectedTest() {
         assertEquals(BOARD_WIDTH, board.getWidth());
     }
 
     @Test
-    public void whenBoardIsInitBoardHeightIsTheSameAsExpected() {
+    public void whenBoardIsInitBoardHeightIsTheSameAsExpectedTest() {
         assertEquals(BOARD_HEIGHT, board.getHeight());
     }
 
@@ -68,7 +66,7 @@ public class BoardTest {
      *
       */
     @Test
-    public void whenPlayerIsOutsideOnTopOfBoardItIsDetected() {
+    public void whenPlayerIsOutsideOnTopOfBoardItIsDetectedTest() {
         player.setPosition(new Vector2(0, BOARD_HEIGHT-1));
         player.setDirection(Direction.NORTH);
         board.movePlayer(player);
@@ -76,7 +74,7 @@ public class BoardTest {
     }
 
     @Test
-    public void whenPlayerIsOutsideOnRightSideOfBoardItIsDetected() {
+    public void whenPlayerIsOutsideOnRightSideOfBoardItIsDetectedTest() {
         player.setPosition(new Vector2(BOARD_WIDTH-1, 0));
         player.setDirection(Direction.EAST);
         board.movePlayer(player);
@@ -84,7 +82,7 @@ public class BoardTest {
     }
 
     @Test
-    public void whenPlayerIsOutsideOnLeftSideOfBoardItIsDetected() {
+    public void whenPlayerIsOutsideOnLeftSideOfBoardItIsDetectedTest() {
         player.setPosition(new Vector2(0, 0));
         player.setDirection(Direction.WEST);
         board.movePlayer(player);
@@ -92,7 +90,7 @@ public class BoardTest {
     }
 
     @Test
-    public void whenPlayerIsOutsideUnderTheBoardItIsDetected() {
+    public void whenPlayerIsOutsideUnderTheBoardItIsDetectedTest() {
         player.setPosition(new Vector2(0, 0));
         player.setDirection(Direction.SOUTH);
         board.movePlayer(player);
@@ -101,35 +99,35 @@ public class BoardTest {
 
 
     @Test
-    public void whenPlayerMovesOutsideBoardOnLeftSideItShouldBeAccepted() {
+    public void whenPlayerMovesOutsideBoardOnLeftSideItShouldBeAcceptedTest() {
         player.setPosition(new Vector2(0, 0));
         player.setDirection(Direction.WEST);
         assertTrue(board.canGo(player));
     }
 
     @Test
-    public void whenPlayerMovesOutsideBoardOnRightSideItShouldBeAccepted() {
+    public void whenPlayerMovesOutsideBoardOnRightSideItShouldBeAcceptedTest() {
         player.setPosition(new Vector2(BOARD_WIDTH - 1, 0));
         player.setDirection(Direction.EAST);
         assertTrue(board.canGo(player));
     }
 
     @Test
-    public void whenPlayerMovesOutsideBoardOnTopItShouldBeAccepted() {
+    public void whenPlayerMovesOutsideBoardOnTopItShouldBeAcceptedTest() {
         player.setPosition(new Vector2(0, BOARD_HEIGHT-1));
         player.setDirection(Direction.NORTH);
         assertTrue(board.canGo(player));
     }
 
     @Test
-    public void whenPlayerMovesOutsideUnderBoardItShouldBeAccepted() {
+    public void whenPlayerMovesOutsideUnderBoardItShouldBeAcceptedTest() {
         player.setPosition(new Vector2(0, 0));
         player.setDirection(Direction.SOUTH);
         assertTrue(board.canGo(player));
     }
 
     @Test
-    public void whenPlayerIsMovedPlayerHasChangedCoordinates() {
+    public void whenPlayerIsMovedPlayerHasChangedCoordinatesTest() {
         Vector2 startPosition = new Vector2(player.getPosition().x, player.getPosition().y);
         player.setDirection(Direction.EAST);
         board.movePlayer(player);
