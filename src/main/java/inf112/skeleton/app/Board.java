@@ -14,7 +14,6 @@ public class Board extends BoardLayers {
 
     private final ArrayList<Flag> flags;
     private ArrayList<Player> players;
-    private Player player1;
 
     public Board() {
         this("assets/testMap.tmx");
@@ -33,7 +32,7 @@ public class Board extends BoardLayers {
      * Finds the where the flags are on the board and makes {@link Flag} objects.
      * And puts them in to the flag array.
      */
-    public void findFlags(){
+    public void findFlags() {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
                 try {
@@ -86,7 +85,6 @@ public class Board extends BoardLayers {
     }
 
 
-
     /**
      * Add a player to the player layer in coordinate (x, y) and
      * add that player to the list of players
@@ -99,7 +97,8 @@ public class Board extends BoardLayers {
         TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("player");
         cell.setTile(tileSet.getTile(137));
         playerLayer.setCell(x, y, cell);
-        players.add(new Player(new Vector2(x, y), playerNumber));
+        Player player = new Player(new Vector2(x, y), playerNumber);
+        players.add(player);
     }
 
     public Player getPlayer1() {
@@ -115,6 +114,7 @@ public class Board extends BoardLayers {
         Vector2 position = player.getPosition();
         Direction direction = player.getDirection();
 
+        shouldPush(position, direction);
         if (direction == Direction.EAST) {
             return position.x < boardWidth - 1;
         } else if (direction == Direction.WEST) {
@@ -135,15 +135,10 @@ public class Board extends BoardLayers {
      * @param player that is suppose to move
      */
     public void movePlayer(Player player) {
-        if (!canGo(player)) {
-            return;
-        }
         Vector2 playerPosition = player.getPosition();
         Direction playerDirection = player.getDirection();
 
-        TiledMapTileLayer.Cell cell = playerLayer.getCell((int) playerPosition.x, (int) playerPosition.y);
-
-        playerLayer.setCell((int) playerPosition.x, (int) playerPosition.y, new TiledMapTileLayer.Cell());
+        shouldPush(playerPosition, playerDirection);
         switch (playerDirection) {
             case NORTH:
                 playerPosition.set(playerPosition.x, playerPosition.y + 1);
@@ -162,9 +157,76 @@ public class Board extends BoardLayers {
         }
 
         player.setPosition(playerPosition);
-        playerLayer.setCell((int) playerPosition.x, (int) playerPosition.y, cell);
+        updatePlayers();
     }
 
+    /**
+     * If player moved outside board, respawn them on last backup location
+     * @param player current player
+     */
+    private void outsideBoard(Player player) {
+        if (player.getPosition().x < 0 || player.getPosition().x > 15 || player.getPosition().y < 0 || player.getPosition().y > 11) {
+            player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
+        }
+    }
+
+    /**
+     * Check if the moving player should try to push another player
+     * @param position  of the player that wants to move
+     * @param direction of the player that wants to move
+     */
+    private void shouldPush(Vector2 position, Direction direction) {
+        for (Player enemyPlayer : players) {
+            if (direction == Direction.EAST && enemyPlayer.getPosition().x == position.x + 1 && enemyPlayer.getPosition().y == position.y) {
+                pushPlayer(enemyPlayer, direction);
+            } else if (direction == Direction.WEST && enemyPlayer.getPosition().x == position.x - 1 && enemyPlayer.getPosition().y == position.y) {
+                pushPlayer(enemyPlayer, direction);
+            } else if (direction == Direction.NORTH && enemyPlayer.getPosition().x == position.x && enemyPlayer.getPosition().y == position.y + 1) {
+                pushPlayer(enemyPlayer, direction);
+            } else if (direction == Direction.SOUTH && enemyPlayer.getPosition().x == position.x && enemyPlayer.getPosition().y == position.y - 1) {
+                pushPlayer(enemyPlayer, direction);
+            }
+        }
+    }
+
+    /**
+     * @param enemyPlayer enemy player that should be pushed
+     * @param direction direction to push enemy player in
+     */
+    private void pushPlayer(Player enemyPlayer, Direction direction) {
+        switch (direction) {
+            case SOUTH:
+                enemyPlayer.setPosition(new Vector2(enemyPlayer.getPosition().x, enemyPlayer.getPosition().y - 1));
+                break;
+            case WEST:
+                enemyPlayer.setPosition(new Vector2(enemyPlayer.getPosition().x - 1, enemyPlayer.getPosition().y));
+                break;
+            case EAST:
+                enemyPlayer.setPosition(new Vector2(enemyPlayer.getPosition().x + 1, enemyPlayer.getPosition().y));
+                break;
+            case NORTH:
+                enemyPlayer.setPosition(new Vector2(enemyPlayer.getPosition().x, enemyPlayer.getPosition().y + 1));
+                break;
+            default:
+                break;
+        }
+    }
+
+    //TODO: BUG when you are crashing with a player in the corner. Ist possible to only update the specific tile(?).
+    public void updatePlayers() {
+        for (int y = 0; y < boardHeight; y++) {
+            for (int x = 0; x < boardWidth; x++) {
+                playerLayer.setCell(x, y, null);
+            }
+        }
+        for (Player player : players) {
+            TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+            TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("player");
+            cell.setTile(tileSet.getTile(137));
+            outsideBoard(player);
+            playerLayer.setCell((int) player.getPosition().x, (int) player.getPosition().y, cell);
+        }
+    }
 
     /**
      * @return list of all players
