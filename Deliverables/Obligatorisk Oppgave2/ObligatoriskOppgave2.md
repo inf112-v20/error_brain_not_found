@@ -178,8 +178,8 @@ Made user stories and tests for everything, improved how the player moves, made 
 board works. And made many changes to it.
 
 ### Known bugs in 
-Push player is wrong, when other players are in a corner  
-Wrong start player
+When player pushes an other player outside of the board and he ends up on the spawningpoint to the other player they 
+end-up on-top of each other.
 
 ## Task 3
 See `README.md -> How to run` 
