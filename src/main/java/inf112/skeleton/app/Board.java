@@ -151,6 +151,8 @@ public class Board extends BoardLayers {
             case SOUTH:
                 playerPosition.set(playerPosition.x, playerPosition.y - 1);
                 break;
+            default:
+                return;
         }
 
         player.setPosition(playerPosition);
@@ -203,6 +205,8 @@ public class Board extends BoardLayers {
                 break;
             case NORTH:
                 enemyPlayer.setPosition(new Vector2(enemyPlayer.getPosition().x, enemyPlayer.getPosition().y + 1));
+                break;
+            default:
                 break;
         }
     }
