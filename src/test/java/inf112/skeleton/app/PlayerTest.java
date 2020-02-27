@@ -18,35 +18,35 @@ public class PlayerTest {
     }
 
     @Test
-    public void positionGivenToPlayerIsSameAsPlayerGives() {
+    public void positionGivenToPlayerIsSameAsPlayerGivesTest() {
         assertEquals(0, player.getPosition().x, 0.01);
 
     }
 
     @Test
-    public void whenNewXCoordinateIsGivenPlayersCoordinatesChanged() {
+    public void whenNewXCoordinateIsGivenPlayersCoordinatesChangedTest() {
         player.setPosition(new Vector2(1,0));
         assertEquals(1, player.getPosition().x, 0.01);
     }
 
     @Test
-    public void whenNewYCoordinateIsGivenPlayersCoordinatesChanged() {
+    public void whenNewYCoordinateIsGivenPlayersCoordinatesChangedTest() {
         player.setPosition(new Vector2(0, 1));
         assertEquals(1, player.getPosition().y, 0.01);
     }
 
     @Test
-    public void whenNewPlayerIsMadeDirectionIsSetToEast() {
+    public void whenNewPlayerIsMadeDirectionIsSetToEastTest() {
         assertEquals(Direction.EAST, player.getDirection());
     }
 
     @Test
-    public void whenPlayersStartDirectionIsTurnedLeftItGivesNorthDirection() {
+    public void whenPlayersStartDirectionIsTurnedLeftItGivesNorthDirectionTest() {
         assertEquals(Direction.NORTH, player.getDirection().turnLeft());
     }
 
     @Test
-    public void whenPlayersStartDirectionIsTurnedRightItGivesSouthDirection() {
+    public void whenPlayersStartDirectionIsTurnedRightItGivesSouthDirectionTest() {
         assertEquals(Direction.SOUTH, player.getDirection().turnRight());
     }
 
