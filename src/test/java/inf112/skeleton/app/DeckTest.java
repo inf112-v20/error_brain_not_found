@@ -18,18 +18,18 @@ public class DeckTest {
     }
 
     @Test
-    public void whenNewDeckIsMadeTheNumberOfProgramCardsInDeckIsNumberOfCards() {
+    public void whenNewDeckIsMadeTheNumberOfProgramCardsInDeckIsNumberOfCardsTest() {
         assertEquals(NUMBER_OF_CARDS, deck.deckSize());
     }
 
     @Test
-    public void whenNewDeckIsMadeButNotShuffledFirstCardIsAMove1Card() {
+    public void whenNewDeckIsMadeButNotShuffledFirstCardIsAMove1CardTest() {
         deck.makeNewDeck();
         assertEquals(1, deck.drawCard().getDistance());
     }
 
     @Test
-    public void whenDeckIsNotShuffledTheFirstCardsAreOfTypeMoveOneCard() {
+    public void whenDeckIsNotShuffledTheFirstCardsAreOfTypeMoveOneCardTest() {
         deck.makeNewDeck();
         for (int i = 0; i < NUMBER_OF_MOVE_ONE_CARDS; i++) {
             assertEquals(1, deck.drawCard().getDistance());
@@ -37,7 +37,7 @@ public class DeckTest {
     }
 
     @Test
-    public void whenACardIsDrawnTheSizeIsDecreasedByOne() {
+    public void whenACardIsDrawnTheSizeIsDecreasedByOneTest() {
         deck.drawCard();
         assertEquals(NUMBER_OF_CARDS-1, deck.deckSize());
     }
