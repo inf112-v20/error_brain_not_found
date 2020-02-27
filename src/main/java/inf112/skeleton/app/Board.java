@@ -44,7 +44,7 @@ public class Board {
         boardWidth = properties.get("width", Integer.class);
         boardHeight = properties.get("height", Integer.class);
 
-        addPlayersToStartPositions(2);
+        addPlayersToStartPositions(7);
         movePlayer(players.get(0));
     }
 
