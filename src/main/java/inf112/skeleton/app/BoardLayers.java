@@ -34,7 +34,6 @@ public abstract class BoardLayers {
         MapProperties properties = tiledMap.getProperties();
         boardWidth = properties.get("width", Integer.class);
         boardHeight = properties.get("height", Integer.class);
-
     }
 
 

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 public class Board extends BoardLayers {
 
+    private final ArrayList<Vector2> holes = new ArrayList<>();
     private final ArrayList<Flag> flags;
     private ArrayList<Player> players;
 
@@ -24,6 +25,7 @@ public class Board extends BoardLayers {
         this.players = new ArrayList<>();
         this.flags = new ArrayList<>();
         findFlags();
+        findHoles();
         addPlayersToStartPositions(2);
     }
 
@@ -31,9 +33,10 @@ public class Board extends BoardLayers {
      * Finds the where the flags are on the board and makes {@link Flag} objects.
      * And puts them in to the flag array.
      */
-    public void findFlags(){
-        for (int x = 0; x < groundLayer.getWidth(); x++) {
-            for (int y = 0; y < groundLayer.getHeight(); y++) {
+
+    public void findFlags() {
+        for (int x = 0; x < flagLayer.getWidth(); x++) {
+            for (int y = 0; y < flagLayer.getHeight(); y++) {
                 try {
                     TiledMapTileLayer.Cell cell = flagLayer.getCell(x, y);
                     int ID = cell.getTile().getId();
@@ -44,8 +47,21 @@ public class Board extends BoardLayers {
                     } else if (ID == 71) {
                         flags.add(new Flag(3, x, y));
                     } //TODO: Find the last ID to the 4th flag
-                } catch (Exception e){
+                } catch (Exception e) {
                     // There are so many nullPointers in this layer
+                }
+            }
+        }
+    }
+
+    public void findHoles() {
+        for (int x = 0; x < groundLayer.getWidth(); x++) {
+            for (int y = 0; y < groundLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
+                int ID = cell.getTile().getId();
+                if (ID == 6) {
+                    System.out.println(x + " "+ y);
+                    holes.add(new Vector2(x, y));
                 }
             }
         }
@@ -116,6 +132,41 @@ public class Board extends BoardLayers {
         return false;
     }
 
+
+    private boolean doIHaveANeighbourInMyDirection(Player player, Direction direction) {
+        Vector2 position = player.getPosition();
+
+        for (Player enemyPlayer : players) {
+            if (direction == Direction.EAST && enemyPlayer.getPosition().x == position.x + 1 && enemyPlayer.getPosition().y == position.y) {
+                return true;
+            } else if (direction == Direction.WEST && enemyPlayer.getPosition().x == position.x - 1 && enemyPlayer.getPosition().y == position.y) {
+                return true;
+            } else if (direction == Direction.NORTH && enemyPlayer.getPosition().x == position.x && enemyPlayer.getPosition().y == position.y + 1) {
+                return true;
+            } else if (direction == Direction.SOUTH && enemyPlayer.getPosition().x == position.x && enemyPlayer.getPosition().y == position.y - 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean thereIsAHole(Player player, Direction direction) {
+        Vector2 position = player.getPosition();
+        for (Vector2 vector2 : holes) {
+            if (direction == Direction.EAST && vector2.x == position.x + 1 && vector2.y == position.y) {
+                return true;
+            } else if (direction == Direction.WEST && vector2.x == position.x - 1 && vector2.y == position.y) {
+                return true;
+            } else if (direction == Direction.NORTH && vector2.x == position.x && vector2.y == position.y + 1) {
+                return true;
+            } else if (direction == Direction.SOUTH && vector2.x == position.x && vector2.y == position.y - 1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
     /**
      * Moves the player from current position one tile in the direction it's facing.
      * Removes the cell its currently on and moves the content of that cell to the cell it moves to.
@@ -149,11 +200,65 @@ public class Board extends BoardLayers {
             default:
                 return;
         }
-
+        System.out.println(player.getPosition().toString());
         player.setPosition(playerPosition);
-        playerLayer.setCell((int) playerPosition.x, (int) playerPosition.y, cell);
+        //playerLayer.setCell((int) playerPosition.x, (int) playerPosition.y, cell);
+        updatePlayers();
     }
 
+    /**
+     * @param position  of the player that wants to move
+     * @param direction of the player that wants to move
+     */
+    private void occupiedTile(Vector2 position, Direction direction) {
+        for (Player enemyPlayer : players) {
+            if (direction == Direction.EAST && enemyPlayer.getPosition().x == position.x + 1 && enemyPlayer.getPosition().y == position.y) {
+                handleCrash(enemyPlayer, direction);
+            } else if (direction == Direction.WEST && enemyPlayer.getPosition().x == position.x - 1 && enemyPlayer.getPosition().y == position.y) {
+                handleCrash(enemyPlayer, direction);
+            } else if (direction == Direction.NORTH && enemyPlayer.getPosition().x == position.x && enemyPlayer.getPosition().y == position.y + 1) {
+                handleCrash(enemyPlayer, direction);
+            } else if (direction == Direction.SOUTH && enemyPlayer.getPosition().x == position.x && enemyPlayer.getPosition().y == position.y - 1) {
+                handleCrash(enemyPlayer, direction);
+            }
+        }
+    }
+
+    private void handleCrash(Player enemyPlayer, Direction direction) {
+        System.out.println("you hit me");
+        switch (direction) {
+            case SOUTH:
+                enemyPlayer.setPosition(new Vector2(enemyPlayer.getPosition().x, enemyPlayer.getPosition().y - 1));
+                break;
+            case WEST:
+                enemyPlayer.setPosition(new Vector2(enemyPlayer.getPosition().x - 1, enemyPlayer.getPosition().y));
+                break;
+            case EAST:
+                enemyPlayer.setPosition(new Vector2(enemyPlayer.getPosition().x + 1, enemyPlayer.getPosition().y));
+                break;
+            case NORTH:
+                enemyPlayer.setPosition(new Vector2(enemyPlayer.getPosition().x, enemyPlayer.getPosition().y + 1));
+                break;
+            default:
+                System.out.println("I should never run!");
+        }
+        updatePlayers();
+    }
+
+    //TODO: BUG when you are crashing with a player in the corner. Ist possible to only update the specific tile(?).
+    private void updatePlayers() {
+        for (int y = 0; y < boardHeight; y++) {
+            for (int x = 0; x < boardWidth; x++) {
+                playerLayer.setCell(x, y, null);
+            }
+        }
+        for (Player player : players) {
+            TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+            TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("player");
+            cell.setTile(tileSet.getTile(137));
+            playerLayer.setCell((int) player.getPosition().x, (int) player.getPosition().y, cell);
+        }
+    }
 
     /**
      * @return list of all players
