@@ -18,12 +18,23 @@ Responsible for all graphics, sounds and music. Also responsible for making all 
 
 
 ### Communication and group dynamic
-We communicate alot better than last time. 
+We communicate a lot better than last time. 
 We discuss how we should do the project and the tests, and we're good at sharing knowledge.
 We communicate good as a team, and between the different roles.
 
 
 ### Retrospective
+Our project structure started out a bit unorganized, but we manged to clean it up early. And after that we have only
+become better day by day. Until now we have gotten a working board and we are able to move the player around on it. We 
+have used a lot of time to catch everyone up to date on how the board in `libGDX` work. People have struggled on 
+getting our head around how parts of `libGDX` work with others. 
+We have improved our ability to delegate work tasks and define them. Your workflow is going better, and we are planning 
+our code in advance. So the tester are able to make up a overview of what she want to test in that spesific domain. We 
+give each other better feedback, on what we have done, but also what we should improve in our code and also what we want 
+each other to complete in a given time.   
+
+We can still be a better at communication, get a better communication flow through the week. 
+
 
 
 #### Improvement points from retrospective
@@ -87,15 +98,17 @@ Tasks:
 - Tests to fulfill acceptance-criteria.
 
 ### Prioritisation of tasks
- 
+
  
 ### Main criteria for MVP
 
 
 ### Tasks done since last assignment
-
+Made user stories and tests for everything, improved how the player moves, made flags and 
 
 ### Known bugs in 
+Push player is wrong
+Wrong start player
 
 ## Task 3
 The project build, test and runs this way…
