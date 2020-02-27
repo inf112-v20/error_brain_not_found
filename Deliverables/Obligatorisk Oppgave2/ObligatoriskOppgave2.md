@@ -112,7 +112,11 @@ Tasks:
 
  
 ### Main criteria for MVP
-
+* The game should be able to run, show a board with starting robot and programcards to this robot.
+* The player is able to pick programcards and place them so that the robot can move.
+* The game should be able to do a round, and do the phases in the correct order in that round.
+* The robot should be able to win by going to the flags in a specific order.
+* The robot is stopped by walls, and respawned when outside board. 
 
 ### Tasks done since last assignment
 Made user stories and tests for everything, improved how the player moves, made flags and 
