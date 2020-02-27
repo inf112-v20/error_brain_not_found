@@ -23,7 +23,7 @@ public class DirectionTest {
     }
 
     @Test
-    public void whenInitialisedRightValueIsGiven(){
+    public void whenInitialisedRightValueIsGivenTest(){
         assertEquals(Direction.WEST,west);
         assertEquals(Direction.NORTH,north);
         assertEquals(Direction.EAST,east);
@@ -32,62 +32,62 @@ public class DirectionTest {
     }
 
     @Test
-    public void whenWestIsTurnedLeftNewDirectionIsSouth() {
+    public void whenWestIsTurnedLeftNewDirectionIsSouthTest() {
         assertEquals(Direction.SOUTH, west.turnLeft());
     }
 
     @Test
-    public void whenNorthIsTurnedLeftNewDirectionIsWest() {
+    public void whenNorthIsTurnedLeftNewDirectionIsWestTest() {
         assertEquals(Direction.WEST, north.turnLeft());
     }
 
     @Test
-    public void whenEastIsTurnedLeftNewDirectionIsNorth() {
+    public void whenEastIsTurnedLeftNewDirectionIsNorthTest() {
         assertEquals(Direction.NORTH, east.turnLeft());
     }
 
     @Test
-    public void whenSouthIsTurnedLeftNewDirectionIsEast() {
+    public void whenSouthIsTurnedLeftNewDirectionIsEastTest() {
         assertEquals(Direction.EAST, south.turnLeft());
     }
 
     @Test
-    public void whenWestIsTurnedRightNewDirectionIsNorth() {
+    public void whenWestIsTurnedRightNewDirectionIsNorthTest() {
         assertEquals(Direction.NORTH, west.turnRight());
     }
 
     @Test
-    public void whenNorthIsTurnedRightNewDirectionIsEast() {
+    public void whenNorthIsTurnedRightNewDirectionIsEastTest() {
         assertEquals(Direction.EAST, north.turnRight());
     }
 
     @Test
-    public void whenEastIsTurnedRightNewDirectionIsSouth() {
+    public void whenEastIsTurnedRightNewDirectionIsSouthTest() {
         assertEquals(Direction.SOUTH, east.turnRight());
     }
 
     @Test
-    public void whenSouthIsTurnedRightNewDirectionIsWest() {
+    public void whenSouthIsTurnedRightNewDirectionIsWestTest() {
         assertEquals(Direction.WEST, south.turnRight());
     }
 
     @Test
-    public void whenNorthIsTurned360DegreesItWillBeNorthAfterwards() {
+    public void whenNorthIsTurned360DegreesItWillBeNorthAfterwardsTest() {
         assertEquals(Direction.NORTH, north.turnRight().turnRight().turnRight().turnRight());
     }
 
     @Test
-    public void whenSouthIsTurned360DegreesItWillBeSouthAfterwards() {
+    public void whenSouthIsTurned360DegreesItWillBeSouthAfterwardsTest() {
         assertEquals(Direction.SOUTH, south.turnRight().turnRight().turnRight().turnRight());
     }
 
     @Test
-    public void whenEastIsTurned360DegreesItWillBeEastAfterwards() {
+    public void whenEastIsTurned360DegreesItWillBeEastAfterwardsTest() {
         assertEquals(Direction.EAST, east.turnRight().turnRight().turnRight().turnRight());
     }
 
     @Test
-    public void whenWestIsTurned360DegreesItWillBeWestAfterwards() {
+    public void whenWestIsTurned360DegreesItWillBeWestAfterwardsTest() {
         assertEquals(Direction.WEST, west.turnRight().turnRight().turnRight().turnRight());
     }
 

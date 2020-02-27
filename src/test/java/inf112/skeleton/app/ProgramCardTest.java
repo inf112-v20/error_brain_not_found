@@ -17,7 +17,7 @@ public class ProgramCardTest {
     }
 
     @Test
-    public void whenRotationIsSetToNoneItHasNoRotation() {
+    public void whenRotationIsSetToNoneItHasNoRotationTest() {
         assertEquals(Rotate.NONE, card.getRotate());
     }
 

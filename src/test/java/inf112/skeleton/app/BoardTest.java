@@ -32,35 +32,33 @@ public class BoardTest {
 
 
     @Test
-    public void whenBoardIsInitializedMapIsNotNull() {
+    public void whenBoardIsInitializedMapIsNotNullTest() {
         assertNotNull(board.getMap());
     }
 
     @Test
-    public void whenBoardIsInitializedItHasCorrectNumberOfPlayers() {
-
-
+    public void whenBoardIsInitializedItHasCorrectNumberOfPlayersTest() {
         assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME, board.getPlayers().size());
     }
 
     @Test
-    public void whenAPlayerIsAddedTheBoardHasIncrementedPlayersByOne() {
+    public void whenAPlayerIsAddedTheBoardHasIncrementedPlayersByOneTest() {
         board.addPlayer(0,0, 1);
         assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME + 1, board.getPlayers().size());
     }
 
     @Test
-    public void whenBoardIsInitBoardWidthIsTheSameAsExpected() {
+    public void whenBoardIsInitBoardWidthIsTheSameAsExpectedTest() {
         assertEquals(BOARD_WIDTH, board.getWidth());
     }
 
     @Test
-    public void whenBoardIsInitBoardHeightIsTheSameAsExpected() {
+    public void whenBoardIsInitBoardHeightIsTheSameAsExpectedTest() {
         assertEquals(BOARD_HEIGHT, board.getHeight());
     }
 
     @Test
-    public void whenPlayerIsMovedPlayerHasChangedCoordinates() {
+    public void whenPlayerIsMovedPlayerHasChangedCoordinatesTest() {
         Vector2 startPosition = new Vector2(player.getPosition().x, player.getPosition().y);
         player.setDirection(Direction.EAST);
         board.movePlayer(player);
