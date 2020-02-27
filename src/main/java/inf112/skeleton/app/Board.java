@@ -14,6 +14,7 @@ public class Board extends BoardLayers {
 
     private final ArrayList<Flag> flags;
     private ArrayList<Player> players;
+    private Player player1;
 
     public Board() {
         this("assets/testMap.tmx");
@@ -93,12 +94,21 @@ public class Board extends BoardLayers {
      * @param x coordinate
      * @param y coordinate
      */
-    public void addPlayer(int x, int y) {
+    public void addPlayer(int x, int y, int playerNumber) {
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
         TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("player");
         cell.setTile(tileSet.getTile(137));
         playerLayer.setCell(x, y, cell);
-        players.add(new Player(new Vector2(x, y)));
+        players.add(new Player(new Vector2(x, y), playerNumber));
+    }
+
+    public Player getPlayer1() {
+        for (Player player : players) {
+            if (player.getPlayerNr() == 1) {
+                return player;
+            }
+        }
+        return players.get(0);
     }
 
     public boolean canGo(Player player) {

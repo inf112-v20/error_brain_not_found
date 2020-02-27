@@ -27,7 +27,7 @@ public class BoardTest {
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
         this.board = new Board("assets/Risky_Exchange.tmx");
-        this.player = new Player(new Vector2(0,0));
+        this.player = new Player(new Vector2(0,0), 1);
     }
 
 
@@ -45,7 +45,7 @@ public class BoardTest {
 
     @Test
     public void whenAPlayerIsAddedTheBoardHasIncrementedPlayersByOne() {
-        board.addPlayer(0,0);
+        board.addPlayer(0,0, 1);
         assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME + 1, board.getPlayers().size());
     }
 
