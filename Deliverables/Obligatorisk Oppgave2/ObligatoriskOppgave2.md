@@ -27,9 +27,17 @@ We communicate good as a team, and between the different roles.
 Our project structure started out a bit unorganized, but we manged to clean it up early. And after that we have only
 become better day by day. Until now we have gotten a working board and we are able to move the player around on it. We 
 have used a lot of time to catch everyone up to date on how the board in `libGDX` work. People have struggled on 
-getting our head around how parts of `libGDX` work with others. 
+getting their head around how parts of `libGDX` work and how to use them with our code. We have used some time on
+sharing our knowledge, so everyone feel comfortable to write code and understanding what to get from `libGDX`.
+
+In meetings we have tried to do some pair-programming. When we are working on the project outside of meetings, and get 
+stuck on a problem we try to ask someone in the team to see the problem and if their able to help. If they have time we 
+that often end-up with some pair-programming, until the task is complete. In meetings there is have become every easy to
+ask if there is anything someone is wondering about, but outside of meetings people use a bit to long before they ask 
+someone. So we should be better at using Slack or finding someone faster.
+ 
 We have improved our ability to delegate work tasks and define them. Your workflow is going better, and we are planning 
-our code in advance. So the tester are able to make up a overview of what she want to test in that spesific domain. We 
+our code in advance. So the tester are able to make up a overview of what she want to test in that specific domain. We 
 give each other better feedback, on what we have done, but also what we should improve in our code and also what we want 
 each other to complete in a given time.   
 
