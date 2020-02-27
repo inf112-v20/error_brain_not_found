@@ -13,6 +13,17 @@ public class Board extends BoardLayers {
 
     private final ArrayList<Flag> flags;
     private ArrayList<Player> players;
+    private int player1 = 121;
+    private int player2 = 122;
+    private int player3 = 123;
+    private int player4 = 124;
+    private int player5 = 129;
+    private int player6 = 130;
+    private int player7 = 131;
+    private int player8 = 132;
+
+    private int flag1 = 55;
+    private int flag2 = 63;
 
     public Board() {
         this("assets/testMap.tmx");
@@ -62,21 +73,21 @@ public class Board extends BoardLayers {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
                 int ID = cell.getTile().getId();
-                if (ID == 121) {
+                if (ID == player1) {
                     addPlayer(x, y);
-                } else if (ID == 122 && numPlayers > 1) {
+                } else if (ID == player2 && numPlayers > 1) {
                     addPlayer(x, y);
-                } else if (ID == 123 && numPlayers > 2) {
+                } else if (ID == player3 && numPlayers > 2) {
                     addPlayer(x, y);
-                } else if (ID == 124 && numPlayers > 3) {
+                } else if (ID == player4 && numPlayers > 3) {
                     addPlayer(x, y);
-                } else if (ID == 129 && numPlayers > 4) {
+                } else if (ID == player5 && numPlayers > 4) {
                     addPlayer(x, y);
-                } else if (ID == 130 && numPlayers > 5) {
+                } else if (ID == player6 && numPlayers > 5) {
                     addPlayer(x, y);
-                } else if (ID == 131 && numPlayers > 6) {
+                } else if (ID == player7 && numPlayers > 6) {
                     addPlayer(x, y);
-                } else if (ID == 132 && numPlayers > 7) {
+                } else if (ID == player8 && numPlayers > 7) {
                     addPlayer(x, y);
                 }
             }
