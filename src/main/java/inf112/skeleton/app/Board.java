@@ -160,13 +160,12 @@ public class Board extends BoardLayers {
     }
 
     /**
-     * If player moved outside board, respawn them on last backup location
+     * If player moved outside board method return true
      * @param player current player
      */
-    private void outsideBoard(Player player) {
-        if (player.getPosition().x < 0 || player.getPosition().x > 15 || player.getPosition().y < 0 || player.getPosition().y > 11) {
-            player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
-        }
+    public boolean outsideBoard(Player player) {
+        //TODO: Fix constants
+        return player.getPosition().x < 0 || player.getPosition().x > 15 || player.getPosition().y < 0 || player.getPosition().y > 11;
     }
 
     /**
@@ -222,9 +221,19 @@ public class Board extends BoardLayers {
             TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
             TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("player");
             cell.setTile(tileSet.getTile(137));
-            outsideBoard(player);
+            if (outsideBoard(player)) {
+                respawn(player);
+            }
             playerLayer.setCell((int) player.getPosition().x, (int) player.getPosition().y, cell);
         }
+    }
+
+    /**
+     * Places a player in backup position when player is outside of board.
+     * @param player
+     */
+    private void respawn(Player player) {
+        player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
     }
 
     /**
