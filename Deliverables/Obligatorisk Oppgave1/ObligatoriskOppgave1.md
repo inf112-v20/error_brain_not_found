@@ -42,19 +42,19 @@ Overall goal: To be able to play a digital version of RoboRally against another 
 working board and responds to input.  
 
 ### High level requirements 
-|                      |                             |                  |
-| -------------------- |:---------------------------:| ----------------:|
-| Game board           | Move robots                 | Game over        |
-| Playing piece        | Delegate cards              | Multiplayer      |
-| Program card         | Visit flag                   | Singleplayer     |
-| Player               | Drop the backup             | Difficulty levels |
-| Moving fields / belts | Repair damage               | Default level    |
-| Special field         | Get destroyed / with damage |                  |
-| Laser                | Shoot / Activate laser      |                  |
-| Flag                 | Powerdown                   |                  |
-| Walls                | Just one robot at a time    | 
-| Rounds               | Priority moves              |
-| Phase                | Damaged robots              |
+|                       |                              |                  |
+| --------------------- |:----------------------------:| ----------------:|
+| Game board            | Move robots                  | Game over        |
+| Playing piece         | Delegate cards               | Multiplayer      |
+| Program card          | Visit flag                    | Singleplayer     |
+| Player                | Drop the backup              | Difficulty levels |
+| Moving fields / belts  | Repair damage                | Default level    |
+| Special field          | Get destroyed / with damage  |                  |
+| Laser                 | Shoot / Activate laser       |                  |
+| Flag                  | Powerdown                    |                  |
+| Walls                 | Just one robot at a time     | 
+| Rounds                | Priority moves               |
+| Phase                 | Damaged robots               |
 
 #### Requirements for first iteration
 1.  We have a board.
@@ -77,14 +77,15 @@ Various elements from project methodologies:
         *   Reason: We want to make sure we deliver something that is functional,
          and if the tests are based on the rules of the game then we can program with that
          considering what the game is all about. By testing before each commit, we will also ensure that the code meets 
-         the requirements we give it.
+         the requirements we give it.  
          
 *   Kanban
     *   Limit in the progress board.
     
         *   Reason: In order not to be overloaded with tasks, we intend to limit the number of tasks each person can have 
         in order to focus on a task and ensure that this task is done properly before further building on it or work on 
-        another task.
+        another task.  
+        
 *   Scrum
     *   Cross-functional team.
     
