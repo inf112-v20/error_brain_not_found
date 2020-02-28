@@ -59,30 +59,35 @@ working board and responds to input.
 #### Requirements for first iteration
 1.  We have a board.
     *   Able to see the the board.
+    
 2.  We have a playing piece.
     *   Able to se the piece.
+    
 3.  Able to set the playing piece on the board.
     *   Able to move the piece around.
+    
 4.  Work on the design.
-
-
 
 ## Task 3
 Various elements from project methodologies:  
 
 *   XP
     *   Test before every commit.
+    
         *   Reason: We want to make sure we deliver something that is functional,
          and if the tests are based on the rules of the game then we can program with that
          considering what the game is all about. By testing before each commit, we will also ensure that the code meets 
          the requirements we give it.
+         
 *   Kanban
     *   Limit in the progress board.
+    
         *   Reason: In order not to be overloaded with tasks, we intend to limit the number of tasks each person can have 
         in order to focus on a task and ensure that this task is done properly before further building on it or work on 
         another task.
 *   Scrum
     *   Cross-functional team.
+    
     *   Meetings / team updates after each iteration.
         *   Reason: With a cross-functional team, we have defined roles where each person has their area of 
         responsibility. What we want to achieve with this is a more orderly progress, as it hopefully limits more work 
