@@ -1,5 +1,5 @@
 # Mandatory Assignment 1
-### TEAM: error_no_brain_found
+TEAM: error_no_brain_found
 
 ## Task 1
 ### Mathias Skallerud Jacobsen
@@ -37,13 +37,11 @@ Skills: Fast learner, and get things done. Know how to code.
 Expertise: Inf100, inf115, Inf101  
 Main tasks: Checks the code for errors, and try to clean-up code.
 
-
-
 ## Task 2
 Overall goal: To be able to play a digital version of RoboRally against another (AI or player), with set rules and a 
 working board and responds to input.  
 
-#### High level requirements: 
+### High level requirements 
 |                      |                             |                  |
 | -------------------- |:---------------------------:| ----------------:|
 | Game board           | Move robots                 | Game over        |
@@ -90,18 +88,15 @@ Various elements from project methodologies:
         responsibility. What we want to achieve with this is a more orderly progress, as it hopefully limits more work 
         on the same task. In order for everything to be coordinated, we must try to have meetings after each iteration.
         
- 
 Using gitFlow; one ``master``-branch only for iterations. ``develop`` is used for day to day developing, and this 
 branch is the one pushed to ``master``-branch mandatory assignments. Every feature have their own ``feature``-branch.
  
-   
 Meetings: We decided to have one extra meeting every week to check the status of the project.  
 Communication between meetings: Slack.  
 Workflow: As describe in ``Task 1``.
 Common docs: Google drive.
 
-
-#### User stories
+### User stories
 Story: As a player I want to see a board, to be able to know what's happening in the game.  
 
 Acceptance criteria: 
