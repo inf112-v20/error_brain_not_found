@@ -58,8 +58,8 @@ takes longer then it needs to, just because people are afraid to start and this 
 experience. But this have gotten much better after they asked for help.  
 
 #### Improvement points from retrospective
-* Still getting better at communication in between meetings, on Slack ang go and ask in person  
-* Using git and get to know it well, and not be afraid for mess it up  
+*   Still getting better at communication in between meetings, on Slack ang go and ask in person  
+*   Using git and get to know it well, and not be afraid for mess it up  
 
 ### Meeting minutes
 [Møte 1](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte)  
@@ -81,8 +81,8 @@ User-story:
 As a player I do not want to be able to go through walls, so that I can have a challenge in reaching the flags.
 
 Acceptance-criteria: 
-* Given that I am facing a wall, I will not be able to go through it.  
-* Given that I am not facing a wall but are on a tile with a wall, I will be able 
+*   Given that I am facing a wall, I will not be able to go through it.  
+*   Given that I am not facing a wall but are on a tile with a wall, I will be able 
 to go around the wall.  
 
 Tasks:
@@ -185,3 +185,7 @@ See `README.md -> How to run`
 ### Manual test and how to run them
 The menu-screen goes away after clicking on it. 
 * start the game then click somewhere on the screen. Then the game-screen should come.
+
+### Comment to automatic build tests
+Travis does not support the language `Java` on their Windows Build Environment. But 3/5 in our group run windows and it 
+runs on their computer.  
