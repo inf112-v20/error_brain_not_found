@@ -56,7 +56,7 @@ working board and responds to input.
 | Rounds               | Priority moves              |
 | Phase                | Damaged robots              |
 
-##### Requirements for first iteration
+#### Requirements for first iteration
 1.  We have a board.
     *   Able to see the the board.
 2.  We have a playing piece.
