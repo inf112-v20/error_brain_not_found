@@ -56,35 +56,35 @@ working board and responds to input.
 | Rounds               | Priority moves              |
 | Phase                | Damaged robots              |
 
-##### Requirements for first iteration:       
-1. We have a board.
-    * Able to see the the board.
-2. We have a playing piece.
-    * Able to se the piece.
-3. Able to set the playing piece on the board.
-    * Able to move the piece around.
-4. Work on the design.
+##### Requirements for first iteration
+1.  We have a board.
+    *   Able to see the the board.
+2.  We have a playing piece.
+    *   Able to se the piece.
+3.  Able to set the playing piece on the board.
+    *   Able to move the piece around.
+4.  Work on the design.
 
 
 
 ## Task 3
 Various elements from project methodologies:  
 
-* XP
-    * Test before every commit.
-        * Reason: We want to make sure we deliver something that is functional,
+*   XP
+    *   Test before every commit.
+        *   Reason: We want to make sure we deliver something that is functional,
          and if the tests are based on the rules of the game then we can program with that
          considering what the game is all about. By testing before each commit, we will also ensure that the code meets 
          the requirements we give it.
-* Kanban
-    * Limit in the progress board.
-        * Reason: In order not to be overloaded with tasks, we intend to limit the number of tasks each person can have 
+*   Kanban
+    *   Limit in the progress board.
+        *   Reason: In order not to be overloaded with tasks, we intend to limit the number of tasks each person can have 
         in order to focus on a task and ensure that this task is done properly before further building on it or work on 
         another task.
-* Scrum
-    * Cross-functional team.
-    * Meetings / team updates after each iteration.
-        * Reason: With a cross-functional team, we have defined roles where each person has their area of 
+*   Scrum
+    *   Cross-functional team.
+    *   Meetings / team updates after each iteration.
+        *   Reason: With a cross-functional team, we have defined roles where each person has their area of 
         responsibility. What we want to achieve with this is a more orderly progress, as it hopefully limits more work 
         on the same task. In order for everything to be coordinated, we must try to have meetings after each iteration.
         
@@ -100,16 +100,16 @@ Common docs: Google drive.
 Story: As a player I want to see a board, to be able to know what's happening in the game.  
 
 Acceptance criteria: 
-* Given that the board shows a cell, the board has only one in height and one in width (one cell). 
-* Given that a board appears, when the board has no robots / items on it, all cells are empty.
-* Given that a board is displayed, when I should have the height and length of the board, it matches what I expect.  
+*   Given that the board shows a cell, the board has only one in height and one in width (one cell). 
+*   Given that a board appears, when the board has no robots / items on it, all cells are empty.
+*   Given that a board is displayed, when I should have the height and length of the board, it matches what I expect.  
 
 How to get there: Make a ``Board``-class, with cells. We have to have methods that can get dimensions from 
 the board.  
 
 Story: As a player I want to be able to place the player where I want it to start. 
 Acceptance criteria: 
-* Given that I have a robot and a board, when I place the robot on the board, then the board has a 
+*   Given that I have a robot and a board, when I place the robot on the board, then the board has a 
 robot on it.  
 
 How to get there: Need to have a ``Player/Robot``-class that is able to store a position. ``Board``-class need to know 
@@ -117,36 +117,36 @@ whats on the cells, and be able to put something on the board.
 
 Story: As a player I want to be able to press the mouse so that the robot moves.  
 Acceptance criteria: 
-* Given that I have a player on the board, when I click on a tile the player moves there.
+*   Given that I have a player on the board, when I click on a tile the player moves there.
 How to get there: Implement ``mouseListener``, that are able to get positions and return it to the board, and update the
  ``player / robot`` positions.  
 
 Story: As a player I want to be able to move the pointer over the board in such a way that the cell under the pointer is 
 highlighted. Then I can be sure that the piece is placed where I want.  
 Acceptance criteria: 
-* Given that I want to place a robot, when I place the pointer over a given cell, that cell should be highlighted.   
+*   Given that I want to place a robot, when I place the pointer over a given cell, that cell should be highlighted.   
 How to get there: Board must receive an input from the pointer so that it can select a current cell.  
 
 ## Summary
 
-* What worked?
+*   What worked?
 
 We have done what the task tells us to do, we managed to show a board and place a player on it. We also made user
 stories, and tasks according to these. 
 
-* What did not work?
+*   What did not work?
 
 We had some communication problems in the beginning, and we should have
 defined who should do what more clearly by using issues more.
 When trying to test the board it did not work out, because you need to 
 run the application in order to get information from it. 
 
-* Is there something we should de better to next mandatory assignment?
+*   Is there something we should de better to next mandatory assignment?
 
 Make the tasks for each member of the team more clearer, and create more user stories
 for the tasks. 
 
-* Are you satisfied with your work, is there something that you could not do?
+*   Are you satisfied with your work, is there something that you could not do?
 
 It was a bit hard to learn LibGDX right away, so it was a bit back and 
 fourth. The tests written seems ok, but we could not test the board. The 
