@@ -81,9 +81,8 @@ User-story:
 As a player I do not want to be able to go through walls, so that I can have a challenge in reaching the flags.
 
 Acceptance-criteria: 
-*   Given that I am facing a wall, I will not be able to go through it.    
-*   Given that I am not facing a wall but are on a tile with a wall, I will be able 
-to go around the wall.  
+*   Given that I am facing a wall, I will not be able to go through it.
+*   Given that I am not facing a wall but are on a tile with a wall, I will be able to go around the wall.  
 
 Tasks:
 *   Make a check canGo() that tells if the player is facing a wall.
@@ -111,10 +110,11 @@ User-story:
 As a player I do not want to be able to be on the same cell as another player, so that I can push the other player.
 
 Acceptance-criteria:  
-*   If I try to go on the same cell as another player, both players will not be on this
-cell.  
+*   If I try to go on the same cell as another player, both players will not be on this cell.
+
 *   If I try to go on the same cell as another player, the player will move away from me 
 in the same direction it was pushed.  
+
 *   If I try to go on the same cell as another player, the player will move in the 
 same direction it was pushed. 
 
@@ -159,8 +159,7 @@ Tasks:
 *   Make several boards.  
 *   Make tests for when a board is picked, this is the board that is actually used by the game.   
    
-
-
+   
 ### Prioritisation of tasks
 For the next iteration we are focusing on getting some game-logic so we can start to have a turn in our game.
  
