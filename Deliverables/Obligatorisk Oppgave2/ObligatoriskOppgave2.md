@@ -30,7 +30,6 @@ We communicate a lot better than last time, something we go more in depth in `Re
 We discuss how we should do the project and the tests, and we're good at sharing knowledge.
 We communicate good as a team, and between the different roles.
 
-
 ### Retrospective
 Our project structure started out a bit unorganized, people started with requirements on their own and the team felt 
 left out. Since they didnt want to do something that was already working on, but we manged to clean it up early. And 
@@ -59,8 +58,8 @@ takes longer then it needs to, just because people are afraid to start and this 
 experience. But this have gotten much better after they asked for help.  
 
 #### Improvement points from retrospective
-* Still getting better at communication in between meetings, on Slack ang go and ask in person
-* Using git and get to know it well, and not be afraid for mess it up
+* Still getting better at communication in between meetings, on Slack ang go and ask in person  
+* Using git and get to know it well, and not be afraid for mess it up  
 
 ### Meeting minutes
 [Møte 1](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte)  
@@ -75,91 +74,90 @@ need answering.
 
 ### User stories for requirements
 
-#### Walls: 
+#### Walls
 A player can not go through a wall
 
 User-story:
 As a player I do not want to be able to go through walls, so that I can have a challenge in reaching the flags.
 
 Acceptance-criteria: 
-- Given that I am facing a wall, I will not be able to go through it.
-- Given that I am not facing a wall but are on a tile with a wall, I will be able 
-to go around the wall. 
-
+* Given that I am facing a wall, I will not be able to go through it.  
+* Given that I am not facing a wall but are on a tile with a wall, I will be able 
+to go around the wall.  
 
 Tasks:
-- Make a check canGo() that tells if the player is facing a wall.
-- Make tests to check acceptance-criteria.
+* Make a check canGo() that tells if the player is facing a wall.
+* Make tests to check acceptance-criteria.
 
-#### Game board:
-If you get outside the board you get respawned.
+#### Game board
+If you get outside the board you get respawn.
 
 User-story:
 As a player I want to be able to go outside the board without error, so that I can respawn.
 
 Acceptance-criteria: 
-- If I go outside the board, then I will not get an error.
-- If I go outside the board, I will be respawned on the board.
+* If I go outside the board, then I will not get an error.  
+* If I go outside the board, I will be respawned on the board.  
 
 Tasks:
-- Make a check that says if you are outside the board. Store the playerinformation. 
-- A method that places player on respawn-place.
-- Tests to check acceptance-criteria.
+* Make a check that says if you are outside the board. Store the playerinformation.  
+* A method that places player on respawn-place.  
+* Tests to check acceptance-criteria.  
 
-#### Playing piece:
+#### Playing piece
 Player can not be on same cell
 
 User-story:
 As a player I do not want to be able to be on the same cell as another player, so that I can push the other player.
 
 Acceptance-criteria:  
-- If I try to go on the same cell as another player, both players will not be on this
-cell.
-- If I try to go on the same cell as another player, the player will move away from me 
-in the same direction it was pushed. 
-- If I try to go on the same cell as another player, the player will move in the 
+* If I try to go on the same cell as another player, both players will not be on this
+cell.  
+* If I try to go on the same cell as another player, the player will move away from me 
+in the same direction it was pushed.  
+* If I try to go on the same cell as another player, the player will move in the 
 same direction it was pushed. 
 
-#### Programcards:
+#### Programcards
 Show programcards and let the player draw cards, and making program.
 
 User-story:
 As a player I want to be able to draw cards, so that I can plan the program for the robot.
 
 Acceptance-criteria:
-- If I draw cards, I will have the correct amount of cards given to me.
-- Given that I have drawn cards, I will have them displayed on the screen.
+* If I draw cards, I will have the correct amount of cards given to me.  
+* Given that I have drawn cards, I will have them displayed on the screen.  
 
 Tasks:
-- Make a function that let the player draw cards from the deck.
-- Test that the function draws the correct amount of cards and delegate them to correct player.
-- Make a function that displays the cards on the screen.
+* Make a function that let the player draw cards from the deck.  
+* Test that the function draws the correct amount of cards and delegate them to correct player.  
+* Make a function that displays the cards on the screen.  
 
 
 User-story:     
 As a player I want to be able to rearrange the cards, so that I can make a program for the robot.
 
 Acceptance-criteria:
-- If I pick up one card, I can decide where to put this card down again.
-- When I put one card on top of the other, the cards will swap position. 
+* If I pick up one card, I can decide where to put this card down again.  
+* When I put one card on top of the other, the cards will swap position.  
 
 Tasks:
-- Make a function that takes input from user and tells if a user picks up a card. 
-- Make a function that swaps the position to two cards. 
-- Make tests for when cards are swapped.
+* Make a function that takes input from user and tells if a user picks up a card.  
+* Make a function that swaps the position to two cards.  
+* Make tests for when cards are swapped.  
 
-#### Several Boards:
+#### Several Boards
 
 User-story:  
 As a player I want to be able to choose what board I want to play on, so that I can get a new challenge in the game. 
 
 Acceptance-criteria:  
-- If I pick a board, this is the board that will show on the screen.
-- If I pick a different board, the same tiles will have the same functions as the previous one. 
+* If I pick a board, this is the board that will show on the screen.  
+* If I pick a different board, the same tiles will have the same functions as the previous one.  
 
 Tasks:   
-- Make several boards.
-- Make tests for when a board is picked, this is the board that is actually used by the game. 
+* Make several boards.  
+* Make tests for when a board is picked, this is the board that is actually used by the game.   
    
 
 
