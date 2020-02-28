@@ -65,7 +65,7 @@ working board and responds to input.
     
 3.  Able to set the playing piece on the board.
     *   Able to move the piece around.
-    
+
 4.  Work on the design.
 
 ## Task 3
