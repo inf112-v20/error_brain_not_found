@@ -46,10 +46,10 @@ working board and responds to input.
 | --------------------- |:----------------------------:| ----------------:|
 | Game board            | Move robots                  | Game over        |
 | Playing piece         | Delegate cards               | Multiplayer      |
-| Program card          | Visit flag                    | Singleplayer     |
-| Player                | Drop the backup              | Difficulty levels |
-| Moving fields / belts  | Repair damage                | Default level    |
-| Special field          | Get destroyed / with damage  |                  |
+| Program card          | Visit flag                   | Singleplayer     |
+| Player                | Drop the backup              | Difficulty levels|
+| Moving fields / belts | Repair damage                | Default level    |
+| Special field         | Get destroyed / with damage  |                  |
 | Laser                 | Shoot / Activate laser       |                  |
 | Flag                  | Powerdown                    |                  |
 | Walls                 | Just one robot at a time     | 
