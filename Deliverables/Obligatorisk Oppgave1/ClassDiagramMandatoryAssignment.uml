@@ -3,16 +3,17 @@
   <ID>JAVA</ID>
   <OriginalElement>inf112.skeleton.app</OriginalElement>
   <nodes>
-    <node x="308.0" y="0.0">inf112.skeleton.app.assets</node>
-    <node x="30.41666666666667" y="0.0">inf112.skeleton.app.Position</node>
-    <node x="56.5" y="730.0">inf112.skeleton.app.Main</node>
-    <node x="26.5" y="198.0">inf112.skeleton.app.Player</node>
-    <node x="0.0" y="326.0">inf112.skeleton.app.Board</node>
+    <node x="283.0" y="0.0">inf112.skeleton.app.Position</node>
+    <node x="0.0" y="554.0">inf112.skeleton.app.Main</node>
+    <node x="500.0" y="0.0">inf112.skeleton.app.Player</node>
+    <node x="760.3605633802817" y="75.30140845070423">inf112.skeleton.app.Board</node>
   </nodes>
   <notes />
   <edges />
-  <settings layout="Hierarchic Group" zoom="0.5957711442786069" x="219.0" y="392.00000000000006" />
-  <SelectedNodes />
+  <settings layout="Hierarchic Group" zoom="0.5444785276073619" x="261.63661971830993" y="306.0" />
+  <SelectedNodes>
+    <node>inf112.skeleton.app.Board</node>
+  </SelectedNodes>
   <Categories>
     <Category>Fields</Category>
     <Category>Constructors</Category>
