@@ -6,7 +6,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.TileID;
-import inf112.skeleton.app.gameObjects.Flag;
+import inf112.skeleton.app.objects.Flag;
 
 import java.util.ArrayList;
 
@@ -35,8 +35,8 @@ public class Board extends BoardLayers {
     public void findFlags() {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
-                try {
-                    TiledMapTileLayer.Cell cell = flagLayer.getCell(x, y);
+                TiledMapTileLayer.Cell cell = flagLayer.getCell(x, y);
+                if (cell != null)  {
                     int ID = cell.getTile().getId();
                     if (ID == 55) {
                         flags.add(new Flag(1, x, y));
@@ -44,16 +44,14 @@ public class Board extends BoardLayers {
                         flags.add(new Flag(2, x, y));
                     } else if (ID == 71) {
                         flags.add(new Flag(3, x, y));
-                    } //TODO: Find the last ID to the 4th flag
-                } catch (Exception e){
-                    // There are so many nullPointers in this layer
+                    }
                 }
             }
         }
     }
 
     /**
-     * Check all cells on map for start positions and add a new player to that
+     * Check all cells on map for start positions got by {@link TileID} and add a new player to that
      * position based on number of players
      *
      * @param numPlayers number of robots playing, between 1-8
