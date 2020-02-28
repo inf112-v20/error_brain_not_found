@@ -22,7 +22,6 @@ public class Deck {
     public void makeNewDeck() {
         deck = new Stack<>();
 
-
         priority = makeRotateCards(priority);
         makeMoveCards(priority);
     }

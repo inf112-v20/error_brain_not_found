@@ -1,4 +1,4 @@
-package inf112.skeleton.app.gameObjects;
+package inf112.skeleton.app.objects;
 
 import com.badlogic.gdx.math.Vector2;
 
