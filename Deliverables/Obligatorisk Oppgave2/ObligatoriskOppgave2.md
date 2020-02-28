@@ -81,13 +81,13 @@ User-story:
 As a player I do not want to be able to go through walls, so that I can have a challenge in reaching the flags.
 
 Acceptance-criteria: 
-*   Given that I am facing a wall, I will not be able to go through it.  
+*   Given that I am facing a wall, I will not be able to go through it.    
 *   Given that I am not facing a wall but are on a tile with a wall, I will be able 
 to go around the wall.  
 
 Tasks:
-* Make a check canGo() that tells if the player is facing a wall.
-* Make tests to check acceptance-criteria.
+*   Make a check canGo() that tells if the player is facing a wall.
+*   Make tests to check acceptance-criteria.
 
 #### Game board
 If you get outside the board you get respawn.
@@ -96,13 +96,13 @@ User-story:
 As a player I want to be able to go outside the board without error, so that I can respawn.
 
 Acceptance-criteria: 
-* If I go outside the board, then I will not get an error.  
-* If I go outside the board, I will be respawned on the board.  
+*   If I go outside the board, then I will not get an error.  
+*   If I go outside the board, I will be respawned on the board.  
 
 Tasks:
-* Make a check that says if you are outside the board. Store the playerinformation.  
-* A method that places player on respawn-place.  
-* Tests to check acceptance-criteria.  
+*   Make a check that says if you are outside the board. Store the playerinformation.  
+*   A method that places player on respawn-place.  
+*   Tests to check acceptance-criteria.  
 
 #### Playing piece
 Player can not be on same cell
@@ -111,11 +111,11 @@ User-story:
 As a player I do not want to be able to be on the same cell as another player, so that I can push the other player.
 
 Acceptance-criteria:  
-* If I try to go on the same cell as another player, both players will not be on this
+*   If I try to go on the same cell as another player, both players will not be on this
 cell.  
-* If I try to go on the same cell as another player, the player will move away from me 
+*   If I try to go on the same cell as another player, the player will move away from me 
 in the same direction it was pushed.  
-* If I try to go on the same cell as another player, the player will move in the 
+*   If I try to go on the same cell as another player, the player will move in the 
 same direction it was pushed. 
 
 #### Programcards
@@ -125,26 +125,26 @@ User-story:
 As a player I want to be able to draw cards, so that I can plan the program for the robot.
 
 Acceptance-criteria:
-* If I draw cards, I will have the correct amount of cards given to me.  
-* Given that I have drawn cards, I will have them displayed on the screen.  
+*   If I draw cards, I will have the correct amount of cards given to me.  
+*   Given that I have drawn cards, I will have them displayed on the screen.  
 
 Tasks:
-* Make a function that let the player draw cards from the deck.  
-* Test that the function draws the correct amount of cards and delegate them to correct player.  
-* Make a function that displays the cards on the screen.  
+*   Make a function that let the player draw cards from the deck.  
+*   Test that the function draws the correct amount of cards and delegate them to correct player.  
+*   Make a function that displays the cards on the screen.  
 
 
 User-story:     
 As a player I want to be able to rearrange the cards, so that I can make a program for the robot.
 
 Acceptance-criteria:
-* If I pick up one card, I can decide where to put this card down again.  
-* When I put one card on top of the other, the cards will swap position.  
+*   If I pick up one card, I can decide where to put this card down again.  
+*   When I put one card on top of the other, the cards will swap position.  
 
 Tasks:
-* Make a function that takes input from user and tells if a user picks up a card.  
-* Make a function that swaps the position to two cards.  
-* Make tests for when cards are swapped.  
+*   Make a function that takes input from user and tells if a user picks up a card.  
+*   Make a function that swaps the position to two cards.  
+*   Make tests for when cards are swapped.  
 
 #### Several Boards
 
@@ -152,12 +152,12 @@ User-story:
 As a player I want to be able to choose what board I want to play on, so that I can get a new challenge in the game. 
 
 Acceptance-criteria:  
-* If I pick a board, this is the board that will show on the screen.  
-* If I pick a different board, the same tiles will have the same functions as the previous one.  
+*   If I pick a board, this is the board that will show on the screen.  
+*   If I pick a different board, the same tiles will have the same functions as the previous one.  
 
 Tasks:   
-* Make several boards.  
-* Make tests for when a board is picked, this is the board that is actually used by the game.   
+*   Make several boards.  
+*   Make tests for when a board is picked, this is the board that is actually used by the game.   
    
 
 
@@ -165,11 +165,11 @@ Tasks:
 For the next iteration we are focusing on getting some game-logic so we can start to have a turn in our game.
  
 ### Main criteria for MVP
-* The game should be able to run, show a board with starting robot and programcards to this robot.
-* The player is able to pick programcards and place them so that the robot can move.
-* The game should be able to do a round, and do the phases in the correct order in that round.
-* The robot should be able to win by going to the flags in a specific order.
-* The robot is stopped by walls, and respawned when outside board. 
+*   The game should be able to run, show a board with starting robot and programcards to this robot.
+*   The player is able to pick programcards and place them so that the robot can move.
+*   The game should be able to do a round, and do the phases in the correct order in that round.
+*   The robot should be able to win by going to the flags in a specific order.
+*   The robot is stopped by walls, and respawned when outside board. 
 
 ### Tasks done since last assignment
 Made user stories and tests for everything, improved how the player moves, made flags and gotten a understanding of how 
@@ -184,7 +184,7 @@ See `README.md -> How to run`
 
 ### Manual test and how to run them
 The menu-screen goes away after clicking on it. 
-* start the game then click somewhere on the screen. Then the game-screen should come.
+*   start the game then click somewhere on the screen. Then the game-screen should come.
 
 ### Comment to automatic build tests
 Travis does not support the language `Java` on their Windows Build Environment. But 3/5 in our group run windows and it 
