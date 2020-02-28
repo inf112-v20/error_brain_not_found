@@ -133,7 +133,6 @@ Tasks:
 *   Test that the function draws the correct amount of cards and delegate them to correct player.  
 *   Make a function that displays the cards on the screen.  
 
-
 User-story:     
 As a player I want to be able to rearrange the cards, so that I can make a program for the robot.
 
