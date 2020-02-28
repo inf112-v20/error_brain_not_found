@@ -78,7 +78,6 @@ Various elements from project methodologies:
          and if the tests are based on the rules of the game then we can program with that
          considering what the game is all about. By testing before each commit, we will also ensure that the code meets 
          the requirements we give it.  
-         
 *   Kanban
     *   Limit in the progress board.
     
