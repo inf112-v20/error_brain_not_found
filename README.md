@@ -8,8 +8,6 @@ Simple skeleton with libgdx.
 Clone the repo from github to you computer then:  
 Open the repo and go to `src/main/java/inf112/skeleton/app/Main.java` and run `main` function.
 
-
 ## Known bugs
 Currently throws "WARNING: An illegal reflective access operation has occurred", 
 when the java version used is >8. This has no effect on function or performance, and is just a warning.
-
