@@ -65,4 +65,36 @@ public class BoardTest {
         assertNotEquals(startPosition, player.getPosition());
     }
 
+    @Test
+    public void whenPlayerIsOutsideOnTopOfBoardItIsDetectedTest() {
+        player.setPosition(new Vector2(0, BOARD_HEIGHT-1));
+        player.setDirection(Direction.NORTH);
+        board.movePlayer(player);
+        assertTrue(board.outsideBoard(player));
+    }
+
+    @Test
+    public void whenPlayerIsOutsideOnRightSideOfBoardItIsDetectedTest() {
+        player.setPosition(new Vector2(BOARD_WIDTH-1, 0));
+        player.setDirection(Direction.EAST);
+        board.movePlayer(player);
+        assertTrue(board.outsideBoard(player));
+    }
+
+    @Test
+    public void whenPlayerIsOutsideOnLeftSideOfBoardItIsDetectedTest() {
+        player.setPosition(new Vector2(0, 0));
+        player.setDirection(Direction.WEST);
+        board.movePlayer(player);
+        assertTrue(board.outsideBoard(player));
+    }
+
+    @Test
+    public void whenPlayerIsOutsideUnderTheBoardItIsDetectedTest() {
+        player.setPosition(new Vector2(0, 0));
+        player.setDirection(Direction.SOUTH);
+        board.movePlayer(player);
+        assertTrue(board.outsideBoard(player));
+    }
+
 }
