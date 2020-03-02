@@ -110,7 +110,9 @@ public class Board extends BoardLayers {
         TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("player");
         cell.setTile(tileSet.getTile(137));
         playerLayer.setCell((int) player.getPosition().x, (int) player.getPosition().y, cell);
-        players.add(player);
+        if (!players.contains(player)) {
+            players.add(player);
+        }
     }
 
     public Player getPlayer1() {
