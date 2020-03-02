@@ -64,7 +64,6 @@ public class Board extends BoardLayers {
      */
     public void addPlayer(Player player) {
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-        TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("player");
         cell.setTile(getRobotTile(player));
         if (outsideBoard(player)) {
             respawn(player);
@@ -266,7 +265,10 @@ public class Board extends BoardLayers {
         Vector2 position = player.getPosition();
         Direction direction = player.getDirection();
 
-        if (!canGo(position, direction)) { return; }
+        if (!canGo(position, direction)) {
+            addPlayer(player);
+            return;
+        }
         if (shouldPush(player)) {
             Player enemyPlayer = getPlayer(getNeighbourPosition(player.getPosition(), direction));
             if (canPush(enemyPlayer, direction)) {
