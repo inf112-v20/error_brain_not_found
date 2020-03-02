@@ -43,7 +43,7 @@ public class BoardTest {
 
     @Test
     public void whenAPlayerIsAddedTheBoardHasIncrementedPlayersByOneTest() {
-        board.addPlayer(0,0, 1);
+        board.addPlayer(player);
         assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME + 1, board.getPlayers().size());
     }
 
@@ -57,13 +57,6 @@ public class BoardTest {
         assertEquals(BOARD_HEIGHT, board.getHeight());
     }
 
-    @Test
-    public void whenPlayerIsMovedPlayerHasChangedCoordinatesTest() {
-        Vector2 startPosition = new Vector2(player.getPosition().x, player.getPosition().y);
-        player.setDirection(Direction.EAST);
-        board.movePlayer(player);
-        assertNotEquals(startPosition, player.getPosition());
-    }
 
     @Test
     public void whenPlayerIsOutsideOnTopOfBoardItIsDetectedTest() {
@@ -95,6 +88,32 @@ public class BoardTest {
         player.setDirection(Direction.SOUTH);
         board.movePlayer(player);
         assertTrue(board.outsideBoard(player));
+    }
+
+    @Test
+    public void whenPlayerIsOutsideOfBoardPlayerIsRespawned() {
+        Vector2 outsideOfBoardPosition = new Vector2(-1, 0);
+        player.setPosition(outsideOfBoardPosition);
+        board.addPlayer(player);
+        board.updatePlayers();
+        assertEquals(player.getPosition(), player.getBackupPosition());
+    }
+
+
+    @Test
+    public void whenPlayerIsMovedPlayerHasChangedCoordinatesTest() {
+        Vector2 startPosition = new Vector2(player.getPosition().x, player.getPosition().y);
+        player.setDirection(Direction.EAST);
+        board.movePlayer(player);
+        assertNotEquals(startPosition, player.getPosition());
+    }
+
+    @Test
+    public void whenPlayerIsMovedUpItHasMovedOneStepTest() {
+        Vector2 startPosition = new Vector2(player.getPosition().x, player.getPosition().y);
+        player.setDirection(Direction.NORTH);
+        board.movePlayer(player);
+        assertEquals((int) startPosition.y+1, (int) player.getPosition().y);
     }
 
 }
