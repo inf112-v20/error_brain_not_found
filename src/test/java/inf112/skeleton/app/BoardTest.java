@@ -26,7 +26,7 @@ public class BoardTest {
         Gdx.gl = mock(GL20.class);
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
-        this.board = new Board("assets/Risky_Exchange.tmx");
+        this.board = new Board("assets/Risky_Exchange.tmx", NUMBER_OF_PLAYERS_WHEN_STARTING_GAME);
         this.player = new Player(new Vector2(0,0), 1);
     }
 
@@ -60,33 +60,25 @@ public class BoardTest {
 
     @Test
     public void whenPlayerIsOutsideOnTopOfBoardItIsDetectedTest() {
-        player.setPosition(new Vector2(0, BOARD_HEIGHT-1));
-        player.setDirection(Direction.NORTH);
-        board.movePlayer(player);
+        player.setPosition(new Vector2(0, BOARD_HEIGHT));
         assertTrue(board.outsideBoard(player));
     }
 
     @Test
     public void whenPlayerIsOutsideOnRightSideOfBoardItIsDetectedTest() {
-        player.setPosition(new Vector2(BOARD_WIDTH-1, 0));
-        player.setDirection(Direction.EAST);
-        board.movePlayer(player);
+        player.setPosition(new Vector2(BOARD_WIDTH, 0));
         assertTrue(board.outsideBoard(player));
     }
 
     @Test
     public void whenPlayerIsOutsideOnLeftSideOfBoardItIsDetectedTest() {
-        player.setPosition(new Vector2(0, 0));
-        player.setDirection(Direction.WEST);
-        board.movePlayer(player);
+        player.setPosition(new Vector2(-1, 0));
         assertTrue(board.outsideBoard(player));
     }
 
     @Test
     public void whenPlayerIsOutsideUnderTheBoardItIsDetectedTest() {
-        player.setPosition(new Vector2(0, 0));
-        player.setDirection(Direction.SOUTH);
-        board.movePlayer(player);
+        player.setPosition(new Vector2(0, -1));
         assertTrue(board.outsideBoard(player));
     }
 
@@ -95,7 +87,6 @@ public class BoardTest {
         Vector2 outsideOfBoardPosition = new Vector2(-1, 0);
         player.setPosition(outsideOfBoardPosition);
         board.addPlayer(player);
-        board.updatePlayers();
         assertEquals(player.getPosition(), player.getBackupPosition());
     }
 
