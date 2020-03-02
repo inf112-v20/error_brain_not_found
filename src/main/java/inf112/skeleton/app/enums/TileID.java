@@ -28,6 +28,8 @@ public enum TileID {
     VERTICAL_LASER(47),
     HORIZONTAL_LASER(39),
 
+    HOLE(6),
+
     WRENCH(14),
     DOUBLE_WRENCH(7),
 

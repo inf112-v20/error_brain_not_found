@@ -8,10 +8,12 @@ import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.TileID;
 import inf112.skeleton.app.objects.Flag;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Board extends BoardLayers {
 
     private final ArrayList<Flag> flags;
+    private final ArrayList<Vector2> holes;
     private ArrayList<Player> players;
 
     public Board(int numberOfPlayers) {
@@ -23,7 +25,11 @@ public class Board extends BoardLayers {
 
         this.players = new ArrayList<>();
         this.flags = new ArrayList<>();
+        this.holes = new ArrayList<>();
+
         findFlags();
+        findHoles();
+
         addPlayersToStartPositions(numberOfPlayers);
     }
 
@@ -109,6 +115,18 @@ public class Board extends BoardLayers {
                     } else if (ID == TileID.FLAG_4.getId()) {
                         flags.add(new Flag(4, x, y));
                     }
+                }
+            }
+        }
+    }
+
+    public void findHoles(){
+        for (int x = 0; x < groundLayer.getWidth(); x++) {
+            for (int y = 0; y < groundLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
+                int ID = cell.getTile().getId();
+                if (ID == TileID.HOLE.getId()){
+                    holes.add(new Vector2(x, y));
                 }
             }
         }
