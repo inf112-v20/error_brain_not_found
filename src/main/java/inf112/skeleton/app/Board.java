@@ -297,6 +297,8 @@ public class Board extends BoardLayers {
             case SOUTH:
                 neighbourPosition.y--;
                 break;
+            default:
+                break;
         }
         return neighbourPosition;
     }
