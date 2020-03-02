@@ -1,14 +1,14 @@
 package inf112.skeleton.app.enums;
 
 public enum TileID {
-    STARTPOS1(121),
-    STARTPOS2(122),
-    STARTPOS3(123),
-    STARTPOS4(124),
-    STARTPOS5(129),
-    STARTPOS6(130),
-    STARTPOS7(131),
-    STARTPOS8(133),
+    START_POS1(121),
+    START_POS2(122),
+    START_POS3(123),
+    START_POS4(124),
+    START_POS5(129),
+    START_POS6(130),
+    START_POS7(131),
+    START_POS8(133),
 
     EAST_WALL(23),
     SOUTH_WALL(29),
@@ -33,7 +33,7 @@ public enum TileID {
 
     PLAYER(137);
 
-    private int id;
+    private final int id;
 
     TileID(int id) {
         this.id = id;
