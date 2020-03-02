@@ -35,7 +35,8 @@ public enum TileID {
 
     FLAG_1(55),
     FLAG_2(63),
-    FLAG_3(71);
+    FLAG_3(71),
+    FLAG_4(79);
 
     private final int id;
 

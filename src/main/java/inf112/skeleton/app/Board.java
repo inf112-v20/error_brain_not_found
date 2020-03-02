@@ -106,6 +106,8 @@ public class Board extends BoardLayers {
                         flags.add(new Flag(2, x, y));
                     } else if (ID == TileID.FLAG_3.getId()) {
                         flags.add(new Flag(3, x, y));
+                    } else if (ID == TileID.FLAG_4.getId()) {
+                        flags.add(new Flag(4, x, y));
                     }
                 }
             }
