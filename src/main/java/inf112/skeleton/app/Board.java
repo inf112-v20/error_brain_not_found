@@ -95,16 +95,16 @@ public class Board extends BoardLayers {
      * and puts them in to the flag array.
      */
     public void findFlags() {
-        for (int x = 0; x < groundLayer.getWidth(); x++) {
-            for (int y = 0; y < groundLayer.getHeight(); y++) {
+        for (int x = 0; x < flagLayer.getWidth(); x++) {
+            for (int y = 0; y < flagLayer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = flagLayer.getCell(x, y);
                 if (cell != null)  {
                     int ID = cell.getTile().getId();
-                    if (ID == 55) {
+                    if (ID == TileID.FLAG_1.getId()) {
                         flags.add(new Flag(1, x, y));
-                    } else if (ID == 63) {
+                    } else if (ID == TileID.FLAG_2.getId()) {
                         flags.add(new Flag(2, x, y));
-                    } else if (ID == 71) {
+                    } else if (ID == TileID.FLAG_3.getId()) {
                         flags.add(new Flag(3, x, y));
                     }
                 }

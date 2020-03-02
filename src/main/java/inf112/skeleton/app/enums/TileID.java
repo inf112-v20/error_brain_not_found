@@ -31,7 +31,11 @@ public enum TileID {
     WRENCH(14),
     DOUBLE_WRENCH(7),
 
-    PLAYER(137);
+    PLAYER(137),
+
+    FLAG_1(55),
+    FLAG_2(63),
+    FLAG_3(71);
 
     private final int id;
 
