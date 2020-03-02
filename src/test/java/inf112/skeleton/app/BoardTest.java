@@ -43,7 +43,7 @@ public class BoardTest {
 
     @Test
     public void whenAPlayerIsAddedTheBoardHasIncrementedPlayersByOneTest() {
-        board.addPlayer(0,0, 1);
+        board.addPlayer(player);
         assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME + 1, board.getPlayers().size());
     }
 
