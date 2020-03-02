@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>inf112.skeleton.app</OriginalElement>
+  <nodes>
+    <node x="467.15" y="1184.0">inf112.skeleton.app.cards.ProgramCard</node>
+    <node x="254.2333333333333" y="1707.0">inf112.skeleton.app.RallyGame</node>
+    <node x="250.7333333333333" y="1876.0">inf112.skeleton.app.Main</node>
+    <node x="457.4" y="1420.0">inf112.skeleton.app.cards.Deck</node>
+    <node x="48.900000000000034" y="147.0">inf112.skeleton.app.Player</node>
+    <node x="1.3568347953215607" y="0.0">inf112.skeleton.app.enums.Direction</node>
+    <node x="43.39999999999998" y="405.0">inf112.skeleton.app.BoardLayers</node>
+    <node x="201.89999999999998" y="1151.0">inf112.skeleton.app.screens.GameScreen</node>
+    <node x="194.25211988304085" y="1409.0">inf112.skeleton.app.screens.MenuScreen</node>
+    <node x="176.39999999999998" y="607.0">inf112.skeleton.app.Board</node>
+    <node x="309.4" y="438.5">inf112.skeleton.app.objects.Flag</node>
+    <node x="471.4" y="438.0">inf112.skeleton.app.enums.TileID</node>
+    <node x="494.65" y="839.5">inf112.skeleton.app.enums.Rotate</node>
+    <node x="551.8166666666666" y="1740.0">inf112.skeleton.app.cards.CardHand</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="inf112.skeleton.app.Board" target="inf112.skeleton.app.enums.TileID">
+      <point x="81.66666666666669" y="-247.0" />
+      <point x="380.56666666666666" y="577.0" />
+      <point x="522.4" y="577.0" />
+      <point x="0.0" y="38.0" />
+    </edge>
+    <edge source="inf112.skeleton.app.Board" target="inf112.skeleton.app.objects.Flag">
+      <point x="54.44444444444446" y="-247.0" />
+      <point x="353.34444444444443" y="567.0" />
+      <point x="415.8999999999999" y="567.0" />
+      <point x="35.49999999999994" y="37.5" />
+    </edge>
+    <edge source="inf112.skeleton.app.cards.CardHand" target="inf112.skeleton.app.cards.Deck">
+      <point x="-39.75" y="-26.5" />
+      <point x="591.5666666666666" y="1687.0" />
+      <point x="610.7333333333333" y="1687.0" />
+      <point x="61.33333333333337" y="93.0" />
+    </edge>
+    <edge source="inf112.skeleton.app.RallyGame" target="inf112.skeleton.app.cards.Deck">
+      <point x="63.70833333333337" y="-59.5" />
+      <point x="387.44166666666666" y="1687.0" />
+      <point x="549.4" y="1687.0" />
+      <point x="0.0" y="93.0" />
+    </edge>
+    <edge source="inf112.skeleton.app.screens.GameScreen" target="inf112.skeleton.app.Board">
+      <point x="0.0" y="-104.0" />
+      <point x="293.4" y="1131.0" />
+      <point x="268.275" y="1131.0" />
+      <point x="-30.625" y="247.0" />
+    </edge>
+    <edge source="inf112.skeleton.app.Main" target="inf112.skeleton.app.RallyGame">
+      <point x="0.0" y="-26.5" />
+      <point x="0.0" y="59.5" />
+    </edge>
+    <edge source="inf112.skeleton.app.cards.CardHand" target="inf112.skeleton.app.cards.ProgramCard">
+      <point x="39.75" y="-26.5" />
+      <point x="671.0666666666666" y="1687.0" />
+      <point x="651.9" y="1687.0" />
+      <point x="651.9" y="1384.0" />
+      <point x="680.65" y="1384.0" />
+      <point x="91.5" y="71.0" />
+    </edge>
+    <edge source="inf112.skeleton.app.RallyGame" target="inf112.skeleton.app.Board">
+      <point x="-40.54166666666674" y="-59.5" />
+      <point x="283.19166666666655" y="1667.0" />
+      <point x="165.89999999999998" y="1667.0" />
+      <point x="165.89999999999998" y="1131.0" />
+      <point x="207.02499999999998" y="1131.0" />
+      <point x="-91.875" y="247.0" />
+    </edge>
+    <edge source="inf112.skeleton.app.cards.ProgramCard" target="inf112.skeleton.app.enums.Rotate">
+      <point x="-61.0" y="-71.0" />
+      <point x="528.15" y="1131.0" />
+      <point x="539.65" y="1131.0" />
+      <point x="0.0" y="14.5" />
+    </edge>
+    <edge source="inf112.skeleton.app.RallyGame" target="inf112.skeleton.app.screens.MenuScreen">
+      <point x="-17.375" y="-59.5" />
+      <point x="306.3583333333333" y="1647.0" />
+      <point x="224.58545321637422" y="1647.0" />
+      <point x="-60.66666666666663" y="104.0" />
+    </edge>
+    <edge source="inf112.skeleton.app.screens.MenuScreen" target="inf112.skeleton.app.RallyGame">
+      <point x="60.66666666666663" y="104.0" />
+      <point x="345.9187865497075" y="1637.0" />
+      <point x="329.5249999999999" y="1637.0" />
+      <point x="5.791666666666629" y="-59.5" />
+    </edge>
+    <edge source="inf112.skeleton.app.BoardLayers" target="inf112.skeleton.app.Player">
+      <point x="0.0" y="-71.0" />
+      <point x="0.0" y="104.0" />
+    </edge>
+    <edge source="inf112.skeleton.app.cards.Deck" target="inf112.skeleton.app.cards.ProgramCard">
+      <point x="23.0" y="-93.0" />
+      <point x="572.4" y="1384.0" />
+      <point x="558.65" y="1384.0" />
+      <point x="-30.5" y="71.0" />
+    </edge>
+    <edge source="inf112.skeleton.app.Board" target="inf112.skeleton.app.Player">
+      <point x="-27.22222222222223" y="-247.0" />
+      <point x="271.67777777777775" y="587.0" />
+      <point x="287.9" y="587.0" />
+      <point x="287.9" y="385.0" />
+      <point x="205.0" y="385.0" />
+      <point x="44.599999999999966" y="104.0" />
+    </edge>
+    <edge source="inf112.skeleton.app.screens.GameScreen" target="inf112.skeleton.app.RallyGame">
+      <point x="-61.0" y="104.0" />
+      <point x="232.39999999999998" y="1384.0" />
+      <point x="183.75211988304085" y="1384.0" />
+      <point x="183.75211988304085" y="1657.0" />
+      <point x="294.7749999999999" y="1657.0" />
+      <point x="-28.95833333333337" y="-59.5" />
+    </edge>
+    <edge source="inf112.skeleton.app.cards.Deck" target="inf112.skeleton.app.enums.Rotate">
+      <point x="-69.0" y="-93.0" />
+      <point x="480.4" y="1384.0" />
+      <point x="442.9" y="1384.0" />
+      <point x="442.9" y="1131.0" />
+      <point x="509.65" y="1131.0" />
+      <point x="-30.0" y="14.5" />
+    </edge>
+    <edge source="inf112.skeleton.app.RallyGame" target="inf112.skeleton.app.Player">
+      <point x="-52.125000000000114" y="-59.5" />
+      <point x="271.6083333333332" y="1677.0" />
+      <point x="21.899999999999977" y="1677.0" />
+      <point x="21.899999999999977" y="375.0" />
+      <point x="71.20000000000005" y="375.0" />
+      <point x="-89.19999999999999" y="104.0" />
+    </edge>
+    <edge source="inf112.skeleton.app.RallyGame" target="inf112.skeleton.app.enums.Direction">
+      <point x="-63.70833333333337" y="-59.5" />
+      <point x="260.0249999999999" y="1687.0" />
+      <point x="0.0" y="1687.0" />
+      <point x="0.0" y="122.0" />
+      <point x="48.98183479532156" y="122.0" />
+      <point x="-142.875" y="48.5" />
+    </edge>
+    <edge source="inf112.skeleton.app.Board" target="inf112.skeleton.app.enums.Direction">
+      <point x="108.88888888888891" y="-247.0" />
+      <point x="407.7888888888889" y="587.0" />
+      <point x="583.9" y="587.0" />
+      <point x="583.9" y="122.0" />
+      <point x="334.73183479532156" y="122.0" />
+      <point x="142.875" y="48.5" />
+    </edge>
+    <edge source="inf112.skeleton.app.Player" target="inf112.skeleton.app.enums.Direction">
+      <point x="55.75" y="-104.0" />
+      <point x="216.15000000000003" y="122.0" />
+      <point x="239.48183479532156" y="122.0" />
+      <point x="47.625" y="48.5" />
+    </edge>
+    <edge source="inf112.skeleton.app.Board" target="inf112.skeleton.app.BoardLayers">
+      <point x="-81.66666666666669" y="-247.0" />
+      <point x="217.2333333333333" y="577.0" />
+      <point x="101.89999999999998" y="577.0" />
+      <point x="-58.5" y="71.0" />
+    </edge>
+    <edge source="inf112.skeleton.app.screens.MenuScreen" target="inf112.skeleton.app.screens.GameScreen">
+      <point x="0.0" y="-104.0" />
+      <point x="285.25211988304085" y="1384.0" />
+      <point x="293.4" y="1384.0" />
+      <point x="0.0" y="104.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Group" zoom="0.5072014617971858" x="497.14844769341676" y="569.5093419891617" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Methods</Category>
+  </Categories>
+  <SCOPE>Production</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

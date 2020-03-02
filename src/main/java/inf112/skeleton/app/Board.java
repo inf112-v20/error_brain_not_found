@@ -6,7 +6,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.TileID;
-import inf112.skeleton.app.gameObjects.Flag;
+import inf112.skeleton.app.objects.Flag;
 
 import java.util.ArrayList;
 
@@ -35,8 +35,8 @@ public class Board extends BoardLayers {
     public void findFlags() {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
-                try {
-                    TiledMapTileLayer.Cell cell = flagLayer.getCell(x, y);
+                TiledMapTileLayer.Cell cell = flagLayer.getCell(x, y);
+                if (cell != null)  {
                     int ID = cell.getTile().getId();
                     if (ID == 55) {
                         flags.add(new Flag(1, x, y));
@@ -44,16 +44,14 @@ public class Board extends BoardLayers {
                         flags.add(new Flag(2, x, y));
                     } else if (ID == 71) {
                         flags.add(new Flag(3, x, y));
-                    } //TODO: Find the last ID to the 4th flag
-                } catch (Exception e){
-                    // There are so many nullPointers in this layer
+                    }
                 }
             }
         }
     }
 
     /**
-     * Check all cells on map for start positions and add a new player to that
+     * Check all cells on map for start positions got by {@link TileID} and add a new player to that
      * position based on number of players
      *
      * @param numPlayers number of robots playing, between 1-8
@@ -66,7 +64,7 @@ public class Board extends BoardLayers {
                 if (ID == TileID.STARTPOS1.getId()) {
                     addPlayer(x, y, 1);
                 } else if (ID == TileID.STARTPOS2.getId() && numPlayers > 1) {
-                    addPlayer(x, y,2);
+                    addPlayer(x, y, 2);
                 } else if (ID == TileID.STARTPOS3.getId() && numPlayers > 2) {
                     addPlayer(x, y, 3);
                 } else if (ID == TileID.STARTPOS4.getId() && numPlayers > 3) {
@@ -155,19 +153,17 @@ public class Board extends BoardLayers {
             default:
                 return;
         }
-
         player.setPosition(playerPosition);
         updatePlayers();
     }
 
     /**
-     * If player moved outside board, respawn them on last backup location
+     * If player moved outside board method return true
      * @param player current player
      */
-    private void outsideBoard(Player player) {
-        if (player.getPosition().x < 0 || player.getPosition().x > 15 || player.getPosition().y < 0 || player.getPosition().y > 11) {
-            player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
-        }
+    public boolean outsideBoard(Player player) {
+        //TODO: Fix constants
+        return player.getPosition().x < 0 || player.getPosition().x > 15 || player.getPosition().y < 0 || player.getPosition().y > 11;
     }
 
     /**
@@ -223,9 +219,19 @@ public class Board extends BoardLayers {
             TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
             TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("player");
             cell.setTile(tileSet.getTile(137));
-            outsideBoard(player);
+            if (outsideBoard(player)) {
+                respawn(player);
+            }
             playerLayer.setCell((int) player.getPosition().x, (int) player.getPosition().y, cell);
         }
+    }
+
+    /**
+     * Places a player in backup position when player is outside of board.
+     * @param player
+     */
+    private void respawn(Player player) {
+        player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
     }
 
     /**

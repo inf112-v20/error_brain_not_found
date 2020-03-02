@@ -20,29 +20,16 @@ public enum TileID {
     LEFT_LASER_WALL(38),
     UP_LASER_WALL(45),
 
-
-
     SOUTHEASTWALL(8),
     NORTHEASTWALL(16),
     NORTHWESTWALL(24),
     SOUTHWESTWALL(32),
 
-
     VERTICAL_LASER(47),
     HORIZONTAL_LASER(39),
 
-
-
-
-
-
     WRENCH(14),
     DOUBLE_WRENCH(7);
-
-
-
-
-
 
     private int id;
 

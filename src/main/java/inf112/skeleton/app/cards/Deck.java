@@ -8,23 +8,18 @@ import java.util.Stack;
 public class Deck {
     private Stack<ProgramCard> deck;
 
-    private ProgramCard card;
-    private int priority = 0;
-
     public Deck() {
         makeNewDeck();
         shuffleDeck();
     }
 
     /**
-     * Makes all the programCards and puts them on the stack
+     * Make all the programCards and put them in the stack
      */
     public void makeNewDeck() {
         deck = new Stack<>();
-
-
-        priority = makeRotateCards(priority);
-        makeMoveCards(priority);
+        makeRotateCards();
+        makeMoveCards();
     }
 
     /**
@@ -49,58 +44,39 @@ public class Deck {
     }
 
     /**
-     * Makes all the rotating cards, RotateR (18), RotateL (18) and RotateU (6) cards.
-     * @param startPri is the priority number the last card made had.
-     * @return the priority number of the last card made
+     * Make all rotate cards, 18 Rotate right, 18 Rotate left and 6 Rotate U-turn
+     * with priority evenly spread between all cards
      */
-    private int makeRotateCards(int startPri){
-        int priority = startPri;
-        for (int i = 0; i < 36; i++) {
-            priority += 10;
-            if (i % 2 == 0) {
-                card = new ProgramCard(priority, 0, Rotate.LEFT, "Rotate Left");
+    private void makeRotateCards() {
+        // Make 42 rotate cards
+        for (int priority = 1; priority <= 42; priority++) {
+            // Every seventh rotate card should be U-turn
+            if (priority % 7 == 0) {
+                deck.push(new ProgramCard(priority * 10, 0, Rotate.UTURN, "U-turn"));
+            } else if (priority % 2 == 0) {
+                deck.push(new ProgramCard(priority * 10, 0, Rotate.RIGHT, "Right rotate"));
             } else {
-                card = new ProgramCard(priority, 0, Rotate.RIGHT, "Rotate Right");
+                deck.push(new ProgramCard(priority * 10, 0, Rotate.LEFT, "Left rotate"));
             }
-            deck.push(card);
         }
-        for (int i = 0; i < 6; i++) {
-            priority += 10;
-            card = new ProgramCard(priority, 0, Rotate.UTURN, "U-Turn");
-            deck.push(card);
-        }
-        return priority;
     }
 
     /**
-     * Makes all the move cards, Move 1 (18), Move 2 (12) and Move 3 (6).
-     * @param startPri is the priority number of the last card made had.
+     * Make all move cards, 18 Move 1, 12 Move 2 and 6 Move 3
+     * with priority evenly spread between all cards
      */
-    private void makeMoveCards(int startPri){
-        int priority = startPri;
-        boolean checker = true;
-        for (int i = 0; i < 30; i++) {
-            priority += 10;
-
-            // This is so the move tre cards not all get in the same range of priority.
-            if (i % 3 == 0 && i < 18) {
-                card = new ProgramCard(priority, 3, Rotate.NONE, "Move 3");
+    private void makeMoveCards() {
+        int startPriority = 420;
+        // Make 36 move cards
+        for (int priority = 1; priority <= 36; priority++) {
+            if (priority % 6 == 0) {
+                // For every sixth card there should be one move 3, two move 2 and three move 1 cards
+                deck.push(new ProgramCard(priority * 10 + startPriority, 3, Rotate.NONE, "Move 3"));
+            } else if ((priority + 1) % 6 == 0 || (priority + 2) % 6 == 0) {
+                deck.push(new ProgramCard(priority * 10 + startPriority, 2, Rotate.NONE, "Move 2"));
             } else {
-                if (checker) {
-                    card = new ProgramCard(priority, 2, Rotate.NONE, "Move 2");
-                    checker = false;
-                } else {
-                    card = new ProgramCard(priority, 1, Rotate.NONE, "Move 1");
-                    checker = true;
-                }
+                deck.push(new ProgramCard(priority * 10 + startPriority, 1, Rotate.NONE, "Move 1"));
             }
-            deck.push(card);
-        }
-        // Making the last 6 Move 1 cards
-        for (int i = 0; i < 6; i++) {
-            priority += 10;
-            card = new ProgramCard(priority, 1, Rotate.NONE, "Move 1");
-            deck.push(card);
         }
     }
 }

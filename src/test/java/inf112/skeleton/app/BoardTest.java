@@ -57,21 +57,13 @@ public class BoardTest {
         assertEquals(BOARD_HEIGHT, board.getHeight());
     }
 
-    /**
-     * Test the check if a player is outside the board after a move, so
-     * it can be respawned.
-     *
-     * When board.playerIsOutsideBoard(player) is implemented in Board it should return true
-     * when the player moves outside.
-     *
-      */
+
     @Test
     public void whenPlayerIsOutsideOnTopOfBoardItIsDetectedTest() {
         player.setPosition(new Vector2(0, BOARD_HEIGHT-1));
         player.setDirection(Direction.NORTH);
         board.movePlayer(player);
-        //TODO: make player is outside borders function in board
-        //assertTrue(board.playerIsOutsideBoard(player));
+        assertTrue(board.outsideBoard(player));
     }
 
     @Test
@@ -79,8 +71,7 @@ public class BoardTest {
         player.setPosition(new Vector2(BOARD_WIDTH-1, 0));
         player.setDirection(Direction.EAST);
         board.movePlayer(player);
-        //TODO: make player is outside borders function in board
-        //assertTrue(board.playerIsOutsideBoard(player));
+        assertTrue(board.outsideBoard(player));
     }
 
     @Test
@@ -88,8 +79,7 @@ public class BoardTest {
         player.setPosition(new Vector2(0, 0));
         player.setDirection(Direction.WEST);
         board.movePlayer(player);
-        //TODO: make player is outside borders function in board
-        //assertTrue(board.playerIsOutsideBoard(player));
+        assertTrue(board.outsideBoard(player));
     }
 
     @Test
@@ -97,40 +87,7 @@ public class BoardTest {
         player.setPosition(new Vector2(0, 0));
         player.setDirection(Direction.SOUTH);
         board.movePlayer(player);
-        //TODO: make player is outside borders function in board
-        //assertTrue(board.playerIsOutsideBoard(player));
-    }
-
-
-    @Test
-    public void whenPlayerMovesOutsideBoardOnLeftSideItShouldBeAcceptedTest() {
-        player.setPosition(new Vector2(0, 0));
-        player.setDirection(Direction.WEST);
-        assertTrue(board.canGo(player));
-    }
-
-    @Test
-    public void whenPlayerMovesOutsideBoardOnRightSideItShouldBeAcceptedTest() {
-        player.setPosition(new Vector2(BOARD_WIDTH - 1, 0));
-        player.setDirection(Direction.EAST);
-        //TODO: Make canGo accept player go outside board
-        assertTrue(board.canGo(player));
-    }
-
-    @Test
-    public void whenPlayerMovesOutsideBoardOnTopItShouldBeAcceptedTest() {
-        player.setPosition(new Vector2(0, BOARD_HEIGHT-1));
-        player.setDirection(Direction.NORTH);
-        //TODO: Make canGo accept player go outside board
-        assertTrue(board.canGo(player));
-    }
-
-    @Test
-    public void whenPlayerMovesOutsideUnderBoardItShouldBeAcceptedTest() {
-        player.setPosition(new Vector2(0, 0));
-        player.setDirection(Direction.SOUTH);
-        //TODO: Make canGo accept player go outside board
-        assertTrue(board.canGo(player));
+        assertTrue(board.outsideBoard(player));
     }
 
     @Test
@@ -148,8 +105,5 @@ public class BoardTest {
         board.movePlayer(player);
         assertEquals((int) startPosition.y+1, (int) player.getPosition().y);
     }
-
-
-
 
 }
