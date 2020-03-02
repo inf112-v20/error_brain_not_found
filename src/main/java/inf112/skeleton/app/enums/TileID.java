@@ -10,34 +10,41 @@ public enum TileID {
     START_POS7(131),
     START_POS8(133),
 
-    RIGHT_WALL(23),
-    DOWN_WALL(29),
-    LEFT_WALL(30),
-    UP_WALL(31),
+    EAST_WALL(23),
+    SOUTH_WALL(29),
+    WEST_WALL(30),
+    NORTH_WALL(31),
 
-    RIGHT_LASER_WALL(46),
-    DOWN_LASER_WALL(37),
-    LEFT_LASER_WALL(38),
-    UP_LASER_WALL(45),
+    EAST_LASER_WALL(46),
+    SOUTH_LASER_WALL(37),
+    WEST_LASER_WALL(38),
+    NORTH_LASER_WALL(45),
 
-    SOUTHEASTWALL(8),
-    NORTHEASTWALL(16),
-    NORTHWESTWALL(24),
-    SOUTHWESTWALL(32),
+    SOUTHEAST_WALL(8),
+    NORTHEAST_WALL(16),
+    NORTHWEST_WALL(24),
+    SOUTHWEST_WALL(32),
 
     VERTICAL_LASER(47),
     HORIZONTAL_LASER(39),
 
     WRENCH(14),
-    DOUBLE_WRENCH(7);
+    DOUBLE_WRENCH(7),
+
+    PLAYER(137),
+
+    FLAG_1(55),
+    FLAG_2(63),
+    FLAG_3(71),
+    FLAG_4(79);
 
     private final int id;
 
+    TileID(int id) {
+        this.id = id;
+    }
     public int getId() {
         return this.id;
-    }
-    private TileID(int id) {
-        this.id = id;
     }
 }
 
