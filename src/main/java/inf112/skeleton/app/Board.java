@@ -168,6 +168,8 @@ public class Board extends BoardLayers {
             case WEST:
                 if (hasWestWall(cell) || hasEastWall(westCell)) { return false; }
                 break;
+            default:
+                break;
         }
         return true;
     }
@@ -271,7 +273,7 @@ public class Board extends BoardLayers {
                 position.y--;
                 break;
             default:
-                return;
+                break;
         }
         player.setPosition(position);
         addPlayer(player);
