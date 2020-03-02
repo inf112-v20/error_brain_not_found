@@ -13,7 +13,7 @@ public class ProgramCardTest {
 
     @Before
     public void setUp() {
-        card = new ProgramCard(1, 1, Rotate.NONE, "card1");
+        card = new ProgramCard(1, 1, Rotate.NONE, "Move 1");
     }
 
     @Test
