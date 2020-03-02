@@ -91,6 +91,18 @@ public class BoardTest {
     }
 
     @Test
+    public void whenPlayerIsOutsideOfBoardPlayerIsRespawned() {
+        Vector2 outsideOfBoardPosition = new Vector2(-1, 0);
+        board.addPlayer((int) outsideOfBoardPosition.x, (int) outsideOfBoardPosition.y, 1);
+        // Get player index because 2 players already added to board
+        Player respawnedPlayer = board.getPlayers().get(2);
+        // Let board know that player is outside of board
+        board.updatePlayers();
+        assertEquals(respawnedPlayer.getPosition(), respawnedPlayer.getBackupPosition());
+    }
+
+
+    @Test
     public void whenPlayerIsMovedPlayerHasChangedCoordinatesTest() {
         Vector2 startPosition = new Vector2(player.getPosition().x, player.getPosition().y);
         player.setDirection(Direction.EAST);
