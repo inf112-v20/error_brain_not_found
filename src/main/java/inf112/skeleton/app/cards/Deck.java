@@ -48,8 +48,8 @@ public class Deck {
      * with priority evenly spread between all cards
      */
     private void makeRotateCards() {
-        int ROTATE_CARDS = 42;
-        for (int priority = 1; priority <= ROTATE_CARDS; priority++) {
+        // Make 42 rotate cards
+        for (int priority = 1; priority <= 42; priority++) {
             // Every seventh rotate card should be U-turn
             if (priority % 7 == 0) {
                 deck.push(new ProgramCard(priority * 10, 0, Rotate.UTURN));
@@ -66,16 +66,16 @@ public class Deck {
      * with priority evenly spread between all cards
      */
     private void makeMoveCards() {
-        int MOVE_CARDS = 36;
         int startPriority = 420;
-        for (int priority = 1; priority <= MOVE_CARDS; priority++) {
+        // Make 36 move cards
+        for (int priority = 1; priority <= 36; priority++) {
             if (priority % 6 == 0) {
                 // For every sixth card there should be one move 3, two move 2 and three move 1 cards
-                deck.push(new ProgramCard(priority + startPriority, 3, Rotate.NONE));
+                deck.push(new ProgramCard(priority * 10 + startPriority, 3, Rotate.NONE));
             } else if ((priority + 1) % 6 == 0 || (priority + 2) % 6 == 0) {
-                deck.push(new ProgramCard(priority + startPriority, 2, Rotate.NONE));
+                deck.push(new ProgramCard(priority * 10 + startPriority, 2, Rotate.NONE));
             } else {
-                deck.push(new ProgramCard(priority + startPriority, 1, Rotate.NONE));
+                deck.push(new ProgramCard(priority * 10 + startPriority, 1, Rotate.NONE));
             }
         }
     }
