@@ -52,11 +52,11 @@ public class Deck {
         for (int priority = 1; priority <= 42; priority++) {
             // Every seventh rotate card should be U-turn
             if (priority % 7 == 0) {
-                deck.push(new ProgramCard(priority * 10, 0, Rotate.UTURN));
+                deck.push(new ProgramCard(priority * 10, 0, Rotate.UTURN, "U-turn"));
             } else if (priority % 2 == 0) {
-                deck.push(new ProgramCard(priority * 10, 0, Rotate.RIGHT));
+                deck.push(new ProgramCard(priority * 10, 0, Rotate.RIGHT, "Right rotate"));
             } else {
-                deck.push(new ProgramCard(priority * 10, 0, Rotate.LEFT));
+                deck.push(new ProgramCard(priority * 10, 0, Rotate.LEFT, "Left rotate"));
             }
         }
     }
@@ -71,11 +71,11 @@ public class Deck {
         for (int priority = 1; priority <= 36; priority++) {
             if (priority % 6 == 0) {
                 // For every sixth card there should be one move 3, two move 2 and three move 1 cards
-                deck.push(new ProgramCard(priority * 10 + startPriority, 3, Rotate.NONE));
+                deck.push(new ProgramCard(priority * 10 + startPriority, 3, Rotate.NONE, "Move 3"));
             } else if ((priority + 1) % 6 == 0 || (priority + 2) % 6 == 0) {
-                deck.push(new ProgramCard(priority * 10 + startPriority, 2, Rotate.NONE));
+                deck.push(new ProgramCard(priority * 10 + startPriority, 2, Rotate.NONE, "Move 2"));
             } else {
-                deck.push(new ProgramCard(priority * 10 + startPriority, 1, Rotate.NONE));
+                deck.push(new ProgramCard(priority * 10 + startPriority, 1, Rotate.NONE, "Move 1"));
             }
         }
     }
