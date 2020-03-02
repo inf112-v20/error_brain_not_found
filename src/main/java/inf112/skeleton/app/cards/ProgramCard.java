@@ -9,11 +9,10 @@ public class ProgramCard {
 
     private Rotate rotate;
 
-    public ProgramCard(int priority, int distance, Rotate rotate, String name) {
+    public ProgramCard(int priority, int distance, Rotate rotate) {
         this.priority = priority;
         this.distance = distance;
         this.rotate = rotate;
-        this.name = name;
     }
 
     public int getPriority() {
@@ -26,9 +25,5 @@ public class ProgramCard {
 
     public Rotate getRotate() {
         return rotate;
-    }
-
-    public String getName() {
-        return name;
     }
 }
