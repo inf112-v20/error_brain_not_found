@@ -99,6 +99,20 @@ public class Board extends BoardLayers {
         players.add(player);
     }
 
+    /**
+     * Add a player to the player layer in coordinate (x, y) and
+     * add that player to the list of players
+     *
+     * @param player
+     */
+    public void addPlayer(Player player) {
+        TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+        TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("player");
+        cell.setTile(tileSet.getTile(137));
+        playerLayer.setCell((int) player.getPosition().x, (int) player.getPosition().y, cell);
+        players.add(player);
+    }
+
     public Player getPlayer1() {
         for (Player player : players) {
             if (player.getPlayerNr() == 1) {
