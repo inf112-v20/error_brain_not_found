@@ -17,9 +17,6 @@ public class Board extends BoardLayers {
     private final ArrayList<Vector2> holes;
     private ArrayList<Player> players;
 
-    public Board(int numberOfPlayers) {
-        this("assets/testMap.tmx", numberOfPlayers);
-    }
 
     public Board(String mapPath, int numberOfPlayers) {
         super(mapPath);
