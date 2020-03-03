@@ -4,11 +4,12 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Vector2;
+import com.sun.imageio.plugins.tiff.TIFFAttrInfo;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.TileID;
 import inf112.skeleton.app.objects.Flag;
+
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Board extends BoardLayers {
 
@@ -36,8 +37,8 @@ public class Board extends BoardLayers {
     /**
      * Make new player and add player to game and board
      *
-     * @param x coordinate
-     * @param y coordinate
+     * @param x            coordinate
+     * @param y            coordinate
      * @param playerNumber of player
      */
     public void addPlayer(int x, int y, int playerNumber) {
@@ -104,7 +105,7 @@ public class Board extends BoardLayers {
         for (int x = 0; x < flagLayer.getWidth(); x++) {
             for (int y = 0; y < flagLayer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = flagLayer.getCell(x, y);
-                if (cell != null)  {
+                if (cell != null) {
                     int ID = cell.getTile().getId();
                     if (ID == TileID.FLAG_1.getId()) {
                         flags.add(new Flag(1, x, y));
@@ -120,13 +121,39 @@ public class Board extends BoardLayers {
         }
     }
 
-    public void findHoles(){
+    public void findHoles() {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
                 int ID = cell.getTile().getId();
-                if (ID == TileID.HOLE.getId()){
+                if (ID == TileID.NORMAL_HOLE.getId()) {
                     holes.add(new Vector2(x, y));
+                } else if (ID == TileID.NORMAL_HOLE2.getId()) {
+                    holes.add(new Vector2(x, y));
+                } else if (ID == TileID.NORTHWEST_HOLE.getId()) {
+                    holes.add(new Vector2(x, y));
+                } else if (ID == TileID.NORTH_HOLE.getId()) {
+                    holes.add(new Vector2(x, y));
+                } else if (ID == TileID.NORTHEAST_HOLE.getId()) {
+                    holes.add(new Vector2(x, y));
+                } else if (ID == TileID.EAST_HOLE.getId()) {
+                    holes.add(new Vector2(x, y));
+                } else if (ID == TileID.NORTH_EAST_SOUTH_HOLE.getId()) {
+                    holes.add(new Vector2(x, y));
+                } else if (ID == TileID.WEST_EAST_SOUTH_HOLE.getId()) {
+                    holes.add(new Vector2(x, y));
+                } else if (ID == TileID.SOUTHWEST_HOLE.getId()) {
+                    holes.add(new Vector2(x,y));
+                } else if (ID == TileID.SOUTH_HOLE.getId()) {
+                    holes.add(new Vector2(x,y));
+                } else if (ID == TileID.SOUTHEAST_HOLE.getId()){
+                    holes.add(new Vector2(x,y));
+                } else if (ID == TileID.WEST_HOLE.getId()) {
+                    holes.add(new Vector2(x,y));
+                } else if (ID == TileID.NORTH_WEST_SOUTH_HOLE.getId()){
+                    holes.add(new Vector2(x,y));
+                } else if (ID == TileID.NORTH_WEST_EAST_HOLE.getId()){
+                    holes.add(new Vector2(x,y));
                 }
             }
         }
@@ -134,6 +161,7 @@ public class Board extends BoardLayers {
 
     /**
      * Check if player is outside of board
+     *
      * @param player to check
      */
     public boolean outsideBoard(Player player) {
@@ -145,6 +173,7 @@ public class Board extends BoardLayers {
 
     /**
      * Places a player in backup position
+     *
      * @param player to respawn
      */
     private void respawn(Player player) {
@@ -164,7 +193,7 @@ public class Board extends BoardLayers {
     }
 
     /**
-     * @param position to go from
+     * @param position  to go from
      * @param direction to go in
      * @return true if there is no wall blocking the way
      */
@@ -177,16 +206,24 @@ public class Board extends BoardLayers {
 
         switch (direction) {
             case NORTH:
-                if (hasNorthWall(cell) || hasSouthWall(northCell)) { return false; }
+                if (hasNorthWall(cell) || hasSouthWall(northCell)) {
+                    return false;
+                }
                 break;
             case SOUTH:
-                if (hasSouthWall(cell) || hasNorthWall(southCell)) { return false; }
+                if (hasSouthWall(cell) || hasNorthWall(southCell)) {
+                    return false;
+                }
                 break;
             case EAST:
-                if (hasEastWall(cell) || hasWestWall(eastCell)) { return false; }
+                if (hasEastWall(cell) || hasWestWall(eastCell)) {
+                    return false;
+                }
                 break;
             case WEST:
-                if (hasWestWall(cell) || hasEastWall(westCell)) { return false; }
+                if (hasWestWall(cell) || hasEastWall(westCell)) {
+                    return false;
+                }
                 break;
             default:
                 break;
@@ -267,7 +304,9 @@ public class Board extends BoardLayers {
         Vector2 position = player.getPosition();
         Direction direction = player.getDirection();
 
-        if (!canGo(position, direction)) { return; }
+        if (!canGo(position, direction)) {
+            return;
+        }
         if (shouldPush(player)) {
             Player enemyPlayer = getPlayer(getNeighbourPosition(player.getPosition(), direction));
             if (canPush(enemyPlayer, direction)) {
@@ -300,7 +339,7 @@ public class Board extends BoardLayers {
     }
 
     /**
-     * @param position to go from
+     * @param position  to go from
      * @param direction to go in
      * @return neighbour position in direction from position
      */
@@ -336,6 +375,7 @@ public class Board extends BoardLayers {
 
     /**
      * Return player if there is a player in that position
+     *
      * @param position to check
      * @return player in position
      */
@@ -350,6 +390,7 @@ public class Board extends BoardLayers {
 
     /**
      * Check if the moving player should try to push another player
+     *
      * @param player trying to move
      * @return true if player should push another player to move
      */
@@ -358,7 +399,7 @@ public class Board extends BoardLayers {
     }
 
     /**
-     * @param player that should be pushed
+     * @param player    that should be pushed
      * @param direction to push in
      * @return true if it is possible to push all enemies in a row
      */
@@ -374,7 +415,8 @@ public class Board extends BoardLayers {
      * Remove player from board
      * Update player position according to direction
      * Add player to cell that corresponds to player position
-     * @param player that should be pushed
+     *
+     * @param player    that should be pushed
      * @param direction to push player in
      */
     private void pushPlayer(Player player, Direction direction) {
@@ -403,6 +445,7 @@ public class Board extends BoardLayers {
 
     /**
      * Remove player from board
+     *
      * @param player to remove from board
      */
     public void removePlayerFromBoard(Player player) {
