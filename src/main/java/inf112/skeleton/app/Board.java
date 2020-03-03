@@ -1,6 +1,7 @@
 package inf112.skeleton.app;
 
 import com.badlogic.gdx.maps.tiled.TiledMap;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Vector2;
@@ -27,6 +28,22 @@ public class Board extends BoardLayers {
         addPlayersToStartPositions(numberOfPlayers);
     }
 
+    private TiledMapTile getRobotTile(Player player) {
+        TiledMapTileSet tileSet = this.tiledMap.getTileSets().getTileSet("robots");
+        switch (player.getDirection()) {
+            case SOUTH:
+                return tileSet.getTile(140);
+            case NORTH:
+                return tileSet.getTile(141);
+            case EAST:
+                return tileSet.getTile(142);
+            case WEST:
+                return tileSet.getTile(143);
+            default:
+                return null;
+        }
+    }
+
     /**
      * Make new player and add player to game and board
      *
@@ -47,8 +64,7 @@ public class Board extends BoardLayers {
      */
     public void addPlayer(Player player) {
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-        TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("player");
-        cell.setTile(tileSet.getTile(TileID.PLAYER.getId()));
+        cell.setTile(getRobotTile(player));
         if (outsideBoard(player)) {
             respawn(player);
         }
@@ -249,7 +265,10 @@ public class Board extends BoardLayers {
         Vector2 position = player.getPosition();
         Direction direction = player.getDirection();
 
-        if (!canGo(position, direction)) { return; }
+        if (!canGo(position, direction)) {
+            addPlayer(player);
+            return;
+        }
         if (shouldPush(player)) {
             Player enemyPlayer = getPlayer(getNeighbourPosition(player.getPosition(), direction));
             if (canPush(enemyPlayer, direction)) {
@@ -388,9 +407,6 @@ public class Board extends BoardLayers {
      * @param player to remove from board
      */
     public void removePlayerFromBoard(Player player) {
-        TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-        TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("player");
-        cell.setTile(tileSet.getTile(TileID.PLAYER.getId()));
         playerLayer.setCell((int) player.getPosition().x, (int) player.getPosition().y, null);
     }
 
