@@ -7,7 +7,9 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.MenuScreen;
+import inf112.skeleton.app.screens.YouWinScreen;
 
 public class RallyGame extends Game {
 
@@ -37,9 +39,16 @@ public class RallyGame extends Game {
                     return super.keyDown(keycode);
                 }
                 board.movePlayer(player);
+                if (player.hasAllFlags(board.getFlags().size())) {
+                    setWinScreen();
+                }
                 return super.keyDown(keycode);
             }
         });
+    }
+
+    public void setWinScreen() {
+        this.setScreen(new GifScreen(this));
     }
 
     public void render() {
