@@ -366,8 +366,13 @@ public class Board extends BoardLayers {
             default:
                 break;
         }
+
         player.setPosition(position);
         addPlayer(player);
+
+        if (hasFlag(player.getPosition())) {
+            pickUpFlag(player);
+        }
     }
 
     /**
@@ -482,6 +487,28 @@ public class Board extends BoardLayers {
      */
     public void removePlayerFromBoard(Player player) {
         playerLayer.setCell((int) player.getPosition().x, (int) player.getPosition().y, null);
+    }
+
+    public boolean hasFlag(Vector2 position) {
+        return flagLayer.getCell((int) position.x, (int) position.y) != null;
+    }
+
+    public Flag getFlag(Vector2 position) {
+        for (Flag flag : flags) {
+            if (flag.getPosition().equals(position)) {
+                return flag;
+            }
+        }
+        return null;
+    }
+
+    public void pickUpFlag(Player player) {
+        Flag flag = getFlag(player.getPosition());
+        player.pickUpFlag(getFlag(player.getPosition()), flag.getFlagnr());
+    }
+
+    public ArrayList<Flag> getFlags(){
+        return flags;
     }
 
     /**
