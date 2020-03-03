@@ -247,7 +247,7 @@ public class Board extends BoardLayers {
      * @param cell to check for wall
      * @return true if cell has a wall on west side
      */
-    private boolean hasWestWall(TiledMapTileLayer.Cell cell) {
+    public boolean hasWestWall(TiledMapTileLayer.Cell cell) {
         if (cell != null) {
             int tileID = cell.getTile().getId();
             return tileID == TileID.WEST_WALL.getId() ||
@@ -292,7 +292,7 @@ public class Board extends BoardLayers {
      * @param cell to check for wall
      * @return true if cell has a wall on north side
      */
-    private boolean hasNorthWall(TiledMapTileLayer.Cell cell) {
+    public boolean hasNorthWall(TiledMapTileLayer.Cell cell) {
         if (cell != null) {
             int tileID = cell.getTile().getId();
             return tileID == TileID.NORTH_WALL.getId() ||

@@ -2,6 +2,7 @@ package inf112.skeleton.app;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
 import org.junit.Before;
@@ -105,6 +106,15 @@ public class BoardTest {
         player.setDirection(Direction.NORTH);
         board.movePlayer(player);
         assertEquals((int) startPosition.y+1, (int) player.getPosition().y);
+    }
+
+    @Test
+    public void whenPlayerIsOnCellWithWallItShouldBeDetectedTest() {
+        // Found position in Risky_Exchange.tmx
+        player.setPosition(new Vector2(2, 0));
+        TiledMapTileLayer wallLayer = board.getWallLayer();
+        TiledMapTileLayer.Cell playerCell = wallLayer.getCell((int) player.getPosition().x, (int) player.getPosition().y);
+        assertTrue(board.hasNorthWall(playerCell));
     }
 
 }
