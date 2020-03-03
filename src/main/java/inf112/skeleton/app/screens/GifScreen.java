@@ -37,8 +37,6 @@ public class GifScreen implements Screen {
         game.batch.setProjectionMatrix(camera.combined);
 
         elapsed += Gdx.graphics.getDeltaTime();
-        Gdx.gl.glClearColor(1, 0, 0, 0);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         game.batch.begin();
         game.batch.draw(animation.getKeyFrame(elapsed), 0, 0, camera.viewportWidth, camera.viewportHeight);
         game.batch.end();
@@ -50,7 +48,6 @@ public class GifScreen implements Screen {
             }
             game.setScreen(new YouWinScreen(game));
         }
-
     }
 
     @Override
