@@ -133,6 +133,9 @@ public class Board extends BoardLayers {
         }
     }
 
+    /**
+     * Finds where there is a hole on the map, and adds a {@link Vector2} to the holes list.
+     */
     public void findHoles() {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
@@ -172,6 +175,21 @@ public class Board extends BoardLayers {
     }
 
     /**
+     * Checks if player moves on to a hole
+     * @param player that is checked
+     * @return true if the player moves onto a hole
+     */
+    private boolean onHole(Player player) {
+        Vector2 position = player.getPosition();
+        for (Vector2 vector : holes){
+            if (vector.equals(position)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * Check if player is outside of board
      *
      * @param player to check
@@ -180,7 +198,8 @@ public class Board extends BoardLayers {
         return player.getPosition().x < 0 ||
                 player.getPosition().x >= this.boardWidth ||
                 player.getPosition().y < 0 ||
-                player.getPosition().y >= this.boardHeight;
+                player.getPosition().y >= this.boardHeight ||
+                onHole(player);
     }
 
     /**
