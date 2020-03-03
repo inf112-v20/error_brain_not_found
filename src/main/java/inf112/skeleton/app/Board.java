@@ -176,6 +176,12 @@ public class Board extends BoardLayers {
             }
         }
     }
+
+    /**
+     * Checks if player moves on to a hole
+     * @param player that is checked
+     * @return true if the player moves onto a hole
+     */
     private boolean onHole(Player player) {
         Vector2 position = player.getPosition();
         for (Vector2 vector : holes){
