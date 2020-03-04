@@ -35,7 +35,10 @@ public class RallyGame extends Game {
                     player.setDirection(Direction.NORTH);
                 } else if (keycode == Input.Keys.DOWN) {
                     player.setDirection(Direction.SOUTH);
-                } else {
+                } else if (keycode == Input.Keys.ESCAPE){
+                    Gdx.app.exit();
+                }
+                else {
                     return super.keyDown(keycode);
                 }
                 board.movePlayer(player);
