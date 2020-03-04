@@ -16,7 +16,7 @@ public class MenuScreen implements Screen {
 
     public MenuScreen(final RallyGame game) {
         this.game = game;
-        this.background = new Texture("assets/RoboRallyMenuScreen.png");
+        this.background = new Texture("assets/images/RoboRallyMenuScreen.png");
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
