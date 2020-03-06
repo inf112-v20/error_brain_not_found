@@ -39,6 +39,9 @@ public class Player {
         }
     }
 
+    /**
+     * @return backup position
+     */
     public Vector2 getBackupPosition() {
         return backupPosition;
     }
