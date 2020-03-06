@@ -1,21 +1,11 @@
 package inf112.skeleton.app.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.TextureData;
-import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.scenes.scene2d.*;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import inf112.skeleton.app.RallyGame;
 
 public class MenuScreen implements Screen {
@@ -28,7 +18,6 @@ public class MenuScreen implements Screen {
     private static final int EXIT_BUTTON_Y = 100;
 
     private final RallyGame game;
-    //public Batch batch;
 
     Texture startButtonInactive;
     Texture startButtonActive;
@@ -37,10 +26,7 @@ public class MenuScreen implements Screen {
 
     private OrthographicCamera camera;
     private Texture background;
-    private Texture startButton;
-    private Label outputLabel;
-    private Stage stage;
-    private Sprite button1;
+    private Music music;
 
     public MenuScreen(RallyGame game) {
         this.game = game;
@@ -50,6 +36,12 @@ public class MenuScreen implements Screen {
         startButtonInactive = new Texture("assets/images/Start_Button_Active.png");
         exitButtonInactive = new Texture("assets/images/Exit_Button_Active.png");
         exitButtonActive= new Texture("assets/images/Exit_Button_Inactive.png");
+
+        music = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
+        music.setLooping(true);
+        music.setVolume(1f);
+        music.play();
+
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
@@ -62,7 +54,6 @@ public class MenuScreen implements Screen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         camera.update();
-//        game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
         game.batch.draw(background, 0, 0, camera.viewportWidth, camera.viewportHeight);
 

@@ -1,7 +1,6 @@
 package inf112.skeleton.app;
 
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Flag;
@@ -15,9 +14,6 @@ public class Player {
     private Vector2 position;
     private Direction direction;
     private ArrayList<Flag> flagsCollected;
-    private int HP = 10;
-    private int lifePoint = 3;
-    private boolean alive = true;
 
     public Player(Vector2 position, int playerNr) {
         this.position = position;
