@@ -84,7 +84,7 @@ public class BoardTest {
     }
 
     @Test
-    public void whenPlayerIsOutsideOfBoardPlayerIsRespawned() {
+    public void whenPlayerIsOutsideOfBoardPlayerIsRespawnedTest() {
         Vector2 outsideOfBoardPosition = new Vector2(-1, 0);
         player.setPosition(outsideOfBoardPosition);
         board.addPlayer(player);
@@ -109,12 +109,38 @@ public class BoardTest {
     }
 
     @Test
-    public void whenPlayerIsOnCellWithWallItShouldBeDetectedTest() {
-        // Found position in Risky_Exchange.tmx
+    public void whenPlayerIsOnCellWithNorthWallHasNorthWallShouldBeTrueTest() {
+        // Found position in Risky_Exchange.tmx, North Wall has ID 31
         player.setPosition(new Vector2(2, 0));
         TiledMapTileLayer wallLayer = board.getWallLayer();
         TiledMapTileLayer.Cell playerCell = wallLayer.getCell((int) player.getPosition().x, (int) player.getPosition().y);
         assertTrue(board.hasNorthWall(playerCell));
     }
+
+    @Test
+    public void whenPlayerIsOnCellWithSouthWestWallHasSouthWallShouldBeTrueTest() {
+        // Found position in Risky_Exchange.tmx, SouthWest wall has ID 32
+        player.setPosition(new Vector2(11, 7));
+        TiledMapTileLayer wallLayer = board.getWallLayer();
+        TiledMapTileLayer.Cell playerCell = wallLayer.getCell((int) player.getPosition().x, (int) player.getPosition().y);
+        assertTrue(board.hasWestWall(playerCell));
+    }
+
+    @Test
+    public void whenPlayerIsOnCellWithEastWallHasEastWallShouldBeTrueTest() {
+        // Found position in Risky_Exchange.tmx, East Wall ha ID 23
+        player.setPosition(new Vector2(3, 2));
+        TiledMapTileLayer wallLayer = board.getWallLayer();
+        TiledMapTileLayer.Cell playerCell = wallLayer.getCell((int) player.getPosition().x, (int) player.getPosition().y);
+        assertTrue(board.hasEastWall(playerCell));
+    }
+
+    @Test
+    public void whenGivenPositionWithNorthWallAndNorthDirectionCanGoReturnsFalseTest() {
+        // Found position in Risky_Exchange.tmx, North Wall has ID 31
+        Vector2 tileWithNorthWallPosition = new Vector2(2, 0);
+        assertFalse(board.canGo(tileWithNorthWallPosition, Direction.NORTH));
+    }
+
 
 }

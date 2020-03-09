@@ -228,7 +228,7 @@ public class Board extends BoardLayers {
      * @param direction to go in
      * @return true if there is no wall blocking the way
      */
-    private boolean canGo(Vector2 position, Direction direction) {
+    public boolean canGo(Vector2 position, Direction direction) {
         TiledMapTileLayer.Cell cell = wallLayer.getCell((int) position.x, (int) position.y);
         TiledMapTileLayer.Cell northCell = wallLayer.getCell((int) position.x, (int) position.y + 1);
         TiledMapTileLayer.Cell southCell = wallLayer.getCell((int) position.x, (int) position.y - 1);
@@ -281,7 +281,7 @@ public class Board extends BoardLayers {
      * @param cell to check for wall
      * @return true if cell has a wall on east side
      */
-    private boolean hasEastWall(TiledMapTileLayer.Cell cell) {
+    public boolean hasEastWall(TiledMapTileLayer.Cell cell) {
         if (cell != null) {
             int tileID = cell.getTile().getId();
             return tileID == TileID.EAST_WALL.getId() ||
@@ -296,7 +296,7 @@ public class Board extends BoardLayers {
      * @param cell to check for wall
      * @return true if cell has a wall on south side
      */
-    private boolean hasSouthWall(TiledMapTileLayer.Cell cell) {
+    public boolean hasSouthWall(TiledMapTileLayer.Cell cell) {
         if (cell != null) {
             int tileID = cell.getTile().getId();
             return tileID == TileID.SOUTH_WALL.getId() ||
