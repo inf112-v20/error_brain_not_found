@@ -1,7 +1,9 @@
 package inf112.skeleton.app;
 
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Flag;
 
@@ -14,13 +16,53 @@ public class Player {
     private Vector2 position;
     private Direction direction;
     private ArrayList<Flag> flagsCollected;
+    private ArrayList<ProgramCard> programCards;
 
     public Player(Vector2 position, int playerNr) {
         this.position = position;
         this.direction = Direction.EAST;
         this.playerNr = playerNr;
         this.flagsCollected = new ArrayList<>();
+        this.programCards = new ArrayList<>();
         setBackupPosition(position);
+    }
+
+    public ProgramCard playCard(RallyGame game) {
+        ProgramCard card = programCards.remove(0);
+        switch (card.getRotate()) {
+            case RIGHT:
+                setDirection(this.direction.turnRight());
+                game.getBoard().rotatePlayer(this);
+                break;
+            case LEFT:
+                setDirection(this.direction.turnLeft());
+                game.getBoard().rotatePlayer(this);
+                break;
+            case UTURN:
+                setDirection(this.direction.turnAround());
+                game.getBoard().rotatePlayer(this);
+                break;
+            case NONE:
+                for (int i = 0; i < card.getDistance(); i++) {
+                    game.getBoard().movePlayer(this);
+                }
+                break;
+            default:
+                break;
+        }
+        return card;
+    }
+
+    public void drawCard(RallyGame game) {
+        programCards.add(game.deck.drawCard());
+    }
+
+    public ArrayList<ProgramCard> getProgramCards() {
+        return programCards;
+    }
+
+    public void setProgramCards(ArrayList<ProgramCard> programCards) {
+        this.programCards = programCards;
     }
 
     /**

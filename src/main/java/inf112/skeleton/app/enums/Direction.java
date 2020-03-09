@@ -25,15 +25,24 @@ public enum Direction {
     }
 
     /**
+     * Turns the {@link Direction} to opposite direction.
+     *
+     * @return {@link Direction} after opposite transformation.
+     */
+    public Direction turnAround() {
+        return getDirection(WEST, SOUTH, EAST, NORTH);
+    }
+
+    /**
      * Help function instead of duplicate code
      *
      * @param baseCaseEAST  The direction it's supposed to be if the case is EAST.
      * @param baseCaseNORTH The direction it's supposed to be if the case is NORTH.
      * @param baseCaseWEST  The direction it's supposed to be if the case is WEST.
-     * @param baseCaseSOUT  The direction it's supposed to be if the case is SOUTH.
+     * @param baseCaseSOUTH  The direction it's supposed to be if the case is SOUTH.
      * @return The right facing after a given transformation.
      */
-    private Direction getDirection(Direction baseCaseEAST, Direction baseCaseNORTH, Direction baseCaseWEST, Direction baseCaseSOUT) {
+    private Direction getDirection(Direction baseCaseEAST, Direction baseCaseNORTH, Direction baseCaseWEST, Direction baseCaseSOUTH) {
         switch (this) {
             case EAST:
                 return baseCaseEAST;
@@ -42,7 +51,7 @@ public enum Direction {
             case WEST:
                 return baseCaseWEST;
             case SOUTH:
-                return baseCaseSOUT;
+                return baseCaseSOUTH;
             default:
                 return null;
         }
