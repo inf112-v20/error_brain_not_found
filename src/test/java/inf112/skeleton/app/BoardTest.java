@@ -211,6 +211,18 @@ public class BoardTest {
         }
     }
 
+    @Test
+    public void playerIsNotFacingWallButOnSameTileAsWallThenPlayerCanMoveTest() {
+        // Test for several random walls
+        for (int i = 0; i < 5; i++) {
+            player.setPosition(getRandomNorthWallPosition());
+            player.setDirection(Direction.WEST);
+            Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
+            board.movePlayer(player);
+            assertNotEquals(posBefore, player.getPosition());
+        }
+    }
+
     /**
      * @param cell
      * @return true if cell only has north wall
