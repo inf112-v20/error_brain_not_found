@@ -3,6 +3,9 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.objects.Flag;
+
+import java.util.ArrayList;
 
 public class Player {
 
@@ -10,11 +13,13 @@ public class Player {
     private Vector2 backupPosition;
     private Vector2 position;
     private Direction direction;
+    private ArrayList<Flag> flagsCollected;
 
     public Player(Vector2 position, int playerNr) {
         this.position = position;
         this.direction = Direction.EAST;
         this.playerNr = playerNr;
+        this.flagsCollected = new ArrayList<>();
         setBackupPosition(position);
     }
 
@@ -68,5 +73,36 @@ public class Player {
      */
     public void setDirection(Direction direction) {
         this.direction = direction;
+    }
+
+    public void pickUpFlag(Flag flag, int flagNr) {
+        switch (flagNr) {
+            case 1:
+                if (!flagsCollected.contains(flag)) {
+                    flagsCollected.add(flag);
+                }
+                break;
+            case 2:
+                if (!flagsCollected.contains(flag) && flagsCollected.size() == 1) {
+                    flagsCollected.add(flag);
+                }
+                break;
+            case 3:
+                if (!flagsCollected.contains(flag) && flagsCollected.size() == 2) {
+                    flagsCollected.add(flag);
+                }
+                break;
+            case 4:
+                if (!flagsCollected.contains(flag) && flagsCollected.size() == 3) {
+                    flagsCollected.add(flag);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    public boolean hasAllFlags(int numberOfFlags) {
+        return flagsCollected.size() == numberOfFlags;
     }
 }

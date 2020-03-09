@@ -7,6 +7,8 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.screens.GifScreen;
+import inf112.skeleton.app.screens.LoadingScreen;
 import inf112.skeleton.app.screens.MenuScreen;
 
 public class RallyGame extends Game {
@@ -17,8 +19,9 @@ public class RallyGame extends Game {
 
     public void create() {
         this.batch = new SpriteBatch();
-        this.board = new Board("assets/Island_Hop.tmx", 4);
-        this.setScreen(new MenuScreen(this));
+        this.board = new Board("assets/maps/Risky_Exchange.tmx", 4);
+        //this.setScreen(new MenuScreen(this));
+        this.setScreen(new LoadingScreen(this));
         this.deck = new Deck();
 
         Gdx.input.setInputProcessor(new InputAdapter() {
@@ -33,13 +36,23 @@ public class RallyGame extends Game {
                     player.setDirection(Direction.NORTH);
                 } else if (keycode == Input.Keys.DOWN) {
                     player.setDirection(Direction.SOUTH);
-                } else {
+                } else if (keycode == Input.Keys.ESCAPE){
+                    Gdx.app.exit();
+                }
+                else {
                     return super.keyDown(keycode);
                 }
                 board.movePlayer(player);
+                if (player.hasAllFlags(board.getFlags().size())) {
+                    setWinScreen();
+                }
                 return super.keyDown(keycode);
             }
         });
+    }
+
+    public void setWinScreen() {
+        this.setScreen(new GifScreen(this));
     }
 
     public void render() {
@@ -48,6 +61,7 @@ public class RallyGame extends Game {
 
     public void dispose() {
         batch.dispose();
+
     }
 
     public Board getBoard() {

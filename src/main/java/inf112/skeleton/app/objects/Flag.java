@@ -12,11 +12,16 @@ public class Flag {
         this.position = position;
     }
 
-
     public Flag(int flagnr, int x, int y) {
         this.flagnr = flagnr;
         this.position = new Vector2(x, y);
     }
 
+    public Vector2 getPosition() {
+        return position;
+    }
 
+    public int getFlagnr() {
+        return flagnr;
+    }
 }
