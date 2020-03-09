@@ -191,13 +191,35 @@ public class BoardTest {
     @Test
     public void whenPlayerIsFacingEastWallAndMovesItWillNotChangePositionTest() {
         // Test for several random walls
-        for (int i = 0; i < 10; i++) {
-            player.setPosition(getRandomNorthWallPosition());
-            player.setDirection(Direction.NORTH);
+        for (int i = 0; i < 5; i++) {
+            player.setPosition(getRandomEastWallPosition());
+            player.setDirection(Direction.EAST);
             Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
             board.movePlayer(player);
             assertEquals(posBefore, player.getPosition());
         }
+    }
+
+    @Test
+    public void whenPlayerIsFacingWestWallAndMovesItWillNotChangePositionTest() {
+        // Test for several random walls
+        for (int i = 0; i < 5; i++) {
+            player.setPosition(getRandomWestWallPosition());
+            player.setDirection(Direction.WEST);
+            Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
+            board.movePlayer(player);
+            assertEquals(posBefore, player.getPosition());
+        }
+    }
+
+    /**
+     * Get the position of a random north wall so that player can be placed on this position.
+     *
+     * @return position of random north wall on board.
+     */
+    private Vector2 getRandomWestWallPosition() {
+        int randomIndex = random.nextInt(westWalls.size());
+        return westWalls.get(randomIndex);
     }
 
     /**
@@ -218,6 +240,16 @@ public class BoardTest {
     private Vector2 getRandomSouthWallPosition() {
         int randomIndex = random.nextInt(southWalls.size());
         return southWalls.get(randomIndex);
+    }
+
+    /**
+     * Get the position of a random east wall so that player can be placed on this position.
+     *
+     * @return position of random east wall on board.
+     */
+    private Vector2 getRandomEastWallPosition() {
+        int randomIndex = random.nextInt(eastWalls.size());
+        return eastWalls.get(randomIndex);
     }
 
     /**
