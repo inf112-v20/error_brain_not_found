@@ -2,6 +2,7 @@ package inf112.skeleton.app;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
@@ -138,9 +139,40 @@ public class BoardTest {
     @Test
     public void whenGivenPositionWithNorthWallAndNorthDirectionCanGoReturnsFalseTest() {
         // Found position in Risky_Exchange.tmx, North Wall has ID 31
-        Vector2 tileWithNorthWallPosition = new Vector2(2, 0);
-        assertFalse(board.canGo(tileWithNorthWallPosition, Direction.NORTH));
+        Vector2 northWallPosition = new Vector2(2, 0);
+        assertFalse(board.canGo(northWallPosition, Direction.NORTH));
     }
+
+    @Test
+    public void whenGivenPositionWithEastWallAndEastDirectionCanGoReturnsFalseTest() {
+        // Found position in Risky_Exchange.tmx, East Wall has ID 23
+        Vector2 eastWallPosition = new Vector2(6, 1);
+        assertFalse(board.canGo(eastWallPosition, Direction.EAST));
+    }
+
+    @Test
+    public void whenPlayerIsFacingWallAndMovesItWillNotChangePositionTest() {
+
+    }
+
+    /**
+     * Get the position of a north wall so that player can be placed on this position.
+     *
+     * @return position of north wall on board
+     */
+    private Vector2 getNorthWallPosition() {
+        TiledMapTileLayer wallLayer = board.getWallLayer();
+        for (int x = 0; x < BOARD_WIDTH; x++) {
+            for (int y = 0; y < BOARD_HEIGHT; y++) {
+                Vector2 pos = new Vector2(x, y);
+                if (board.hasNorthWall(wallLayer.getCell(x,y))) {
+                    return pos;
+                }
+            }
+        }
+        return null;
+    }
+
 
 
 }
