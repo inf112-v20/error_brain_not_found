@@ -9,6 +9,10 @@ import inf112.skeleton.app.enums.Direction;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Random;
+
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
@@ -20,6 +24,7 @@ public class BoardTest {
     private final int BOARD_WIDTH = 16;
     private final int BOARD_HEIGHT = 12;
     private Player player;
+    private Random random;
 
     @Before
     public void setUp() {
@@ -30,6 +35,7 @@ public class BoardTest {
         new HeadlessApplication(new EmptyApplication());
         this.board = new Board("assets/maps/Risky_Exchange.tmx", NUMBER_OF_PLAYERS_WHEN_STARTING_GAME);
         this.player = new Player(new Vector2(0,0), 1);
+        random = new Random();
     }
 
 
@@ -152,25 +158,34 @@ public class BoardTest {
 
     @Test
     public void whenPlayerIsFacingWallAndMovesItWillNotChangePositionTest() {
-
+        // Test for several random walls
+        for (int i = 0; i < 10; i++) {
+            player.setPosition(getRandomNorthWallPosition());
+            player.setDirection(Direction.NORTH);
+            Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
+            board.movePlayer(player);
+            assertEquals(posBefore, player.getPosition());
+        }
     }
 
     /**
-     * Get the position of a north wall so that player can be placed on this position.
+     * Get the position of a random north wall so that player can be placed on this position.
      *
-     * @return position of north wall on board
+     * @return position of random north wall on board.
      */
-    private Vector2 getNorthWallPosition() {
+    private Vector2 getRandomNorthWallPosition() {
+        ArrayList<Vector2> walls = new ArrayList<>();
         TiledMapTileLayer wallLayer = board.getWallLayer();
         for (int x = 0; x < BOARD_WIDTH; x++) {
             for (int y = 0; y < BOARD_HEIGHT; y++) {
                 Vector2 pos = new Vector2(x, y);
                 if (board.hasNorthWall(wallLayer.getCell(x,y))) {
-                    return pos;
+                    walls.add(pos);
                 }
             }
         }
-        return null;
+        int randomIndex = random.nextInt(walls.size());
+        return walls.get(randomIndex);
     }
 
 
