@@ -38,9 +38,6 @@ public class RallyGame extends Game {
                     player.setDirection(Direction.SOUTH);
                 } else if (keycode == Input.Keys.ESCAPE) {
                     Gdx.app.exit();
-                } else if (keycode == Input.Keys.SPACE) {
-                    doTurn();
-                    return super.keyDown(keycode);
                 } else {
                     return super.keyDown(keycode);
                 }
@@ -51,14 +48,6 @@ public class RallyGame extends Game {
                 return super.keyDown(keycode);
             }
         });
-    }
-
-    public void doTurn() {
-        // TODO: Alle skal velge kort
-        // TODO: Alle kort skal spilles
-        // TODO: Belter skal flytte/rotere
-        // TODO: Laser skal skyte
-        // TODO: Vant noen?
     }
 
     public void setWinScreen() {
