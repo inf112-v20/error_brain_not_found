@@ -5,10 +5,9 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.enums.TileID;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -213,6 +212,50 @@ public class BoardTest {
     }
 
     /**
+     * @param cell
+     * @return true if cell only has north wall
+     */
+    private boolean isNorthWall(TiledMapTileLayer.Cell cell) {
+        if (cell == null) {
+            return false;
+        }
+        return cell.getTile().getId() == TileID.NORTH_WALL.getId();
+    }
+
+    /**
+     * @param cell
+     * @return true if cell only has south wall
+     */
+    private boolean isSouthWall(TiledMapTileLayer.Cell cell) {
+        if (cell == null) {
+            return false;
+        }
+        return cell.getTile().getId() == TileID.SOUTH_WALL.getId();
+    }
+
+    /**
+     * @param cell
+     * @return true if cell only has east wall
+     */
+    private boolean isEastWall(TiledMapTileLayer.Cell cell) {
+        if (cell == null) {
+            return false;
+        }
+        return cell.getTile().getId() == TileID.EAST_WALL.getId();
+    }
+
+    /**
+     * @param cell
+     * @return true if cell only has west wall
+     */
+    private boolean isWestWall(TiledMapTileLayer.Cell cell) {
+        if (cell == null) {
+            return false;
+        }
+        return cell.getTile().getId() == TileID.WEST_WALL.getId();
+    }
+
+    /**
      * Get the position of a random north wall so that player can be placed on this position.
      *
      * @return position of random north wall on board.
@@ -261,16 +304,18 @@ public class BoardTest {
             for (int y = 0; y < BOARD_HEIGHT; y++) {
                 Vector2 pos = new Vector2(x, y);
                 TiledMapTileLayer.Cell cell = wallLayer.getCell(x, y);
-                if (board.hasSouthWall(cell)) {
+                System.out.print(cell);
+                System.out.print(TileID.SOUTH_WALL.getId());
+                if (isSouthWall(cell)) {
                     southWalls.add(pos);
                 }
-                if (board.hasNorthWall(cell)) {
+                if (isNorthWall(cell)) {
                     northWalls.add(pos);
                 }
-                if (board.hasEastWall(cell)) {
+                if (isEastWall(cell)) {
                     eastWalls.add(pos);
                 }
-                if (board.hasWestWall(cell)) {
+                if (isWestWall(cell)) {
                     westWalls.add(pos);
                 }
             }
