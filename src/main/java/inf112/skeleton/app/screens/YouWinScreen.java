@@ -16,7 +16,7 @@ public class YouWinScreen implements Screen {
 
     public YouWinScreen(final RallyGame game) {
         this.game = game;
-        this.background = new Texture("assets/YouWin.png");
+        this.background = new Texture("assets/images/YouWin.png");
         camera = new OrthographicCamera();
         camera.setToOrtho(false, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     }
