@@ -2,15 +2,14 @@ package inf112.skeleton.app;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -25,6 +24,10 @@ public class BoardTest {
     private final int BOARD_HEIGHT = 12;
     private Player player;
     private Random random;
+    private ArrayList<Vector2> northWalls;
+    private ArrayList<Vector2> southWalls;
+    private ArrayList<Vector2> eastWalls;
+    private ArrayList<Vector2> westWalls;
 
     @Before
     public void setUp() {
@@ -36,6 +39,11 @@ public class BoardTest {
         this.board = new Board("assets/maps/Risky_Exchange.tmx", NUMBER_OF_PLAYERS_WHEN_STARTING_GAME);
         this.player = new Player(new Vector2(0,0), 1);
         random = new Random();
+        northWalls = new ArrayList<>();
+        southWalls = new ArrayList<>();
+        eastWalls = new ArrayList<>();
+        westWalls = new ArrayList<>();
+        putPositionsToWallsInLists();
     }
 
 
@@ -157,7 +165,31 @@ public class BoardTest {
     }
 
     @Test
-    public void whenPlayerIsFacingWallAndMovesItWillNotChangePositionTest() {
+    public void whenPlayerIsFacingNorthWallAndMovesItWillNotChangePositionTest() {
+        // Test for some random walls
+        for (int i = 0; i < 5; i++) {
+            player.setPosition(getRandomNorthWallPosition());
+            player.setDirection(Direction.NORTH);
+            Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
+            board.movePlayer(player);
+            assertEquals(posBefore, player.getPosition());
+        }
+    }
+
+    @Test
+    public void whenPlayerIsFacingSouthWallAndMovesItWillNotChangePositionTest() {
+        // Test for some random walls
+        for (int i = 0; i < 5; i++) {
+            player.setPosition(getRandomSouthWallPosition());
+            player.setDirection(Direction.SOUTH);
+            Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
+            board.movePlayer(player);
+            assertEquals(posBefore, player.getPosition());
+        }
+    }
+
+    @Test
+    public void whenPlayerIsFacingEastWallAndMovesItWillNotChangePositionTest() {
         // Test for several random walls
         for (int i = 0; i < 10; i++) {
             player.setPosition(getRandomNorthWallPosition());
@@ -174,19 +206,48 @@ public class BoardTest {
      * @return position of random north wall on board.
      */
     private Vector2 getRandomNorthWallPosition() {
-        ArrayList<Vector2> walls = new ArrayList<>();
+        int randomIndex = random.nextInt(northWalls.size());
+        return northWalls.get(randomIndex);
+    }
+
+    /**
+     * Get the position of a random south wall so that player can be placed on this position.
+     *
+     * @return position of random south wall on board.
+     */
+    private Vector2 getRandomSouthWallPosition() {
+        int randomIndex = random.nextInt(southWalls.size());
+        return southWalls.get(randomIndex);
+    }
+
+    /**
+     * Put all position to the walls on board in lists.
+     */
+    private void putPositionsToWallsInLists() {
         TiledMapTileLayer wallLayer = board.getWallLayer();
         for (int x = 0; x < BOARD_WIDTH; x++) {
             for (int y = 0; y < BOARD_HEIGHT; y++) {
                 Vector2 pos = new Vector2(x, y);
-                if (board.hasNorthWall(wallLayer.getCell(x,y))) {
-                    walls.add(pos);
+                TiledMapTileLayer.Cell cell = wallLayer.getCell(x, y);
+                if (board.hasSouthWall(cell)) {
+                    southWalls.add(pos);
+                }
+                if (board.hasNorthWall(cell)) {
+                    northWalls.add(pos);
+                }
+                if (board.hasEastWall(cell)) {
+                    eastWalls.add(pos);
+                }
+                if (board.hasWestWall(cell)) {
+                    westWalls.add(pos);
                 }
             }
         }
-        int randomIndex = random.nextInt(walls.size());
-        return walls.get(randomIndex);
     }
+
+
+
+
 
 
 
