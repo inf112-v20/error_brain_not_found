@@ -31,7 +31,7 @@ public class Player {
      */
     public void setBackup(Vector2 backupPosition, Direction backupDirection) {
         if (this.backupPosition == null) {
-            this.backupPosition = new Vector2(backupPosition.x, backupPosition.y);
+            this.backupPosition = new Vector2(backupPosition);
         } else {
             this.backupPosition.set(backupPosition.x, backupPosition.y);
         }
