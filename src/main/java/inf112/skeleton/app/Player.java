@@ -27,43 +27,15 @@ public class Player {
         setBackupPosition(position);
     }
 
-    public ProgramCard playCard(RallyGame game) {
-        ProgramCard card = programCards.remove(0);
-        switch (card.getRotate()) {
-            case RIGHT:
-                setDirection(this.direction.turnRight());
-                game.getBoard().rotatePlayer(this);
-                break;
-            case LEFT:
-                setDirection(this.direction.turnLeft());
-                game.getBoard().rotatePlayer(this);
-                break;
-            case UTURN:
-                setDirection(this.direction.turnAround());
-                game.getBoard().rotatePlayer(this);
-                break;
-            case NONE:
-                for (int i = 0; i < card.getDistance(); i++) {
-                    game.getBoard().movePlayer(this);
-                }
-                break;
-            default:
-                break;
-        }
-        return card;
-    }
-
-    public void drawCard(RallyGame game) {
-        programCards.add(game.deck.drawCard());
+    public void addCard(ProgramCard card) {
+        programCards.add(card);
     }
 
     public ArrayList<ProgramCard> getProgramCards() {
         return programCards;
     }
 
-    public void setProgramCards(ArrayList<ProgramCard> programCards) {
-        this.programCards = programCards;
-    }
+    public ProgramCard removeCard() {return programCards.remove(0); }
 
     /**
      * Set new backup position
