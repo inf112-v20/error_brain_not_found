@@ -50,16 +50,16 @@ public class WallTests {
      * neighbour cell, we need to get walls so that the player can be positioned
      * next to the wall without getting outside the board.
      *
-     * @return position to a wall where the wall is not on east border
+     * @return list of positions to east side walls where a player can stand on east side of wall
      */
-    private Vector2 getRandomEastWallNeighbourPosition() {
+    private ArrayList<Vector2> getEastWallsNotOnBorderPositions() {
         ArrayList<Vector2> eastWallsWithNeighbourCellOnEastSide = new ArrayList<>();
         for (Vector2 wall : eastWalls) {
-            if (wall.x < BOARD_WIDTH-1) {
+            if (wall.x < board.getWidth()-1) {
                 eastWallsWithNeighbourCellOnEastSide.add(wall);
             }
         }
-        return getRandomWallPosition(eastWallsWithNeighbourCellOnEastSide);
+        return eastWallsWithNeighbourCellOnEastSide;
 
     }
 
@@ -123,8 +123,8 @@ public class WallTests {
      */
     private void putPositionsToWallsInLists() {
         TiledMapTileLayer wallLayer = board.getWallLayer();
-        for (int x = 0; x < BOARD_WIDTH; x++) {
-            for (int y = 0; y < BOARD_HEIGHT; y++) {
+        for (int x = 0; x < board.getWidth(); x++) {
+            for (int y = 0; y < board.getHeight(); y++) {
                 Vector2 pos = new Vector2(x, y);
                 TiledMapTileLayer.Cell cell = wallLayer.getCell(x, y);
                 System.out.print(cell);
@@ -320,7 +320,7 @@ public class WallTests {
     public void playerFacingRandomWallOnNeighbourCellCanNotMoveTest() {
         // Test for some random walls
         for (int i = 0; i < 5; i++) {
-            Vector2 neighbourCellWithWall = getRandomEastWallNeighbourPosition();
+            Vector2 neighbourCellWithWall = getRandomWallPosition(getEastWallsNotOnBorderPositions());
             int neighbourX = (int) neighbourCellWithWall.x;
             int neighbourY = (int) neighbourCellWithWall.y;
             Vector2 playerPosition = new Vector2(neighbourX + 1, neighbourY);
