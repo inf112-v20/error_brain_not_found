@@ -57,48 +57,48 @@ public class BoardTest {
     }
 
     @Test
-    public void whenAPlayerIsAddedTheBoardHasIncrementedPlayersByOneTest() {
+    public void aPlayerIsAddedToTheBoardIncrementPlayersTest() {
         board.addPlayer(player);
         assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME + 1, board.getPlayers().size());
     }
 
     @Test
-    public void whenBoardIsInitBoardWidthIsTheSameAsExpectedTest() {
+    public void boardInitializedWithCorrectWidthTest() {
         assertEquals(BOARD_WIDTH, board.getWidth());
     }
 
     @Test
-    public void whenBoardIsInitBoardHeightIsTheSameAsExpectedTest() {
+    public void boardInitializedWithCorrectHeightTest() {
         assertEquals(BOARD_HEIGHT, board.getHeight());
     }
 
 
     @Test
-    public void whenPlayerIsOutsideOnTopOfBoardItIsDetectedTest() {
+    public void playerIsOutsideOfUpperBorderTest() {
         player.setPosition(new Vector2(0, BOARD_HEIGHT));
         assertTrue(board.outsideBoard(player));
     }
 
     @Test
-    public void whenPlayerIsOutsideOnRightSideOfBoardItIsDetectedTest() {
+    public void playerIsOutsideOfRightBorderTest() {
         player.setPosition(new Vector2(BOARD_WIDTH, 0));
         assertTrue(board.outsideBoard(player));
     }
 
     @Test
-    public void whenPlayerIsOutsideOnLeftSideOfBoardItIsDetectedTest() {
+    public void playerIsOutsideOfLeftBorderTest() {
         player.setPosition(new Vector2(-1, 0));
         assertTrue(board.outsideBoard(player));
     }
 
     @Test
-    public void whenPlayerIsOutsideUnderTheBoardItIsDetectedTest() {
+    public void playerIsOutsideOfUnderBorderTest() {
         player.setPosition(new Vector2(0, -1));
         assertTrue(board.outsideBoard(player));
     }
 
     @Test
-    public void whenPlayerIsOutsideOfBoardPlayerIsRespawnedTest() {
+    public void playerOutsideBoardPlayerIsRespawnedTest() {
         Vector2 outsideOfBoardPosition = new Vector2(-1, 0);
         player.setPosition(outsideOfBoardPosition);
         board.addPlayer(player);
@@ -107,7 +107,7 @@ public class BoardTest {
 
 
     @Test
-    public void whenPlayerIsMovedPlayerHasChangedCoordinatesTest() {
+    public void playerHasMovedThenPlayerHasChangedCoordinatesTest() {
         Vector2 startPosition = new Vector2(player.getPosition().x, player.getPosition().y);
         player.setDirection(Direction.EAST);
         board.movePlayer(player);
@@ -123,7 +123,7 @@ public class BoardTest {
     }
 
     @Test
-    public void whenPlayerIsOnCellWithNorthWallHasNorthWallShouldBeTrueTest() {
+    public void playerIsOnCellWithNorthWallTest() {
         // Found position in Risky_Exchange.tmx, North Wall has ID 31
         player.setPosition(new Vector2(2, 0));
         TiledMapTileLayer wallLayer = board.getWallLayer();
@@ -132,7 +132,7 @@ public class BoardTest {
     }
 
     @Test
-    public void whenPlayerIsOnCellWithSouthWestWallHasSouthWallShouldBeTrueTest() {
+    public void playerIsOnCellWithWestWallTest() {
         // Found position in Risky_Exchange.tmx, SouthWest wall has ID 32
         player.setPosition(new Vector2(11, 7));
         TiledMapTileLayer wallLayer = board.getWallLayer();
@@ -141,7 +141,7 @@ public class BoardTest {
     }
 
     @Test
-    public void whenPlayerIsOnCellWithEastWallHasEastWallShouldBeTrueTest() {
+    public void playerIsOnCellWithEastWallTestTest() {
         // Found position in Risky_Exchange.tmx, East Wall ha ID 23
         player.setPosition(new Vector2(3, 2));
         TiledMapTileLayer wallLayer = board.getWallLayer();
@@ -150,21 +150,21 @@ public class BoardTest {
     }
 
     @Test
-    public void whenGivenPositionWithNorthWallAndNorthDirectionCanGoReturnsFalseTest() {
+    public void playerFacingNorthWallCanNotGoTest() {
         // Found position in Risky_Exchange.tmx, North Wall has ID 31
         Vector2 northWallPosition = new Vector2(2, 0);
         assertFalse(board.canGo(northWallPosition, Direction.NORTH));
     }
 
     @Test
-    public void whenGivenPositionWithEastWallAndEastDirectionCanGoReturnsFalseTest() {
+    public void playerFacingEastWallCanNotGoTest() {
         // Found position in Risky_Exchange.tmx, East Wall has ID 23
         Vector2 eastWallPosition = new Vector2(6, 1);
         assertFalse(board.canGo(eastWallPosition, Direction.EAST));
     }
 
     @Test
-    public void whenPlayerIsFacingNorthWallAndMovesItWillNotChangePositionTest() {
+    public void playerFacingRandomNorthWallDoesNotMoveTest() {
         // Test for some random walls
         for (int i = 0; i < 5; i++) {
             player.setPosition(getRandomNorthWallPosition());
@@ -176,7 +176,7 @@ public class BoardTest {
     }
 
     @Test
-    public void whenPlayerIsFacingSouthWallAndMovesItWillNotChangePositionTest() {
+    public void playerFacingRandomSouthWallDoesNotMoveTest() {
         // Test for some random walls
         for (int i = 0; i < 5; i++) {
             player.setPosition(getRandomSouthWallPosition());
@@ -188,7 +188,7 @@ public class BoardTest {
     }
 
     @Test
-    public void whenPlayerIsFacingEastWallAndMovesItWillNotChangePositionTest() {
+    public void playerFacingRandomEastWallDoesNotMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
             player.setPosition(getRandomEastWallPosition());
@@ -200,7 +200,7 @@ public class BoardTest {
     }
 
     @Test
-    public void whenPlayerIsFacingWestWallAndMovesItWillNotChangePositionTest() {
+    public void playerFacingRandomWestWallDoesNotMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
             player.setPosition(getRandomWestWallPosition());
@@ -258,6 +258,8 @@ public class BoardTest {
             assertNotEquals(posBefore, player.getPosition());
         }
     }
+
+
 
 
 
