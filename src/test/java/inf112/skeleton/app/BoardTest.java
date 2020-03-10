@@ -8,6 +8,7 @@ import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.TileID;
 import org.junit.Before;
 import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -150,7 +151,7 @@ public class BoardTest {
     }
 
     @Test
-    public void playerFacingNorthWallCanNotGoTest() {
+    public void playerFacingRandomNorthWallCanNotGoTest() {
         // Test for some random walls on board
         for (int i = 0; i < 5; i++) {
             assertFalse(board.canGo(getRandomNorthWallPosition(), Direction.NORTH));
@@ -158,7 +159,7 @@ public class BoardTest {
     }
 
     @Test
-    public void playerFacingEastWallCanNotGoTest() {
+    public void playerFacingRandomEastWallCanNotGoTest() {
         // Test for some random walls on board
         for (int i = 0; i < 5; i++) {
             assertFalse(board.canGo(getRandomEastWallPosition(), Direction.EAST));
@@ -166,7 +167,7 @@ public class BoardTest {
     }
 
     @Test
-    public void playerFacingSouthWallCanNotGoTest() {
+    public void playerFacingRandomSouthWallCanNotGoTest() {
         // Test for some random walls on board
         for (int i = 0; i < 5; i++) {
             assertFalse(board.canGo(getRandomSouthWallPosition(), Direction.SOUTH));
@@ -174,18 +175,11 @@ public class BoardTest {
     }
 
     @Test
-    public void playerFacingWestWallCanNotGoTest() {
+    public void playerFacingRandomWestWallCanNotGoTest() {
         // Test for some random walls on board
         for (int i = 0; i < 5; i++) {
             assertFalse(board.canGo(getRandomWestWallPosition(), Direction.WEST));
         }
-    }
-
-
-
-    @Test
-    public void playerFacingWallOnNeighbourCellCanNotGoTest() {
-
     }
 
     @Test
@@ -284,7 +278,42 @@ public class BoardTest {
         }
     }
 
-
+    /**
+     * A player can be on tile with no walls but still
+     * have a neighbouring tile with wall pointing against
+     * player. So when a player tries to go on this tile, it should
+     * be blocked even though it has no wall on the tile player is standing
+     * on.
+     *
+     * Here the scenario is:
+     *
+     *    ----------
+     *    |    |<-P|
+     *    |        |
+     *    |        |
+     *    |________|
+     *
+     */
+    @Test
+    public void playerFacingRandomWallOnNeighbourCellCanNotMoveTest() {
+        // Test for some random walls
+        for (int i = 0; i < 5; i++) {
+            Vector2 neighbourCellWithWall = getRandomEastWallPosition();
+            int neighbourX = (int) neighbourCellWithWall.x;
+            int neighbourY = (int) neighbourCellWithWall.y;
+            // If wall is on border east side, player can not
+            // get on the cell next to it
+            while (neighbourX >= BOARD_WIDTH -1) {
+                neighbourCellWithWall = getRandomEastWallPosition();
+                neighbourX = (int) neighbourCellWithWall.x;
+            }
+            Vector2 playerPosition = new Vector2(neighbourX + 1, neighbourY);
+            player.setPosition(playerPosition);
+            player.setDirection(Direction.WEST);
+            board.movePlayer(player);
+            assertEquals(playerPosition, player.getPosition());
+        }
+    }
 
     /**
      * @param cell
@@ -396,11 +425,5 @@ public class BoardTest {
             }
         }
     }
-
-
-
-
-
-
 
 }
