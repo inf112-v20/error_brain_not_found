@@ -151,16 +151,41 @@ public class BoardTest {
 
     @Test
     public void playerFacingNorthWallCanNotGoTest() {
-        // Found position in Risky_Exchange.tmx, North Wall has ID 31
-        Vector2 northWallPosition = new Vector2(2, 0);
-        assertFalse(board.canGo(northWallPosition, Direction.NORTH));
+        // Test for some random walls on board
+        for (int i = 0; i < 5; i++) {
+            assertFalse(board.canGo(getRandomNorthWallPosition(), Direction.NORTH));
+        }
     }
 
     @Test
     public void playerFacingEastWallCanNotGoTest() {
-        // Found position in Risky_Exchange.tmx, East Wall has ID 23
-        Vector2 eastWallPosition = new Vector2(6, 1);
-        assertFalse(board.canGo(eastWallPosition, Direction.EAST));
+        // Test for some random walls on board
+        for (int i = 0; i < 5; i++) {
+            assertFalse(board.canGo(getRandomEastWallPosition(), Direction.EAST));
+        }
+    }
+
+    @Test
+    public void playerFacingSouthWallCanNotGoTest() {
+        // Test for some random walls on board
+        for (int i = 0; i < 5; i++) {
+            assertFalse(board.canGo(getRandomSouthWallPosition(), Direction.SOUTH));
+        }
+    }
+
+    @Test
+    public void playerFacingWestWallCanNotGoTest() {
+        // Test for some random walls on board
+        for (int i = 0; i < 5; i++) {
+            assertFalse(board.canGo(getRandomWestWallPosition(), Direction.WEST));
+        }
+    }
+
+
+
+    @Test
+    public void playerFacingWallOnNeighbourCellCanNotGoTest() {
+
     }
 
     @Test
@@ -212,7 +237,7 @@ public class BoardTest {
     }
 
     @Test
-    public void playerIsNotFacingNorthWallButOnSameTileAsWallThenPlayerCanMoveTest() {
+    public void playerIsNotFacingRandomNorthWallButOnSameTileAsWallThenPlayerCanMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
             player.setPosition(getRandomNorthWallPosition());
@@ -224,7 +249,7 @@ public class BoardTest {
     }
 
     @Test
-    public void playerIsNotFacingWestWallButOnSameTileAsWallThenPlayerCanMoveTest() {
+    public void playerIsNotFacingRandomWestWallButOnSameTileAsWallThenPlayerCanMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
             player.setPosition(getRandomWestWallPosition());
@@ -236,7 +261,7 @@ public class BoardTest {
     }
 
     @Test
-    public void playerIsNotFacingEastWallButOnSameTileAsWallThenPlayerCanMoveTest() {
+    public void playerIsNotFacingRandomEastWallButOnSameTileAsWallThenPlayerCanMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
             player.setPosition(getRandomEastWallPosition());
@@ -248,7 +273,7 @@ public class BoardTest {
     }
 
     @Test
-    public void playerIsNotFacingSouthWallButOnSameTileAsWallThenPlayerCanMoveTest() {
+    public void playerIsNotFacingRandomSouthWallButOnSameTileAsWallThenPlayerCanMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
             player.setPosition(getRandomSouthWallPosition());
@@ -258,8 +283,6 @@ public class BoardTest {
             assertNotEquals(posBefore, player.getPosition());
         }
     }
-
-
 
 
 
