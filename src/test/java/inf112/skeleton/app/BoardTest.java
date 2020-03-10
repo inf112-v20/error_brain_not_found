@@ -212,7 +212,7 @@ public class BoardTest {
     }
 
     @Test
-    public void playerIsNotFacingWallButOnSameTileAsWallThenPlayerCanMoveTest() {
+    public void playerIsNotFacingNorthWallButOnSameTileAsWallThenPlayerCanMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
             player.setPosition(getRandomNorthWallPosition());
@@ -222,6 +222,44 @@ public class BoardTest {
             assertNotEquals(posBefore, player.getPosition());
         }
     }
+
+    @Test
+    public void playerIsNotFacingWestWallButOnSameTileAsWallThenPlayerCanMoveTest() {
+        // Test for several random walls
+        for (int i = 0; i < 5; i++) {
+            player.setPosition(getRandomWestWallPosition());
+            player.setDirection(Direction.EAST);
+            Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
+            board.movePlayer(player);
+            assertNotEquals(posBefore, player.getPosition());
+        }
+    }
+
+    @Test
+    public void playerIsNotFacingEastWallButOnSameTileAsWallThenPlayerCanMoveTest() {
+        // Test for several random walls
+        for (int i = 0; i < 5; i++) {
+            player.setPosition(getRandomEastWallPosition());
+            player.setDirection(Direction.SOUTH);
+            Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
+            board.movePlayer(player);
+            assertNotEquals(posBefore, player.getPosition());
+        }
+    }
+
+    @Test
+    public void playerIsNotFacingSouthWallButOnSameTileAsWallThenPlayerCanMoveTest() {
+        // Test for several random walls
+        for (int i = 0; i < 5; i++) {
+            player.setPosition(getRandomSouthWallPosition());
+            player.setDirection(Direction.NORTH);
+            Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
+            board.movePlayer(player);
+            assertNotEquals(posBefore, player.getPosition());
+        }
+    }
+
+
 
     /**
      * @param cell
