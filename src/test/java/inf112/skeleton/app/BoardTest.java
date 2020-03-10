@@ -154,7 +154,7 @@ public class BoardTest {
     public void playerFacingRandomNorthWallCanNotGoTest() {
         // Test for some random walls on board
         for (int i = 0; i < 5; i++) {
-            assertFalse(board.canGo(getRandomNorthWallPosition(), Direction.NORTH));
+            assertFalse(board.canGo(getRandomWallPosition(northWalls), Direction.NORTH));
         }
     }
 
@@ -162,7 +162,7 @@ public class BoardTest {
     public void playerFacingRandomEastWallCanNotGoTest() {
         // Test for some random walls on board
         for (int i = 0; i < 5; i++) {
-            assertFalse(board.canGo(getRandomEastWallPosition(), Direction.EAST));
+            assertFalse(board.canGo(getRandomWallPosition(eastWalls), Direction.EAST));
         }
     }
 
@@ -170,7 +170,7 @@ public class BoardTest {
     public void playerFacingRandomSouthWallCanNotGoTest() {
         // Test for some random walls on board
         for (int i = 0; i < 5; i++) {
-            assertFalse(board.canGo(getRandomSouthWallPosition(), Direction.SOUTH));
+            assertFalse(board.canGo(getRandomWallPosition(southWalls), Direction.SOUTH));
         }
     }
 
@@ -178,7 +178,7 @@ public class BoardTest {
     public void playerFacingRandomWestWallCanNotGoTest() {
         // Test for some random walls on board
         for (int i = 0; i < 5; i++) {
-            assertFalse(board.canGo(getRandomWestWallPosition(), Direction.WEST));
+            assertFalse(board.canGo(getRandomWallPosition(westWalls), Direction.WEST));
         }
     }
 
@@ -186,7 +186,7 @@ public class BoardTest {
     public void playerFacingRandomNorthWallDoesNotMoveTest() {
         // Test for some random walls
         for (int i = 0; i < 5; i++) {
-            player.setPosition(getRandomNorthWallPosition());
+            player.setPosition(getRandomWallPosition(northWalls));
             player.setDirection(Direction.NORTH);
             Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
             board.movePlayer(player);
@@ -198,7 +198,7 @@ public class BoardTest {
     public void playerFacingRandomSouthWallDoesNotMoveTest() {
         // Test for some random walls
         for (int i = 0; i < 5; i++) {
-            player.setPosition(getRandomSouthWallPosition());
+            player.setPosition(getRandomWallPosition(southWalls));
             player.setDirection(Direction.SOUTH);
             Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
             board.movePlayer(player);
@@ -210,7 +210,7 @@ public class BoardTest {
     public void playerFacingRandomEastWallDoesNotMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
-            player.setPosition(getRandomEastWallPosition());
+            player.setPosition(getRandomWallPosition(eastWalls));
             player.setDirection(Direction.EAST);
             Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
             board.movePlayer(player);
@@ -222,7 +222,7 @@ public class BoardTest {
     public void playerFacingRandomWestWallDoesNotMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
-            player.setPosition(getRandomWestWallPosition());
+            player.setPosition(getRandomWallPosition(westWalls));
             player.setDirection(Direction.WEST);
             Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
             board.movePlayer(player);
@@ -234,7 +234,7 @@ public class BoardTest {
     public void playerIsNotFacingRandomNorthWallButOnSameTileAsWallThenPlayerCanMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
-            player.setPosition(getRandomNorthWallPosition());
+            player.setPosition(getRandomWallPosition(northWalls));
             player.setDirection(Direction.WEST);
             Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
             board.movePlayer(player);
@@ -246,7 +246,7 @@ public class BoardTest {
     public void playerIsNotFacingRandomWestWallButOnSameTileAsWallThenPlayerCanMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
-            player.setPosition(getRandomWestWallPosition());
+            player.setPosition(getRandomWallPosition(westWalls));
             player.setDirection(Direction.EAST);
             Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
             board.movePlayer(player);
@@ -258,7 +258,7 @@ public class BoardTest {
     public void playerIsNotFacingRandomEastWallButOnSameTileAsWallThenPlayerCanMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
-            player.setPosition(getRandomEastWallPosition());
+            player.setPosition(getRandomWallPosition(eastWalls));
             player.setDirection(Direction.SOUTH);
             Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
             board.movePlayer(player);
@@ -270,7 +270,7 @@ public class BoardTest {
     public void playerIsNotFacingRandomSouthWallButOnSameTileAsWallThenPlayerCanMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
-            player.setPosition(getRandomSouthWallPosition());
+            player.setPosition(getRandomWallPosition(southWalls));
             player.setDirection(Direction.NORTH);
             Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
             board.movePlayer(player);
@@ -298,21 +298,40 @@ public class BoardTest {
     public void playerFacingRandomWallOnNeighbourCellCanNotMoveTest() {
         // Test for some random walls
         for (int i = 0; i < 5; i++) {
-            Vector2 neighbourCellWithWall = getRandomEastWallPosition();
+            Vector2 neighbourCellWithWall = getRandomEastWallNeighbourPosition();
             int neighbourX = (int) neighbourCellWithWall.x;
             int neighbourY = (int) neighbourCellWithWall.y;
             // If wall is on border east side, player can not
             // get on the cell next to it
-            while (neighbourX >= BOARD_WIDTH -1) {
-                neighbourCellWithWall = getRandomEastWallPosition();
-                neighbourX = (int) neighbourCellWithWall.x;
-            }
+            //TODO: Extract this in a function
+            //while (neighbourX >= BOARD_WIDTH -1) {
+             //   neighbourCellWithWall = getRandomWallPosition(eastWalls);
+             //   neighbourX = (int) neighbourCellWithWall.x;
+            //}
             Vector2 playerPosition = new Vector2(neighbourX + 1, neighbourY);
             player.setPosition(playerPosition);
             player.setDirection(Direction.WEST);
             board.movePlayer(player);
             assertEquals(playerPosition, player.getPosition());
         }
+    }
+
+    /**
+     * When checking that a player not can go through facing a wall on a
+     * neighbour cell, we need to get walls so that the player can be positioned
+     * next to the wall without getting outside the board.
+     *
+     * @return position to a wall where the wall is not on east border
+     */
+    private Vector2 getRandomEastWallNeighbourPosition() {
+        ArrayList<Vector2> eastWallsWithNeighbourCellOnEastSide = new ArrayList<>();
+        for (Vector2 wall : eastWalls) {
+            if (wall.x < BOARD_WIDTH-1) {
+                eastWallsWithNeighbourCellOnEastSide.add(wall);
+            }
+        }
+        return getRandomWallPosition(eastWallsWithNeighbourCellOnEastSide);
+
     }
 
     /**
@@ -360,44 +379,15 @@ public class BoardTest {
     }
 
     /**
-     * Get the position of a random north wall so that player can be placed on this position.
+     * Give a random entry from given list
      *
-     * @return position of random north wall on board.
+     * @Return a random position from the list given
      */
-    private Vector2 getRandomWestWallPosition() {
-        int randomIndex = random.nextInt(westWalls.size());
-        return westWalls.get(randomIndex);
+    private Vector2 getRandomWallPosition(ArrayList<Vector2> listOfWalls) {
+        int randomIndex = random.nextInt(listOfWalls.size());
+        return listOfWalls.get(randomIndex);
     }
 
-    /**
-     * Get the position of a random north wall so that player can be placed on this position.
-     *
-     * @return position of random north wall on board.
-     */
-    private Vector2 getRandomNorthWallPosition() {
-        int randomIndex = random.nextInt(northWalls.size());
-        return northWalls.get(randomIndex);
-    }
-
-    /**
-     * Get the position of a random south wall so that player can be placed on this position.
-     *
-     * @return position of random south wall on board.
-     */
-    private Vector2 getRandomSouthWallPosition() {
-        int randomIndex = random.nextInt(southWalls.size());
-        return southWalls.get(randomIndex);
-    }
-
-    /**
-     * Get the position of a random east wall so that player can be placed on this position.
-     *
-     * @return position of random east wall on board.
-     */
-    private Vector2 getRandomEastWallPosition() {
-        int randomIndex = random.nextInt(eastWalls.size());
-        return eastWalls.get(randomIndex);
-    }
 
     /**
      * Put all position to the walls on board in lists.
