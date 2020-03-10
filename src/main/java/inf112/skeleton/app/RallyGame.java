@@ -9,20 +9,20 @@ import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.LoadingScreen;
-import inf112.skeleton.app.screens.MenuScreen;
 
 public class RallyGame extends Game {
 
     public Board board;
     public SpriteBatch batch;
     public Deck deck;
+    public Player currentPlayer;
 
     public void create() {
         this.batch = new SpriteBatch();
         this.board = new Board("assets/maps/Risky_Exchange.tmx", 4);
-        //this.setScreen(new MenuScreen(this));
         this.setScreen(new LoadingScreen(this));
         this.deck = new Deck();
+        this.currentPlayer = board.getPlayer1();
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
@@ -36,10 +36,9 @@ public class RallyGame extends Game {
                     player.setDirection(Direction.NORTH);
                 } else if (keycode == Input.Keys.DOWN) {
                     player.setDirection(Direction.SOUTH);
-                } else if (keycode == Input.Keys.ESCAPE){
+                } else if (keycode == Input.Keys.ESCAPE) {
                     Gdx.app.exit();
-                }
-                else {
+                } else {
                     return super.keyDown(keycode);
                 }
                 board.movePlayer(player);
