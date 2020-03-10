@@ -6,9 +6,12 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import inf112.skeleton.app.cards.Deck;
+import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.LoadingScreen;
+
+import java.util.concurrent.Semaphore;
 
 public class RallyGame extends Game {
 
@@ -16,6 +19,8 @@ public class RallyGame extends Game {
     public SpriteBatch batch;
     public Deck deck;
     public Player currentPlayer;
+    public Semaphore waitForCards;
+    public boolean playing;
 
     public void create() {
         this.batch = new SpriteBatch();
@@ -23,6 +28,10 @@ public class RallyGame extends Game {
         this.setScreen(new LoadingScreen(this));
         this.deck = new Deck();
         this.currentPlayer = board.getPlayer1();
+        this.waitForCards = new Semaphore(1);
+        waitForCards.tryAcquire();
+        this.playing = true;
+        new Thread(this::doTurn).start();
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
@@ -38,6 +47,9 @@ public class RallyGame extends Game {
                     player.setDirection(Direction.SOUTH);
                 } else if (keycode == Input.Keys.ESCAPE) {
                     Gdx.app.exit();
+                } else if (keycode == Input.Keys.SPACE) {
+                    cardsReady();
+                    return super.keyDown(keycode);
                 } else {
                     return super.keyDown(keycode);
                 }
@@ -48,6 +60,61 @@ public class RallyGame extends Game {
                 return super.keyDown(keycode);
             }
         });
+    }
+
+    private void cardsReady() {
+        waitForCards.release();
+    }
+
+    public void doTurn() {
+        // TODO: Alle velger kort
+        // TODO: Første kort spilles for alle i riktig rekkefølge
+        // TODO: Gears roterer
+        // TODO: Express belt flytter én
+        // TODO: Express belt og vanlig belt flytter én
+        // TODO: Spiller skyter
+        // TODO: Laser skyter
+        while (playing) {
+            try {
+                waitForCards.acquire();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (Thread.interrupted()) { return; }
+            for (ProgramCard card : currentPlayer.getProgramCards()) {
+                switch (card.getRotate()) {
+                    case RIGHT:
+                        currentPlayer.setDirection(currentPlayer.getDirection().turnRight());
+                        board.rotatePlayer(currentPlayer);
+                        break;
+                    case LEFT:
+                        currentPlayer.setDirection(currentPlayer.getDirection().turnLeft());
+                        board.rotatePlayer(currentPlayer);
+                        break;
+                    case UTURN:
+                        currentPlayer.setDirection(currentPlayer.getDirection().turnAround());
+                        board.rotatePlayer(currentPlayer);
+                        break;
+                    case NONE:
+                        for (int i = 0; i < card.getDistance(); i++) {
+                            board.movePlayer(currentPlayer);
+                            try {
+                                Thread.sleep(500);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
     public void setWinScreen() {
