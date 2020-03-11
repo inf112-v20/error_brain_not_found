@@ -26,15 +26,20 @@ public class RallyGame extends Game {
 
     public void create() {
         this.batch = new SpriteBatch();
-        this.board = new Board(this, "assets/maps/Risky_Exchange.tmx", 4);
+        this.board = new Board("assets/maps/Risky_Exchange.tmx", 6);
         this.setScreen(new LoadingScreen(this));
         this.deck = new Deck();
         this.players = new ArrayList<>();
         this.currentPlayer = board.getPlayer1();
         this.waitForCards = new Semaphore(1);
-        waitForCards.tryAcquire();
         this.playing = true;
+        this.players = board.getPlayers();
+
         new Thread(this::doTurn).start();
+
+        waitForCards.tryAcquire();
+        dealCards();
+        selectCards();
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
@@ -83,41 +88,80 @@ public class RallyGame extends Game {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if (Thread.interrupted()) { return; }
-            for (ProgramCard card : currentPlayer.getProgramCards()) {
-                switch (card.getRotate()) {
-                    case RIGHT:
-                        currentPlayer.setDirection(currentPlayer.getDirection().turnRight());
-                        board.rotatePlayer(currentPlayer);
-                        break;
-                    case LEFT:
-                        currentPlayer.setDirection(currentPlayer.getDirection().turnLeft());
-                        board.rotatePlayer(currentPlayer);
-                        break;
-                    case UTURN:
-                        currentPlayer.setDirection(currentPlayer.getDirection().turnAround());
-                        board.rotatePlayer(currentPlayer);
-                        break;
-                    case NONE:
-                        for (int i = 0; i < card.getDistance(); i++) {
-                            board.movePlayer(currentPlayer);
-                            try {
-                                Thread.sleep(500);
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                        }
-                        break;
-                    default:
-                        break;
-                }
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            if (Thread.interrupted()) {
+                return;
+            }
+            for (int i = 0; i < 5; i++) {
+                System.out.println("Runde " + (i + 1));
+                allPlayersPlayCard();
+
+            }
+            dealCards();
+            selectCards();
+        }
+    }
+
+    public void selectCards() {
+        for (Player player : players) {
+            player.selectCards();
+        }
+    }
+
+    public void dealCards() {
+        for (Player player : players) {
+            player.drawCards(deck);
+        }
+    }
+
+    public void allPlayersPlayCard() {
+        ArrayList<Player> playerOrder = new ArrayList<>(players);
+        // Add all players to order list, and remove players with no cards left
+        playerOrder.removeIf(p -> p.getSelectedCards().isEmpty());
+        playerOrder.sort(new PlayerSorter());
+        for (Player player : playerOrder) {
+            playCard(player);
+            // Wait 1 second for each player
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
         }
+    }
+
+    public void playCard(Player player) {
+        ProgramCard card = player.getSelectedCards().remove(0);
+        System.out.println(player.toString() + " played " + card.toString());
+        switch (card.getRotate()) {
+            case RIGHT:
+                player.setDirection(player.getDirection().turnRight());
+                board.rotatePlayer(player);
+                break;
+            case LEFT:
+                player.setDirection(player.getDirection().turnLeft());
+                board.rotatePlayer(player);
+                break;
+            case UTURN:
+                player.setDirection(player.getDirection().turnAround());
+                board.rotatePlayer(player);
+                break;
+            case NONE:
+                for (int i = 0; i < card.getDistance(); i++) {
+                    board.movePlayer(player);
+                    // Wait 500 ms for each move except last one
+                    if (i < card.getDistance() - 1) {
+                        try {
+                            Thread.sleep(500);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        deck.addCardToDiscardPile(card);
     }
 
     public void setWinScreen() {
@@ -131,13 +175,6 @@ public class RallyGame extends Game {
     public void dispose() {
         batch.dispose();
 
-    }
-
-    /**
-     * @return list of all players
-     */
-    public ArrayList<Player> getPlayers() {
-        return players;
     }
 
     public Board getBoard() {
