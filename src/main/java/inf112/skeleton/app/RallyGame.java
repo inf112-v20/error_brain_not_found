@@ -4,25 +4,24 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.audio.Music;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.LoadingScreen;
-import inf112.skeleton.app.screens.MenuScreen;
 
 public class RallyGame extends Game {
 
     public Board board;
-    public SpriteBatch batch;
     public Deck deck;
+    private Music music;
 
     public void create() {
-        this.batch = new SpriteBatch();
         this.board = new Board("assets/maps/Risky_Exchange.tmx", 4);
-        //this.setScreen(new MenuScreen(this));
         this.setScreen(new LoadingScreen(this));
         this.deck = new Deck();
+        this.music = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
+        startMusic();
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
@@ -51,6 +50,12 @@ public class RallyGame extends Game {
         });
     }
 
+    public void startMusic() {
+        music.setLooping(true);
+        music.setVolume(1f);
+        music.play();
+    }
+
     public void setWinScreen() {
         this.setScreen(new GifScreen(this));
     }
@@ -60,8 +65,7 @@ public class RallyGame extends Game {
     }
 
     public void dispose() {
-        batch.dispose();
-
+        this.screen.dispose();
     }
 
     public Board getBoard() {
