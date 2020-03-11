@@ -4,12 +4,15 @@ import java.util.ArrayList;
 
 public class CardHand {
 
-    private ArrayList<ProgramCard> hand = new ArrayList<>();
+    private ArrayList<ProgramCard> hand;
 
-    public CardHand(Deck deck, int slots) {
-        for (int i = 0; i < slots; i++) {
+    public CardHand() {
+        hand = new ArrayList<>();
+    }
+
+    public void dealCards(Deck deck, int slots) {
+        while (hand.size() < slots) {
             hand.add(deck.drawCard());
         }
     }
-
 }

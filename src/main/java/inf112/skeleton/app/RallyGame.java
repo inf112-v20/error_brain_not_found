@@ -11,6 +11,7 @@ import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.LoadingScreen;
 
+import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 public class RallyGame extends Game {
@@ -19,14 +20,16 @@ public class RallyGame extends Game {
     public SpriteBatch batch;
     public Deck deck;
     public Player currentPlayer;
+    public ArrayList<Player> players;
     public Semaphore waitForCards;
     public boolean playing;
 
     public void create() {
         this.batch = new SpriteBatch();
-        this.board = new Board("assets/maps/Risky_Exchange.tmx", 4);
+        this.board = new Board(this, "assets/maps/Risky_Exchange.tmx", 4);
         this.setScreen(new LoadingScreen(this));
         this.deck = new Deck();
+        this.players = new ArrayList<>();
         this.currentPlayer = board.getPlayer1();
         this.waitForCards = new Semaphore(1);
         waitForCards.tryAcquire();
@@ -128,6 +131,13 @@ public class RallyGame extends Game {
     public void dispose() {
         batch.dispose();
 
+    }
+
+    /**
+     * @return list of all players
+     */
+    public ArrayList<Player> getPlayers() {
+        return players;
     }
 
     public Board getBoard() {

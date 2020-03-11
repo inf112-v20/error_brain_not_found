@@ -7,6 +7,7 @@ import java.util.Stack;
 
 public class Deck {
     private Stack<ProgramCard> deck;
+    private Stack<ProgramCard> discardPile;
 
     public Deck() {
         makeNewDeck();
@@ -20,6 +21,10 @@ public class Deck {
         deck = new Stack<>();
         makeRotateCards();
         makeMoveCards();
+    }
+
+    public void addCardToDiscardPile(ProgramCard programCard) {
+        discardPile.push(programCard);
     }
 
     /**

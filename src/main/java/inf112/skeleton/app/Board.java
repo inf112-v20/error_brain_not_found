@@ -13,15 +13,14 @@ import java.util.ArrayList;
 
 public class Board extends BoardLayers {
 
+    private final RallyGame game;
     private final ArrayList<Flag> flags;
     private final ArrayList<Vector2> holes;
-    private ArrayList<Player> players;
 
-
-    public Board(String mapPath, int numberOfPlayers) {
+    public Board(final RallyGame game, String mapPath, int numberOfPlayers) {
         super(mapPath);
 
-        this.players = new ArrayList<>();
+        this.game = game;
         this.flags = new ArrayList<>();
         this.holes = new ArrayList<>();
         laserLayer.setVisible(false);
@@ -73,8 +72,8 @@ public class Board extends BoardLayers {
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
         cell.setTile(getRobotTile(player));
         playerLayer.setCell((int) player.getPosition().x, (int) player.getPosition().y, cell);
-        if (!players.contains(player)) {
-            players.add(player);
+        if (!game.players.contains(player)) {
+            game.players.add(player);
         }
     }
 
@@ -217,12 +216,12 @@ public class Board extends BoardLayers {
      * @return player that should be moved with arrows
      */
     public Player getPlayer1() {
-        for (Player player : players) {
+        for (Player player : game.players) {
             if (player.getPlayerNr() == 1) {
                 return player;
             }
         }
-        return players.get(0);
+        return game.players.get(0);
     }
 
     /**
@@ -327,7 +326,8 @@ public class Board extends BoardLayers {
 
     /**
      * Add player to the board, so the direction is correct
-     * @param player
+     *
+     * @param player that should be rotated
      */
     public void rotatePlayer(Player player) {
         addPlayer(player);
@@ -413,7 +413,7 @@ public class Board extends BoardLayers {
     }
 
     private boolean hasPlayer(Vector2 position) {
-        for (Player enemyPlayer : players) {
+        for (Player enemyPlayer : game.players) {
             if (enemyPlayer.getPosition().equals(position)) {
                 return true;
             }
@@ -428,7 +428,7 @@ public class Board extends BoardLayers {
      * @return player in position
      */
     private Player getPlayer(Vector2 position) {
-        for (Player enemyPlayer : players) {
+        for (Player enemyPlayer : game.players) {
             if (enemyPlayer.getPosition().equals(position)) {
                 return enemyPlayer;
             }
@@ -520,13 +520,6 @@ public class Board extends BoardLayers {
 
     public ArrayList<Flag> getFlags(){
         return flags;
-    }
-
-    /**
-     * @return list of all players
-     */
-    public ArrayList<Player> getPlayers() {
-        return players;
     }
 
     /**
