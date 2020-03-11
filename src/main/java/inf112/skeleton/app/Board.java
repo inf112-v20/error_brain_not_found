@@ -324,6 +324,15 @@ public class Board extends BoardLayers {
         return false;
     }
 
+
+    /**
+     * Add player to the board, so the direction is correct
+     * @param player
+     */
+    public void rotatePlayer(Player player) {
+        addPlayer(player);
+    }
+
     /**
      * Check if it is possible to move in the direction the player are facing.
      * Check if player should and can push another player, if not return

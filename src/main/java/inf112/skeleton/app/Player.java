@@ -2,6 +2,7 @@ package inf112.skeleton.app;
 
 
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Flag;
 
@@ -15,6 +16,7 @@ public class Player {
     private Vector2 position;
     private Direction direction;
     private ArrayList<Flag> flagsCollected;
+    private ArrayList<ProgramCard> programCards;
 
     public Player(Vector2 position, int playerNr) {
         this.position = position;
@@ -23,6 +25,16 @@ public class Player {
         this.flagsCollected = new ArrayList<>();
         setBackup(position, Direction.EAST);
     }
+
+    public void addCard(ProgramCard card) {
+        programCards.add(card);
+    }
+
+    public ArrayList<ProgramCard> getProgramCards() {
+        return programCards;
+    }
+
+    public ProgramCard removeCard() {return programCards.remove(0); }
 
     /**
      * Set new backup position and direction
