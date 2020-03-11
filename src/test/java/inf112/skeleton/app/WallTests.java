@@ -60,7 +60,7 @@ public class WallTests {
      * @return true if position is on tile before border
      */
     private boolean onWestBorder(Vector2 position) {
-        return position.x <= 0;
+        return position.x < 1;
     }
 
     /**
@@ -69,7 +69,7 @@ public class WallTests {
      * @return true if position is on tile before border
      */
     private boolean onSouthBorder(Vector2 position) {
-        return position.y <= 0;
+        return position.y < 1;
     }
 
     /**
@@ -146,7 +146,7 @@ public class WallTests {
     private ArrayList<Vector2> filterWallsOnBorder(ArrayList<Vector2> listOfWalls) {
         ArrayList<Vector2> wallsCopy = (ArrayList<Vector2>) listOfWalls.clone();
         for (Vector2 wallPosition : listOfWalls) {
-            TiledMapTileLayer.Cell wallCell = board.getWallLayer().getCell((int) wall.x, (int) wall.y);
+            TiledMapTileLayer.Cell wallCell = board.getWallLayer().getCell((int) wallPosition.x, (int) wallPosition.y);
             if (onEastBorder(wallPosition) && isEastWall(wallCell)) {
                 wallsCopy.remove(wallPosition);
             }
@@ -349,27 +349,14 @@ public class WallTests {
      * player. So when a player tries to go on this tile, it should
      * be blocked even though it has no wall on the tile player is standing
      * on.
-     *
-     * Here the scenario is:
-     *
-     *    ----------
-     *    |    |<-P|
-     *    |        |
-     *    |        |
-     *    |________|
-     *
      */
     @Test
     public void playerFacingRandomEastWallOnNeighbourCellCanNotMoveTest() {
         // Test for some random walls
         for (int i = 0; i < 5; i++) {
-            Vector2 neighbourCellWithWall = getRandomWallPosition(eastWalls);
+            Vector2 neighbourCellWithWall = getRandomWallPosition(filterWallsOnBorder(eastWalls));
             int neighbourX = (int) neighbourCellWithWall.x;
             int neighbourY = (int) neighbourCellWithWall.y;
-            while (onEastBorder(neighbourCellWithWall)) {
-                neighbourCellWithWall = getRandomWallPosition(eastWalls);
-
-            }
             Vector2 playerPosition = new Vector2(neighbourX + 1, neighbourY);
             player.setPosition(playerPosition);
             player.setDirection(Direction.WEST);
@@ -378,34 +365,42 @@ public class WallTests {
         }
     }
 
-
     /**
-     * see: {@link #playerFacingRandomEastWallOnNeighbourCellCanNotMoveTest()} }
-     * for documentation
-     *
-     * Here the scenario is:
-     *
-     *    ----------
-     *    |    P->||
-     *    |        |
-     *    |        |
-     *    |________|
-     *
+     * See {@link #playerFacingRandomEastWallOnNeighbourCellCanNotMoveTest()}
      */
     @Test
     public void playerFacingRandomWestWallOnNeighbourCellCanNotMoveTest() {
         // Test for some random walls
         for (int i = 0; i < 5; i++) {
-            Vector2 neighbourCellWithWall = getRandomWallPosition(getWestWallsNotOnBorderPositions());
+            Vector2 neighbourCellWithWall = getRandomWallPosition(filterWallsOnBorder(westWalls));
             int neighbourX = (int) neighbourCellWithWall.x;
             int neighbourY = (int) neighbourCellWithWall.y;
-            Vector2 playerPosition = new Vector2(neighbourX + 1, neighbourY);
+            Vector2 playerPosition = new Vector2(neighbourX - 1, neighbourY);
             player.setPosition(playerPosition);
-            player.setDirection(Direction.WEST);
+            player.setDirection(Direction.EAST);
             board.movePlayer(player);
             assertEquals(playerPosition, player.getPosition());
         }
     }
+
+    /**
+     * See {@link #playerFacingRandomEastWallOnNeighbourCellCanNotMoveTest()}
+     */
+    @Test
+    public void playerFacingRandomNorthWallOnNeighbourCellCanNotMoveTest() {
+        // Test for some random walls
+        for (int i = 0; i < 5; i++) {
+            Vector2 neighbourCellWithWall = getRandomWallPosition(filterWallsOnBorder(northWalls));
+            int neighbourX = (int) neighbourCellWithWall.x;
+            int neighbourY = (int) neighbourCellWithWall.y;
+            Vector2 playerPosition = new Vector2(neighbourX, neighbourY+1);
+            player.setPosition(playerPosition);
+            player.setDirection(Direction.SOUTH);
+            board.movePlayer(player);
+            assertEquals(playerPosition, player.getPosition());
+        }
+    }
+
 
 
 }
