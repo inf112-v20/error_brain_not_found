@@ -10,7 +10,6 @@ import inf112.skeleton.app.enums.TileID;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -22,10 +21,10 @@ public class WallTests {
     private final int NUMBER_OF_PLAYERS_WHEN_STARTING_GAME = 2;
     private Player player;
     private Random random;
-    private ArrayList<Vector2> northWalls;
-    private ArrayList<Vector2> southWalls;
-    private ArrayList<Vector2> eastWalls;
-    private ArrayList<Vector2> westWalls;
+    private ArrayList<Vector2> allNorthWalls;
+    private ArrayList<Vector2> allSouthWalls;
+    private ArrayList<Vector2> allEastWalls;
+    private ArrayList<Vector2> allWestWalls;
 
     @Before
     public void setUp() {
@@ -37,10 +36,10 @@ public class WallTests {
         this.board = new Board("assets/maps/Risky_Exchange.tmx", NUMBER_OF_PLAYERS_WHEN_STARTING_GAME);
         this.player = new Player(new Vector2(0,0), 1);
         random = new Random();
-        northWalls = new ArrayList<>();
-        southWalls = new ArrayList<>();
-        eastWalls = new ArrayList<>();
-        westWalls = new ArrayList<>();
+        allNorthWalls = new ArrayList<>();
+        allSouthWalls = new ArrayList<>();
+        allEastWalls = new ArrayList<>();
+        allWestWalls = new ArrayList<>();
 
         putPositionsToWallsInLists();
     }
@@ -136,6 +135,82 @@ public class WallTests {
     }
 
     /**
+     * Filter out walls like south-east, north-west etc. Is used
+     * so that we can test that a player can move when there is not a wall in
+     * front of the player, but on same tile.
+     *
+     * @param listOfWalls
+     * @return list of only north walls
+     */
+    private ArrayList<Vector2> getOnlyNorthWalls(ArrayList<Vector2> listOfWalls) {
+        ArrayList<Vector2> northWalls = new ArrayList<>();
+        for (Vector2 wallPos : listOfWalls) {
+            TiledMapTileLayer.Cell cell = board.getWallLayer().getCell((int) wallPos.x, (int) wallPos.y);
+            if (isNorthWall(cell)) {
+                northWalls.add(wallPos);
+            }
+        }
+        return northWalls;
+    }
+
+    /**
+     * Filter out walls like south-east, north-west etc. Is used
+     * so that we can test that a player can move when there is not a wall in
+     * front of the player, but on same tile.
+     *
+     * @param listOfWalls
+     * @return list of only south walls
+     */
+    private ArrayList<Vector2> getOnlySouthWalls(ArrayList<Vector2> listOfWalls) {
+        ArrayList<Vector2> southWalls = new ArrayList<>();
+        for (Vector2 wallPos : listOfWalls) {
+            TiledMapTileLayer.Cell cell = board.getWallLayer().getCell((int) wallPos.x, (int) wallPos.y);
+            if (isSouthWall(cell)) {
+                southWalls.add(wallPos);
+            }
+        }
+        return southWalls;
+    }
+
+    /**
+     * Filter out walls like south-east, north-west etc. Is used
+     * so that we can test that a player can move when there is not a wall in
+     * front of the player, but on same tile.
+     *
+     * @param listOfWalls
+     * @return list of only east walls
+     */
+    private ArrayList<Vector2> getOnlyEastWalls(ArrayList<Vector2> listOfWalls) {
+        ArrayList<Vector2> eastWalls = new ArrayList<>();
+        for (Vector2 wallPos : listOfWalls) {
+            TiledMapTileLayer.Cell cell = board.getWallLayer().getCell((int) wallPos.x, (int) wallPos.y);
+            if (isEastWall(cell)) {
+                eastWalls.add(wallPos);
+            }
+        }
+        return eastWalls;
+    }
+
+    /**
+     * Filter out walls like south-east, north-west etc. Is used
+     * so that we can test that a player can move when there is not a wall in
+     * front of the player, but on same tile.
+     *
+     * @param listOfWalls
+     * @return list of only west walls
+     */
+    private ArrayList<Vector2> getOnlyWestWalls(ArrayList<Vector2> listOfWalls) {
+        ArrayList<Vector2> westWalls = new ArrayList<>();
+        for (Vector2 wallPos : listOfWalls) {
+            TiledMapTileLayer.Cell cell = board.getWallLayer().getCell((int) wallPos.x, (int) wallPos.y);
+            if (isWestWall(cell)) {
+                westWalls.add(wallPos);
+            }
+        }
+        return westWalls;
+    }
+
+    /**
      * In order to test that a player can not move when facing a wall on a neighbour cell,
      * player needs to be placed on the cell next to the wall. Then this cell can not have a wall
      * facing towards the border, because then the player will be placed outside the board.
@@ -147,16 +222,16 @@ public class WallTests {
         ArrayList<Vector2> wallsCopy = (ArrayList<Vector2>) listOfWalls.clone();
         for (Vector2 wallPosition : listOfWalls) {
             TiledMapTileLayer.Cell wallCell = board.getWallLayer().getCell((int) wallPosition.x, (int) wallPosition.y);
-            if (onEastBorder(wallPosition) && isEastWall(wallCell)) {
+            if (onEastBorder(wallPosition) && board.hasEastWall(wallCell)) {
                 wallsCopy.remove(wallPosition);
             }
-            if (onSouthBorder(wallPosition) && isSouthWall(wallCell)) {
+            if (onSouthBorder(wallPosition) && board.hasSouthWall(wallCell)) {
                 wallsCopy.remove(wallPosition);
             }
-            if (onWestBorder((wallPosition)) && isWestWall(wallCell)) {
+            if (onWestBorder((wallPosition)) && board.hasWestWall(wallCell)) {
                 wallsCopy.remove(wallPosition);
             }
-            if (onNorthBorder(wallPosition) && isNorthWall(wallCell)) {
+            if (onNorthBorder(wallPosition) && board.hasNorthWall(wallCell)) {
                 wallsCopy.remove(wallPosition);
             }
         }
@@ -172,21 +247,22 @@ public class WallTests {
             for (int y = 0; y < board.getHeight(); y++) {
                 Vector2 pos = new Vector2(x, y);
                 TiledMapTileLayer.Cell wall = wallLayer.getCell(x, y);
-                if (isSouthWall(wall)) {
-                    southWalls.add(pos);
+                if (board.hasSouthWall(wall)) {
+                    allSouthWalls.add(pos);
                 }
-                if (isNorthWall(wall)) {
-                    northWalls.add(pos);
+                if (board.hasNorthWall(wall)) {
+                    allNorthWalls.add(pos);
                 }
-                if (isEastWall(wall)) {
-                    eastWalls.add(pos);
+                if (board.hasEastWall(wall)) {
+                    allEastWalls.add(pos);
                 }
-                if (isWestWall(wall)) {
-                    westWalls.add(pos);
+                if (board.hasWestWall(wall)) {
+                    allWestWalls.add(pos);
                 }
             }
         }
     }
+
 
     @Test
     public void playerIsOnCellWithNorthWallTest() {
@@ -219,7 +295,7 @@ public class WallTests {
     public void playerFacingRandomNorthWallCanNotGoTest() {
         // Test for some random walls on board
         for (int i = 0; i < 5; i++) {
-            assertFalse(board.canGo(getRandomWallPosition(northWalls), Direction.NORTH));
+            assertFalse(board.canGo(getRandomWallPosition(allNorthWalls), Direction.NORTH));
         }
     }
 
@@ -227,7 +303,7 @@ public class WallTests {
     public void playerFacingRandomEastWallCanNotGoTest() {
         // Test for some random walls on board
         for (int i = 0; i < 5; i++) {
-            assertFalse(board.canGo(getRandomWallPosition(eastWalls), Direction.EAST));
+            assertFalse(board.canGo(getRandomWallPosition(allEastWalls), Direction.EAST));
         }
     }
 
@@ -235,7 +311,7 @@ public class WallTests {
     public void playerFacingRandomSouthWallCanNotGoTest() {
         // Test for some random walls on board
         for (int i = 0; i < 5; i++) {
-            assertFalse(board.canGo(getRandomWallPosition(southWalls), Direction.SOUTH));
+            assertFalse(board.canGo(getRandomWallPosition(allSouthWalls), Direction.SOUTH));
         }
     }
 
@@ -243,7 +319,7 @@ public class WallTests {
     public void playerFacingRandomWestWallCanNotGoTest() {
         // Test for some random walls on board
         for (int i = 0; i < 5; i++) {
-            assertFalse(board.canGo(getRandomWallPosition(westWalls), Direction.WEST));
+            assertFalse(board.canGo(getRandomWallPosition(allWestWalls), Direction.WEST));
         }
     }
 
@@ -251,7 +327,7 @@ public class WallTests {
     public void playerFacingRandomNorthWallDoesNotMoveTest() {
         // Test for some random walls
         for (int i = 0; i < 5; i++) {
-            player.setPosition(getRandomWallPosition(northWalls));
+            player.setPosition(getRandomWallPosition(allNorthWalls));
             player.setDirection(Direction.NORTH);
             Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
             board.movePlayer(player);
@@ -263,7 +339,7 @@ public class WallTests {
     public void playerFacingRandomSouthWallDoesNotMoveTest() {
         // Test for some random walls
         for (int i = 0; i < 5; i++) {
-            player.setPosition(getRandomWallPosition(southWalls));
+            player.setPosition(getRandomWallPosition(allSouthWalls));
             player.setDirection(Direction.SOUTH);
             Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
             board.movePlayer(player);
@@ -275,7 +351,7 @@ public class WallTests {
     public void playerFacingRandomEastWallDoesNotMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
-            player.setPosition(getRandomWallPosition(eastWalls));
+            player.setPosition(getRandomWallPosition(allEastWalls));
             player.setDirection(Direction.EAST);
             Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
             board.movePlayer(player);
@@ -287,7 +363,7 @@ public class WallTests {
     public void playerFacingRandomWestWallDoesNotMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
-            player.setPosition(getRandomWallPosition(westWalls));
+            player.setPosition(getRandomWallPosition(allWestWalls));
             player.setDirection(Direction.WEST);
             Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
             board.movePlayer(player);
@@ -299,7 +375,7 @@ public class WallTests {
     public void playerIsNotFacingRandomNorthWallButOnSameTileAsWallThenPlayerCanMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
-            player.setPosition(getRandomWallPosition(northWalls));
+            player.setPosition(getRandomWallPosition(getOnlyNorthWalls(allNorthWalls)));
             player.setDirection(Direction.WEST);
             Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
             board.movePlayer(player);
@@ -311,7 +387,7 @@ public class WallTests {
     public void playerIsNotFacingRandomWestWallButOnSameTileAsWallThenPlayerCanMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
-            player.setPosition(getRandomWallPosition(westWalls));
+            player.setPosition(getRandomWallPosition(getOnlyWestWalls(allWestWalls)));
             player.setDirection(Direction.EAST);
             Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
             board.movePlayer(player);
@@ -323,7 +399,7 @@ public class WallTests {
     public void playerIsNotFacingRandomEastWallButOnSameTileAsWallThenPlayerCanMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
-            player.setPosition(getRandomWallPosition(eastWalls));
+            player.setPosition(getRandomWallPosition(getOnlyEastWalls(allEastWalls)));
             player.setDirection(Direction.SOUTH);
             Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
             board.movePlayer(player);
@@ -335,7 +411,7 @@ public class WallTests {
     public void playerIsNotFacingRandomSouthWallButOnSameTileAsWallThenPlayerCanMoveTest() {
         // Test for several random walls
         for (int i = 0; i < 5; i++) {
-            player.setPosition(getRandomWallPosition(southWalls));
+            player.setPosition(getRandomWallPosition(getOnlySouthWalls(allSouthWalls)));
             player.setDirection(Direction.NORTH);
             Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
             board.movePlayer(player);
@@ -354,7 +430,7 @@ public class WallTests {
     public void playerFacingRandomEastWallOnNeighbourCellCanNotMoveTest() {
         // Test for some random walls
         for (int i = 0; i < 5; i++) {
-            Vector2 neighbourCellWithWall = getRandomWallPosition(filterWallsOnBorder(eastWalls));
+            Vector2 neighbourCellWithWall = getRandomWallPosition(filterWallsOnBorder(allEastWalls));
             int neighbourX = (int) neighbourCellWithWall.x;
             int neighbourY = (int) neighbourCellWithWall.y;
             Vector2 playerPosition = new Vector2(neighbourX + 1, neighbourY);
@@ -372,7 +448,7 @@ public class WallTests {
     public void playerFacingRandomWestWallOnNeighbourCellCanNotMoveTest() {
         // Test for some random walls
         for (int i = 0; i < 5; i++) {
-            Vector2 neighbourCellWithWall = getRandomWallPosition(filterWallsOnBorder(westWalls));
+            Vector2 neighbourCellWithWall = getRandomWallPosition(filterWallsOnBorder(allWestWalls));
             int neighbourX = (int) neighbourCellWithWall.x;
             int neighbourY = (int) neighbourCellWithWall.y;
             Vector2 playerPosition = new Vector2(neighbourX - 1, neighbourY);
@@ -390,12 +466,30 @@ public class WallTests {
     public void playerFacingRandomNorthWallOnNeighbourCellCanNotMoveTest() {
         // Test for some random walls
         for (int i = 0; i < 5; i++) {
-            Vector2 neighbourCellWithWall = getRandomWallPosition(filterWallsOnBorder(northWalls));
+            Vector2 neighbourCellWithWall = getRandomWallPosition(filterWallsOnBorder(allNorthWalls));
             int neighbourX = (int) neighbourCellWithWall.x;
             int neighbourY = (int) neighbourCellWithWall.y;
             Vector2 playerPosition = new Vector2(neighbourX, neighbourY+1);
             player.setPosition(playerPosition);
             player.setDirection(Direction.SOUTH);
+            board.movePlayer(player);
+            assertEquals(playerPosition, player.getPosition());
+        }
+    }
+
+    /**
+     * See {@link #playerFacingRandomEastWallOnNeighbourCellCanNotMoveTest()}
+     */
+    @Test
+    public void playerFacingRandomSouthWallOnNeighbourCellCanNotMoveTest() {
+        // Test for some random walls
+        for (int i = 0; i < 5; i++) {
+            Vector2 neighbourCellWithWall = getRandomWallPosition(filterWallsOnBorder(allSouthWalls));
+            int neighbourX = (int) neighbourCellWithWall.x;
+            int neighbourY = (int) neighbourCellWithWall.y;
+            Vector2 playerPosition = new Vector2(neighbourX, neighbourY-1);
+            player.setPosition(playerPosition);
+            player.setDirection(Direction.NORTH);
             board.movePlayer(player);
             assertEquals(playerPosition, player.getPosition());
         }
