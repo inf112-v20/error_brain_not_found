@@ -40,7 +40,6 @@ public class WallTests {
         allSouthWalls = new ArrayList<>();
         allEastWalls = new ArrayList<>();
         allWestWalls = new ArrayList<>();
-
         putPositionsToWallsInLists();
     }
 
@@ -84,7 +83,7 @@ public class WallTests {
      * @param cell
      * @return true if cell only has north wall
      */
-    private boolean isNorthWall(TiledMapTileLayer.Cell cell) {
+    private boolean isOnlyNorthWall(TiledMapTileLayer.Cell cell) {
         if (cell == null) {
             return false;
         }
@@ -95,7 +94,7 @@ public class WallTests {
      * @param cell
      * @return true if cell only has south wall
      */
-    private boolean isSouthWall(TiledMapTileLayer.Cell cell) {
+    private boolean isOnlySouthWall(TiledMapTileLayer.Cell cell) {
         if (cell == null) {
             return false;
         }
@@ -106,7 +105,7 @@ public class WallTests {
      * @param cell
      * @return true if cell only has east wall
      */
-    private boolean isEastWall(TiledMapTileLayer.Cell cell) {
+    private boolean isOnlyEastWall(TiledMapTileLayer.Cell cell) {
         if (cell == null) {
             return false;
         }
@@ -117,7 +116,7 @@ public class WallTests {
      * @param cell
      * @return true if cell only has west wall
      */
-    private boolean isWestWall(TiledMapTileLayer.Cell cell) {
+    private boolean isOnlyWestWall(TiledMapTileLayer.Cell cell) {
         if (cell == null) {
             return false;
         }
@@ -146,7 +145,7 @@ public class WallTests {
         ArrayList<Vector2> northWalls = new ArrayList<>();
         for (Vector2 wallPos : listOfWalls) {
             TiledMapTileLayer.Cell cell = board.getWallLayer().getCell((int) wallPos.x, (int) wallPos.y);
-            if (isNorthWall(cell)) {
+            if (isOnlyNorthWall(cell)) {
                 northWalls.add(wallPos);
             }
         }
@@ -165,7 +164,7 @@ public class WallTests {
         ArrayList<Vector2> southWalls = new ArrayList<>();
         for (Vector2 wallPos : listOfWalls) {
             TiledMapTileLayer.Cell cell = board.getWallLayer().getCell((int) wallPos.x, (int) wallPos.y);
-            if (isSouthWall(cell)) {
+            if (isOnlySouthWall(cell)) {
                 southWalls.add(wallPos);
             }
         }
@@ -184,7 +183,7 @@ public class WallTests {
         ArrayList<Vector2> eastWalls = new ArrayList<>();
         for (Vector2 wallPos : listOfWalls) {
             TiledMapTileLayer.Cell cell = board.getWallLayer().getCell((int) wallPos.x, (int) wallPos.y);
-            if (isEastWall(cell)) {
+            if (isOnlyEastWall(cell)) {
                 eastWalls.add(wallPos);
             }
         }
@@ -203,7 +202,7 @@ public class WallTests {
         ArrayList<Vector2> westWalls = new ArrayList<>();
         for (Vector2 wallPos : listOfWalls) {
             TiledMapTileLayer.Cell cell = board.getWallLayer().getCell((int) wallPos.x, (int) wallPos.y);
-            if (isWestWall(cell)) {
+            if (isOnlyWestWall(cell)) {
                 westWalls.add(wallPos);
             }
         }
@@ -261,6 +260,26 @@ public class WallTests {
                 }
             }
         }
+    }
+
+    @Test
+    public void thereAreNorthWallsOnBoardTest() {
+        assertFalse(allNorthWalls.isEmpty());
+    }
+
+    @Test
+    public void thereAreSouthWallsOnBoardTest() {
+        assertFalse(allSouthWalls.isEmpty());
+    }
+
+    @Test
+    public void thereAreEastWallsOnBoardTest() {
+        assertFalse(allEastWalls.isEmpty());
+    }
+
+    @Test
+    public void thereAreWestWallsOnBoardTest() {
+        assertFalse(allWestWalls.isEmpty());
     }
 
 
