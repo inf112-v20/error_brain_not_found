@@ -10,6 +10,7 @@ import inf112.skeleton.app.enums.TileID;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -19,8 +20,6 @@ import static org.mockito.Mockito.mock;
 public class WallTests {
     private Board board;
     private final int NUMBER_OF_PLAYERS_WHEN_STARTING_GAME = 2;
-    private final int BOARD_WIDTH = 16;
-    private final int BOARD_HEIGHT = 12;
     private Player player;
     private Random random;
     private ArrayList<Vector2> northWalls;
@@ -42,25 +41,44 @@ public class WallTests {
         southWalls = new ArrayList<>();
         eastWalls = new ArrayList<>();
         westWalls = new ArrayList<>();
+
         putPositionsToWallsInLists();
     }
 
     /**
-     * When checking that a player not can go through facing a wall on a
-     * neighbour cell, we need to get walls so that the player can be positioned
-     * next to the wall without getting outside the board.
      *
-     * @return list of positions to east side walls where a player can stand on east side of wall
+     * @param position
+     * @return true if position is on tile before border
      */
-    private ArrayList<Vector2> getEastWallsNotOnBorderPositions() {
-        ArrayList<Vector2> eastWallsWithNeighbourCellOnEastSide = new ArrayList<>();
-        for (Vector2 wall : eastWalls) {
-            if (wall.x < board.getWidth()-1) {
-                eastWallsWithNeighbourCellOnEastSide.add(wall);
-            }
-        }
-        return eastWallsWithNeighbourCellOnEastSide;
+    private boolean onEastBorder(Vector2 position) {
+        return position.x >= board.getWidth()-1;
+    }
 
+    /**
+     *
+     * @param position
+     * @return true if position is on tile before border
+     */
+    private boolean onWestBorder(Vector2 position) {
+        return position.x <= 0;
+    }
+
+    /**
+     *
+     * @param position
+     * @return true if position is on tile before border
+     */
+    private boolean onSouthBorder(Vector2 position) {
+        return position.y <= 0;
+    }
+
+    /**
+     *
+     * @param position
+     * @return true if position is on tile before border
+     */
+    private boolean onNorthBorder(Vector2 position) {
+        return position.y >= board.getHeight()-1;
     }
 
     /**
@@ -117,6 +135,33 @@ public class WallTests {
         return listOfWalls.get(randomIndex);
     }
 
+    /**
+     * In order to test that a player can not move when facing a wall on a neighbour cell,
+     * player needs to be placed on the cell next to the wall. Then this cell can not have a wall
+     * facing towards the border, because then the player will be placed outside the board.
+     *
+     * @param listOfWalls a list of position to the walls
+     * @return a list of position for the walls, where the walls aligning the borderline is excluded
+     */
+    private ArrayList<Vector2> filterWallsOnBorder(ArrayList<Vector2> listOfWalls) {
+        ArrayList<Vector2> wallsCopy = (ArrayList<Vector2>) listOfWalls.clone();
+        for (Vector2 wallPosition : listOfWalls) {
+            TiledMapTileLayer.Cell wallCell = board.getWallLayer().getCell((int) wall.x, (int) wall.y);
+            if (onEastBorder(wallPosition) && isEastWall(wallCell)) {
+                wallsCopy.remove(wallPosition);
+            }
+            if (onSouthBorder(wallPosition) && isSouthWall(wallCell)) {
+                wallsCopy.remove(wallPosition);
+            }
+            if (onWestBorder((wallPosition)) && isWestWall(wallCell)) {
+                wallsCopy.remove(wallPosition);
+            }
+            if (onNorthBorder(wallPosition) && isNorthWall(wallCell)) {
+                wallsCopy.remove(wallPosition);
+            }
+        }
+        return wallsCopy;
+    }
 
     /**
      * Put all position to the walls on board in lists.
@@ -126,19 +171,17 @@ public class WallTests {
         for (int x = 0; x < board.getWidth(); x++) {
             for (int y = 0; y < board.getHeight(); y++) {
                 Vector2 pos = new Vector2(x, y);
-                TiledMapTileLayer.Cell cell = wallLayer.getCell(x, y);
-                System.out.print(cell);
-                System.out.print(TileID.SOUTH_WALL.getId());
-                if (isSouthWall(cell)) {
+                TiledMapTileLayer.Cell wall = wallLayer.getCell(x, y);
+                if (isSouthWall(wall)) {
                     southWalls.add(pos);
                 }
-                if (isNorthWall(cell)) {
+                if (isNorthWall(wall)) {
                     northWalls.add(pos);
                 }
-                if (isEastWall(cell)) {
+                if (isEastWall(wall)) {
                     eastWalls.add(pos);
                 }
-                if (isWestWall(cell)) {
+                if (isWestWall(wall)) {
                     westWalls.add(pos);
                 }
             }
@@ -317,10 +360,43 @@ public class WallTests {
      *
      */
     @Test
-    public void playerFacingRandomWallOnNeighbourCellCanNotMoveTest() {
+    public void playerFacingRandomEastWallOnNeighbourCellCanNotMoveTest() {
         // Test for some random walls
         for (int i = 0; i < 5; i++) {
-            Vector2 neighbourCellWithWall = getRandomWallPosition(getEastWallsNotOnBorderPositions());
+            Vector2 neighbourCellWithWall = getRandomWallPosition(eastWalls);
+            int neighbourX = (int) neighbourCellWithWall.x;
+            int neighbourY = (int) neighbourCellWithWall.y;
+            while (onEastBorder(neighbourCellWithWall)) {
+                neighbourCellWithWall = getRandomWallPosition(eastWalls);
+
+            }
+            Vector2 playerPosition = new Vector2(neighbourX + 1, neighbourY);
+            player.setPosition(playerPosition);
+            player.setDirection(Direction.WEST);
+            board.movePlayer(player);
+            assertEquals(playerPosition, player.getPosition());
+        }
+    }
+
+
+    /**
+     * see: {@link #playerFacingRandomEastWallOnNeighbourCellCanNotMoveTest()} }
+     * for documentation
+     *
+     * Here the scenario is:
+     *
+     *    ----------
+     *    |    P->||
+     *    |        |
+     *    |        |
+     *    |________|
+     *
+     */
+    @Test
+    public void playerFacingRandomWestWallOnNeighbourCellCanNotMoveTest() {
+        // Test for some random walls
+        for (int i = 0; i < 5; i++) {
+            Vector2 neighbourCellWithWall = getRandomWallPosition(getWestWallsNotOnBorderPositions());
             int neighbourX = (int) neighbourCellWithWall.x;
             int neighbourY = (int) neighbourCellWithWall.y;
             Vector2 playerPosition = new Vector2(neighbourX + 1, neighbourY);
@@ -330,5 +406,6 @@ public class WallTests {
             assertEquals(playerPosition, player.getPosition());
         }
     }
+
 
 }
