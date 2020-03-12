@@ -1,6 +1,7 @@
 ### User stories:
 
 #### Laser
+
 User-story:
 As a player I want the laser to be able to hit me, so that I take damage.
 
@@ -76,9 +77,45 @@ Tasks:
 - Make methods for choosing board
 - Make graphics for choosing board
 
-#### Liv på roboter - Kenny lager userstory
+#### Liv på roboter
 
-#### Damagetoken - Kenny lager userstory
+User-Story:
+As a player I want my robot to be able to take damage, so that my robot can die
+
+Acceptance-criteria:
+If a laser hits me, I want to recieve damage
+
+Tasks:
+- Make methods for robots to take damage
+
+#### Damagetoken 
+
+User-Story:
+As a player I want my robot to have a Token-bar, to see when or if my robot gets hurt
+
+Acceptance-criteria:
+- When i get 10 damage tokens, I want my robot to die and respawn
+- When i get 5 or more damage tokens, then the program cards will 'lock up' starting from register 5 
+- When i get x damage tokens, I will get x less program cards
+
+Tasks:
+- Make a GUI for visible damage tokens for the robots
+- Make methods to recieve damage tokens
+- Make methods to recieve less programs cards based on damage tokens
+
+#### Lifetoken
+
+User-Story: 
+As a player I want to have Life tokens, to see how many lives I have left
+
+Acceptance-criteria:
+- If my robot gets 10 damage tokens, I lose a life token
+- If my life tokens are depleted, then im permanently out of the game
+
+Tasks:
+- Make a GUI to visualize life tokens
+- Make a method that removes life tokens when robots die.    
+- Make a method that robots do not respawn after losing all life tokens
 
 
 #### See the cards - se hånden til kortene
