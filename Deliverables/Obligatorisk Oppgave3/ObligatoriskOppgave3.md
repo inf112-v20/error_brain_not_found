@@ -61,19 +61,19 @@ As a user I want to get turned if I walk on a rotate pad
 Acceptance-criteria:
 when I move to a tile with a rotate-wheel I want to be turned in the direction of the rotate pad
 
-Tasks: 
+Tasks:
 - make a method that tells if player i on rotate pad and then rotate player 
 - test that player is rotated in correct direction
 
 #### MenuScreen - Skal kunne velge brett
 
-User-Story: 
+User-Story:
 As a user of the game I want to be able to choose different board layouts, so that I can have a new challenge in the game.
 
-Acceptance-criteria: 
-If I choose a board-layout, this is the layout that shows when I start the game.
+Acceptance-criteria:
+If I choose a board-layout, this is the layout that shows when I start the game
 
-Tasks: 
+Tasks:
 - Make methods for choosing board
 - Make graphics for choosing board
 
@@ -86,16 +86,16 @@ Acceptance-criteria:
 If a laser hits me, I want to recieve damage
 
 Tasks:
-- Make methods for robots to take damage
+Make methods for robots to take damage
 
-#### Damagetoken 
+#### Damagetoken
 
 User-Story:
 As a player I want my robot to have a Token-bar, to see when or if my robot gets hurt
 
 Acceptance-criteria:
 - When i get 10 damage tokens, I want my robot to die and respawn
-- When i get 5 or more damage tokens, then the program cards will 'lock up' starting from register 5 
+- When i get 5 or more damage tokens, then the program cards will 'lock up' starting from register 5
 - When i get x damage tokens, I will get x less program cards
 
 Tasks:
