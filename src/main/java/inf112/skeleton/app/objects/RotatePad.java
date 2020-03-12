@@ -9,6 +9,7 @@ public class RotatePad {
 
     public RotatePad(Rotate rotate, Vector2 vector){
         this.rotate = rotate;
+        this.position = vector;
     }
 
     public Rotate getRotate() {
