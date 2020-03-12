@@ -15,15 +15,18 @@ public class RallyGame extends Game {
     public Board board;
     public SpriteBatch batch;
     public Deck deck;
-    public Player currentPlayer;
 
     public void create() {
         this.batch = new SpriteBatch();
-        this.board = new Board("assets/maps/Risky_Exchange.tmx", 4);
         this.setScreen(new LoadingScreen(this));
-        this.deck = new Deck();
-        this.currentPlayer = board.getPlayer1();
+    }
 
+    public void setupGame(String mapPath) {
+        this.board = new Board(mapPath, 4);
+        this.deck = new Deck();
+        setInputProcessor();
+    }
+    public void setInputProcessor() {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyUp(int keycode) {
@@ -38,15 +41,17 @@ public class RallyGame extends Game {
                     player.setDirection(Direction.SOUTH);
                 } else if (keycode == Input.Keys.ESCAPE) {
                     Gdx.app.exit();
-                } else {
-                    return super.keyDown(keycode);
                 }
                 board.movePlayer(player);
+
                 if (player.hasAllFlags(board.getFlags().size())) {
                     setWinScreen();
                 }
+
                 return super.keyDown(keycode);
+
             }
+
         });
     }
 
