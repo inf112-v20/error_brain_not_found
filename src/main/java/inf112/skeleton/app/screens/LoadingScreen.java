@@ -20,7 +20,7 @@ public class LoadingScreen extends StandardScreen {
 
         if (Gdx.input.isTouched()) {
             game.setScreen(new MenuScreen(game));
-            dispose();
+            this.dispose();
         }
     }
 }

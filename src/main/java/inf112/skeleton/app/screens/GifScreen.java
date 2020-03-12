@@ -25,6 +25,7 @@ public class GifScreen extends StandardScreen {
         batch.draw(animation.getKeyFrame(elapsed), 0, 0, camera.viewportWidth, camera.viewportHeight);
         batch.end();
         if (animation.isAnimationFinished(elapsed)) {
+            this.dispose();
             game.setScreen(new YouWinScreen(game));
         }
     }

@@ -57,6 +57,7 @@ public class RallyGame extends Game {
     }
 
     public void setWinScreen() {
+        this.screen.dispose();
         this.setScreen(new GifScreen(this));
     }
 
