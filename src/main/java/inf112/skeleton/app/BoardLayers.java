@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.enums.TileID;
+import inf112.skeleton.app.objects.Flag;
 import inf112.skeleton.app.objects.RotatePad;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public abstract class BoardLayers {
     public TiledMapTileLayer laserLayer;
     public TiledMapTileLayer groundLayer;
 
+    public final ArrayList<Flag> flags;
     public final ArrayList<RotatePad> rotatePads;
     public final ArrayList<Vector2> holes;
 
@@ -42,6 +44,7 @@ public abstract class BoardLayers {
 
         this.holes = new ArrayList<Vector2>();
         this.rotatePads = new ArrayList<RotatePad>();
+        this.flags = new ArrayList<Flag>();
     }
 
 
@@ -86,6 +89,30 @@ public abstract class BoardLayers {
                     rotatePads.add(new RotatePad(Rotate.LEFT, new Vector2(x, y)));
                 } else if (ID == TileID.ROTATE_PAD_RIGHT.getId()) {
                     rotatePads.add(new RotatePad(Rotate.RIGHT, new Vector2(x, y)));
+                }
+            }
+        }
+    }
+
+    /**
+     * Finds the where the flags are on the board, makes {@link Flag} objects
+     * and puts them in to the flag array.
+     */
+    public void findFlags() {
+        for (int x = 0; x < flagLayer.getWidth(); x++) {
+            for (int y = 0; y < flagLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = flagLayer.getCell(x, y);
+                if (cell != null) {
+                    int ID = cell.getTile().getId();
+                    if (ID == TileID.FLAG_1.getId()) {
+                        flags.add(new Flag(1, x, y));
+                    } else if (ID == TileID.FLAG_2.getId()) {
+                        flags.add(new Flag(2, x, y));
+                    } else if (ID == TileID.FLAG_3.getId()) {
+                        flags.add(new Flag(3, x, y));
+                    } else if (ID == TileID.FLAG_4.getId()) {
+                        flags.add(new Flag(4, x, y));
+                    }
                 }
             }
         }
