@@ -70,6 +70,7 @@ public class MenuScreen implements Screen {
         if (Gdx.input.getX() < x + START_BUTTON_WIDTH && Gdx.input.getX() > x && camera.viewportHeight - Gdx.input.getY() < START_BUTTON_Y + START_BUTTON_HEIGHT && camera.viewportHeight - Gdx.input.getY() > START_BUTTON_Y) {
             game.batch.draw(startButtonActive,x,START_BUTTON_Y,START_BUTTON_WIDTH,START_BUTTON_HEIGHT);
             if (Gdx.input.isTouched()){
+                game.setupGame("assets/maps/Risky_Exchange.tmx");
                 game.setScreen(new GameScreen(game));
                 this.dispose();
             }

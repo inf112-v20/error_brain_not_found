@@ -19,30 +19,37 @@ public class RallyGame extends Game {
 
     public void create() {
         this.batch = new SpriteBatch();
-        this.board = new Board("assets/maps/Risky_Exchange.tmx", 4);
         this.setScreen(new LoadingScreen(this));
-        this.deck = new Deck();
-        this.currentPlayer = board.getPlayer1();
+    }
 
+    public void setupGame(String mapPath) {
+        this.board = new Board(mapPath, 4);
+        this.currentPlayer = board.getPlayer1();
+        this.deck = new Deck();
+        setInputProcessor();
+    }
+
+    public void setInputProcessor() {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyUp(int keycode) {
                 Player player = board.getPlayer1();
                 if (keycode == Input.Keys.RIGHT) {
                     player.setDirection(Direction.EAST);
+                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.LEFT) {
                     player.setDirection(Direction.WEST);
+                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.UP) {
                     player.setDirection(Direction.NORTH);
+                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.DOWN) {
                     player.setDirection(Direction.SOUTH);
+                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.ESCAPE) {
                     Gdx.app.exit();
-                } else {
-                    return super.keyDown(keycode);
                 }
-                board.movePlayer(player);
-                if (player.hasAllFlags(board.getFlags().size())) {
+                if (currentPlayer.hasAllFlags(board.getFlags().size())) {
                     setWinScreen();
                 }
                 return super.keyDown(keycode);
