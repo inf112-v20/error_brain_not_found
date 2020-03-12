@@ -27,7 +27,8 @@ public class Board extends BoardLayers {
         laserLayer.setVisible(false);
 
         findFlags();
-        findHoles();
+        //findHoles();
+        findRotatePadsAndHoles();
 
         addPlayersToStartPositions(numberOfPlayers);
     }
