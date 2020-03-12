@@ -45,6 +45,9 @@ public abstract class BoardLayers {
         this.holes = new ArrayList<Vector2>();
         this.rotatePads = new ArrayList<RotatePad>();
         this.flags = new ArrayList<Flag>();
+
+        findFlags();
+        findRotatePadsAndHoles();
     }
 
 

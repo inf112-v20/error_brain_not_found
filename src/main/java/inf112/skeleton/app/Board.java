@@ -15,18 +15,12 @@ public class Board extends BoardLayers {
 
     private ArrayList<Player> players;
 
-
     public Board(String mapPath, int numberOfPlayers) {
         super(mapPath);
 
         this.players = new ArrayList<>();
-        //this.flags = new ArrayList<>();
-        //this.holes = new ArrayList<>();
-        laserLayer.setVisible(false);
 
-        findFlags();
-        //findHoles();
-        findRotatePadsAndHoles();
+        laserLayer.setVisible(false);
 
         addPlayersToStartPositions(numberOfPlayers);
     }
