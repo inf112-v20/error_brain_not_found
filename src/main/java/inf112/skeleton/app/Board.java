@@ -24,6 +24,7 @@ public class Board extends BoardLayers {
         this.players = new ArrayList<>();
         this.flags = new ArrayList<>();
         this.holes = new ArrayList<>();
+        laserLayer.setVisible(false);
 
         findFlags();
         findHoles();
@@ -66,11 +67,11 @@ public class Board extends BoardLayers {
      * @param player to add to game and board
      */
     public void addPlayer(Player player) {
-        TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
-        cell.setTile(getRobotTile(player));
         if (outsideBoard(player)) {
             respawn(player);
         }
+        TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
+        cell.setTile(getRobotTile(player));
         playerLayer.setCell((int) player.getPosition().x, (int) player.getPosition().y, cell);
         if (!players.contains(player)) {
             players.add(player);
@@ -209,6 +210,7 @@ public class Board extends BoardLayers {
      */
     private void respawn(Player player) {
         player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
+        player.setDirection(player.getBackupDirection());
     }
 
     /**
@@ -320,6 +322,15 @@ public class Board extends BoardLayers {
                     tileID == TileID.NORTH_LASER_WALL.getId();
         }
         return false;
+    }
+
+
+    /**
+     * Add player to the board, so the direction is correct
+     * @param player
+     */
+    public void rotatePlayer(Player player) {
+        addPlayer(player);
     }
 
     /**

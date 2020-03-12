@@ -2,6 +2,7 @@ package inf112.skeleton.app;
 
 
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Flag;
 
@@ -11,28 +12,42 @@ public class Player {
 
     private final int playerNr;
     private Vector2 backupPosition;
+    private Direction backupDirection;
     private Vector2 position;
     private Direction direction;
     private ArrayList<Flag> flagsCollected;
+    private ArrayList<ProgramCard> programCards;
 
     public Player(Vector2 position, int playerNr) {
         this.position = position;
         this.direction = Direction.EAST;
         this.playerNr = playerNr;
         this.flagsCollected = new ArrayList<>();
-        setBackupPosition(position);
+        setBackup(position, Direction.EAST);
     }
 
+    public void addCard(ProgramCard card) {
+        programCards.add(card);
+    }
+
+    public ArrayList<ProgramCard> getProgramCards() {
+        return programCards;
+    }
+
+    public ProgramCard removeCard() {return programCards.remove(0); }
+
     /**
-     * Set new backup position
+     * Set new backup position and direction
      * @param backupPosition respawn position when damaged
+     * @param backupDirection respawn direction when damaged
      */
-    public void setBackupPosition(Vector2 backupPosition) {
+    public void setBackup(Vector2 backupPosition, Direction backupDirection) {
         if (this.backupPosition == null) {
-            this.backupPosition = new Vector2(backupPosition.x, backupPosition.y);
+            this.backupPosition = new Vector2(backupPosition);
         } else {
             this.backupPosition.set(backupPosition.x, backupPosition.y);
         }
+        this.backupDirection = backupDirection;
     }
 
     /**
@@ -40,6 +55,13 @@ public class Player {
      */
     public Vector2 getBackupPosition() {
         return backupPosition;
+    }
+
+    /**
+     * @return backup direction
+     */
+    public Direction getBackupDirection() {
+        return backupDirection;
     }
 
     /**
