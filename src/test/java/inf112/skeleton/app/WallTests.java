@@ -18,7 +18,6 @@ import static org.mockito.Mockito.mock;
 
 public class WallTests {
     private Board board;
-    private final int NUMBER_OF_PLAYERS_WHEN_STARTING_GAME = 2;
     private Player player;
     private Random random;
     private ArrayList<Vector2> allNorthWalls;
@@ -33,6 +32,7 @@ public class WallTests {
         Gdx.gl = mock(GL20.class);
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
+        int NUMBER_OF_PLAYERS_WHEN_STARTING_GAME = 2;
         this.board = new Board("assets/maps/Risky_Exchange.tmx", NUMBER_OF_PLAYERS_WHEN_STARTING_GAME);
         this.player = new Player(new Vector2(0,0), 1);
         random = new Random();
@@ -45,7 +45,7 @@ public class WallTests {
 
     /**
      *
-     * @param position
+     * @param position of tile
      * @return true if position is on tile before border
      */
     private boolean onEastBorder(Vector2 position) {
@@ -54,7 +54,7 @@ public class WallTests {
 
     /**
      *
-     * @param position
+     * @param position of tile
      * @return true if position is on tile before border
      */
     private boolean onWestBorder(Vector2 position) {
@@ -63,7 +63,7 @@ public class WallTests {
 
     /**
      *
-     * @param position
+     * @param position of tile
      * @return true if position is on tile before border
      */
     private boolean onSouthBorder(Vector2 position) {
@@ -72,7 +72,7 @@ public class WallTests {
 
     /**
      *
-     * @param position
+     * @param position of tile
      * @return true if position is on tile before border
      */
     private boolean onNorthBorder(Vector2 position) {
@@ -80,7 +80,7 @@ public class WallTests {
     }
 
     /**
-     * @param cell
+     * @param cell to check
      * @return true if cell only has north wall
      */
     private boolean isOnlyNorthWall(TiledMapTileLayer.Cell cell) {
@@ -91,7 +91,7 @@ public class WallTests {
     }
 
     /**
-     * @param cell
+     * @param cell to check
      * @return true if cell only has south wall
      */
     private boolean isOnlySouthWall(TiledMapTileLayer.Cell cell) {
@@ -102,7 +102,7 @@ public class WallTests {
     }
 
     /**
-     * @param cell
+     * @param cell to check
      * @return true if cell only has east wall
      */
     private boolean isOnlyEastWall(TiledMapTileLayer.Cell cell) {
@@ -113,7 +113,7 @@ public class WallTests {
     }
 
     /**
-     * @param cell
+     * @param cell to check
      * @return true if cell only has west wall
      */
     private boolean isOnlyWestWall(TiledMapTileLayer.Cell cell) {
@@ -126,7 +126,7 @@ public class WallTests {
     /**
      * Give a random entry from given list
      *
-     * @Return a random position from the list given
+     * @return a random position from the list given
      */
     private Vector2 getRandomWallPosition(ArrayList<Vector2> listOfWalls) {
         int randomIndex = random.nextInt(listOfWalls.size());
@@ -138,7 +138,7 @@ public class WallTests {
      * so that we can test that a player can move when there is not a wall in
      * front of the player, but on same tile.
      *
-     * @param listOfWalls
+     * @param listOfWalls allNorthWalls
      * @return list of only north walls
      */
     private ArrayList<Vector2> getOnlyNorthWalls(ArrayList<Vector2> listOfWalls) {
@@ -157,7 +157,7 @@ public class WallTests {
      * so that we can test that a player can move when there is not a wall in
      * front of the player, but on same tile.
      *
-     * @param listOfWalls
+     * @param listOfWalls allSouthWalls
      * @return list of only south walls
      */
     private ArrayList<Vector2> getOnlySouthWalls(ArrayList<Vector2> listOfWalls) {
@@ -176,7 +176,7 @@ public class WallTests {
      * so that we can test that a player can move when there is not a wall in
      * front of the player, but on same tile.
      *
-     * @param listOfWalls
+     * @param listOfWalls allEastWalls
      * @return list of only east walls
      */
     private ArrayList<Vector2> getOnlyEastWalls(ArrayList<Vector2> listOfWalls) {
@@ -195,7 +195,7 @@ public class WallTests {
      * so that we can test that a player can move when there is not a wall in
      * front of the player, but on same tile.
      *
-     * @param listOfWalls
+     * @param listOfWalls allWestWalls
      * @return list of only west walls
      */
     private ArrayList<Vector2> getOnlyWestWalls(ArrayList<Vector2> listOfWalls) {
