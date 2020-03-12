@@ -16,11 +16,11 @@ public class RallyGame extends Game {
     public Board board;
     public SpriteBatch batch;
     public Deck deck;
+    private Player currentPlayer;
 
     public void create() {
         this.batch = new SpriteBatch();
-        this.board = new Board("assets/maps/Risky_Exchange.tmx", 4);
-        //this.setScreen(new MenuScreen(this));
+        //this.board = new Board("assets/maps/Risky_Exchange.tmx", 4);
         this.setScreen(new LoadingScreen(this));
     }
 
@@ -30,7 +30,7 @@ public class RallyGame extends Game {
         this.deck = new Deck();
         setInputProcessor();
     }
-
+    public void setInputProcessor() {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyUp(int keycode) {

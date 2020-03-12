@@ -64,7 +64,7 @@ public class MenuScreen implements Screen {
        selectMap.setWidth(BUTTON_WIDTH*.87f);
        selectMap.setPosition((100), START_BUTTON_Y - selectMap.getHeight()*2);
 
-        Music music = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
         music.setLooping(true);
         music.setVolume(1f);
         music.play();
@@ -118,7 +118,7 @@ public class MenuScreen implements Screen {
         if (Gdx.input.getX() < x + BUTTON_WIDTH && Gdx.input.getX() > x && camera.viewportHeight - Gdx.input.getY() < START_BUTTON_Y + BUTTON_HEIGHT && camera.viewportHeight - Gdx.input.getY() > START_BUTTON_Y) {
             game.batch.draw(startButtonActive,x,START_BUTTON_Y,BUTTON_WIDTH,BUTTON_HEIGHT);
             if (Gdx.input.isTouched()){
-                game.setupGame("assets/maps/Risky_Exchange.tmx");
+                game.setupGame("assets/maps/"+getBoard()+".tmx");
                 game.setScreen(new GameScreen(game));
                 this.dispose();
             }
@@ -134,9 +134,6 @@ public class MenuScreen implements Screen {
 
     public String getBoard(){
         select = selectMap.getSelected();
-        //this.board = new Board("assets/maps/"+ select+"tmx",4);
-        //this.board = new Board("assets/maps/Island_hop.tmx",4);
-        System.out.println(this.board);
         return select;
     }
 
@@ -157,7 +154,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void hide() {
-        Gdx.input.setInputProcessor(null);
+       // Gdx.input.setInputProcessor(null);
 
     }
 
