@@ -35,24 +35,25 @@ public class RallyGame extends Game {
                 Player player = board.getPlayer1();
                 if (keycode == Input.Keys.RIGHT) {
                     player.setDirection(Direction.EAST);
-                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.LEFT) {
                     player.setDirection(Direction.WEST);
-                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.UP) {
                     player.setDirection(Direction.NORTH);
-                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.DOWN) {
                     player.setDirection(Direction.SOUTH);
-                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.ESCAPE) {
                     Gdx.app.exit();
                 }
-                if (currentPlayer.hasAllFlags(board.getFlags().size())) {
+                board.movePlayer(player);
+
+                if (player.hasAllFlags(board.getFlags().size())) {
                     setWinScreen();
                 }
+
                 return super.keyDown(keycode);
+
             }
+
         });
     }
 
