@@ -42,48 +42,48 @@ public class BoardTest {
     }
 
     @Test
-    public void whenAPlayerIsAddedTheBoardHasIncrementedPlayersByOneTest() {
+    public void aPlayerIsAddedToTheBoardIncrementPlayersTest() {
         board.addPlayer(player);
         assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME + 1, board.getPlayers().size());
     }
 
     @Test
-    public void whenBoardIsInitBoardWidthIsTheSameAsExpectedTest() {
+    public void boardInitializedWithCorrectWidthTest() {
         assertEquals(BOARD_WIDTH, board.getWidth());
     }
 
     @Test
-    public void whenBoardIsInitBoardHeightIsTheSameAsExpectedTest() {
+    public void boardInitializedWithCorrectHeightTest() {
         assertEquals(BOARD_HEIGHT, board.getHeight());
     }
 
 
     @Test
-    public void whenPlayerIsOutsideOnTopOfBoardItIsDetectedTest() {
+    public void playerIsOutsideOfUpperBorderTest() {
         player.setPosition(new Vector2(0, BOARD_HEIGHT));
         assertTrue(board.outsideBoard(player));
     }
 
     @Test
-    public void whenPlayerIsOutsideOnRightSideOfBoardItIsDetectedTest() {
+    public void playerIsOutsideOfRightBorderTest() {
         player.setPosition(new Vector2(BOARD_WIDTH, 0));
         assertTrue(board.outsideBoard(player));
     }
 
     @Test
-    public void whenPlayerIsOutsideOnLeftSideOfBoardItIsDetectedTest() {
+    public void playerIsOutsideOfLeftBorderTest() {
         player.setPosition(new Vector2(-1, 0));
         assertTrue(board.outsideBoard(player));
     }
 
     @Test
-    public void whenPlayerIsOutsideUnderTheBoardItIsDetectedTest() {
+    public void playerIsOutsideOfUnderBorderTest() {
         player.setPosition(new Vector2(0, -1));
         assertTrue(board.outsideBoard(player));
     }
 
     @Test
-    public void whenPlayerIsOutsideOfBoardPlayerIsRespawned() {
+    public void playerOutsideBoardPlayerIsRespawnedTest() {
         Vector2 outsideOfBoardPosition = new Vector2(-1, 0);
         player.setPosition(outsideOfBoardPosition);
         board.addPlayer(player);
@@ -92,7 +92,7 @@ public class BoardTest {
 
 
     @Test
-    public void whenPlayerIsMovedPlayerHasChangedCoordinatesTest() {
+    public void playerHasMovedThenPlayerHasChangedCoordinatesTest() {
         Vector2 startPosition = new Vector2(player.getPosition().x, player.getPosition().y);
         player.setDirection(Direction.EAST);
         board.movePlayer(player);
