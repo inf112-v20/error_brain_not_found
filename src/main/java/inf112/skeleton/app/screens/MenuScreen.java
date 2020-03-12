@@ -42,6 +42,7 @@ public class MenuScreen implements Screen {
     private Stage stage;
     public String select;
     private Object Viewport;
+    private Music music;
 
     public MenuScreen(RallyGame game) {
         this.game = game;
@@ -117,11 +118,9 @@ public class MenuScreen implements Screen {
         if (Gdx.input.getX() < x + BUTTON_WIDTH && Gdx.input.getX() > x && camera.viewportHeight - Gdx.input.getY() < START_BUTTON_Y + BUTTON_HEIGHT && camera.viewportHeight - Gdx.input.getY() > START_BUTTON_Y) {
             game.batch.draw(startButtonActive,x,START_BUTTON_Y,BUTTON_WIDTH,BUTTON_HEIGHT);
             if (Gdx.input.isTouched()){
-                System.out.println(selectMap.getSelected());
-                //System.out.println(select);
-                //this.board = new Board("assets/maps" + select + ".tmx",4);
+                game.setupGame("assets/maps/Risky_Exchange.tmx");
                 game.setScreen(new GameScreen(game));
-                //this.dispose();
+                this.dispose();
             }
         }
         else { game.batch.draw(startButtonInactive,x, START_BUTTON_Y,BUTTON_WIDTH,BUTTON_HEIGHT);}
@@ -143,6 +142,7 @@ public class MenuScreen implements Screen {
 
     @Override
     public void resize(int i, int i1) {
+
     }
 
     @Override

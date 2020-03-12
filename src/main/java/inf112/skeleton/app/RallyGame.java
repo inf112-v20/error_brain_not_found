@@ -16,39 +16,46 @@ public class RallyGame extends Game {
     public Board board;
     public SpriteBatch batch;
     public Deck deck;
-    public MenuScreen menu;
 
     public void create() {
         this.batch = new SpriteBatch();
-       // this.board = new Board("assets/maps/Risky_Exchange.tmx", 4);
+        this.board = new Board("assets/maps/Risky_Exchange.tmx", 4);
+        //this.setScreen(new MenuScreen(this));
         this.setScreen(new LoadingScreen(this));
-        this.deck = new Deck();
+    }
 
-      /*  Gdx.input.setInputProcessor(new InputAdapter() {
+    public void setupGame(String mapPath) {
+        this.board = new Board(mapPath, 4);
+        this.currentPlayer = board.getPlayer1();
+        this.deck = new Deck();
+        setInputProcessor();
+    }
+
+        Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyUp(int keycode) {
                 Player player = board.getPlayer1();
                 if (keycode == Input.Keys.RIGHT) {
                     player.setDirection(Direction.EAST);
+                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.LEFT) {
                     player.setDirection(Direction.WEST);
+                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.UP) {
                     player.setDirection(Direction.NORTH);
+                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.DOWN) {
                     player.setDirection(Direction.SOUTH);
-                } else if (keycode == Input.Keys.ESCAPE){
+                    board.movePlayer(player);
+                } else if (keycode == Input.Keys.ESCAPE) {
                     Gdx.app.exit();
                 }
-                else {
-                    return super.keyDown(keycode);
-                }
-                board.movePlayer(player);
-                if (player.hasAllFlags(board.getFlags().size())) {
+                if (currentPlayer.hasAllFlags(board.getFlags().size())) {
                     setWinScreen();
                 }
                 return super.keyDown(keycode);
             }
-        });*/
+        });
     }
 
     public void setWinScreen() {
@@ -65,11 +72,6 @@ public class RallyGame extends Game {
     }
 
     public Board getBoard() {
-        String select = menu.selectMap.getSelected();
-        System.out.println(select);
-//        this.board = new Board("assets/maps/" + menu.select +".tmx", 4);
-
         return this.board;
     }
-
 }
