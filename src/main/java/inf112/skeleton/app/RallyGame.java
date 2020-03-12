@@ -16,15 +16,15 @@ public class RallyGame extends Game {
     public Board board;
     public SpriteBatch batch;
     public Deck deck;
+    public MenuScreen menu;
 
     public void create() {
         this.batch = new SpriteBatch();
-        this.board = new Board("assets/maps/Risky_Exchange.tmx", 4);
-        //this.setScreen(new MenuScreen(this));
+       // this.board = new Board("assets/maps/Risky_Exchange.tmx", 4);
         this.setScreen(new LoadingScreen(this));
         this.deck = new Deck();
 
-        Gdx.input.setInputProcessor(new InputAdapter() {
+      /*  Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyUp(int keycode) {
                 Player player = board.getPlayer1();
@@ -48,7 +48,7 @@ public class RallyGame extends Game {
                 }
                 return super.keyDown(keycode);
             }
-        });
+        });*/
     }
 
     public void setWinScreen() {
@@ -65,6 +65,11 @@ public class RallyGame extends Game {
     }
 
     public Board getBoard() {
+        String select = menu.selectMap.getSelected();
+        System.out.println(select);
+//        this.board = new Board("assets/maps/" + menu.select +".tmx", 4);
+
         return this.board;
     }
+
 }

@@ -13,6 +13,8 @@ public class GameScreen implements Screen {
 
     private final RallyGame game;
     private final Board board;
+    public MenuScreen menu;
+    public String select;
 
     private OrthographicCamera camera;
     private TiledMapRenderer mapRenderer;
@@ -22,6 +24,7 @@ public class GameScreen implements Screen {
 
         this.game = game;
         this.board = game.getBoard();
+        //this.board = menu.getBoard();
 
         camera.setToOrtho(false, board.getWidth() * 300, board.getHeight() * 300);
 
