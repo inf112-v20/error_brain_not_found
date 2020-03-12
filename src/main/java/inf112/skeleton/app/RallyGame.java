@@ -15,7 +15,6 @@ public class RallyGame extends Game {
     public Board board;
     public SpriteBatch batch;
     public Deck deck;
-    private Player currentPlayer;
 
     public void create() {
         this.batch = new SpriteBatch();
@@ -24,7 +23,6 @@ public class RallyGame extends Game {
 
     public void setupGame(String mapPath) {
         this.board = new Board(mapPath, 4);
-        this.currentPlayer = board.getPlayer1();
         this.deck = new Deck();
         setInputProcessor();
     }
