@@ -83,9 +83,9 @@ public abstract class BoardLayers {
                 } else if (ID == TileID.NORTH_WEST_EAST_HOLE.getId()) {
                     holes.add(new Vector2(x, y));
                 } else if (ID == TileID.ROTATE_PAD_LEFT.getId()) {
-                    rotatePads.add(new RotatePad(Rotate.LEFT));
+                    rotatePads.add(new RotatePad(Rotate.LEFT, new Vector2(x, y)));
                 } else if (ID == TileID.ROTATE_PAD_RIGHT.getId()) {
-                    rotatePads.add(new RotatePad(Rotate.RIGHT));
+                    rotatePads.add(new RotatePad(Rotate.RIGHT, new Vector2(x, y)));
                 }
             }
         }
