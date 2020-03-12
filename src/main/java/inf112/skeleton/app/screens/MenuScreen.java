@@ -6,14 +6,10 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
-import com.badlogic.gdx.utils.viewport.FitViewport;
-import com.badlogic.gdx.utils.viewport.Viewport;
-import inf112.skeleton.app.Board;
 import inf112.skeleton.app.RallyGame;
 
 import java.io.File;
@@ -26,8 +22,6 @@ public class MenuScreen implements Screen {
     private static final int BUTTON_HEIGHT = 150;
     private static final int START_BUTTON_Y = 250;
     private static final int EXIT_BUTTON_Y = 100;
-    //private static final int x = 200;
-    public Board board;
 
     private RallyGame game;
     public SelectBox<String> selectMap;
@@ -41,8 +35,6 @@ public class MenuScreen implements Screen {
     private Texture background;
     private Stage stage;
     public String select;
-    private Object Viewport;
-    private Music music;
 
     public MenuScreen(RallyGame game) {
         this.game = game;
@@ -57,14 +49,14 @@ public class MenuScreen implements Screen {
         exitButtonActive= new Texture("assets/images/Exit_Button_Inactive.png");
 
 
-       selectMap = new SelectBox<>(skin);
+        selectMap = new SelectBox<>(skin);
 
-       selectMap.setItems(getMaps());
-       selectMap.setSelected("assets/maps/Risky_Exchange.tmx");
-       selectMap.setWidth(BUTTON_WIDTH*.87f);
-       selectMap.setPosition((100), START_BUTTON_Y - selectMap.getHeight()*2);
+        selectMap.setItems(getMaps());
+        selectMap.setSelected("assets/maps/Risky_Exchange.tmx");
+        selectMap.setWidth(BUTTON_WIDTH*.87f);
+        selectMap.setPosition((100), START_BUTTON_Y - selectMap.getHeight()*2);
 
-        music = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
+        Music music = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
         music.setLooping(true);
         music.setVolume(1f);
         music.play();
@@ -91,8 +83,8 @@ public class MenuScreen implements Screen {
 
     @Override
     public void show() {
-       Gdx.input.setInputProcessor(stage);
-       render(0);
+        Gdx.input.setInputProcessor(stage);
+        render(0);
     }
     @Override
     public void render(float v) {
@@ -126,10 +118,8 @@ public class MenuScreen implements Screen {
         else { game.batch.draw(startButtonInactive,x, START_BUTTON_Y,BUTTON_WIDTH,BUTTON_HEIGHT);}
 
         game.batch.end();
-
         stage.act(v);
         stage.draw();
-
     }
 
     public String getBoard(){
@@ -149,20 +139,16 @@ public class MenuScreen implements Screen {
 
     @Override
     public void resume() {
-
     }
 
     @Override
     public void hide() {
-       // Gdx.input.setInputProcessor(null);
-
     }
 
     @Override
     public void dispose() {
         stage.dispose();
         background.dispose();
-
     }
 
 }

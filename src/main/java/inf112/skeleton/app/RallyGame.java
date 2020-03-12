@@ -9,7 +9,6 @@ import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.LoadingScreen;
-import inf112.skeleton.app.screens.MenuScreen;
 
 public class RallyGame extends Game {
 
@@ -20,7 +19,6 @@ public class RallyGame extends Game {
 
     public void create() {
         this.batch = new SpriteBatch();
-        //this.board = new Board("assets/maps/Risky_Exchange.tmx", 4);
         this.setScreen(new LoadingScreen(this));
     }
 
