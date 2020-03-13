@@ -7,7 +7,6 @@ import inf112.skeleton.app.enums.Direction;
 import org.junit.Before;
 import org.junit.Test;
 
-import javax.xml.validation.Validator;
 import java.util.ArrayList;
 import java.util.Random;
 
