@@ -80,16 +80,7 @@ Tasks:
 -   Create flags with flagnumber and position 
 -   Check if all flags are picked up in correct order 
 -   Make tests for flags 
-
-User-story:
-As a user I want to go on flags, so that I can be respawned on the flag later.
-
-Acceptance-criteria:
--   If I go on a flag and then go outside board, I will be respawned on this flag 
-
-Tasks:
--   Update backupPosition to player when on a flag. 
--   Test that player is respawned to this position
+-   Make tests for flags 
 
 #### Game loop
 User-story:
