@@ -131,3 +131,32 @@ Acceptance-citeria:
 Tasks:
 -   Make graphics for showing cards 
 -   Manual test
+
+#### Flags 
+
+User-story:
+As a user I want to go on flags, so that I can win the game. 
+
+Acceptance-criteria:
+-   If I go on a flag, this flag is picked up.
+-   If I pick up all flags in correct order, I win.
+-   If I pick up flags in incorrect order, the flag is not picked up.
+
+Tasks: 
+-   Create a function to tell i you can pick up a flag 
+-   Create flags with flagnumber and position 
+-   Check if all flags are picked up in correct order 
+-   Make tests for flags 
+-   Make tests for flags 
+
+#### Game loop
+User-story:
+As a player I want the game to go in a loop, so that events happen in a specific order. 
+
+Acceptance-criteria:
+When the game starts, it goes through the fases and the rounds. 
+
+Tasks:
+-   Make loop for the game. 
+-   Test that events happen in right order
+-   Manual tests   
