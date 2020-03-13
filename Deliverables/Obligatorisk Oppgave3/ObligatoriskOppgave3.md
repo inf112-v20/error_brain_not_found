@@ -147,7 +147,6 @@ Tasks:
 -   Create flags with flagnumber and position 
 -   Check if all flags are picked up in correct order 
 -   Make tests for flags 
--   Make tests for flags 
 
 #### Game loop
 User-story:
