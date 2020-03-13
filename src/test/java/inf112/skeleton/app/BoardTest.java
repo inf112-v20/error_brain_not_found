@@ -53,10 +53,9 @@ public class BoardTest {
     /**
      * @return a random rotatePad position
      */
-    private Vector2 getRandomRotatePadPosition() {
+    private RotatePad getRandomRotatePad() {
         int randomIndex = random.nextInt(rotatePads.size());
-        RotatePad pad = rotatePads.get(randomIndex);
-        return pad.getPosition();
+        return rotatePads.get(randomIndex);
     }
 
     /**
@@ -157,6 +156,7 @@ public class BoardTest {
             assertTrue(board.outsideBoard(player));
         }
     }
+
     @Test
     public void playerOnRandomHoleIsRespawnedTest() {
         // Choose some random holes
@@ -167,7 +167,5 @@ public class BoardTest {
             assertTrue(isInBackupState(player));
         }
     }
-
-
 
 }
