@@ -102,7 +102,7 @@ public class BoardTest {
         Vector2 outsideOfBoardPosition = new Vector2(-1, 0);
         player.setPosition(outsideOfBoardPosition);
         board.addPlayer(player);
-        assertEquals(player.getPosition(), player.getBackupPosition());
+        assertEquals(player.getBackupPosition(), player.getPosition());
     }
 
 
@@ -134,6 +134,17 @@ public class BoardTest {
             Vector2 holePosition = getRandomHolePosition();
             player.setPosition(holePosition);
             assertTrue(board.outsideBoard(player));
+        }
+    }
+
+    @Test
+    public void playerOnRandomHoleIsRespawnedToBackupPositionTest() {
+        // Choose some random holes
+        for (int i = 0; i < 5; i++) {
+            Vector2 holePosition = getRandomHolePosition();
+            player.setPosition(holePosition);
+            board.addPlayer(player);
+            assertEquals(player.getBackupPosition(), player.getPosition());
         }
     }
 
