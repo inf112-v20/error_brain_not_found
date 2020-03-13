@@ -14,11 +14,10 @@ public class RallyGame extends Game {
 
     public Board board;
     public Deck deck;
-    private Music music;
 
     public void create() {
-        this.board = new Board("assets/maps/Risky_Exchange.tmx", 4);
         this.setScreen(new LoadingScreen(this));
+        startMusic();
     }
 
     public void setupGame(String mapPath) {
@@ -27,8 +26,6 @@ public class RallyGame extends Game {
         setInputProcessor();
     }
     public void setInputProcessor() {
-        this.music = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
-        startMusic();
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
@@ -36,18 +33,18 @@ public class RallyGame extends Game {
                 Player player = board.getPlayer1();
                 if (keycode == Input.Keys.RIGHT) {
                     player.setDirection(Direction.EAST);
+                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.LEFT) {
                     player.setDirection(Direction.WEST);
+                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.UP) {
                     player.setDirection(Direction.NORTH);
+                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.DOWN) {
                     player.setDirection(Direction.SOUTH);
+                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.ESCAPE) {
                     Gdx.app.exit();
-                }
-                board.movePlayer(player);
-                if (player.hasAllFlags(board.getFlags().size())) {
-                    setWinScreen();
                 }
                 return super.keyDown(keycode);
             }
@@ -55,6 +52,7 @@ public class RallyGame extends Game {
     }
 
     public void startMusic() {
+        Music music = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
         music.setLooping(true);
         music.setVolume(1f);
         music.play();

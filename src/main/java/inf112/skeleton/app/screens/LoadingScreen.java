@@ -6,8 +6,10 @@ import inf112.skeleton.app.RallyGame;
 
 public class LoadingScreen extends StandardScreen {
 
+    private Texture background;
     public LoadingScreen(final RallyGame game) {
-        super(game, new Texture("assets/images/RoboRallyMenuScreen.png"));
+        super(game);
+        background = new Texture("assets/images/RoboRallyMenuScreen.png");
     }
 
     @Override
@@ -19,8 +21,14 @@ public class LoadingScreen extends StandardScreen {
         batch.end();
 
         if (Gdx.input.isTouched()) {
+            game.dispose();
             game.setScreen(new MenuScreen(game));
-            this.dispose();
         }
+    }
+
+    @Override
+    public void dispose() {
+        background.dispose();
+        super.dispose();
     }
 }
