@@ -46,6 +46,14 @@ public class BoardTest {
         return holes.get(randomIndex);
     }
 
+    /**
+     *
+     * @return true if player is on backupPosition and has backupDirection
+     */
+    private boolean isInBackupState(Player player) {
+        return player.getPosition().equals(player.getBackupPosition()) && player.getDirection().equals(player.getBackupDirection());
+    }
+
     @Test
     public void whenBoardIsInitializedMapIsNotNullTest() {
         assertNotNull(board.getMap());
@@ -102,7 +110,7 @@ public class BoardTest {
         Vector2 outsideOfBoardPosition = new Vector2(-1, 0);
         player.setPosition(outsideOfBoardPosition);
         board.addPlayer(player);
-        assertEquals(player.getBackupPosition(), player.getPosition());
+        assertTrue(isInBackupState(player));
     }
 
 
@@ -138,13 +146,13 @@ public class BoardTest {
     }
 
     @Test
-    public void playerOnRandomHoleIsRespawnedToBackupPositionTest() {
+    public void playerOnRandomHoleIsRespawnedTest() {
         // Choose some random holes
         for (int i = 0; i < 5; i++) {
             Vector2 holePosition = getRandomHolePosition();
             player.setPosition(holePosition);
             board.addPlayer(player);
-            assertEquals(player.getBackupPosition(), player.getPosition());
+            assertTrue(isInBackupState(player));
         }
     }
 
