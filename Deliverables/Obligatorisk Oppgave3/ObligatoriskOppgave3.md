@@ -1,6 +1,10 @@
 # Mandatory Assignment 2 
 Team: error_no_brain_found
 
+## Task 1
+
+
+## Task 2
 ### User stories:
 
 #### Laser
