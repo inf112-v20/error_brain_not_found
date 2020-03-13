@@ -4,6 +4,8 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.enums.Rotate;
+import inf112.skeleton.app.objects.RotatePad;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,7 +23,9 @@ public class BoardTest {
     private final int BOARD_WIDTH = 16;
     private final int BOARD_HEIGHT = 12;
     private Player player;
+    private Random random;
     private ArrayList<Vector2> holes;
+    private ArrayList<RotatePad> rotatePads;
 
     @Before
     public void setUp() {
@@ -33,6 +37,8 @@ public class BoardTest {
         this.board = new Board("assets/maps/Risky_Exchange.tmx", NUMBER_OF_PLAYERS_WHEN_STARTING_GAME);
         this.player = new Player(new Vector2(0,0), 1);
         this.holes = board.holes;
+        this.rotatePads = board.rotatePads;
+        this.random = new Random();
     }
 
     /**
@@ -40,9 +46,17 @@ public class BoardTest {
      * @return a random hole position
      */
     private Vector2 getRandomHolePosition() {
-        Random random = new Random();
         int randomIndex = random.nextInt(holes.size());
         return holes.get(randomIndex);
+    }
+
+    /**
+     * @return a random rotatePad position
+     */
+    private Vector2 getRandomRotatePadPosition() {
+        int randomIndex = random.nextInt(rotatePads.size());
+        RotatePad pad = rotatePads.get(randomIndex);
+        return pad.getPosition();
     }
 
     /**
@@ -153,5 +167,7 @@ public class BoardTest {
             assertTrue(isInBackupState(player));
         }
     }
+
+
 
 }
