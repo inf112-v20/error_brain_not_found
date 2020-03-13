@@ -19,7 +19,14 @@ public class RallyGame extends Game {
     public void create() {
         this.board = new Board("assets/maps/Risky_Exchange.tmx", 4);
         this.setScreen(new LoadingScreen(this));
+    }
+
+    public void setupGame(String mapPath) {
+        this.board = new Board(mapPath, 4);
         this.deck = new Deck();
+        setInputProcessor();
+    }
+    public void setInputProcessor() {
         this.music = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
         startMusic();
 
@@ -35,11 +42,8 @@ public class RallyGame extends Game {
                     player.setDirection(Direction.NORTH);
                 } else if (keycode == Input.Keys.DOWN) {
                     player.setDirection(Direction.SOUTH);
-                } else if (keycode == Input.Keys.ESCAPE){
+                } else if (keycode == Input.Keys.ESCAPE) {
                     Gdx.app.exit();
-                }
-                else {
-                    return super.keyDown(keycode);
                 }
                 board.movePlayer(player);
                 if (player.hasAllFlags(board.getFlags().size())) {
