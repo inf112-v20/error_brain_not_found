@@ -12,7 +12,6 @@ import inf112.skeleton.app.RallyGame;
 public class GameScreen implements Screen {
 
     private final RallyGame game;
-    private final Board board;
 
     private OrthographicCamera camera;
     private TiledMapRenderer mapRenderer;
@@ -21,7 +20,7 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
 
         this.game = game;
-        this.board = game.getBoard();
+        Board board = game.getBoard();
 
         camera.setToOrtho(false, board.getWidth() * 300, board.getHeight() * 300);
 

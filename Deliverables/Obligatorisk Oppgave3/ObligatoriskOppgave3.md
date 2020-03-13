@@ -7,6 +7,18 @@ Team: error_no_brain_found
 ## Task 2
 ### User stories:
 
+#### Holes 
+
+User story:  
+As a player I want to respawn if I end up on a hole, so that I can continue the game from backup.
+
+Acceptance-criteria:  
+-   If I go on a tile where there is a hole I want to be respawned at my backup.  
+
+Tasks:  
+-   Make a method that tells if you are on a hole     
+-   Test that you are respawned when on a hole   
+
 #### Laser
 
 User-story:
