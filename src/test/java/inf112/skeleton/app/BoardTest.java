@@ -4,6 +4,7 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.objects.Flag;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -21,7 +22,9 @@ public class BoardTest {
     private final int BOARD_WIDTH = 16;
     private final int BOARD_HEIGHT = 12;
     private Player player;
+    private Random random;
     private ArrayList<Vector2> holes;
+    private ArrayList<Flag> flags;
 
     @Before
     public void setUp() {
@@ -33,6 +36,7 @@ public class BoardTest {
         this.board = new Board("assets/maps/Risky_Exchange.tmx", NUMBER_OF_PLAYERS_WHEN_STARTING_GAME);
         this.player = new Player(new Vector2(0,0), 1);
         this.holes = board.holes;
+        this.flags = board.flags;
     }
 
     /**
@@ -40,9 +44,17 @@ public class BoardTest {
      * @return a random hole position
      */
     private Vector2 getRandomHolePosition() {
-        Random random = new Random();
         int randomIndex = random.nextInt(holes.size());
         return holes.get(randomIndex);
+    }
+
+    /**
+     *
+     * @return Flag a random flag
+     */
+    private Flag getRandomFlag() {
+        int randomIndex = random.nextInt(flags.size());
+        return flags.get(randomIndex);
     }
 
     /**
