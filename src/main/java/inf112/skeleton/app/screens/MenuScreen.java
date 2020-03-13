@@ -39,7 +39,7 @@ public class MenuScreen implements Screen {
     public MenuScreen(RallyGame game) {
         this.game = game;
         stage = new Stage ();
-        Skin skin = new Skin(Gdx.files.internal("/Users/47413/Downloads/skins/uiskin.json"));
+        Skin skin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
 
         background = new Texture("assets/images/GUI_Edited.jpg");
 
