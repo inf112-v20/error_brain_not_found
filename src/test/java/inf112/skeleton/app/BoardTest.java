@@ -55,12 +55,12 @@ public class BoardTest {
     }
 
     @Test
-    public void whenBoardIsInitializedMapIsNotNullTest() {
+    public void boardHasAMapTest() {
         assertNotNull(board.getMap());
     }
 
     @Test
-    public void whenBoardIsInitializedItHasCorrectNumberOfPlayersTest() {
+    public void correctNumbersOfPlayersOnBoardTest() {
         assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME, board.getPlayers().size());
     }
 
@@ -100,13 +100,13 @@ public class BoardTest {
     }
 
     @Test
-    public void playerIsOutsideOfUnderBorderTest() {
+    public void playerIsUnderBorderTest() {
         player.setPosition(new Vector2(0, -1));
         assertTrue(board.outsideBoard(player));
     }
 
     @Test
-    public void playerOutsideBoardPlayerIsRespawnedTest() {
+    public void playerOutsideBoardIsRespawnedTest() {
         Vector2 outsideOfBoardPosition = new Vector2(-1, 0);
         player.setPosition(outsideOfBoardPosition);
         board.addPlayer(player);
@@ -115,7 +115,7 @@ public class BoardTest {
 
 
     @Test
-    public void playerHasMovedThenPlayerHasChangedCoordinatesTest() {
+    public void movedPlayerHasChangedCoordinatesTest() {
         Vector2 startPosition = new Vector2(player.getPosition().x, player.getPosition().y);
         player.setDirection(Direction.EAST);
         board.movePlayer(player);
@@ -144,7 +144,6 @@ public class BoardTest {
             assertTrue(board.outsideBoard(player));
         }
     }
-
     @Test
     public void playerOnRandomHoleIsRespawnedTest() {
         // Choose some random holes
