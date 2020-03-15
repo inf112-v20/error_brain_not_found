@@ -31,20 +31,22 @@ public class RallyGame extends Game {
     public void setupGame(String mapPath) {
         this.board = new Board(mapPath, 4);
         this.deck = new Deck();
-        setInputProcessor();
-    }
-    public void setInputProcessor() {
-        this.players = new ArrayList<>();
         this.currentPlayer = board.getPlayer1();
-        this.waitForCards = new Semaphore(1);
-        this.playing = true;
+        this.players = new ArrayList<>();
         this.players = board.getPlayers();
+
+        this.waitForCards = new Semaphore(1);
+        this.waitForCards.tryAcquire();
+        this.playing = true;
 
         new Thread(this::doTurn).start();
 
-        waitForCards.tryAcquire();
+        setInputProcessor();
         dealCards();
         selectCards();
+    }
+
+    public void setInputProcessor() {
 
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
