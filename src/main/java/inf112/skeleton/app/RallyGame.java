@@ -46,6 +46,9 @@ public class RallyGame extends Game {
                 } else if (keycode == Input.Keys.ESCAPE) {
                     Gdx.app.exit();
                 }
+                if (player.hasAllFlags(board.getFlags().size())) {
+                    setWinScreen();
+                }
                 return super.keyDown(keycode);
             }
         });
@@ -59,7 +62,7 @@ public class RallyGame extends Game {
     }
 
     public void setWinScreen() {
-        this.screen.dispose();
+        this.dispose();
         this.setScreen(new GifScreen(this));
     }
 
