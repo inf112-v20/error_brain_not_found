@@ -4,7 +4,7 @@ import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.audio.Music;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
@@ -17,7 +17,6 @@ import java.util.concurrent.Semaphore;
 public class RallyGame extends Game {
 
     public Board board;
-    public SpriteBatch batch;
     public Deck deck;
     public Player currentPlayer;
     public ArrayList<Player> players;
@@ -25,10 +24,16 @@ public class RallyGame extends Game {
     public boolean playing;
 
     public void create() {
-        this.batch = new SpriteBatch();
-        this.board = new Board("assets/maps/Risky_Exchange.tmx", 6);
         this.setScreen(new LoadingScreen(this));
+        startMusic();
+    }
+
+    public void setupGame(String mapPath) {
+        this.board = new Board(mapPath, 4);
         this.deck = new Deck();
+        setInputProcessor();
+    }
+    public void setInputProcessor() {
         this.players = new ArrayList<>();
         this.currentPlayer = board.getPlayer1();
         this.waitForCards = new Semaphore(1);
@@ -47,12 +52,16 @@ public class RallyGame extends Game {
                 Player player = board.getPlayer1();
                 if (keycode == Input.Keys.RIGHT) {
                     player.setDirection(Direction.EAST);
+                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.LEFT) {
                     player.setDirection(Direction.WEST);
+                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.UP) {
                     player.setDirection(Direction.NORTH);
+                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.DOWN) {
                     player.setDirection(Direction.SOUTH);
+                    board.movePlayer(player);
                 } else if (keycode == Input.Keys.ESCAPE) {
                     Gdx.app.exit();
                 } else if (keycode == Input.Keys.SPACE) {
@@ -61,13 +70,19 @@ public class RallyGame extends Game {
                 } else {
                     return super.keyDown(keycode);
                 }
-                board.movePlayer(player);
                 if (player.hasAllFlags(board.getFlags().size())) {
                     setWinScreen();
                 }
                 return super.keyDown(keycode);
             }
         });
+    }
+
+    public void startMusic() {
+        Music music = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
+        music.setLooping(true);
+        music.setVolume(1f);
+        music.play();
     }
 
     private void cardsReady() {
@@ -165,6 +180,7 @@ public class RallyGame extends Game {
     }
 
     public void setWinScreen() {
+        this.dispose();
         this.setScreen(new GifScreen(this));
     }
 
@@ -173,8 +189,7 @@ public class RallyGame extends Game {
     }
 
     public void dispose() {
-        batch.dispose();
-
+        this.screen.dispose();
     }
 
     public Board getBoard() {

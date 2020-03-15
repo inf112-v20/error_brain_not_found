@@ -13,21 +13,14 @@ import java.util.ArrayList;
 
 public class Board extends BoardLayers {
 
-    private final ArrayList<Flag> flags;
-    private final ArrayList<Vector2> holes;
-
-    private final ArrayList<Player> players;
+    private ArrayList<Player> players;
 
     public Board(String mapPath, int numberOfPlayers) {
         super(mapPath);
 
         this.players = new ArrayList<>();
-        this.flags = new ArrayList<>();
-        this.holes = new ArrayList<>();
-        laserLayer.setVisible(false);
 
-        findFlags();
-        findHoles();
+        laserLayer.setVisible(false);
 
         addPlayersToStartPositions(numberOfPlayers);
     }
@@ -111,71 +104,6 @@ public class Board extends BoardLayers {
     }
 
     /**
-     * Finds the where the flags are on the board, makes {@link Flag} objects
-     * and puts them in to the flag array.
-     */
-    public void findFlags() {
-        for (int x = 0; x < flagLayer.getWidth(); x++) {
-            for (int y = 0; y < flagLayer.getHeight(); y++) {
-                TiledMapTileLayer.Cell cell = flagLayer.getCell(x, y);
-                if (cell != null) {
-                    int ID = cell.getTile().getId();
-                    if (ID == TileID.FLAG_1.getId()) {
-                        flags.add(new Flag(1, x, y));
-                    } else if (ID == TileID.FLAG_2.getId()) {
-                        flags.add(new Flag(2, x, y));
-                    } else if (ID == TileID.FLAG_3.getId()) {
-                        flags.add(new Flag(3, x, y));
-                    } else if (ID == TileID.FLAG_4.getId()) {
-                        flags.add(new Flag(4, x, y));
-                    }
-                }
-            }
-        }
-    }
-
-    /**
-     * Finds where there is a hole on the map, and adds a {@link Vector2} to the holes list.
-     */
-    public void findHoles() {
-        for (int x = 0; x < groundLayer.getWidth(); x++) {
-            for (int y = 0; y < groundLayer.getHeight(); y++) {
-                TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
-                int ID = cell.getTile().getId();
-                if (ID == TileID.NORMAL_HOLE.getId()) {
-                    holes.add(new Vector2(x, y));
-                } else if (ID == TileID.NORMAL_HOLE2.getId()) {
-                    holes.add(new Vector2(x, y));
-                } else if (ID == TileID.NORTHWEST_HOLE.getId()) {
-                    holes.add(new Vector2(x, y));
-                } else if (ID == TileID.NORTH_HOLE.getId()) {
-                    holes.add(new Vector2(x, y));
-                } else if (ID == TileID.NORTHEAST_HOLE.getId()) {
-                    holes.add(new Vector2(x, y));
-                } else if (ID == TileID.EAST_HOLE.getId()) {
-                    holes.add(new Vector2(x, y));
-                } else if (ID == TileID.NORTH_EAST_SOUTH_HOLE.getId()) {
-                    holes.add(new Vector2(x, y));
-                } else if (ID == TileID.WEST_EAST_SOUTH_HOLE.getId()) {
-                    holes.add(new Vector2(x, y));
-                } else if (ID == TileID.SOUTHWEST_HOLE.getId()) {
-                    holes.add(new Vector2(x,y));
-                } else if (ID == TileID.SOUTH_HOLE.getId()) {
-                    holes.add(new Vector2(x,y));
-                } else if (ID == TileID.SOUTHEAST_HOLE.getId()){
-                    holes.add(new Vector2(x,y));
-                } else if (ID == TileID.WEST_HOLE.getId()) {
-                    holes.add(new Vector2(x,y));
-                } else if (ID == TileID.NORTH_WEST_SOUTH_HOLE.getId()){
-                    holes.add(new Vector2(x,y));
-                } else if (ID == TileID.NORTH_WEST_EAST_HOLE.getId()){
-                    holes.add(new Vector2(x,y));
-                }
-            }
-        }
-    }
-
-    /**
      * Checks if player moves on to a hole
      * @param player that is checked
      * @return true if the player moves onto a hole
@@ -230,7 +158,7 @@ public class Board extends BoardLayers {
      * @param direction to go in
      * @return true if there is no wall blocking the way
      */
-    private boolean canGo(Vector2 position, Direction direction) {
+    public boolean canGo(Vector2 position, Direction direction) {
         TiledMapTileLayer.Cell cell = wallLayer.getCell((int) position.x, (int) position.y);
         TiledMapTileLayer.Cell northCell = wallLayer.getCell((int) position.x, (int) position.y + 1);
         TiledMapTileLayer.Cell southCell = wallLayer.getCell((int) position.x, (int) position.y - 1);
@@ -268,7 +196,7 @@ public class Board extends BoardLayers {
      * @param cell to check for wall
      * @return true if cell has a wall on west side
      */
-    private boolean hasWestWall(TiledMapTileLayer.Cell cell) {
+    public boolean hasWestWall(TiledMapTileLayer.Cell cell) {
         if (cell != null) {
             int tileID = cell.getTile().getId();
             return tileID == TileID.WEST_WALL.getId() ||
@@ -283,7 +211,7 @@ public class Board extends BoardLayers {
      * @param cell to check for wall
      * @return true if cell has a wall on east side
      */
-    private boolean hasEastWall(TiledMapTileLayer.Cell cell) {
+    public boolean hasEastWall(TiledMapTileLayer.Cell cell) {
         if (cell != null) {
             int tileID = cell.getTile().getId();
             return tileID == TileID.EAST_WALL.getId() ||
@@ -298,7 +226,7 @@ public class Board extends BoardLayers {
      * @param cell to check for wall
      * @return true if cell has a wall on south side
      */
-    private boolean hasSouthWall(TiledMapTileLayer.Cell cell) {
+    public boolean hasSouthWall(TiledMapTileLayer.Cell cell) {
         if (cell != null) {
             int tileID = cell.getTile().getId();
             return tileID == TileID.SOUTH_WALL.getId() ||
@@ -313,7 +241,7 @@ public class Board extends BoardLayers {
      * @param cell to check for wall
      * @return true if cell has a wall on north side
      */
-    private boolean hasNorthWall(TiledMapTileLayer.Cell cell) {
+    public boolean hasNorthWall(TiledMapTileLayer.Cell cell) {
         if (cell != null) {
             int tileID = cell.getTile().getId();
             return tileID == TileID.NORTH_WALL.getId() ||
@@ -518,7 +446,7 @@ public class Board extends BoardLayers {
         player.pickUpFlag(getFlag(player.getPosition()), flag.getFlagnr());
     }
 
-    public ArrayList<Flag> getFlags() {
+    public ArrayList<Flag> getFlags(){
         return flags;
     }
 
