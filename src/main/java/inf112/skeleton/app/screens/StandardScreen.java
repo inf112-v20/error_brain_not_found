@@ -40,22 +40,22 @@ public abstract class StandardScreen implements Screen {
 
     @Override
     public void resize(int i, int i1) {
-
+        // Empty functions gives bad code quality
     }
 
     @Override
     public void pause() {
-
+        // Empty functions gives bad code quality
     }
 
     @Override
     public void resume() {
-
+        // Empty functions gives bad code quality
     }
 
     @Override
     public void hide() {
-
+        // Empty functions gives bad code quality
     }
 
     @Override
