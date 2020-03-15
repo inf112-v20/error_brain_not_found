@@ -21,12 +21,12 @@ public abstract class StandardScreen implements Screen {
 
     @Override
     public void show() {
-
+        // Empty functions gives bad code quality
     }
 
     @Override
     public void render(float v) {
-
+        // Empty functions gives bad code quality
     }
 
     public void renderSettings(float v) {
