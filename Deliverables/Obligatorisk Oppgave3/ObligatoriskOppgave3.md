@@ -80,7 +80,7 @@ Tasks:
 -   make a method that tells if player i on rotate pad and then rotate player 
 -   test that player is rotated in correct direction
 
-#### MenuScreen - Skal kunne velge brett
+#### MenuScreen
 
 User-Story:
 As a user of the game I want to be able to choose different board layouts, so that I can have a new challenge in the game.
@@ -92,7 +92,7 @@ Tasks:
 -   Make methods for choosing board
 -   Make graphics for choosing board
 
-#### Liv på roboter
+#### Life on robots
 
 User-Story:
 As a player I want my robot to be able to take damage, so that my robot can die
@@ -132,7 +132,7 @@ Tasks:
 -   Make a method that removes life tokens when robots die.    
 -   Make a method that robots do not respawn after losing all life tokens
 
-#### See the cards - se hånden til kortene
+#### See the cards
 
 User-story:
 As a player I want to be able to see the cards, so that I can plan my program. 
