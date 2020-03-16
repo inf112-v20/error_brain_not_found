@@ -43,6 +43,18 @@ public class BoardTest {
         this.random = new Random();
     }
 
+    /**
+     * @param flag1
+     * @param flag2
+     * @return true if two flags are equal
+     */
+    private boolean isEqualFlags(Flag flag1, Flag flag2) {
+        if (flag1 == null || flag2 == null) {
+            return false;
+        }
+        return flag1.getFlagnr() == flag2.getFlagnr() && flag1.getPosition().equals(flag2.getPosition());
+    }
+
 
     /**
      * @return a random hole position
@@ -167,6 +179,15 @@ public class BoardTest {
             board.addPlayer(player);
             assertTrue(isInBackupState(player));
         }
+    }
+
+    @Test
+    public void playerHasPickedUpAFlagTest() {
+        Flag flag = getRandomFlag();
+        Vector2 flagPosition = firstFlag.getPosition();
+        player.setPosition(flagPosition);
+        board.addPlayer(player);
+        assertEquals(1, player.);
     }
 
 }
