@@ -355,7 +355,7 @@ public class Board extends BoardLayers {
      * @param position to check
      * @return player in position
      */
-    private Player getPlayer(Vector2 position) {
+    public Player getPlayer(Vector2 position) {
         for (Player enemyPlayer : players) {
             if (enemyPlayer.getPosition().equals(position)) {
                 return enemyPlayer;

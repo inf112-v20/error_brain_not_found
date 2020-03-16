@@ -11,6 +11,7 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Random;
+import java.util.Vector;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -178,6 +179,17 @@ public class BoardTest {
             board.addPlayer(player);
             assertTrue(isInBackupState(player));
         }
+    }
+
+    @Test
+    public void pushingNeighbourPlayerTest()   {
+        Vector2 playerToBePushedPosition = new Vector2(0,0);
+        player.setPosition(playerToBePushedPosition);
+        Vector2 playerTwoPos = new Vector2(1, 0);
+        Player player2 = new Player(playerTwoPos, 2);
+        player2.setDirection(Direction.WEST);
+        board.movePlayer(player2);
+        assertEquals(player2, board.getPlayer(playerToBePushedPosition));
     }
 
     @Test
