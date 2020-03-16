@@ -55,7 +55,6 @@ public class BoardTest {
         return flag1.getFlagnr() == flag2.getFlagnr() && flag1.getPosition().equals(flag2.getPosition());
     }
 
-
     /**
      * @return a random hole position
      */
@@ -182,12 +181,33 @@ public class BoardTest {
     }
 
     @Test
-    public void playerHasPickedUpAFlagTest() {
-        Flag flag = getRandomFlag();
-        Vector2 flagPosition = firstFlag.getPosition();
+    public void flagIsOnFlagPositionOnBoardTest() {
+        for (int i = 0; i < 5; i++) {
+            Flag flag = getRandomFlag();
+            Vector2 flagPosition = flag.getPosition();
+            assertTrue(board.hasFlag(flagPosition));
+        }
+    }
+
+    @Test
+    public void playerPicksUpFirstFlagTest() {
+        Flag flag = flags.get(0);
+        Vector2 flagPosition = flag.getPosition();
         player.setPosition(flagPosition);
-        board.addPlayer(player);
-        assertEquals(1, player.);
+        board.pickUpFlag(player);
+        assertTrue(isEqualFlags(flag, player.getFlagsCollected().get(0)));
+
+    }
+
+    @Test
+    public void playerMovesOnFlagTest() {
+        Flag flag = flags.get(0);
+        Vector2 flagPosition = flag.getPosition();
+        Vector2 playerPosition = new Vector2(flagPosition.x -1, flagPosition.y);
+        player.setPosition(playerPosition);
+        player.setDirection(Direction.EAST);
+        board.movePlayer(player);
+        assertTrue(isEqualFlags(flag, player.getFlagsCollected().get(0)));
     }
 
 }
