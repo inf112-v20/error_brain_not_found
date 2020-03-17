@@ -372,7 +372,7 @@ public class Board extends BoardLayers {
      * @param player trying to move
      * @return true if player should push another player to move
      */
-    private boolean shouldPush(Player player) {
+    public boolean shouldPush(Player player) {
         return hasPlayer(getNeighbourPosition(player.getPosition(), player.getDirection()));
     }
 
