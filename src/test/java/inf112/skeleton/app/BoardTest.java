@@ -274,16 +274,53 @@ public class BoardTest {
     }
 
     @Test
-    public void pushedPlayerMovesInSameDirectionAsItIsPushedTest() {
+    public void pushedPlayerIsReplacedByPlayerThatIsPushingTest() {
         Vector2 playerToBePushedPosition = new Vector2(1, 0);
-        Vector2 playerIsPushedToPosition = new Vector2(2,0);
         player.setPosition(playerToBePushedPosition);
         Vector2 playerTwoPos = new Vector2(0,0);
         Player player2 = new Player(playerTwoPos, 2);
         player2.setDirection(Direction.EAST);
         board.addPlayer(player);
         board.movePlayer(player2);
-        assertEquals(player, board.getPlayer(playerIsPushedToPosition));
+        //TODO: implement Equals for player
+        assertTrue(isEqualPlayers(player2, board.getPlayer(playerToBePushedPosition)));
+    }
+
+    @Test
+    public void pushedPlayerMovesInSameDirectionAsItIsPushedTest() {
+        Vector2 playerToBePushedPosition = new Vector2(1, 0);
+        Vector2 playerIsPushedToPosition = new Vector2(2,0);
+        player.setPosition(playerToBePushedPosition);
+        // Set different direction then it is pushed in
+        player.setDirection(Direction.NORTH);
+        Vector2 playerTwoPos = new Vector2(0,0);
+        Player player2 = new Player(playerTwoPos, 2);
+        player2.setDirection(Direction.EAST);
+        board.addPlayer(player);
+        board.movePlayer(player2);
+        //TODO: implement Equals for player
+        assertTrue(isEqualPlayers(player, board.getPlayer(playerIsPushedToPosition)));
+    }
+
+    @Test
+    public void pushingTwoPlayersInSameDirectionTest() {
+        // line 6 from bottom up has no walls in Risky-Exchange:
+        Vector2 playerToBePushedPositionOne = new Vector2(2, 6);
+        Vector2 playerToBePushedPositionTwo = new Vector2(3, 6);
+        Vector2 playerPushingPosition = new Vector2(4, 6);
+        Vector2 positionToBePushedTo = new Vector2(1, 6);
+        Player player2 = new Player(playerToBePushedPositionOne, 2);
+        Player player3 = new Player(playerToBePushedPositionTwo, 3);
+        // Random directions
+        player2.setDirection(Direction.EAST);
+        player3.setDirection(Direction.SOUTH);
+        player.setPosition(playerPushingPosition);
+        player.setDirection(Direction.WEST);
+        board.addPlayer(player2);
+        board.addPlayer(player3);
+        board.movePlayer(player);
+        //TODO: Implement equals in player
+        assertTrue(isEqualPlayers(player2, board.getPlayer(positionToBePushedTo)));
     }
 
 }
