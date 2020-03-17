@@ -66,6 +66,7 @@ public class Board extends BoardLayers {
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
         cell.setTile(getRobotTile(player));
         playerLayer.setCell((int) player.getPosition().x, (int) player.getPosition().y, cell);
+        //TODO: Implement equals method for player
         if (!players.contains(player)) {
             players.add(player);
         }
@@ -82,6 +83,7 @@ public class Board extends BoardLayers {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
                 int ID = cell.getTile().getId();
+                //TODO: Check that numPlayers > 0
                 if (ID == TileID.START_POS1.getId()) {
                     addPlayer(x, y, 1);
                 } else if (ID == TileID.START_POS2.getId() && numPlayers > 1) {

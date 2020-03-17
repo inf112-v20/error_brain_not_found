@@ -19,7 +19,7 @@ import static org.mockito.Mockito.mock;
 public class BoardTest {
 
     private Board board;
-    private final int NUMBER_OF_PLAYERS_WHEN_STARTING_GAME = 2;
+    private final int NUMBER_OF_PLAYERS_WHEN_STARTING_GAME = 0;
     private final int BOARD_WIDTH = 16;
     private final int BOARD_HEIGHT = 12;
     private Player player;
@@ -41,6 +41,16 @@ public class BoardTest {
         // Sort the flags so player can go on them in correct order
         flags.sort(Comparator.comparingInt(Flag::getFlagnr));
         this.random = new Random();
+    }
+
+    /**
+     *
+     * @param player1
+     * @param player2
+     * @return true if players have same playerNumber
+     */
+    private boolean isEqualPlayers(Player player1, Player player2) {
+        return player1.getPlayerNr() == player2.getPlayerNr();
     }
 
     /**
@@ -80,17 +90,27 @@ public class BoardTest {
     }
 
     @Test
+    public void canNotAddSamePlayerOnBoardTest() {
+        //TODO: Implement equalsmethod for player
+        board.addPlayer(player);
+        board.addPlayer(player);
+        assertEquals(1, board.getPlayers().size());
+    }
+
+    @Test
     public void boardHasAMapTest() {
         assertNotNull(board.getMap());
     }
 
     @Test
     public void correctNumbersOfPlayersOnBoardTest() {
+        //TODO: Check that numplayers > 0
         assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME, board.getPlayers().size());
     }
 
     @Test
     public void aPlayerIsAddedToTheBoardIncrementPlayersTest() {
+        //TODO: Check that numplayers > 0
         board.addPlayer(player);
         assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME + 1, board.getPlayers().size());
     }
@@ -243,14 +263,28 @@ public class BoardTest {
     }
 
     @Test
-    public void pushingNeighbourPlayerTest()   {
+    public void pushedPlayerIsReplacedByPlayerThatPushedTest()   {
         Vector2 playerToBePushedPosition = new Vector2(0,0);
         player.setPosition(playerToBePushedPosition);
         Vector2 playerTwoPos = new Vector2(1, 0);
         Player player2 = new Player(playerTwoPos, 2);
         player2.setDirection(Direction.WEST);
+        board.addPlayer(player);
         board.movePlayer(player2);
-        assertEquals(player2, board.getPlayer(playerToBePushedPosition));
+        assertTrue(isEqualPlayers(player2, board.getPlayer(playerToBePushedPosition)));
+    }
+
+    @Test
+    public void pushedPlayerMovesInSameDirectionAsItIsPushedTest() {
+        Vector2 playerToBePushedPosition = new Vector2(1, 0);
+        Vector2 playerIsPushedToPostition = new Vector2(2,0);
+        player.setPosition(playerToBePushedPosition);
+        Vector2 playerTwoPos = new Vector2(0,0);
+        Player player2 = new Player(playerTwoPos, 2);
+        player2.setDirection(Direction.EAST);
+        board.addPlayer(player);
+        board.movePlayer(player2);
+        assertEquals(player, board.getPlayer(playerIsPushedToPostition));
     }
 
 }
