@@ -323,4 +323,15 @@ public class BoardTest {
         assertTrue(isEqualPlayers(player2, board.getPlayer(positionToBePushedTo)));
     }
 
+    @Test
+    public void wallStopsPushingTest() {
+        // Found wall in Risky Exhange
+        Vector2 northWallPosition = new Vector2(0, 5);
+        Player player2 = new Player(northWallPosition, 2);
+        Vector2 playerPushingPosition = new Vector2(0,4);
+        player.setPosition(playerPushingPosition);
+        player.setDirection(Direction.NORTH);
+        assertFalse(board.shouldPush(player));
+    }
+
 }
