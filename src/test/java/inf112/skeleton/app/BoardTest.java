@@ -208,7 +208,27 @@ public class BoardTest {
         player.setPosition(flagPosition);
         board.pickUpFlag(player);
         assertTrue(isEqualFlags(flag, player.getFlagsCollected().get(0)));
+    }
 
+    @Test
+    public void canNotPickUpFlagNumberTwoBeforeFlagNumberOneTest() {
+        // Get flag nr. 2
+        Flag flag = flags.get(1);
+        Vector2 flagPosition = flag.getPosition();
+        player.setPosition(flagPosition);
+        board.pickUpFlag(player);
+        assertEquals(0, player.getFlagsCollected().size());
+    }
+
+    @Test
+    public void canNotPickUpFlagNumberThreeBeforeFlagNumberTwoTest() {
+        Flag firstFlag = flags.get(0);
+        player.setPosition(firstFlag.getPosition());
+        board.pickUpFlag(player);
+        Flag thirdFlag = flags.get(2);
+        player.setPosition(thirdFlag.getPosition());
+        board.pickUpFlag(player);
+        assertEquals(1, player.getFlagsCollected().size());
     }
 
     @Test
@@ -220,6 +240,18 @@ public class BoardTest {
         player.setDirection(Direction.EAST);
         board.movePlayer(player);
         assertTrue(isEqualFlags(flag, player.getFlagsCollected().get(0)));
+    }
+
+    @Test
+    public void pickingUpAllFlagsInIncreasingOrderYouWinTest() {
+        // Visit flags 1, 2, and 3
+        for (int flagNumber = 1; flagNumber <=3; flagNumber++) {
+            Flag flag = flags.get(flagNumber-1);
+            Vector2 flagPosition = flag.getPosition();
+            player.setPosition(flagPosition);
+            board.pickUpFlag(player);
+        }
+        assertTrue(player.hasAllFlags(3));
     }
 
 }
