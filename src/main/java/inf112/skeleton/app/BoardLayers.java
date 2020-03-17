@@ -5,9 +5,11 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.enums.TileID;
 import inf112.skeleton.app.objects.Flag;
+import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
 
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ public abstract class BoardLayers {
     public TiledMapTileLayer laserLayer;
     public TiledMapTileLayer groundLayer;
 
+    public final ArrayList<Laser> lasers;
     public final ArrayList<Flag> flags;
     public final ArrayList<RotatePad> rotatePads;
     public final ArrayList<Vector2> holes;
@@ -42,12 +45,14 @@ public abstract class BoardLayers {
         boardWidth = properties.get("width", Integer.class);
         boardHeight = properties.get("height", Integer.class);
 
-        this.holes = new ArrayList<Vector2>();
-        this.rotatePads = new ArrayList<RotatePad>();
-        this.flags = new ArrayList<Flag>();
+        this.holes = new ArrayList<>();
+        this.rotatePads = new ArrayList<>();
+        this.flags = new ArrayList<>();
+        this.lasers = new ArrayList<>();
 
         findFlags();
         findRotatePadsAndHoles();
+        findLasers();
     }
 
 
@@ -115,6 +120,26 @@ public abstract class BoardLayers {
                         flags.add(new Flag(3, x, y));
                     } else if (ID == TileID.FLAG_4.getId()) {
                         flags.add(new Flag(4, x, y));
+                    }
+                }
+            }
+        }
+    }
+
+    public void findLasers() {
+        for (int x = 0; x < wallLayer.getWidth(); x++) {
+            for (int y = 0; y < wallLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = wallLayer.getCell(x, y);
+                if (cell != null) {
+                    int ID = cell.getTile().getId();
+                    if (ID == TileID.EAST_LASER_WALL.getId()) {
+                        lasers.add(new Laser(x, y, Direction.WEST));
+                    } else if (ID == TileID.WEST_LASER_WALL.getId()) {
+                        lasers.add(new Laser(x, y, Direction.EAST));
+                    } else if (ID == TileID.NORTH_LASER_WALL.getId()) {
+                        lasers.add(new Laser(x, y, Direction.SOUTH));
+                    } else if (ID == TileID.SOUTH_LASER_WALL.getId()) {
+                        lasers.add(new Laser(x, y, Direction.NORTH));
                     }
                 }
             }
