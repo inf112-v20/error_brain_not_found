@@ -40,6 +40,19 @@ public class Board extends BoardLayers {
     }
 
     /**
+     * @param number number of player
+     * @return true if player number is valid
+     */
+    public boolean validPlayerNumber(int number) {
+        for (Player player : players) {
+            if (number == player.getPlayerNr()) {
+                return false;
+            }
+        }
+        return 0 < number && number < 9;
+    }
+
+    /**
      * Make new player and add player to game and board
      *
      * @param x            coordinate
@@ -47,6 +60,9 @@ public class Board extends BoardLayers {
      * @param playerNumber of player
      */
     public void addPlayer(int x, int y, int playerNumber) {
+        if (!validPlayerNumber(playerNumber)) {
+            return;
+        }
         Player player = new Player(new Vector2(x, y), playerNumber);
         addPlayer(player);
     }
