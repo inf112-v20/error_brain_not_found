@@ -285,8 +285,8 @@ public class Board extends BoardLayers {
 
     /**
      * Add player to the board, so the direction is correct
+     * @param player that should be rotated
      *
-     * @param player to rotate
      */
     public void rotatePlayer(Player player) {
         addPlayer(player);

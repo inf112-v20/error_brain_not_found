@@ -7,6 +7,7 @@ import java.util.Stack;
 
 public class Deck {
     private Stack<ProgramCard> deck;
+    private Stack<ProgramCard> discardPile;
 
     public Deck() {
         makeNewDeck();
@@ -18,8 +19,13 @@ public class Deck {
      */
     public void makeNewDeck() {
         deck = new Stack<>();
+        discardPile = new Stack<>();
         makeRotateCards();
         makeMoveCards();
+    }
+
+    public void addCardToDiscardPile(ProgramCard programCard) {
+        discardPile.push(programCard);
     }
 
     /**
@@ -40,7 +46,12 @@ public class Deck {
      * @return the next {@link ProgramCard} in the stack / deck
      */
     public ProgramCard drawCard() {
-        return deck.pop();
+        ProgramCard card = deck.pop();
+        if (deck.isEmpty()) {
+            deck.addAll(discardPile);
+            shuffleDeck();
+        }
+        return card;
     }
 
     /**
