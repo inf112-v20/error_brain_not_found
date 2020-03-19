@@ -20,8 +20,6 @@ public class Board extends BoardLayers {
 
         this.players = new ArrayList<>();
 
-        laserLayer.setVisible(false);
-
         addPlayersToStartPositions(numberOfPlayers);
     }
 
@@ -104,13 +102,42 @@ public class Board extends BoardLayers {
     }
 
     /**
+     * Add laser in position in the right direction
+     *
+     * @param position  to add laser
+     * @param direction of laser
+     */
+    public void addLaser(Vector2 position, Direction direction) {
+        TiledMapTileLayer.Cell cell = laserLayer.getCell((int) position.x, (int) position.y);
+        TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("tiles");
+        if (cell == null) {
+            cell = new TiledMapTileLayer.Cell();
+        }
+        if (direction == Direction.NORTH || direction == Direction.SOUTH) {
+            if (cell.getTile() == null) {
+                cell.setTile(tileSet.getTile(TileID.VERTICAL_LASER.getId()));
+            } else if (cell.getTile().getId() == TileID.HORIZONTAL_LASER.getId()) {
+                cell.setTile(tileSet.getTile(TileID.CROSSED_LASER.getId()));
+            }
+        } else {
+            if (cell.getTile() == null) {
+                cell.setTile(tileSet.getTile(TileID.HORIZONTAL_LASER.getId()));
+            } else if (cell.getTile().getId() == TileID.VERTICAL_LASER.getId()) {
+                cell.setTile(tileSet.getTile(TileID.CROSSED_LASER.getId()));
+            }
+        }
+        laserLayer.setCell((int) position.x, (int) position.y, cell);
+    }
+
+    /**
      * Checks if player moves on to a hole
+     *
      * @param player that is checked
      * @return true if the player moves onto a hole
      */
     private boolean onHole(Player player) {
         Vector2 position = player.getPosition();
-        for (Vector2 vector : holes){
+        for (Vector2 vector : holes) {
             if (vector.equals(position)) {
                 return true;
             }
@@ -256,6 +283,7 @@ public class Board extends BoardLayers {
     /**
      * Add player to the board, so the direction is correct
      * @param player that should be rotated
+     *
      */
     public void rotatePlayer(Player player) {
         addPlayer(player);
@@ -319,7 +347,7 @@ public class Board extends BoardLayers {
      * @param direction to go in
      * @return neighbour position in direction from position
      */
-    private Vector2 getNeighbourPosition(Vector2 position, Direction direction) {
+    public Vector2 getNeighbourPosition(Vector2 position, Direction direction) {
         Vector2 neighbourPosition = new Vector2(position);
         switch (direction) {
             case EAST:
@@ -340,7 +368,7 @@ public class Board extends BoardLayers {
         return neighbourPosition;
     }
 
-    private boolean hasPlayer(Vector2 position) {
+    public boolean hasPlayer(Vector2 position) {
         for (Player enemyPlayer : players) {
             if (enemyPlayer.getPosition().equals(position)) {
                 return true;
@@ -355,7 +383,7 @@ public class Board extends BoardLayers {
      * @param position to check
      * @return player in position
      */
-    private Player getPlayer(Vector2 position) {
+    public Player getPlayer(Vector2 position) {
         for (Player enemyPlayer : players) {
             if (enemyPlayer.getPosition().equals(position)) {
                 return enemyPlayer;

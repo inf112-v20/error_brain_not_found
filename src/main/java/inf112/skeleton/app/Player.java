@@ -139,6 +139,10 @@ public class Player {
         }
     }
 
+    public ArrayList<Flag> getFlagsCollected() {
+        return flagsCollected;
+    }
+
     public boolean hasAllFlags(int numberOfFlags) {
         return flagsCollected.size() == numberOfFlags;
     }

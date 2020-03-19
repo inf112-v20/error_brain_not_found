@@ -8,6 +8,7 @@ import com.badlogic.gdx.audio.Music;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.LoadingScreen;
 
@@ -47,11 +48,11 @@ public class RallyGame extends Game {
     }
 
     public void setInputProcessor() {
-
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyUp(int keycode) {
                 Player player = board.getPlayer1();
+                removeLasers();
                 if (keycode == Input.Keys.RIGHT) {
                     player.setDirection(Direction.EAST);
                     board.movePlayer(player);
@@ -75,6 +76,7 @@ public class RallyGame extends Game {
                 if (player.hasAllFlags(board.getFlags().size())) {
                     setWinScreen();
                 }
+                fireLasers();
                 return super.keyDown(keycode);
             }
         });
@@ -184,6 +186,20 @@ public class RallyGame extends Game {
     public void setWinScreen() {
         this.dispose();
         this.setScreen(new GifScreen(this));
+    }
+
+    public void removeLasers() {
+        for (int y = 0; y < board.getHeight(); y++) {
+            for (int x = 0; x < board.getWidth(); x++) {
+                board.laserLayer.setCell(x, y, null);
+            }
+        }
+    }
+
+    public void fireLasers() {
+        for (Laser laser : board.lasers) {
+            laser.fire(this);
+        }
     }
 
     public void render() {
