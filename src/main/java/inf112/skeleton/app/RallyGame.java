@@ -32,7 +32,12 @@ public class RallyGame extends Game {
             @Override
             public boolean keyUp(int keycode) {
                 Player player = board.getPlayer1();
+                if (player == null) {
+                    return false;
+                }
+
                 removeLasers();
+
                 if (keycode == Input.Keys.RIGHT) {
                     player.setDirection(Direction.EAST);
                     board.movePlayer(player);
@@ -48,10 +53,13 @@ public class RallyGame extends Game {
                 } else if (keycode == Input.Keys.ESCAPE) {
                     Gdx.app.exit();
                 }
+
                 if (player.hasAllFlags(board.getFlags().size())) {
                     setWinScreen();
                 }
+
                 fireLasers();
+
                 return super.keyDown(keycode);
             }
         });

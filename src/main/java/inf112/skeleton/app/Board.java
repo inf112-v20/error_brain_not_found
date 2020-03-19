@@ -27,13 +27,13 @@ public class Board extends BoardLayers {
         TiledMapTileSet tileSet = this.tiledMap.getTileSets().getTileSet("robots");
         switch (player.getDirection()) {
             case SOUTH:
-                return tileSet.getTile(140);
+                return tileSet.getTile(TileID.PLAYER_SOUTH.getId());
             case NORTH:
-                return tileSet.getTile(141);
+                return tileSet.getTile(TileID.PLAYER_NORTH.getId());
             case EAST:
-                return tileSet.getTile(142);
+                return tileSet.getTile(TileID.PLAYER_EAST.getId());
             case WEST:
-                return tileSet.getTile(143);
+                return tileSet.getTile(TileID.PLAYER_WEST.getId());
             default:
                 return null;
         }
@@ -76,6 +76,9 @@ public class Board extends BoardLayers {
      * @param numPlayers number of robots playing, between 1-8
      */
     public void addPlayersToStartPositions(int numPlayers) {
+        if (numPlayers == 0) {
+            return;
+        }
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
