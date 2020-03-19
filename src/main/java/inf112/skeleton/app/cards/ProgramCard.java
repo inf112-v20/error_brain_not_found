@@ -28,5 +28,7 @@ public class ProgramCard {
         return rotate;
     }
 
-    public String toString() { return name; }
+    public String toString() {
+        return name + ": " + priority;
+    }
 }
