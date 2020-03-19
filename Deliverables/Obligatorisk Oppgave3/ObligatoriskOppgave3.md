@@ -24,6 +24,13 @@ results in a lot of waiting for the person requesting these changing and the per
 We should discuss how to make a good solution for this. 
 
 
+*   Group dynamic and communication:  
+In general communication works fine, we communicate over slack and assign tasks to each other by making 
+issues and add them to project board. As mentioned before, because some overlapping of the different roles in the team, 
+it can be a bit challenging to wait for others to respond when you are working on something. Most of the team are communicating 
+great over slack and are doing tasks assigned to them, but we can not get a hold of one of the team-members. We assign issues with tasks and 
+follow up with message over slack, but experience very little to no feedback.
+
 ## Task 2
 ### User stories:
 
