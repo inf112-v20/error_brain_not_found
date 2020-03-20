@@ -64,11 +64,11 @@ public class LaserTest {
 
     @Test
     public void lasersFiredHasLasersInStartPositionTest() {
+        game.fireLasers();
         for (int i = 0; i < 3; i++) {
             Laser laser = getRandomLaser(lasers);
             Vector2 laserPosition = laser.getStartPosition();
             //TODO: Let RallyGame take in number of players as arg
-            laser.fire(game);
             assertTrue(hasLaser(laserPosition));
         }
     }
