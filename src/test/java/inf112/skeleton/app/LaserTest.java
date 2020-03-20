@@ -49,7 +49,7 @@ public class LaserTest {
     /**
      *
      * @param position
-     * @return true if cell in this position from laserLayer is not null (has a laser on this cell).
+     * @return true if cell in this position from laserLayer has a laser on this cell.
      */
     private boolean hasLaser(Vector2 position) {
         TiledMapTileLayer laserLayer = board.getLaserLayer();
