@@ -48,7 +48,7 @@ public class MenuScreen extends StandardScreen {
         selectMap.setItems(getMaps());
         selectMap.setSelected("assets/maps/Risky_Exchange.tmx");
         selectMap.setWidth(BUTTON_WIDTH * .87f);
-        selectMap.setPosition((100), START_BUTTON_Y - selectMap.getHeight() * 2);
+        selectMap.setPosition(BUTTON_X - selectMap.getWidth(), START_BUTTON_Y - BUTTON_HEIGHT / 2);
 
         stage.addActor(selectMap);
     }
