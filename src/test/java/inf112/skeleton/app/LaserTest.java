@@ -68,8 +68,21 @@ public class LaserTest {
         for (int i = 0; i < 3; i++) {
             Laser laser = getRandomLaser(lasers);
             Vector2 laserPosition = laser.getStartPosition();
-            //TODO: Let RallyGame take in number of players as arg
             assertTrue(hasLaser(laserPosition));
+        }
+    }
+
+    @Test
+    public void playerBlockingLaserTest() {
+        for (int i = 0; i < 3; i++) {
+            Laser laser = getRandomLaser(lasers);
+            Vector2 blockingPosition = board.getNeighbourPosition(laser.getStartPosition(), laser.getDirection());
+            //TODO: Let RallyGame take in number of players as arg
+            Player blockingPlayer = new Player(blockingPosition, 5);
+            board.addPlayer(blockingPlayer);
+            game.fireLasers();
+            Vector2 noLaserPosition = board.getNeighbourPosition(blockingPosition, laser.getDirection());
+            assertFalse(hasLaser(noLaserPosition));
         }
     }
 
