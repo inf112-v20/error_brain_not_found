@@ -322,6 +322,7 @@ public class BoardTest {
         // Found wall in Risky Exhange
         Vector2 northWallPosition = new Vector2(0, 5);
         Player player2 = new Player(northWallPosition, 2);
+        player2.setDirection(Direction.WEST);
         Vector2 playerPushingPosition = new Vector2(0,4);
         player.setPosition(playerPushingPosition);
         player.setDirection(Direction.NORTH);
