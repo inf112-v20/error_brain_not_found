@@ -91,10 +91,9 @@ public class BoardTest {
 
     @Test
     public void canNotAddSamePlayerOnBoardTest() {
-        //TODO: Implement equalsmethod for player
         board.addPlayer(player);
         board.addPlayer(player);
-       // assertEquals(1, board.getPlayers().size());
+        assertEquals(1, board.getPlayers().size());
     }
 
     @Test
@@ -104,15 +103,13 @@ public class BoardTest {
 
     @Test
     public void correctNumbersOfPlayersOnBoardTest() {
-        //TODO: Check that numplayers > 0
-        //assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME, board.getPlayers().size());
+        assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME, board.getPlayers().size());
     }
 
     @Test
     public void aPlayerIsAddedToTheBoardIncrementPlayersTest() {
-        //TODO: Check that numplayers > 0
         board.addPlayer(player);
-       // assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME + 1, board.getPlayers().size());
+        assertEquals(NUMBER_OF_PLAYERS_WHEN_STARTING_GAME + 1, board.getPlayers().size());
     }
 
     @Test
@@ -282,7 +279,6 @@ public class BoardTest {
         player2.setDirection(Direction.EAST);
         board.addPlayer(player);
         board.movePlayer(player2);
-        //TODO: implement Equals for player
         assertTrue(isEqualPlayers(player2, board.getPlayer(playerToBePushedPosition)));
     }
 
@@ -298,7 +294,6 @@ public class BoardTest {
         player2.setDirection(Direction.EAST);
         board.addPlayer(player);
         board.movePlayer(player2);
-        //TODO: implement Equals for player
         assertTrue(isEqualPlayers(player, board.getPlayer(playerIsPushedToPosition)));
     }
 
@@ -319,7 +314,6 @@ public class BoardTest {
         board.addPlayer(player2);
         board.addPlayer(player3);
         board.movePlayer(player);
-        //TODO: Implement equals in player
         assertTrue(isEqualPlayers(player2, board.getPlayer(positionToBePushedTo)));
     }
 
