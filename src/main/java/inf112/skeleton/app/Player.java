@@ -8,6 +8,7 @@ import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Flag;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Player {
 
@@ -79,10 +80,29 @@ public class Player {
         return backupDirection;
     }
 
+    public void chooseAlternativeBackupPosition(Board board) {
+        ArrayList<Vector2> possiblePositions = board.getNeighbourhood(getBackupPosition());
+        Collections.shuffle(possiblePositions);
+        for (Vector2 pos : possiblePositions) {
+            for (Direction dir : board.getDirectionRandomOrder()) {
+                if (board.validRespawnPosition(pos, dir)) {
+                    setBackup(pos, dir);
+                    return;
+                }
+            }
+        }
+        setBackup(board.getStartPosition(getPlayerNr()), Direction.EAST);
+        if (board.hasPlayer(board.getStartPosition(getPlayerNr()))) {
+            chooseAlternativeBackupPosition(board);
+        }
+    }
+
     /**
      * @return number of player
      */
-    public int getPlayerNr() {return playerNr; }
+    public int getPlayerNr() {
+        return playerNr;
+    }
 
     /**
      * @return the {@link Vector2} to the player
