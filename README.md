@@ -5,8 +5,10 @@
 Simple skeleton with libgdx. 
 
 ## How to run
-Clone the repo from github to you computer then:  
-Open the repo and go to `src/main/java/inf112/skeleton/app/Main.java` and run `main` function.
+Every text-editor that can run version control system, can be used. We recommend IntelliJ IDEA.  
+Clone the repo from github to you computer: `git clone https://github.com/inf112-v20/error_brain_not_found.git`  
+Then open `pom.xml` in IntelliJ and the IntelliJ will build the project for you.  
+Then open the repo and go to `src/main/java/inf112/skeleton/app/Main.java` and run `main` function.
 
 ## Known bugs
 Currently throws "WARNING: An illegal reflective access operation has occurred", 
