@@ -147,6 +147,10 @@ public class Player {
         return flagsCollected.size() == numberOfFlags;
     }
 
+    public boolean equals(Player other) {
+        return this.getPlayerNr() == other.getPlayerNr();
+    }
+
     public String toString() {
         return "Player " + getPlayerNr();
     }

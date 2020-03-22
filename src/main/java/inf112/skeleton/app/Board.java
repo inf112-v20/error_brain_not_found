@@ -428,7 +428,8 @@ public class Board extends BoardLayers {
      */
     private boolean canPush(Player player, Direction direction) {
         if (hasPlayer(getNeighbourPosition(player.getPosition(), direction))) {
-            return canPush(getPlayer(getNeighbourPosition(player.getPosition(), direction)), direction);
+            return canGo(player.getPosition(), direction) &&
+                    canPush(getPlayer(getNeighbourPosition(player.getPosition(), direction)), direction);
         }
         return canGo(player.getPosition(), direction);
     }
