@@ -1,11 +1,15 @@
 package inf112.skeleton.app;
 
 
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Flag;
+import org.lwjgl.Sys;
 
 import java.util.ArrayList;
 
@@ -19,6 +23,16 @@ public class Player {
     private ArrayList<Flag> flagsCollected;
     private ArrayList<ProgramCard> selectedCards;
     private ArrayList<ProgramCard> allCards;
+    private RallyGame game;
+    private Board board;
+
+    private Sound laser;
+
+    private int damageTokens = 0;
+    private int HP = 10;
+    private final int maxHP = 10;
+    private int lifeTokens = 3;
+
 
     public Player(Vector2 position, int playerNr) {
         this.position = position;
@@ -28,6 +42,7 @@ public class Player {
         this.selectedCards = new ArrayList<>();
         this.allCards = new ArrayList<>();
         setBackup(position, Direction.EAST);
+
     }
 
     public ArrayList<ProgramCard> getAllCards() {
@@ -47,6 +62,60 @@ public class Player {
     public void drawCards(Deck deck) {
         while (allCards.size() < 9) {
             allCards.add(deck.drawCard());
+        }
+    }
+    /**
+     * a int on how many damageTokens
+     *
+     * @return your damageTokens
+     */
+    public int getDamageTokens(){
+        return damageTokens;
+    }
+
+    public int getMaxHP(){
+        return maxHP;
+    }
+
+
+    public int getLifeTokens(){
+        return lifeTokens;
+    }
+
+    public void removeOneLifeToken(){
+        this.lifeTokens -= 1;
+    }
+
+    public void addDamageToken(int damageTokens){
+        numberOfDamageTokens(this.damageTokens + damageTokens);
+    }
+
+    private void numberOfDamageTokens(int damageTokens){
+
+        this.damageTokens = damageTokens;
+        this.HP = maxHP - damageTokens;
+        if (this.damageTokens >= 10){
+            if (getLifeTokens() <= 0){
+                //DeathCheck, bad error catch
+                System.out.println("Supposed to be dead");
+            }
+            else {
+                if (getLifeTokens() == 2){
+                System.out.println("Removed a LifeToken");
+                removeOneLifeToken();
+                this.damageTokens = maxHP - damageTokens;
+                System.out.println("You have " + lifeTokens+ " lifeToken left, Your last Token!");}
+                else{
+                    System.out.println("Removed a LifeToken");
+                    removeOneLifeToken();
+                    this.damageTokens = maxHP - damageTokens;
+                    System.out.println("You have " + lifeTokens+ " lifeTokens left");
+                }
+               // board.respawn(Player.this);
+                setPosition(new Vector2(getBackupPosition().x, getBackupPosition().y));
+                setDirection(getBackupDirection());
+            }
+
         }
     }
 

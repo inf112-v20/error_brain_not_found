@@ -5,13 +5,15 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.LoadingScreen;
-
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
@@ -23,7 +25,15 @@ public class RallyGame extends Game {
     public ArrayList<Player> players;
     public Semaphore waitForCards;
     public boolean playing;
+    public Sound laserSound;
+    public SpriteBatch batch;
+    private int numberOfLifeTokens = 3;
+    private Texture lifeTokens;
+    private Player player;
+    private Tokens token;
 
+
+    
     public void create() {
         this.setScreen(new LoadingScreen(this));
         startMusic();
@@ -39,15 +49,32 @@ public class RallyGame extends Game {
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
         this.playing = true;
+        //this.token = new Tokens(player);
+
+
+        lifeTokens = new Texture("assets/images/lifeToken.png");
 
         new Thread(this::doTurn).start();
+
+
+
 
         setInputProcessor();
         dealCards();
         selectCards();
     }
+    public void getNumberOfLifeTokens(){
+      this.numberOfLifeTokens = player.getLifeTokens();
+        System.out.println(numberOfLifeTokens);
+        //return numberOfLifeTokens;
+
+    }
 
     public void setInputProcessor() {
+      //  getNumberOfLifeTokens();
+       System.out.println(numberOfLifeTokens+ "Set inputproserers");
+         loadTokens();
+
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyUp(int keycode) {
@@ -102,6 +129,8 @@ public class RallyGame extends Game {
     }
 
     public void doTurn() {
+
+
         // TODO: Alle velger kort
         // TODO: Første kort spilles for alle i riktig rekkefølge
         // TODO: Gears roterer
@@ -110,6 +139,7 @@ public class RallyGame extends Game {
         // TODO: Spiller skyter
         // TODO: Laser skyter
         while (playing) {
+            //loadTokens();
             try {
                 waitForCards.acquire();
             } catch (InterruptedException e) {
@@ -205,17 +235,57 @@ public class RallyGame extends Game {
     }
 
     public void fireLasers() {
+
         for (Laser laser : board.lasers) {
+            laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
+            //laserSound.play();
             laser.fire(this);
         }
     }
 
+
     public void render() {
+        /*batch.begin();
+        for (int i = 0; i < currentPlayer.getLifeTokens();i++){
+            batch.draw(lifeTokens,2,2);
+        } */
         super.render();
+
+
+
+
     }
 
     public void dispose() {
         this.screen.dispose();
+    }
+
+    public void disposeTokens(){
+        this.batch.dispose();
+    }
+
+   public void renderTokens(){
+//        System.out.println(player.getLifeTokens());
+
+
+       batch.begin();
+        for (int i =1; i <= numberOfLifeTokens; i++){
+            batch.draw(lifeTokens,i*15,i*2);
+        }
+      // batch.end();
+    }
+    public void loadTokens(){
+        batch = new SpriteBatch();
+       // getNumberOfLifeTokens();
+//        this.numberOfLifeTokens = player.getLifeTokens();
+
+    }
+    public void renderNewTokens(int tokens){
+        batch.begin();
+        for (int i =1; i <= tokens; i++){
+            batch.draw(lifeTokens,i*15,i*2);
+        }
+        batch.end();
     }
 
     public Board getBoard() {

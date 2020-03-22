@@ -1,5 +1,7 @@
 package inf112.skeleton.app;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -8,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.TileID;
 import inf112.skeleton.app.objects.Flag;
+import inf112.skeleton.app.screens.GameScreen;
 
 import java.util.ArrayList;
 
@@ -15,11 +18,16 @@ public class Board extends BoardLayers {
 
     private ArrayList<Player> players;
 
+    private Sound scream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
+    private Sound activateLaser = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
+    private Sound wallImpact = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/ImpactWall.mp3"));
+    private Sound repairTile = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/Repair.mp3"));
+    private RallyGame game;
+    private GameScreen gameScreen;
+
     public Board(String mapPath, int numberOfPlayers) {
         super(mapPath);
-
         this.players = new ArrayList<>();
-
         addPlayersToStartPositions(numberOfPlayers);
     }
 
@@ -145,6 +153,8 @@ public class Board extends BoardLayers {
                 cell.setTile(tileSet.getTile(TileID.CROSSED_LASER.getId()));
             }
         }
+
+        //activateLaser.play(0.3f);
         laserLayer.setCell((int) position.x, (int) position.y, cell);
     }
 
@@ -158,6 +168,7 @@ public class Board extends BoardLayers {
         Vector2 position = player.getPosition();
         for (Vector2 vector : holes) {
             if (vector.equals(position)) {
+                scream.play();
                 return true;
             }
         }
@@ -183,8 +194,29 @@ public class Board extends BoardLayers {
      * @param player to respawn
      */
     private void respawn(Player player) {
-        player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
-        player.setDirection(player.getBackupDirection());
+
+        //game.loadTokens();
+
+        //game.getNumberOfLifeTokens();
+        int lifeTokens = player.getLifeTokens();
+        System.out.println(player.getLifeTokens() + " printing player.getlifeTokens");
+
+        if (player.getLifeTokens() ==1){
+            removePlayerFromBoard(player);
+            System.out.println("You are dead");
+        }
+        else{
+            //game.loadTokens();
+//            game.renderNewTokens(3);
+//            gameScreen.renderTokens(2);
+            System.out.println(player.getLifeTokens() + " you are printing player.getlifTokens");
+           // game.renderNewTokens(lifeTokens);
+            player.removeOneLifeToken();
+//            game.disposeTokens();
+            System.out.println(player.getLifeTokens()+ " is how many life tokens you have left");
+            player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
+            player.setDirection(player.getBackupDirection());}
+
     }
 
     /**
@@ -322,6 +354,7 @@ public class Board extends BoardLayers {
         Direction direction = player.getDirection();
 
         if (!canGo(position, direction)) {
+            wallImpact.play(0.6f);
             addPlayer(player);
             return;
         }
@@ -417,7 +450,7 @@ public class Board extends BoardLayers {
      * @param player trying to move
      * @return true if player should push another player to move
      */
-    private boolean shouldPush(Player player) {
+    public boolean shouldPush(Player player) {
         return hasPlayer(getNeighbourPosition(player.getPosition(), player.getDirection()));
     }
 
