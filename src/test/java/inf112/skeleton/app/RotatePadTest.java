@@ -23,10 +23,8 @@ import static org.mockito.Mockito.mock;
 public class RotatePadTest {
 
     private RallyGame game;
-    private Board board;
     private ArrayList<RotatePad> rotatePads;
     private Player player;
-    private ArrayList<RotatePad> leftRotatePads;
 
     @Before
     public void setUp() {
@@ -35,7 +33,7 @@ public class RotatePadTest {
         new HeadlessApplication(new EmptyApplication());
         this.game = new RallyGame();
         this.game.setupGame("assets/maps/Risky_Exchange.tmx");
-        this.board = game.getBoard();
+        Board board = game.getBoard();
         this.rotatePads = board.rotatePads;
 
         // Already 4 players on board.
