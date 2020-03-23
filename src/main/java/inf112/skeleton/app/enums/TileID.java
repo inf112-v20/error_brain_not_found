@@ -58,13 +58,45 @@ public enum TileID {
     FLAG_1(55),
     FLAG_2(63),
     FLAG_3(71),
-    FLAG_4(79);
+    FLAG_4(79),
+
+    EAST_TO_SOUTH(33),
+    NORTH_TO_EAST(41),
+    WEST_TO_NORTH(42),
+    SOUTH_TO_WEST(34),
+
+    EAST_TO_NORTH(43),
+    NORTH_TO_WEST(44),
+    WEST_TO_SOUTH(36),
+    SOUTH_TO_EAST(35),
+
+    EAST_TO_WEST(51),
+    NORTH_TO_SOUTH(50),
+    WEST_TO_EAST(52),
+    SOUTH_TO_NORTH(49),
+
+    WESTSOUTH_TO_NORTH(57),
+    EASTSOUTH_TO_NORTH(65),
+    WESTEAST_TO_NORTH(69),
+
+    WESTNORTH_TO_SOUTH(67),
+    EASTNORTH_TO_SOUTH(59),
+    WESTEAST_TO_SOUTH(62),
+
+    WESTSOUTH_TO_EAST(66),
+    WESTNORTH_TO_EAST(58),
+    NORTHSOUTH_TO_EAST(61),
+
+    EASTSOUTH_TO_WEST(60),
+    EASTNORTH_TO_WEST(68),
+    NORTHSOUTH_TO_WEST(70);
 
     private final int id;
 
     TileID(int id) {
         this.id = id;
     }
+
     public int getId() {
         return this.id;
     }
