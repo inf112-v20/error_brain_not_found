@@ -14,8 +14,12 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.mockito.Mockito.mock;
 
+/**
+ * Test right and left rotate-wheels. Can not find any uturn-pads.
+ */
 public class RotatePadTest {
 
     private RallyGame game;
@@ -64,22 +68,60 @@ public class RotatePadTest {
         return leftRotatePads;
     }
 
+    /**
+     * Get only right rotate pads.
+     * @param rotatePads
+     * @return list of right rotate pads
+     */
+    private ArrayList<RotatePad> getRightRotatePads(ArrayList<RotatePad> rotatePads) {
+        ArrayList<RotatePad> rightRotatePads = new ArrayList<>();
+        for (RotatePad pad : rotatePads) {
+            if (pad.getRotate() == Rotate.RIGHT) {
+                rightRotatePads.add(pad);
+            }
+        }
+        return rightRotatePads;
+    }
+
+    @Test
+    public void rotatePadsIsNotEmptyTest() {
+        assertFalse(rotatePads.isEmpty());
+    }
+
     @Test
     public void onlyRotateWhenPadIsActivatedTest() {
-        RotatePad pad = getRandomRotatePad(rotatePads);
-        player.setDirection(Direction.EAST);
-        player.setPosition(pad.getPosition());
-        assertEquals(Direction.EAST, player.getDirection());
+        for (int i = 0; i < 3; i++) {
+            RotatePad pad = getRandomRotatePad(rotatePads);
+            player.setDirection(Direction.EAST);
+            player.setPosition(pad.getPosition());
+            assertEquals(Direction.EAST, player.getDirection());
+        }
     }
+
     @Test
-    public void playerOnPadRotatesTest() {
-        RotatePad pad = getRandomRotatePad(getLeftRotatePads(rotatePads));
-        Vector2 padPosition = pad.getPosition();
-        player.setPosition(padPosition);
-        player.setDirection(Direction.EAST);
-        game.activateRotatePads();
-        assertEquals(Direction.NORTH, player.getDirection());
+    public void playerOnLeftPadRotatesLeftTest() {
+        for (int i = 0; i < 3; i++) {
+            RotatePad pad = getRandomRotatePad(getLeftRotatePads(rotatePads));
+            Vector2 padPosition = pad.getPosition();
+            player.setPosition(padPosition);
+            player.setDirection(Direction.EAST);
+            game.activateRotatePads();
+            assertEquals(Direction.NORTH, player.getDirection());
+        }
     }
+
+    @Test
+    public void playerOnRightPadRotatesRightTest() {
+        for (int i = 0; i < 3; i++) {
+            RotatePad pad = getRandomRotatePad(getRightRotatePads(rotatePads));
+            Vector2 padPosition = pad.getPosition();
+            player.setPosition(padPosition);
+            player.setDirection(Direction.EAST);
+            game.activateRotatePads();
+            assertEquals(Direction.SOUTH, player.getDirection());
+        }
+    }
+
 
 
 }
