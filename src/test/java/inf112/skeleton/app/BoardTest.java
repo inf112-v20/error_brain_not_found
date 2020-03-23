@@ -44,16 +44,6 @@ public class BoardTest {
     }
 
     /**
-     *
-     * @param player1
-     * @param player2
-     * @return true if players have same playerNumber
-     */
-    private boolean isEqualPlayers(Player player1, Player player2) {
-        return player1.getPlayerNr() == player2.getPlayerNr();
-    }
-
-    /**
      * @param flag1
      * @param flag2
      * @return true if two flags are equal
@@ -280,7 +270,7 @@ public class BoardTest {
         player2.setDirection(Direction.EAST);
         board.addPlayer(player);
         board.movePlayer(player2);
-        assertTrue(isEqualPlayers(player2, board.getPlayer(playerToBePushedPosition)));
+        assertEquals(player2, board.getPlayer(playerToBePushedPosition));
     }
 
     @Test
@@ -295,7 +285,7 @@ public class BoardTest {
         player2.setDirection(Direction.EAST);
         board.addPlayer(player);
         board.movePlayer(player2);
-        assertTrue(isEqualPlayers(player, board.getPlayer(playerIsPushedToPosition)));
+        assertEquals(player, board.getPlayer(playerIsPushedToPosition));
     }
 
     @Test
@@ -315,7 +305,7 @@ public class BoardTest {
         board.addPlayer(player2);
         board.addPlayer(player3);
         board.movePlayer(player);
-        assertTrue(isEqualPlayers(player2, board.getPlayer(positionToBePushedTo)));
+        assertEquals(player2, board.getPlayer(positionToBePushedTo));
     }
 
     @Test
@@ -327,7 +317,29 @@ public class BoardTest {
         Vector2 playerPushingPosition = new Vector2(0,4);
         player.setPosition(playerPushingPosition);
         player.setDirection(Direction.NORTH);
-        assertFalse(board.shouldPush(player));
+        board.addPlayer(player2);
+        board.addPlayer(player);
+        board.movePlayer(player);
+        assertEquals(player2, board.getPlayer(northWallPosition));
+    }
+
+    @Test
+    public void wallStopsPushingSeveralPlayersTest() {
+        // Found wall in Risky Exhange
+        Vector2 northWallPosition = new Vector2(0, 5);
+        Vector2 middlePosition = new Vector2(0, 4);
+        Player playerToBeStoppedByWall = new Player(northWallPosition, 2);
+        Player playerInMiddle = new Player(middlePosition, 3);
+        playerToBeStoppedByWall.setDirection(Direction.WEST);
+        playerInMiddle.setDirection(Direction.SOUTH);
+        Vector2 playerPushingPosition = new Vector2(0,3);
+        player.setPosition(playerPushingPosition);
+        player.setDirection(Direction.NORTH);
+        board.addPlayer(playerToBeStoppedByWall);
+        board.addPlayer(playerInMiddle);
+        board.addPlayer(player);
+        board.movePlayer(player);
+        assertEquals(playerToBeStoppedByWall, board.getPlayer(northWallPosition));
     }
 
 }
