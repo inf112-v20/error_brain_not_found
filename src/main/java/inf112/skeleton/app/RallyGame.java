@@ -214,17 +214,17 @@ public class RallyGame extends Game {
         }
     }
 
-    public void activateRotatePads(){
-        for(Player player : board.getPlayers()){
-            for(RotatePad rotatePad : board.rotatePads){
+    public void activateRotatePads() {
+        for (Player player : board.getPlayers()) {
+            for (RotatePad rotatePad : board.rotatePads) {
                 Vector2 playerPosition = player.getPosition();
                 Vector2 rotePadPosition = rotatePad.getPosition();
 
-                if(playerPosition.equals(rotePadPosition)){
+                if (playerPosition.equals(rotePadPosition)) {
                     Rotate rotateDirection = rotatePad.getRotate();
                     Direction playerDirection = player.getDirection();
 
-                    switch (rotateDirection){
+                    switch (rotateDirection) {
                         case LEFT:
                             player.setDirection(playerDirection.turnLeft());
                             break;
