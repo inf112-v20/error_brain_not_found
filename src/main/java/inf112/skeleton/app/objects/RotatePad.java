@@ -16,5 +16,11 @@ public class RotatePad {
         return rotate;
     }
 
+<<<<<<< HEAD
     public Vector2 getPosition() {return position;}
+=======
+    public Vector2 getPosition() {
+        return position;
+    }
+>>>>>>> develop
 }

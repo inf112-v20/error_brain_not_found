@@ -20,8 +20,6 @@ public class Board extends BoardLayers {
 
         this.players = new ArrayList<>();
 
-        laserLayer.setVisible(false);
-
         addPlayersToStartPositions(numberOfPlayers);
     }
 
@@ -29,16 +27,29 @@ public class Board extends BoardLayers {
         TiledMapTileSet tileSet = this.tiledMap.getTileSets().getTileSet("robots");
         switch (player.getDirection()) {
             case SOUTH:
-                return tileSet.getTile(140);
+                return tileSet.getTile(TileID.PLAYER_SOUTH.getId());
             case NORTH:
-                return tileSet.getTile(141);
+                return tileSet.getTile(TileID.PLAYER_NORTH.getId());
             case EAST:
-                return tileSet.getTile(142);
+                return tileSet.getTile(TileID.PLAYER_EAST.getId());
             case WEST:
-                return tileSet.getTile(143);
+                return tileSet.getTile(TileID.PLAYER_WEST.getId());
             default:
                 return null;
         }
+    }
+
+    /**
+     * @param number number of player
+     * @return true if player number is valid
+     */
+    public boolean validPlayerNumber(int number) {
+        for (Player player : players) {
+            if (number == player.getPlayerNr()) {
+                return false;
+            }
+        }
+        return 0 < number && number < 9;
     }
 
     /**
@@ -49,6 +60,9 @@ public class Board extends BoardLayers {
      * @param playerNumber of player
      */
     public void addPlayer(int x, int y, int playerNumber) {
+        if (!validPlayerNumber(playerNumber)) {
+            return;
+        }
         Player player = new Player(new Vector2(x, y), playerNumber);
         addPlayer(player);
     }
@@ -78,6 +92,9 @@ public class Board extends BoardLayers {
      * @param numPlayers number of robots playing, between 1-8
      */
     public void addPlayersToStartPositions(int numPlayers) {
+        if (numPlayers == 0) {
+            return;
+        }
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
@@ -104,13 +121,42 @@ public class Board extends BoardLayers {
     }
 
     /**
+     * Add laser in position in the right direction
+     *
+     * @param position  to add laser
+     * @param direction of laser
+     */
+    public void addLaser(Vector2 position, Direction direction) {
+        TiledMapTileLayer.Cell cell = laserLayer.getCell((int) position.x, (int) position.y);
+        TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("tiles");
+        if (cell == null) {
+            cell = new TiledMapTileLayer.Cell();
+        }
+        if (direction == Direction.NORTH || direction == Direction.SOUTH) {
+            if (cell.getTile() == null) {
+                cell.setTile(tileSet.getTile(TileID.VERTICAL_LASER.getId()));
+            } else if (cell.getTile().getId() == TileID.HORIZONTAL_LASER.getId()) {
+                cell.setTile(tileSet.getTile(TileID.CROSSED_LASER.getId()));
+            }
+        } else {
+            if (cell.getTile() == null) {
+                cell.setTile(tileSet.getTile(TileID.HORIZONTAL_LASER.getId()));
+            } else if (cell.getTile().getId() == TileID.VERTICAL_LASER.getId()) {
+                cell.setTile(tileSet.getTile(TileID.CROSSED_LASER.getId()));
+            }
+        }
+        laserLayer.setCell((int) position.x, (int) position.y, cell);
+    }
+
+    /**
      * Checks if player moves on to a hole
+     *
      * @param player that is checked
      * @return true if the player moves onto a hole
      */
     private boolean onHole(Player player) {
         Vector2 position = player.getPosition();
-        for (Vector2 vector : holes){
+        for (Vector2 vector : holes) {
             if (vector.equals(position)) {
                 return true;
             }
@@ -255,7 +301,8 @@ public class Board extends BoardLayers {
 
     /**
      * Add player to the board, so the direction is correct
-     * @param player
+     * @param player that should be rotated
+     *
      */
     public void rotatePlayer(Player player) {
         addPlayer(player);
@@ -319,7 +366,7 @@ public class Board extends BoardLayers {
      * @param direction to go in
      * @return neighbour position in direction from position
      */
-    private Vector2 getNeighbourPosition(Vector2 position, Direction direction) {
+    public Vector2 getNeighbourPosition(Vector2 position, Direction direction) {
         Vector2 neighbourPosition = new Vector2(position);
         switch (direction) {
             case EAST:
@@ -340,7 +387,7 @@ public class Board extends BoardLayers {
         return neighbourPosition;
     }
 
-    private boolean hasPlayer(Vector2 position) {
+    public boolean hasPlayer(Vector2 position) {
         for (Player enemyPlayer : players) {
             if (enemyPlayer.getPosition().equals(position)) {
                 return true;
@@ -355,7 +402,7 @@ public class Board extends BoardLayers {
      * @param position to check
      * @return player in position
      */
-    private Player getPlayer(Vector2 position) {
+    public Player getPlayer(Vector2 position) {
         for (Player enemyPlayer : players) {
             if (enemyPlayer.getPosition().equals(position)) {
                 return enemyPlayer;
@@ -370,7 +417,7 @@ public class Board extends BoardLayers {
      * @param player trying to move
      * @return true if player should push another player to move
      */
-    private boolean shouldPush(Player player) {
+    public boolean shouldPush(Player player) {
         return hasPlayer(getNeighbourPosition(player.getPosition(), player.getDirection()));
     }
 

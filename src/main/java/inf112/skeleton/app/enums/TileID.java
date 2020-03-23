@@ -27,6 +27,7 @@ public enum TileID {
 
     VERTICAL_LASER(47),
     HORIZONTAL_LASER(39),
+    CROSSED_LASER(40),
 
     NORMAL_HOLE(6),
     NORMAL_HOLE2(91),
@@ -49,7 +50,10 @@ public enum TileID {
     WRENCH(14),
     DOUBLE_WRENCH(7),
 
-    PLAYER(137),
+    PLAYER_SOUTH(137),
+    PLAYER_NORTH(138),
+    PLAYER_EAST(139),
+    PLAYER_WEST(140),
 
     FLAG_1(55),
     FLAG_2(63),

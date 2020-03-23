@@ -2,8 +2,10 @@ package inf112.skeleton.app;
 
 
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.objects.Flag;
 
 import java.util.ArrayList;
@@ -16,29 +18,44 @@ public class Player {
     private Vector2 position;
     private Direction direction;
     private ArrayList<Flag> flagsCollected;
-    private ArrayList<ProgramCard> programCards;
+    private ArrayList<ProgramCard> selectedCards;
+    private ArrayList<ProgramCard> allCards;
 
     public Player(Vector2 position, int playerNr) {
         this.position = position;
         this.direction = Direction.EAST;
         this.playerNr = playerNr;
         this.flagsCollected = new ArrayList<>();
+        this.selectedCards = new ArrayList<>();
+        this.allCards = new ArrayList<>();
+        this.allCards.add(new ProgramCard(10, 2, Rotate.NONE,"TEST"));
         setBackup(position, Direction.EAST);
     }
 
-    public void addCard(ProgramCard card) {
-        programCards.add(card);
+    public ArrayList<ProgramCard> getAllCards() {
+        return allCards;
     }
 
-    public ArrayList<ProgramCard> getProgramCards() {
-        return programCards;
+    public ArrayList<ProgramCard> getSelectedCards() {
+        return selectedCards;
     }
 
-    public ProgramCard removeCard() {return programCards.remove(0); }
+    public void selectCards() {
+        while (selectedCards.size() < 5) {
+            selectedCards.add(allCards.remove(0));
+        }
+    }
+
+    public void drawCards(Deck deck) {
+        while (allCards.size() < 9) {
+            allCards.add(deck.drawCard());
+        }
+    }
 
     /**
      * Set new backup position and direction
-     * @param backupPosition respawn position when damaged
+     *
+     * @param backupPosition  respawn position when damaged
      * @param backupDirection respawn direction when damaged
      */
     public void setBackup(Vector2 backupPosition, Direction backupDirection) {
@@ -124,7 +141,15 @@ public class Player {
         }
     }
 
+    public ArrayList<Flag> getFlagsCollected() {
+        return flagsCollected;
+    }
+
     public boolean hasAllFlags(int numberOfFlags) {
         return flagsCollected.size() == numberOfFlags;
+    }
+
+    public String toString() {
+        return "Player " + getPlayerNr();
     }
 }
