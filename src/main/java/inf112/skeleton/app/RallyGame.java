@@ -223,17 +223,20 @@ public class RallyGame extends Game {
                 if(playerPosition.equals(rotePadPosition)){
                     Rotate rotateDirection = rotatePad.getRotate();
                     Direction playerDirection = player.getDirection();
+
                     switch (rotateDirection){
                         case LEFT:
                             player.setDirection(playerDirection.turnLeft());
+                            break;
                         case RIGHT:
                             player.setDirection(playerDirection.turnRight());
+                            break;
                         case UTURN:
                             player.setDirection(playerDirection.turnAround());
+                            break;
                         default:
                             // Will never happen
                     }
-
                 }
             }
         }
