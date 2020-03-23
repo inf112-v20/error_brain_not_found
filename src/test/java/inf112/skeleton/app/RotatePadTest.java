@@ -65,6 +65,13 @@ public class RotatePadTest {
     }
 
     @Test
+    public void onlyRotateWhenPadIsActivatedTest() {
+        RotatePad pad = getRandomRotatePad(rotatePads);
+        player.setDirection(Direction.EAST);
+        player.setPosition(pad.getPosition());
+        assertEquals(Direction.EAST, player.getDirection());
+    }
+    @Test
     public void playerOnPadRotatesTest() {
         RotatePad pad = getRandomRotatePad(getLeftRotatePads(rotatePads));
         Vector2 padPosition = pad.getPosition();
