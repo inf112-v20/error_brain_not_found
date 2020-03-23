@@ -194,7 +194,7 @@ public class Board extends BoardLayers {
      * @param player to respawn
      */
     private void respawn(Player player) {
-
+/*
         //game.loadTokens();
 
         //game.getNumberOfLifeTokens();
@@ -216,7 +216,7 @@ public class Board extends BoardLayers {
             System.out.println(player.getLifeTokens()+ " is how many life tokens you have left");
             player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
             player.setDirection(player.getBackupDirection());}
-
+*/
     }
 
     /**

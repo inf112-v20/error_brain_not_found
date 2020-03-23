@@ -3,10 +3,8 @@ package inf112.skeleton.app.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
-import inf112.skeleton.app.Player;
 import inf112.skeleton.app.RallyGame;
 
 public class GameScreen extends StandardScreen {
@@ -14,19 +12,20 @@ public class GameScreen extends StandardScreen {
     private TiledMapRenderer mapRenderer;
     private Texture lifeTokens;
     private Texture damageTokens;
-    private Player player;
-    private int numberOfTokens;
+    private float tokensX;
+    private float lifeTokensY;
+    private float damageTokensY;
+    private float tokensSize;
 
     public GameScreen(final RallyGame game) {
         super(game);
 
         lifeTokens = new Texture("assets/images/lifeToken.png");
-        super.camera.setToOrtho(false, game.board.getWidth() * 300, game.board.getHeight() * 300);
+        damageTokens = new Texture("assets/images/damageToken.png");
+        super.camera.setToOrtho(false, game.board.getWidth() * 400, game.board.getHeight() * 400);
         this.mapRenderer = new OrthogonalTiledMapRenderer(game.getBoard().getMap());
         mapRenderer.setView(camera);
-        //numberOfTokens = player.getLifeTokens();
-
-        //game.loadTokens();
+        updateTokens();
     }
 
     @Override
@@ -34,30 +33,30 @@ public class GameScreen extends StandardScreen {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         renderSettings(v);
 
-
-      batch.begin();
+        updateTokens();
         mapRenderer.render();
-
-         //game.renderNewTokens(3);
-        // renderTokens(numberOfTokens);
-         //game.loadTokens();
-
-        //System.out.println(player.getLifeTokens());
-       // player.getLifeTokens();
+        batch.begin();
+        renderLifeTokens();
+        renderDamageTokens();
         batch.end();
-
     }
-    public void renderTokens(int tokens){
-        //int numberOfLifeTokens = player.getLifeTokens();
-        batch.end();  batch.begin();
-        for (int i =1; i <= tokens; i++){
-            batch.draw(lifeTokens,i*15,i*2);
+
+    public void updateTokens() {
+        tokensSize = camera.viewportHeight / 8;
+        tokensX = 10;
+        lifeTokensY = camera.viewportHeight - tokensSize;
+        damageTokensY = lifeTokensY - tokensSize;
+    }
+
+    public void renderDamageTokens() {
+        for (int i = 0; i < game.board.getPlayer1().getDamageTokens(); i++) {
+            batch.draw(damageTokens, tokensX + i * tokensSize, damageTokensY, tokensSize, tokensSize);
         }
-
-        //lifeTokens.draw(batch,gam);
     }
-    public void loadTokens(){
-        batch = new SpriteBatch();
 
+    public void renderLifeTokens() {
+        for (int i = 0; i < game.board.getPlayer1().getLifeTokens(); i++) {
+            batch.draw(lifeTokens, tokensX + i * tokensSize, lifeTokensY, tokensSize, tokensSize);
+        }
     }
 }
