@@ -13,6 +13,7 @@ import org.junit.Test;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.Vector;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -33,6 +34,20 @@ public class LaserTest {
         this.game.setupGame("assets/maps/Risky_Exchange.tmx");
         this.board = game.getBoard();
         this.lasers = board.lasers;
+    }
+
+    /**
+     *
+     * @param position
+     * @return laser at position given.
+     */
+    private Laser getLaser(Vector2 position) {
+        for (Laser laser : lasers) {
+            if (laser.getStartPosition().equals(position)) {
+                return laser;
+            }
+        }
+        return null;
     }
 
     /**
