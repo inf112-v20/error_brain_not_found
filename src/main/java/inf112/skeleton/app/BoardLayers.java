@@ -11,6 +11,7 @@ import inf112.skeleton.app.enums.TileID;
 import inf112.skeleton.app.objects.Flag;
 import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
+import inf112.skeleton.app.objects.Belt;
 
 import java.util.ArrayList;
 
@@ -28,6 +29,7 @@ public abstract class BoardLayers {
     public final ArrayList<Flag> flags;
     public final ArrayList<RotatePad> rotatePads;
     public final ArrayList<Vector2> holes;
+    public final ArrayList<Belt> belts;
 
     public int boardWidth;
     public int boardHeight;
@@ -49,6 +51,7 @@ public abstract class BoardLayers {
         this.rotatePads = new ArrayList<>();
         this.flags = new ArrayList<>();
         this.lasers = new ArrayList<>();
+        this.belts = new ArrayList<>();
 
         findFlags();
         findRotatePadsAndHoles();
@@ -59,12 +62,16 @@ public abstract class BoardLayers {
     /**
      * Finds where there are {@link RotatePad} and Holes on the map. In the case of RotatePad adds a RotatePad object to
      * the rotatePad list, in the case of a hole adds a {@link Vector2} to the holes list.
+     * <p>
+     * For better runtime the method finds the {@link RotatePad}'s, holes and {@link Belt}'s these are all on the same
+     * layer. Could have been three different methods but then the run time would have been three times higher.
      */
     public void findRotatePadsAndHoles() {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
                 int ID = cell.getTile().getId();
+                // Add holes
                 if (ID == TileID.NORMAL_HOLE.getId()) {
                     holes.add(new Vector2(x, y));
                 } else if (ID == TileID.NORMAL_HOLE2.getId()) {
@@ -93,10 +100,60 @@ public abstract class BoardLayers {
                     holes.add(new Vector2(x, y));
                 } else if (ID == TileID.NORTH_WEST_EAST_HOLE.getId()) {
                     holes.add(new Vector2(x, y));
+                    // Add Rotate Pads
                 } else if (ID == TileID.ROTATE_PAD_LEFT.getId()) {
                     rotatePads.add(new RotatePad(Rotate.LEFT, new Vector2(x, y)));
                 } else if (ID == TileID.ROTATE_PAD_RIGHT.getId()) {
                     rotatePads.add(new RotatePad(Rotate.RIGHT, new Vector2(x, y)));
+                    // Add normal Belts
+                } else if (ID == TileID.EAST_TO_SOUTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, 1, new Vector2(x, y)));
+                } else if (ID == TileID.NORTH_TO_EAST_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, 1, new Vector2(x, y)));
+                } else if (ID == TileID.WEST_TO_NORTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, 1, new Vector2(x, y)));
+                } else if (ID == TileID.SOUTH_TO_WEST_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, 1, new Vector2(x, y)));
+                } else if (ID == TileID.EAST_TO_NORTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, 1, new Vector2(x, y)));
+                } else if (ID == TileID.NORTH_TO_WEST_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, 1, new Vector2(x, y)));
+                } else if (ID == TileID.WEST_TO_SOUTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, 1, new Vector2(x, y)));
+                } else if (ID == TileID.SOUTH_TO_EAST_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, 1, new Vector2(x, y)));
+                } else if (ID == TileID.EAST_TO_WEST_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, 1, new Vector2(x, y)));
+                } else if (ID == TileID.NORTH_TO_SOUTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, 1, new Vector2(x, y)));
+                } else if (ID == TileID.WEST_TO_EAST_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, 1, new Vector2(x, y)));
+                } else if (ID == TileID.SOUTH_TO_NORTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, 1, new Vector2(x, y)));
+                } else if (ID == TileID.WESTSOUTH_TO_NORTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, 1, new Vector2(x, y)));
+                } else if (ID == TileID.EASTSOUTH_TO_NORTH_BELT.getId()){
+                    belts.add(new Belt(Direction.NORTH, 1, new Vector2(x, y)));
+                } else if (ID == TileID.WESTEAST_TO_NORTH_BELT.getId()){
+                    belts.add(new Belt(Direction.NORTH, 1, new Vector2(x, y)));
+                } else if (ID == TileID.WESTNORTH_TO_SOUTH_BELT.getId()){
+                    belts.add(new Belt(Direction.SOUTH, 1, new Vector2(x, y)));
+                } else if (ID == TileID.EASTNORTH_TO_SOUTH_BELT.getId()){
+                    belts.add(new Belt(Direction.SOUTH, 1, new Vector2(x, y)));
+                } else if (ID == TileID.WESTEAST_TO_SOUTH_BELT.getId()){
+                    belts.add(new Belt(Direction.SOUTH, 1, new Vector2(x, y)));
+                } else if (ID == TileID.WESTSOUTH_TO_EAST_BELT.getId()){
+                    belts.add(new Belt(Direction.EAST, 1, new Vector2(x, y)));
+                } else if (ID == TileID.WESTNORTH_TO_EAST_BELT.getId()){
+                    belts.add(new Belt(Direction.EAST, 1, new Vector2(x, y)));
+                } else if (ID == TileID.NORTHSOUTH_TO_EAST_BELT.getId()){
+                    belts.add(new Belt(Direction.EAST, 1, new Vector2(x, y)));
+                } else if (ID == TileID.EASTSOUTH_TO_WEST_BELT.getId()){
+                    belts.add(new Belt(Direction.WEST, 1, new Vector2(x, y)));
+                } else if (ID == TileID.EASTNORTH_TO_WEST_BELT.getId()){
+                    belts.add(new Belt(Direction.WEST, 1, new Vector2(x, y)));
+                } else if (ID == TileID.NORTHSOUTH_TO_WEST_BELT.getId()){
+                    belts.add(new Belt(Direction.WEST, 1, new Vector2(x, y)));
                 }
             }
         }

@@ -2,7 +2,6 @@ package inf112.skeleton.app.objects;
 
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
-import inf112.skeleton.app.enums.Rotate;
 
 public class Belt {
 
@@ -10,13 +9,11 @@ public class Belt {
 
     private Direction direction;
     private int power;
-    private Rotate rotate;
 
-    public Belt(Direction direction, Rotate rotate, int power, Vector2 position){
+    public Belt(Direction direction, int power, Vector2 position){
         this.direction = direction;
         this.position = position;
         this.power = power;
-        this.rotate = rotate;
     }
 
     public Vector2 getPosition() {
@@ -31,7 +28,4 @@ public class Belt {
         return power;
     }
 
-    public Rotate getRotate() {
-        return rotate;
-    }
 }
