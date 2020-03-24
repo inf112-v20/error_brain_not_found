@@ -5,6 +5,7 @@
 Simple skeleton with libgdx. 
 
 ## How to run
+The program runs `java` and `maven`, these need to be installed.  
 Every text-editor that can run version control system, can be used. We recommend IntelliJ IDEA.  
 Clone the repo from github to you computer: `git clone https://github.com/inf112-v20/error_brain_not_found.git`  
 Then open `pom.xml` in IntelliJ and the IntelliJ will build the project for you.  
