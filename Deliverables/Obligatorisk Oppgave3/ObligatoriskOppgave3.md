@@ -1,4 +1,4 @@
-# Mandatory Assignment 2 
+# Mandatory Assignment 3 
 Team: error_no_brain_found
 
 ## Task 1 - Team and project
@@ -41,6 +41,14 @@ keeps on. I think the way we parted the roles and made us survived the transitio
 responsibility area. When you have to move closer to someone else's area and you meet a wall we are fast to help each other 
 out.
 
+#### Improvement points from retrospective
+*   Lorem
+
+
+### Prioritization in the future
+
+Skjermdump!!! 
+
 ### Group dynamic and communication
 In general communication works fine, we communicate over slack and assign tasks to each other by making 
 issues and add them to project board. As mentioned before, because some overlapping of the different roles in the team, 
@@ -50,7 +58,6 @@ follow up with message over slack, but experience very little to no feedback.
 
 ## Task 2 - Requirements
 ### User stories:
-
 #### Holes 
 
 User story:  
