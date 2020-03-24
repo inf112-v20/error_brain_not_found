@@ -16,7 +16,7 @@ check boxes so that we can see progress in the issue. Also an own issue for test
 it should be testing, with acceptance criteria as tests to be made. This gives us a great overview of who is doing what, 
 and a great workflow because we can always see what to do next.
 
-*    Do you think you have made good choices? If not, what can you do different?   
+*   Do you think you have made good choices? If not, what can you do different?   
 In general yes, we think it was smart to device the team into roles like Developers, Tester etc, because then everyone know
 what to do. On the other hand, these roles have some overlap, for example that maybe the tester sees something that needs to be fixed, can not 
 reach some code, or that the developer/UX-designer needs a specific test. We are then assigning issues to each other and specify the task needs to be done, but sometimes this 
