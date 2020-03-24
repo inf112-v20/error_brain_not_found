@@ -71,7 +71,6 @@ Tasks:
 *   Test that you are respawned when on a hole   
 
 #### Laser
-
 User-story:
 As a player I want the laser to be able to hit me, so that I take damage.
 
@@ -96,7 +95,6 @@ Tasks:
 *   Test that a player is not damaged when out of range of laser. 
 
 #### Belts
-
 User-story:
 As player standing on a belt, I want to be moved as many steps as the belt is moving, so that I can get closer to my goal.
 
@@ -120,7 +118,6 @@ Task:
 should have
 
 #### RotatePads
-
 User-story:
 As a user I want to get turned if I walk on a rotate pad
 
@@ -132,7 +129,6 @@ Tasks:
 *   test that player is rotated in correct direction
 
 #### MenuScreen
-
 User-Story:
 As a user of the game I want to be able to choose different board layouts, so that I can have a new challenge in the game.
 
@@ -144,7 +140,6 @@ Tasks:
 *   Make graphics for choosing board
 
 #### Life on robots
-
 User-Story:
 As a player I want my robot to be able to take damage, so that my robot can die
 
@@ -155,7 +150,6 @@ Tasks:
 Make methods for robots to take damage
 
 #### Damagetoken
-
 User-Story:
 As a player I want my robot to have a Token-bar, to see when or if my robot gets hurt
 
@@ -170,7 +164,6 @@ Tasks:
 *   Make methods to recieve less programs cards based on damage tokens
 
 #### Lifetoken
-
 User-Story: 
 As a player I want to have Life tokens, to see how many lives I have left
 
@@ -184,7 +177,6 @@ Tasks:
 *   Make a method that robots do not respawn after losing all life tokens
 
 #### See the cards
-
 User-story:
 As a player I want to be able to see the cards, so that I can plan my program. 
 
@@ -196,7 +188,6 @@ Tasks:
 *   Manual test
 
 #### Flags 
-
 User-story:
 As a user I want to go on flags, so that I can win the game. 
 
@@ -224,5 +215,10 @@ Tasks:
 *   Manual tests   
 
 ## Task 3 - Productdelivery and codequality
-
 ### Manual tests
+The menu-screen goes away after clicking on it. 
+*   start the game then click somewhere on the screen. Then the game-screen should come.
+
+### Comment to automatic build tests
+Travis does not support the language `Java` on their Windows Build Environment. But 3/5 in our group run windows and it 
+runs on their computer.  
