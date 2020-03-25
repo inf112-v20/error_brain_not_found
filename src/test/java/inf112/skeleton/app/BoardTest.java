@@ -4,10 +4,12 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.objects.Flag;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Random;
 
 import static org.junit.Assert.*;
@@ -17,12 +19,14 @@ import static org.mockito.Mockito.mock;
 public class BoardTest {
 
     private Board board;
-    private final int NUMBER_OF_PLAYERS_WHEN_STARTING_GAME = 2;
+    private final int NUMBER_OF_PLAYERS_WHEN_STARTING_GAME = 0;
     private final int BOARD_WIDTH = 16;
     private final int BOARD_HEIGHT = 12;
     private Player player;
+    private Random random;
     private ArrayList<Vector2> holes;
     private Vector2 startPosition;
+    private ArrayList<Flag> flags;
 
     @Before
     public void setUp() {
@@ -36,16 +40,38 @@ public class BoardTest {
         this.startPosition = new Vector2(5,5);
         this.player = new Player(startPosition, 1);
         this.holes = board.holes;
+        this.flags = board.flags;
+        // Sort the flags so player can go on them in correct order
+        flags.sort(Comparator.comparingInt(Flag::getFlagnr));
+        this.random = new Random();
     }
 
     /**
-     *
+     * @param flag1
+     * @param flag2
+     * @return true if two flags are equal
+     */
+    private boolean isEqualFlags(Flag flag1, Flag flag2) {
+        if (flag1 == null || flag2 == null) {
+            return false;
+        }
+        return flag1.getFlagnr() == flag2.getFlagnr() && flag1.getPosition().equals(flag2.getPosition());
+    }
+
+    /**
      * @return a random hole position
      */
     private Vector2 getRandomHolePosition() {
-        Random random = new Random();
         int randomIndex = random.nextInt(holes.size());
         return holes.get(randomIndex);
+    }
+
+    /**
+     * @return Flag a random flag
+     */
+    private Flag getRandomFlag() {
+        int randomIndex = random.nextInt(flags.size());
+        return flags.get(randomIndex);
     }
 
     /**
@@ -54,6 +80,13 @@ public class BoardTest {
      */
     private boolean isInBackupState(Player player) {
         return player.getPosition().equals(player.getBackupPosition()) && player.getDirection().equals(player.getBackupDirection());
+    }
+
+    @Test
+    public void canNotAddSamePlayerOnBoardTest() {
+        board.addPlayer(player);
+        board.addPlayer(player);
+        assertEquals(1, board.getPlayers().size());
     }
 
     @Test
@@ -146,6 +179,7 @@ public class BoardTest {
             assertTrue(board.outsideBoard(player));
         }
     }
+
     @Test
     public void playerOnRandomHoleIsRespawnedTest() {
         // Choose some random holes
@@ -158,6 +192,7 @@ public class BoardTest {
     }
 
     @Test
+
     public void getWestNeighbourPositionTest() {
         Vector2 neighbourPosition = new Vector2(startPosition.x -1, startPosition.y);
         assertEquals(neighbourPosition, board.getNeighbourPosition(startPosition, Direction.WEST));
@@ -179,6 +214,152 @@ public class BoardTest {
     public void getNorthNeighbourPositionTest() {
         Vector2 neighbourPosition = new Vector2(startPosition.x, startPosition.y + 1);
         assertEquals(neighbourPosition, board.getNeighbourPosition(startPosition, Direction.NORTH));
+    }
+
+
+    @Test
+    public void playerPicksUpFirstFlagTest() {
+        Flag flag = flags.get(0);
+        Vector2 flagPosition = flag.getPosition();
+        player.setPosition(flagPosition);
+        board.pickUpFlag(player);
+        assertTrue(isEqualFlags(flag, player.getFlagsCollected().get(0)));
+    }
+
+    @Test
+    public void canNotPickUpFlagNumberTwoBeforeFlagNumberOneTest() {
+        // Get flag nr. 2
+        Flag flag = flags.get(1);
+        Vector2 flagPosition = flag.getPosition();
+        player.setPosition(flagPosition);
+        board.pickUpFlag(player);
+        assertEquals(0, player.getFlagsCollected().size());
+    }
+
+    @Test
+    public void canNotPickUpFlagNumberThreeBeforeFlagNumberTwoTest() {
+        Flag firstFlag = flags.get(0);
+        player.setPosition(firstFlag.getPosition());
+        board.pickUpFlag(player);
+        Flag thirdFlag = flags.get(2);
+        player.setPosition(thirdFlag.getPosition());
+        board.pickUpFlag(player);
+        assertEquals(1, player.getFlagsCollected().size());
+    }
+
+    @Test
+    public void playerMovesOnFlagTest() {
+        Flag flag = flags.get(0);
+        Vector2 flagPosition = flag.getPosition();
+        Vector2 playerPosition = new Vector2(flagPosition.x -1, flagPosition.y);
+        player.setPosition(playerPosition);
+        player.setDirection(Direction.EAST);
+        board.movePlayer(player);
+        assertTrue(isEqualFlags(flag, player.getFlagsCollected().get(0)));
+    }
+
+    @Test
+    public void pickingUpAllFlagsInIncreasingOrderYouWinTest() {
+        // Visit flags 1, 2, and 3
+        for (int flagNumber = 1; flagNumber <=3; flagNumber++) {
+            Flag flag = flags.get(flagNumber-1);
+            Vector2 flagPosition = flag.getPosition();
+            player.setPosition(flagPosition);
+            board.pickUpFlag(player);
+        }
+        assertTrue(player.hasAllFlags(3));
+    }
+
+    @Test
+    public void facingNeighbourPlayerShouldPushTest()   {
+        Vector2 playerToBePushedPosition = new Vector2(0,0);
+        player.setPosition(playerToBePushedPosition);
+        Vector2 playerTwoPos = new Vector2(1, 0);
+        Player player2 = new Player(playerTwoPos, 2);
+        player2.setDirection(Direction.WEST);
+        board.addPlayer(player);
+        assertTrue(board.shouldPush(player2));
+    }
+
+    @Test
+    public void pushedPlayerIsReplacedByPlayerThatIsPushingTest() {
+        Vector2 playerToBePushedPosition = new Vector2(1, 0);
+        player.setPosition(playerToBePushedPosition);
+        Vector2 playerTwoPos = new Vector2(0,0);
+        Player player2 = new Player(playerTwoPos, 2);
+        player2.setDirection(Direction.EAST);
+        board.addPlayer(player);
+        board.movePlayer(player2);
+        assertEquals(player2, board.getPlayer(playerToBePushedPosition));
+    }
+
+    @Test
+    public void pushedPlayerMovesInSameDirectionAsItIsPushedTest() {
+        Vector2 playerToBePushedPosition = new Vector2(1, 0);
+        Vector2 playerIsPushedToPosition = new Vector2(2,0);
+        player.setPosition(playerToBePushedPosition);
+        // Set different direction then it is pushed in
+        player.setDirection(Direction.NORTH);
+        Vector2 playerTwoPos = new Vector2(0,0);
+        Player player2 = new Player(playerTwoPos, 2);
+        player2.setDirection(Direction.EAST);
+        board.addPlayer(player);
+        board.movePlayer(player2);
+        assertEquals(player, board.getPlayer(playerIsPushedToPosition));
+    }
+
+    @Test
+    public void pushingTwoPlayersInSameDirectionTest() {
+        // line 6 from bottom up has no walls in Risky-Exchange:
+        Vector2 playerToBePushedPositionOne = new Vector2(2, 6);
+        Vector2 playerToBePushedPositionTwo = new Vector2(3, 6);
+        Vector2 playerPushingPosition = new Vector2(4, 6);
+        Vector2 positionToBePushedTo = new Vector2(1, 6);
+        Player player2 = new Player(playerToBePushedPositionOne, 2);
+        Player player3 = new Player(playerToBePushedPositionTwo, 3);
+        // Random directions
+        player2.setDirection(Direction.EAST);
+        player3.setDirection(Direction.SOUTH);
+        player.setPosition(playerPushingPosition);
+        player.setDirection(Direction.WEST);
+        board.addPlayer(player2);
+        board.addPlayer(player3);
+        board.movePlayer(player);
+        assertEquals(player2, board.getPlayer(positionToBePushedTo));
+    }
+
+    @Test
+    public void wallStopsPushingTest() {
+        // Found wall in Risky Exhange
+        Vector2 northWallPosition = new Vector2(0, 5);
+        Player player2 = new Player(northWallPosition, 2);
+        player2.setDirection(Direction.WEST);
+        Vector2 playerPushingPosition = new Vector2(0,4);
+        player.setPosition(playerPushingPosition);
+        player.setDirection(Direction.NORTH);
+        board.addPlayer(player2);
+        board.addPlayer(player);
+        board.movePlayer(player);
+        assertEquals(player2, board.getPlayer(northWallPosition));
+    }
+
+    @Test
+    public void wallStopsPushingSeveralPlayersTest() {
+        // Found wall in Risky Exhange
+        Vector2 northWallPosition = new Vector2(0, 5);
+        Vector2 middlePosition = new Vector2(0, 4);
+        Player playerToBeStoppedByWall = new Player(northWallPosition, 2);
+        Player playerInMiddle = new Player(middlePosition, 3);
+        playerToBeStoppedByWall.setDirection(Direction.WEST);
+        playerInMiddle.setDirection(Direction.SOUTH);
+        Vector2 playerPushingPosition = new Vector2(0,3);
+        player.setPosition(playerPushingPosition);
+        player.setDirection(Direction.NORTH);
+        board.addPlayer(playerToBeStoppedByWall);
+        board.addPlayer(playerInMiddle);
+        board.addPlayer(player);
+        board.movePlayer(player);
+        assertEquals(playerToBeStoppedByWall, board.getPlayer(northWallPosition));
     }
 
 }

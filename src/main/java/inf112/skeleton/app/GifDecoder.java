@@ -5,15 +5,15 @@ package inf112.skeleton.app;
 /* Released under Apache 2.0 */
 /* https://code.google.com/p/animated-gifs-in-android/ */
 
-import java.io.InputStream;
-import java.util.Vector;
-
 import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Animation.PlayMode;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.utils.Array;
+
+import java.io.InputStream;
+import java.util.Vector;
 
 public class GifDecoder {
     /**
@@ -47,8 +47,14 @@ public class GifDecoder {
     protected boolean lctFlag; // local color table flag
     protected boolean interlace; // interlace flag
     protected int lctSize; // local color table size
-    protected int ix, iy, iw, ih; // current image rectangle
-    protected int lrx, lry, lrw, lrh;
+    protected int ix; // current image rectangle
+    protected int iy; // current image rectangle
+    protected int iw; // current image rectangle
+    protected int ih; // current image rectangle
+    protected int lrx;
+    protected int lry;
+    protected int lrw;
+    protected int lrh;
     protected DixieMap image; // current frame
     protected DixieMap lastPixmap; // previous frame
     protected byte[] block = new byte[256]; // current data block
@@ -66,53 +72,42 @@ public class GifDecoder {
     protected Vector<GifFrame> frames; // frames read from current file
     protected int frameCount;
 
-    private static class DixieMap extends Pixmap {
-        DixieMap(int w, int h, Pixmap.Format f) {
-            super(w, h, f);
-        }
-
-        DixieMap(int[] data, int w, int h, Pixmap.Format f) {
-            super(w, h, f);
-
-            int x, y;
-
-            for(y = 0; y < h; y++) {
-                for(x = 0; x < w; x++) {
-                    int pxl_ARGB8888 = data[x + y * w];
-                    int pxl_RGBA8888 =
-                            ((pxl_ARGB8888 >> 24) & 0x000000ff) | ((pxl_ARGB8888 << 8) & 0xffffff00);
-                    // convert ARGB8888 > RGBA8888
-                    drawPixel(x, y, pxl_RGBA8888);
-                }
-            }
-        }
-
-        void getPixels(int[] pixels, int offset, int stride, int x, int y, int width, int height) {
-            java.nio.ByteBuffer bb = getPixels();
-
-            int k, l;
-
-            for(k = y;  k < y + height; k++) {
-                int _offset = offset;
-                for(l = x; l < x + width; l++) {
-                    int pxl = bb.getInt(4 * (l + k * width));
-
-                    // convert RGBA8888 > ARGB8888
-                    pixels[_offset++] = ((pxl >> 8) & 0x00ffffff) | ((pxl << 24) & 0xff000000);
-                }
-                offset += stride;
-            }
-        }
+    /**
+     * Gets the image contents of frame n.
+     *
+     * @return BufferedPixmap representation of frame, or null if n is invalid.
+     */
+    public DixieMap getFrame(int n) {
+        if (frameCount <= 0)
+            return null;
+        n %= frameCount;
+        return frames.elementAt(n).image;
     }
 
-    private static class GifFrame {
-        public GifFrame(DixieMap im, int del) {
-            image = im;
-            delay = del;
+    /**
+     * Reads GIF image from stream
+     *
+     * @param is containing GIF file.
+     */
+    public void read(InputStream is) {
+        init();
+        if (is != null) {
+            in = is;
+            readHeader();
+            if (!err()) {
+                readContents();
+                if (frameCount < 0) {
+                    status = STATUS_FORMAT_ERROR;
+                }
+            }
+        } else {
+            status = STATUS_OPEN_ERROR;
         }
-
-        public DixieMap image;
-        public int delay;
+        try {
+            assert is != null;
+            is.close();
+        } catch (Exception ignored) {
+        }
     }
 
     /**
@@ -137,24 +132,6 @@ public class GifDecoder {
      */
     public int getFrameCount() {
         return frameCount;
-    }
-
-    /**
-     * Gets the first (or only) image read.
-     *
-     * @return BufferedPixmap containing first frame, or null if none.
-     */
-    public Pixmap getPixmap() {
-        return getFrame(0);
-    }
-
-    /**
-     * Gets the "Netscape" iteration count, if any. A count of 0 means repeat indefinitely.
-     *
-     * @return iteration count if one was specified, else 1.
-     */
-    public int getLoopCount() {
-        return loopCount;
     }
 
     /**
@@ -246,52 +223,28 @@ public class GifDecoder {
     }
 
     /**
-     * Gets the image contents of frame n.
-     *
-     * @return BufferedPixmap representation of frame, or null if n is invalid.
-     */
-    public DixieMap getFrame(int n) {
-        if (frameCount <= 0)
-            return null;
-        n = n % frameCount;
-        return frames.elementAt(n).image;
-    }
-
-    /**
-     * Reads GIF image from stream
-     *
-     * @param is
-     *          containing GIF file.
-     * @return read status code (0 = no errors)
-     */
-    public int read(InputStream is) {
-        init();
-        if (is != null) {
-            in = is;
-            readHeader();
-            if (!err()) {
-                readContents();
-                if (frameCount < 0) {
-                    status = STATUS_FORMAT_ERROR;
-                }
-            }
-        } else {
-            status = STATUS_OPEN_ERROR;
-        }
-        try {
-            is.close();
-        } catch (Exception e) {
-        }
-        return status;
-    }
-
-    /**
      * Decodes LZW image data into pixel array. Adapted from John Cristy's BitmapMagick.
      */
     protected void decodeBitmapData() {
         int nullCode = -1;
         int npix = iw * ih;
-        int available, clear, code_mask, code_size, end_of_information, in_code, old_code, bits, code, count, i, datum, data_size, first, top, bi, pi;
+        int available;
+        int clear;
+        int code_mask;
+        int code_size;
+        int end_of_information;
+        int in_code;
+        int old_code;
+        int bits;
+        int code;
+        int count;
+        int i;
+        int datum;
+        int data_size;
+        int first;
+        int top;
+        int bi;
+        int pi;
         if ((pixels == null) || (pixels.length < npix)) {
             pixels = new byte[npix]; // allocate new pixel array
         }
@@ -393,34 +346,14 @@ public class GifDecoder {
     }
 
     /**
-     * Returns true if an error was encountered during reading/decoding
-     */
-    protected boolean err() {
-        return status != STATUS_OK;
-    }
-
-    /**
      * Initializes or re-initializes reader
      */
     protected void init() {
         status = STATUS_OK;
         frameCount = 0;
-        frames = new Vector<GifFrame>();
+        frames = new Vector<>();
         gct = null;
         lct = null;
-    }
-
-    /**
-     * Reads a single byte from the input stream.
-     */
-    protected int read() {
-        int curByte = 0;
-        try {
-            curByte = in.read();
-        } catch (Exception e) {
-            status = STATUS_FORMAT_ERROR;
-        }
-        return curByte;
     }
 
     /**
@@ -433,7 +366,7 @@ public class GifDecoder {
         int n = 0;
         if (blockSize > 0) {
             try {
-                int count = 0;
+                int count;
                 while (n < blockSize) {
                     count = in.read(block, n, blockSize - n);
                     if (count == -1) {
@@ -452,10 +385,94 @@ public class GifDecoder {
     }
 
     /**
+     * Returns true if an error was encountered during reading/decoding
+     */
+    protected boolean err() {
+        return status != STATUS_OK;
+    }
+
+    /**
+     * Main file parser. Reads GIF content blocks.
+     */
+    protected void readContents() {
+        // read GIF file content blocks
+        boolean done = false;
+        while (!(done || err())) {
+            int code = read();
+            switch (code) {
+                case 0x2C: // image separator
+                    readBitmap();
+                    break;
+                case 0x21: // extension
+                    code = read();
+                    switch (code) {
+                        case 0xf9: // graphics control extension
+                            readGraphicControlExt();
+                            break;
+                        case 0xff: // application extension
+                            readBlock();
+                            StringBuilder app = new StringBuilder();
+                            for (int i = 0; i < 11; i++) {
+                                app.append((char) block[i]);
+                            }
+                            if ("NETSCAPE2.0".equals(app.toString())) {
+                                readNetscapeExt();
+                            } else {
+                                skip(); // don't care
+                            }
+                            break;
+                        // comment extension
+                        // plain text extension
+                        default: // uninteresting extension
+                            skip();
+                    }
+                    break;
+                case 0x3b: // terminator
+                    done = true;
+                    break;
+                case 0x00: // bad byte, but keep going and see what happens break;
+                default:
+                    status = STATUS_FORMAT_ERROR;
+            }
+        }
+    }
+
+    /**
+     * Reads a single byte from the input stream.
+     */
+    protected int read() {
+        int curByte = 0;
+        try {
+            curByte = in.read();
+        } catch (Exception e) {
+            status = STATUS_FORMAT_ERROR;
+        }
+        return curByte;
+    }
+
+    /**
+     * Reads GIF file header information.
+     */
+    protected void readHeader() {
+        StringBuilder id = new StringBuilder();
+        for (int i = 0; i < 6; i++) {
+            id.append((char) read());
+        }
+        if (!id.toString().startsWith("GIF")) {
+            status = STATUS_FORMAT_ERROR;
+            return;
+        }
+        readLSD();
+        if (gctFlag && !err()) {
+            gct = readColorTable(gctSize);
+            bgColor = gct[bgIndex];
+        }
+    }
+
+    /**
      * Reads color table as 256 RGB integer values
      *
-     * @param ncolors
-     *          int number of colors to read
+     * @param ncolors int number of colors to read
      * @return int array containing 256 colors (packed ARGB with full alpha)
      */
     protected int[] readColorTable(int ncolors) {
@@ -484,54 +501,47 @@ public class GifDecoder {
         return tab;
     }
 
-    /**
-     * Main file parser. Reads GIF content blocks.
-     */
-    protected void readContents() {
-        // read GIF file content blocks
-        boolean done = false;
-        while (!(done || err())) {
-            int code = read();
-            switch (code) {
-                case 0x2C: // image separator
-                    readBitmap();
-                    break;
-                case 0x21: // extension
-                    code = read();
-                    switch (code) {
-                        case 0xf9: // graphics control extension
-                            readGraphicControlExt();
-                            break;
-                        case 0xff: // application extension
-                            readBlock();
-                            String app = "";
-                            for (int i = 0; i < 11; i++) {
-                                app += (char) block[i];
-                            }
-                            if (app.equals("NETSCAPE2.0")) {
-                                readNetscapeExt();
-                            } else {
-                                skip(); // don't care
-                            }
-                            break;
-                        case 0xfe:// comment extension
-                            skip();
-                            break;
-                        case 0x01:// plain text extension
-                            skip();
-                            break;
-                        default: // uninteresting extension
-                            skip();
-                    }
-                    break;
-                case 0x3b: // terminator
-                    done = true;
-                    break;
-                case 0x00: // bad byte, but keep going and see what happens break;
-                default:
-                    status = STATUS_FORMAT_ERROR;
+    public Animation<TextureRegion> getAnimation(PlayMode playMode) {
+        int nrFrames = getFrameCount();
+        Pixmap frame = getFrame(0);
+        int width = frame.getWidth();
+        int height = frame.getHeight();
+        int vzones = (int) Math.sqrt(nrFrames);
+        int hzones = vzones;
+
+        while (vzones * hzones < nrFrames) vzones++;
+
+        int v;
+        int h;
+
+        Pixmap target = new Pixmap(width * hzones, height * vzones, Pixmap.Format.RGBA8888);
+
+        for (h = 0; h < hzones; h++) {
+            for (v = 0; v < vzones; v++) {
+                int frameID = v + h * vzones;
+                if (frameID < nrFrames) {
+                    frame = getFrame(frameID);
+                    target.drawPixmap(frame, h * width, v * height);
+                }
             }
         }
+
+        Texture texture = new Texture(target);
+        Array<TextureRegion> texReg = new Array<>();
+
+        for (h = 0; h < hzones; h++) {
+            for (v = 0; v < vzones; v++) {
+                int frameID = v + h * vzones;
+                if (frameID < nrFrames) {
+                    TextureRegion tr = new TextureRegion(texture, h * width, v * height, width, height);
+                    texReg.add(tr);
+                }
+            }
+        }
+        float frameDuration = (float) getDelay(0);
+        frameDuration /= 1000; // convert milliseconds into seconds
+
+        return new Animation<>(frameDuration, texReg, playMode);
     }
 
     /**
@@ -550,22 +560,44 @@ public class GifDecoder {
         read(); // block terminator
     }
 
-    /**
-     * Reads GIF file header information.
-     */
-    protected void readHeader() {
-        String id = "";
-        for (int i = 0; i < 6; i++) {
-            id += (char) read();
+    private static class DixieMap extends Pixmap {
+        DixieMap(int w, int h, Pixmap.Format f) {
+            super(w, h, f);
         }
-        if (!id.startsWith("GIF")) {
-            status = STATUS_FORMAT_ERROR;
-            return;
+
+        DixieMap(int[] data, int w, int h, Pixmap.Format f) {
+            super(w, h, f);
+
+            int x;
+            int y;
+
+            for (y = 0; y < h; y++) {
+                for (x = 0; x < w; x++) {
+                    int pxl_ARGB8888 = data[x + y * w];
+                    int pxl_RGBA8888 =
+                            ((pxl_ARGB8888 >> 24) & 0x000000ff) | ((pxl_ARGB8888 << 8) & 0xffffff00);
+                    // convert ARGB8888 > RGBA8888
+                    drawPixel(x, y, pxl_RGBA8888);
+                }
+            }
         }
-        readLSD();
-        if (gctFlag && !err()) {
-            gct = readColorTable(gctSize);
-            bgColor = gct[bgIndex];
+
+        private void getPixels(int[] pixels, int offset, int stride, int x, int y, int width, int height) {
+            java.nio.ByteBuffer bb = getPixels();
+
+            int k;
+            int l;
+
+            for (k = y; k < y + height; k++) {
+                int _offset = offset;
+                for (l = x; l < x + width; l++) {
+                    int pxl = bb.getInt(4 * (l + k * width));
+
+                    // convert RGBA8888 > ARGB8888
+                    pixels[_offset++] = ((pxl >> 8) & 0x00ffffff) | ((pxl << 24) & 0xff000000);
+                }
+                offset += stride;
+            }
         }
     }
 
@@ -687,47 +719,14 @@ public class GifDecoder {
         } while ((blockSize > 0) && !err());
     }
 
-    public Animation<TextureRegion> getAnimation(PlayMode playMode) {
-        int nrFrames = getFrameCount();
-        Pixmap frame = getFrame(0);
-        int width = frame.getWidth();
-        int height = frame.getHeight();
-        int vzones = (int)Math.sqrt(nrFrames);
-        int hzones = vzones;
+    private static class GifFrame {
+        public DixieMap image;
+        public int delay;
 
-        while(vzones * hzones < nrFrames) vzones++;
-
-        int v, h;
-
-        Pixmap target = new Pixmap(width * hzones, height * vzones, Pixmap.Format.RGBA8888);
-
-        for(h = 0; h < hzones; h++) {
-            for(v = 0; v < vzones; v++) {
-                int frameID = v + h * vzones;
-                if(frameID < nrFrames) {
-                    frame = getFrame(frameID);
-                    target.drawPixmap(frame, h * width, v * height);
-                }
-            }
+        public GifFrame(DixieMap im, int del) {
+            image = im;
+            delay = del;
         }
-
-        Texture texture = new Texture(target);
-        Array<TextureRegion> texReg = new Array<TextureRegion>();
-
-        for(h = 0; h < hzones; h++) {
-            for(v = 0; v < vzones; v++) {
-                int frameID = v + h * vzones;
-                if(frameID < nrFrames) {
-                    TextureRegion tr = new TextureRegion(texture, h * width, v * height, width, height);
-                    texReg.add(tr);
-                }
-            }
-        }
-        float frameDuration = (float)getDelay(0);
-        frameDuration /= 1000; // convert milliseconds into seconds
-        Animation<TextureRegion> result = new Animation<TextureRegion>(frameDuration, texReg, playMode);
-
-        return result;
     }
 
     public static Animation<TextureRegion> loadGIFAnimation(Animation.PlayMode playMode, InputStream is) {
