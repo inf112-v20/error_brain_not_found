@@ -215,8 +215,8 @@ Tasks:
 
 ## Task 3 - Productdelivery and codequality
 ### Manual tests
-The menu-screen goes away after clicking on it. 
-*   start the game then click somewhere on the screen. Then the game-screen should come.  
+The start-screen goes away after clicking on it. 
+*   start the game then click somewhere on the screen. Then the menu-screen should come.  
 
 Game loop:  
 *   When the game has started press space once.
