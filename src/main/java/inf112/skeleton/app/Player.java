@@ -72,6 +72,10 @@ public class Player {
         this.lifeTokens--;
     }
 
+    public boolean isDead() {
+        return lifeTokens > 0;
+    }
+
     public void handleDamage(RallyGame game) {
         this.damageTokens++;
         if (damageTokens >= 10) {

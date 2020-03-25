@@ -84,7 +84,9 @@ public class Board extends BoardLayers {
     public void addPlayer(Player player) {
         if (outsideBoard(player)) {
             player.decrementLifeTokens();
-            respawn(player);
+            if (!player.isDead()) {
+                respawn(player);
+            }
         }
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
         cell.setTile(getRobotTile(player));
