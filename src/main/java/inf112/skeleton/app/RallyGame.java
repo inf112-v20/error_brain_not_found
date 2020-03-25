@@ -30,10 +30,6 @@ public class RallyGame extends Game {
     public Semaphore waitForCards;
     public boolean playing;
     public Sound laserSound;
-    public SpriteBatch batch;
-    private int numberOfLifeTokens = 3;
-    private Texture lifeTokens;
-
     
     public void create() {
         this.setScreen(new LoadingScreen(this));
@@ -97,7 +93,7 @@ public class RallyGame extends Game {
                 }
 
                 fireLasers();
-
+                removeDeadPlayers();
                 return super.keyDown(keycode);
             }
         });
@@ -145,6 +141,7 @@ public class RallyGame extends Game {
                 }
                 removeLasers();
             }
+            removeDeadPlayers();
             dealCards();
             selectCards();
         }
@@ -160,6 +157,17 @@ public class RallyGame extends Game {
         for (Player player : players) {
             player.drawCards(deck);
         }
+    }
+
+    public void removeDeadPlayers() {
+        ArrayList<Player> deadPlayers = new ArrayList();
+        for (Player player : players) {
+            if (player.isDead()) {
+                board.removePlayerFromBoard(player);
+                deadPlayers.add(player);
+            }
+        }
+        players.removeAll(deadPlayers);
     }
 
     public void allPlayersPlayCard() {
