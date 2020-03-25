@@ -83,6 +83,8 @@ public class Board extends BoardLayers {
      */
     public void addPlayer(Player player) {
         if (outsideBoard(player)) {
+            removePlayerFromBoard(player);
+            player.handleDamage(game);
             respawn(player);
         }
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
@@ -153,8 +155,6 @@ public class Board extends BoardLayers {
                 cell.setTile(tileSet.getTile(TileID.CROSSED_LASER.getId()));
             }
         }
-
-        //activateLaser.play(0.3f);
         laserLayer.setCell((int) position.x, (int) position.y, cell);
     }
 
@@ -193,30 +193,9 @@ public class Board extends BoardLayers {
      *
      * @param player to respawn
      */
-    private void respawn(Player player) {
-/*
-        //game.loadTokens();
-
-        //game.getNumberOfLifeTokens();
-        int lifeTokens = player.getLifeTokens();
-        System.out.println(player.getLifeTokens() + " printing player.getlifeTokens");
-
-        if (player.getLifeTokens() ==1){
-            removePlayerFromBoard(player);
-            System.out.println("You are dead");
-        }
-        else{
-            //game.loadTokens();
-//            game.renderNewTokens(3);
-//            gameScreen.renderTokens(2);
-            System.out.println(player.getLifeTokens() + " you are printing player.getlifTokens");
-           // game.renderNewTokens(lifeTokens);
-            player.removeOneLifeToken();
-//            game.disposeTokens();
-            System.out.println(player.getLifeTokens()+ " is how many life tokens you have left");
-            player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
-            player.setDirection(player.getBackupDirection());}
-*/
+    public void respawn(Player player) {
+        player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
+        player.setDirection(player.getBackupDirection());
     }
 
     /**
@@ -363,11 +342,10 @@ public class Board extends BoardLayers {
             if (canPush(enemyPlayer, direction)) {
                 pushPlayer(enemyPlayer, direction);
             } else {
+                addPlayer(player);
                 return;
             }
         }
-
-        removePlayerFromBoard(player);
 
         switch (direction) {
             case NORTH:
