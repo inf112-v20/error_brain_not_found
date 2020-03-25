@@ -154,7 +154,6 @@ public class Board extends BoardLayers {
             }
         }
 
-        //activateLaser.play(0.3f);
         laserLayer.setCell((int) position.x, (int) position.y, cell);
     }
 
