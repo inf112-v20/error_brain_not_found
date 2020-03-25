@@ -36,10 +36,8 @@ public class GameScreen extends StandardScreen {
         updateTokens();
         mapRenderer.render();
         batch.begin();
-        if (!game.mainPlayer.isDead()) {
-            renderLifeTokens();
-            renderDamageTokens();
-        }
+        renderLifeTokens();
+        renderDamageTokens();
         batch.end();
     }
 
