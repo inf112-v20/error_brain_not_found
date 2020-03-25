@@ -8,10 +8,13 @@ import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.objects.Laser;
+import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.LoadingScreen;
 
@@ -132,6 +135,8 @@ public class RallyGame extends Game {
             for (int i = 0; i < 5; i++) {
                 System.out.println("Runde " + (i + 1));
                 allPlayersPlayCard();
+                activateRotatePads();
+
                 fireLasers();
                 try {
                     Thread.sleep(600);
@@ -226,6 +231,38 @@ public class RallyGame extends Game {
             laser.fire(this);
         }
         laserSound.play();
+    }
+
+    public void activateRotatePads(){
+        for(Player player : board.getPlayers()){
+            for(RotatePad rotatePad : board.rotatePads){
+                Vector2 playerPosition = player.getPosition();
+                Vector2 rotePadPosition = rotatePad.getPosition();
+
+                if(playerPosition.equals(rotePadPosition)){
+                    Rotate rotateDirection = rotatePad.getRotate();
+                    Direction playerDirection = player.getDirection();
+
+                    switch (rotateDirection){
+                        case LEFT:
+                            player.setDirection(playerDirection.turnLeft());
+                            break;
+                        case RIGHT:
+                            player.setDirection(playerDirection.turnRight());
+                            break;
+                        case UTURN:
+                            player.setDirection(playerDirection.turnAround());
+                            break;
+                        default:
+                            // Will never happen
+                    }
+                }
+            }
+        }
+    }
+
+    public void render() {
+        super.render();
     }
 
     public void dispose() {
