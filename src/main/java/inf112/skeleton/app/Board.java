@@ -194,6 +194,7 @@ public class Board extends BoardLayers {
      * @param player to respawn
      */
     public void respawn(Player player) {
+        removePlayerFromBoard(player);
         player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
         player.setDirection(player.getBackupDirection());
     }
@@ -346,6 +347,8 @@ public class Board extends BoardLayers {
                 return;
             }
         }
+
+        removePlayerFromBoard(player);
 
         switch (direction) {
             case NORTH:
