@@ -216,7 +216,20 @@ Tasks:
 ## Task 3 - Productdelivery and codequality
 ### Manual tests
 The menu-screen goes away after clicking on it. 
-*   start the game then click somewhere on the screen. Then the game-screen should come.
+*   start the game then click somewhere on the screen. Then the game-screen should come.  
+
+Game loop:  
+*   When the game has started press space once.
+*   Then all robots will use one programcard in turn, 5 times. (5 rounds) 
+*   Press space again after all robots have moved and the robots will do five more rounds.   
+
+Laser:  
+*   Press on of the keyboard-arrows and the lasers will be activated. 
+*   Stear your player in front of a laser. The laser should be stopped by a player.   
+
+Menu-screen:  
+*   Click on the start-menu (a picture). Then a screen with a roll-down menu and start and exit buttons should show.   
+*   Choose your board by choosing from the roll-down menu then click start. The board should show with players on it.
 
 ### Comment to automatic build tests
 Travis does not support the language `Java` on their Windows Build Environment. But 3/5 in our group run windows and it 
