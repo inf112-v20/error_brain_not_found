@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.objects.Flag;
 
 import java.util.ArrayList;
