@@ -73,7 +73,7 @@ public class Player {
     }
 
     public boolean isDead() {
-        return lifeTokens > 0;
+        return lifeTokens <= 0;
     }
 
     public void handleDamage(RallyGame game) {

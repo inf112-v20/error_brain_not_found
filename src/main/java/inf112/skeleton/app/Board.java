@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.TileID;
 import inf112.skeleton.app.objects.Flag;
-import inf112.skeleton.app.screens.GameScreen;
 
 import java.util.ArrayList;
 
@@ -22,8 +21,6 @@ public class Board extends BoardLayers {
     private Sound activateLaser = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
     private Sound wallImpact = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/ImpactWall.mp3"));
     private Sound repairTile = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/Repair.mp3"));
-    private RallyGame game;
-    private GameScreen gameScreen;
 
     public Board(String mapPath, int numberOfPlayers) {
         super(mapPath);
@@ -211,7 +208,7 @@ public class Board extends BoardLayers {
                 return player;
             }
         }
-        return players.get(0);
+        return null;
     }
 
     /**
