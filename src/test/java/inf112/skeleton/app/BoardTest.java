@@ -192,7 +192,6 @@ public class BoardTest {
     }
 
     @Test
-
     public void getWestNeighbourPositionTest() {
         Vector2 neighbourPosition = new Vector2(startPosition.x -1, startPosition.y);
         assertEquals(neighbourPosition, board.getNeighbourPosition(startPosition, Direction.WEST));
@@ -216,6 +215,14 @@ public class BoardTest {
         assertEquals(neighbourPosition, board.getNeighbourPosition(startPosition, Direction.NORTH));
     }
 
+    @Test
+    public void flagIsOnFlagPositionOnBoardTest() {
+        for (int i = 0; i < 5; i++) {
+            Flag flag = getRandomFlag();
+            Vector2 flagPosition = flag.getPosition();
+            assertTrue(board.hasFlag(flagPosition));
+        }
+    }
 
     @Test
     public void playerPicksUpFirstFlagTest() {
