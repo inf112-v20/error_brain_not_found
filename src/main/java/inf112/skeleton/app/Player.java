@@ -68,6 +68,10 @@ public class Player {
         return lifeTokens;
     }
 
+    public void decrementLifeTokens() {
+        this.lifeTokens--;
+    }
+
     public void handleDamage(RallyGame game) {
         this.damageTokens++;
         if (damageTokens >= 10) {

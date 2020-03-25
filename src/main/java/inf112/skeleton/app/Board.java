@@ -83,8 +83,7 @@ public class Board extends BoardLayers {
      */
     public void addPlayer(Player player) {
         if (outsideBoard(player)) {
-            removePlayerFromBoard(player);
-            player.handleDamage(game);
+            player.decrementLifeTokens();
             respawn(player);
         }
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
