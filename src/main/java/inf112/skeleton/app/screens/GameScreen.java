@@ -36,8 +36,10 @@ public class GameScreen extends StandardScreen {
         updateTokens();
         mapRenderer.render();
         batch.begin();
-        renderLifeTokens();
-        renderDamageTokens();
+        if (!game.mainPlayer.isDead()) {
+            renderLifeTokens();
+            renderDamageTokens();
+        }
         batch.end();
     }
 
@@ -49,13 +51,13 @@ public class GameScreen extends StandardScreen {
     }
 
     public void renderDamageTokens() {
-        for (int i = 0; i < game.board.getPlayer1().getDamageTokens(); i++) {
+        for (int i = 0; i < game.mainPlayer.getDamageTokens(); i++) {
             batch.draw(damageTokens, tokensX + i * tokensSize, damageTokensY, tokensSize, tokensSize);
         }
     }
 
     public void renderLifeTokens() {
-        for (int i = 0; i < game.board.getPlayer1().getLifeTokens(); i++) {
+        for (int i = 0; i < game.mainPlayer.getLifeTokens(); i++) {
             batch.draw(lifeTokens, tokensX + i * tokensSize, lifeTokensY, tokensSize, tokensSize);
         }
     }

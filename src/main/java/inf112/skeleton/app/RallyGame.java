@@ -6,8 +6,6 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
@@ -30,7 +28,8 @@ public class RallyGame extends Game {
     public Semaphore waitForCards;
     public boolean playing;
     public Sound laserSound;
-    
+    public Player mainPlayer;
+
     public void create() {
         this.setScreen(new LoadingScreen(this));
         startMusic();
@@ -42,6 +41,7 @@ public class RallyGame extends Game {
         this.currentPlayer = board.getPlayer1();
         this.players = new ArrayList<>();
         this.players = board.getPlayers();
+        this.mainPlayer = board.getPlayer1();
 
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
@@ -60,25 +60,24 @@ public class RallyGame extends Game {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyUp(int keycode) {
-                Player player = board.getPlayer1();
-                if (player == null) {
+                if (mainPlayer.isDead()) {
                     return false;
                 }
 
                 removeLasers();
 
                 if (keycode == Input.Keys.RIGHT) {
-                    player.setDirection(Direction.EAST);
-                    board.movePlayer(player);
+                    mainPlayer.setDirection(Direction.EAST);
+                    board.movePlayer(mainPlayer);
                 } else if (keycode == Input.Keys.LEFT) {
-                    player.setDirection(Direction.WEST);
-                    board.movePlayer(player);
+                    mainPlayer.setDirection(Direction.WEST);
+                    board.movePlayer(mainPlayer);
                 } else if (keycode == Input.Keys.UP) {
-                    player.setDirection(Direction.NORTH);
-                    board.movePlayer(player);
+                    mainPlayer.setDirection(Direction.NORTH);
+                    board.movePlayer(mainPlayer);
                 } else if (keycode == Input.Keys.DOWN) {
-                    player.setDirection(Direction.SOUTH);
-                    board.movePlayer(player);
+                    mainPlayer.setDirection(Direction.SOUTH);
+                    board.movePlayer(mainPlayer);
                 } else if (keycode == Input.Keys.ESCAPE) {
                     Gdx.app.exit();
                 } else if (keycode == Input.Keys.SPACE) {
@@ -88,7 +87,7 @@ public class RallyGame extends Game {
                     return super.keyDown(keycode);
                 }
 
-                if (player.hasAllFlags(board.getFlags().size())) {
+                if (mainPlayer.hasAllFlags(board.getFlags().size())) {
                     setWinScreen();
                 }
 
@@ -160,7 +159,7 @@ public class RallyGame extends Game {
     }
 
     public void removeDeadPlayers() {
-        ArrayList<Player> deadPlayers = new ArrayList();
+        ArrayList<Player> deadPlayers = new ArrayList<>();
         for (Player player : players) {
             if (player.isDead()) {
                 board.removePlayerFromBoard(player);
@@ -238,7 +237,7 @@ public class RallyGame extends Game {
         for (Laser laser : board.lasers) {
             laser.fire(this);
         }
-        laserSound.play();
+        //laserSound.play();
     }
 
     public void activateRotatePads(){
