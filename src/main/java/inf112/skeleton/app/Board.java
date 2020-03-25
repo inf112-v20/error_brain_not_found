@@ -83,7 +83,10 @@ public class Board extends BoardLayers {
      */
     public void addPlayer(Player player) {
         if (outsideBoard(player)) {
-            respawn(player);
+            player.decrementLifeTokens();
+            if (!player.isDead()) {
+                respawn(player);
+            }
         }
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
         cell.setTile(getRobotTile(player));
@@ -193,7 +196,8 @@ public class Board extends BoardLayers {
      *
      * @param player to respawn
      */
-    private void respawn(Player player) {
+    public void respawn(Player player) {
+        removePlayerFromBoard(player);
         player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
         player.setDirection(player.getBackupDirection());
     }
@@ -342,6 +346,7 @@ public class Board extends BoardLayers {
             if (canPush(enemyPlayer, direction)) {
                 pushPlayer(enemyPlayer, direction);
             } else {
+                addPlayer(player);
                 return;
             }
         }
@@ -415,7 +420,6 @@ public class Board extends BoardLayers {
      * @return player in position
      */
     public Player getPlayer(Vector2 position) {
-//        game.disposeTokens();
         for (Player enemyPlayer : players) {
             if (enemyPlayer.getPosition().equals(position)) {
                 return enemyPlayer;

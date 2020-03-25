@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
-import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.objects.Flag;
 
 import java.util.ArrayList;
@@ -69,11 +68,20 @@ public class Player {
         return lifeTokens;
     }
 
-    public void handleDamage() {
+    public void decrementLifeTokens() {
+        this.lifeTokens--;
+    }
+
+    public boolean isDead() {
+        return lifeTokens > 0;
+    }
+
+    public void handleDamage(RallyGame game) {
         this.damageTokens++;
         if (damageTokens >= 10) {
             lifeTokens--;
             damageTokens = 0;
+            game.getBoard().respawn(this);
         }
     }
 
