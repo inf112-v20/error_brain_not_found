@@ -14,6 +14,7 @@ import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.objects.Belt;
 
 import java.util.ArrayList;
+import java.util.Vector;
 
 public abstract class BoardLayers {
 
@@ -132,28 +133,77 @@ public abstract class BoardLayers {
                     belts.add(new Belt(Direction.NORTH, 1, new Vector2(x, y)));
                 } else if (ID == TileID.WESTSOUTH_TO_NORTH_BELT.getId()) {
                     belts.add(new Belt(Direction.NORTH, 1, new Vector2(x, y)));
-                } else if (ID == TileID.EASTSOUTH_TO_NORTH_BELT.getId()){
+                } else if (ID == TileID.EASTSOUTH_TO_NORTH_BELT.getId()) {
                     belts.add(new Belt(Direction.NORTH, 1, new Vector2(x, y)));
-                } else if (ID == TileID.WESTEAST_TO_NORTH_BELT.getId()){
+                } else if (ID == TileID.WESTEAST_TO_NORTH_BELT.getId()) {
                     belts.add(new Belt(Direction.NORTH, 1, new Vector2(x, y)));
-                } else if (ID == TileID.WESTNORTH_TO_SOUTH_BELT.getId()){
+                } else if (ID == TileID.WESTNORTH_TO_SOUTH_BELT.getId()) {
                     belts.add(new Belt(Direction.SOUTH, 1, new Vector2(x, y)));
-                } else if (ID == TileID.EASTNORTH_TO_SOUTH_BELT.getId()){
+                } else if (ID == TileID.EASTNORTH_TO_SOUTH_BELT.getId()) {
                     belts.add(new Belt(Direction.SOUTH, 1, new Vector2(x, y)));
-                } else if (ID == TileID.WESTEAST_TO_SOUTH_BELT.getId()){
+                } else if (ID == TileID.WESTEAST_TO_SOUTH_BELT.getId()) {
                     belts.add(new Belt(Direction.SOUTH, 1, new Vector2(x, y)));
-                } else if (ID == TileID.WESTSOUTH_TO_EAST_BELT.getId()){
+                } else if (ID == TileID.WESTSOUTH_TO_EAST_BELT.getId()) {
                     belts.add(new Belt(Direction.EAST, 1, new Vector2(x, y)));
-                } else if (ID == TileID.WESTNORTH_TO_EAST_BELT.getId()){
+                } else if (ID == TileID.WESTNORTH_TO_EAST_BELT.getId()) {
                     belts.add(new Belt(Direction.EAST, 1, new Vector2(x, y)));
-                } else if (ID == TileID.NORTHSOUTH_TO_EAST_BELT.getId()){
+                } else if (ID == TileID.NORTHSOUTH_TO_EAST_BELT.getId()) {
                     belts.add(new Belt(Direction.EAST, 1, new Vector2(x, y)));
-                } else if (ID == TileID.EASTSOUTH_TO_WEST_BELT.getId()){
+                } else if (ID == TileID.EASTSOUTH_TO_WEST_BELT.getId()) {
                     belts.add(new Belt(Direction.WEST, 1, new Vector2(x, y)));
-                } else if (ID == TileID.EASTNORTH_TO_WEST_BELT.getId()){
+                } else if (ID == TileID.EASTNORTH_TO_WEST_BELT.getId()) {
                     belts.add(new Belt(Direction.WEST, 1, new Vector2(x, y)));
-                } else if (ID == TileID.NORTHSOUTH_TO_WEST_BELT.getId()){
+                } else if (ID == TileID.NORTHSOUTH_TO_WEST_BELT.getId()) {
                     belts.add(new Belt(Direction.WEST, 1, new Vector2(x, y)));
+                    // Add express Belts
+                } else if (ID == TileID.EAST_TO_SOUTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, 2, new Vector2(x, y)));
+                } else if (ID == TileID.NORTH_TO_EAST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, 2, new Vector2(x, y)));
+                } else if (ID == TileID.WEST_TO_NORTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, 2, new Vector2(x, y)));
+                } else if (ID == TileID.SOUTH_TO_WEST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, 2, new Vector2(x, y)));
+                } else if (ID == TileID.EAST_TO_NORTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, 2, new Vector2(x, y)));
+                } else if (ID == TileID.NORTH_TO_WEST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, 2, new Vector2(x, y)));
+                } else if (ID == TileID.WEST_TO_SOUTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, 2, new Vector2(x, y)));
+                } else if (ID == TileID.SOUTH_TO_EAST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, 2, new Vector2(x, y)));
+                } else if (ID == TileID.EAST_TO_WEST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, 2, new Vector2(x, y)));
+                } else if (ID == TileID.NORTH_TO_SOUTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, 2, new Vector2(x, y)));
+                } else if (ID == TileID.WEST_TO_EAST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, 2, new Vector2(x, y)));
+                } else if (ID == TileID.SOUTH_TO_NORTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, 2, new Vector2(x, y)));
+                } else if (ID == TileID.WESTSOUTH_TO_NORTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, 2, new Vector2(x, y)));
+                } else if (ID == TileID.EASTSOUTH_TO_NORTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, 2, new Vector2(x, y)));
+                } else if (ID == TileID.WESTEAST_TO_NORTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, 2, new Vector2(x, y)));
+                } else if (ID == TileID.WESTNORTH_TO_SOUTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, 2, new Vector2(x, y)));
+                } else if (ID == TileID.EASTNORTH_TO_SOUTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, 2, new Vector2(x, y)));
+                } else if (ID == TileID.WESTEAST_TO_SOUTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, 2, new Vector2(x, y)));
+                } else if (ID == TileID.WESTSOUTH_TO_EAST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, 2, new Vector2(x, y)));
+                } else if (ID == TileID.WESTNORTH_TO_EAST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, 2, new Vector2(x, y)));
+                } else if (ID == TileID.NORTHSOUTH_TO_EAST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, 2, new Vector2(x, y)));
+                } else if (ID == TileID.EASTSOUTH_TO_WEST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, 2, new Vector2(x, y)));
+                } else if (ID == TileID.EASTNORTH_TO_WEST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, 2, new Vector2(x, y)));
+                } else if (ID == TileID.NORTHSOUTH_TO_WEST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, 2, new Vector2(x, y)));
                 }
             }
         }
