@@ -194,29 +194,8 @@ public class Board extends BoardLayers {
      * @param player to respawn
      */
     private void respawn(Player player) {
-/*
-        //game.loadTokens();
-
-        //game.getNumberOfLifeTokens();
-        int lifeTokens = player.getLifeTokens();
-        System.out.println(player.getLifeTokens() + " printing player.getlifeTokens");
-
-        if (player.getLifeTokens() ==1){
-            removePlayerFromBoard(player);
-            System.out.println("You are dead");
-        }
-        else{
-            //game.loadTokens();
-//            game.renderNewTokens(3);
-//            gameScreen.renderTokens(2);
-            System.out.println(player.getLifeTokens() + " you are printing player.getlifTokens");
-           // game.renderNewTokens(lifeTokens);
-            player.removeOneLifeToken();
-//            game.disposeTokens();
-            System.out.println(player.getLifeTokens()+ " is how many life tokens you have left");
-            player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
-            player.setDirection(player.getBackupDirection());}
-*/
+        player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
+        player.setDirection(player.getBackupDirection());
     }
 
     /**
@@ -436,6 +415,7 @@ public class Board extends BoardLayers {
      * @return player in position
      */
     public Player getPlayer(Vector2 position) {
+//        game.disposeTokens();
         for (Player enemyPlayer : players) {
             if (enemyPlayer.getPosition().equals(position)) {
                 return enemyPlayer;
