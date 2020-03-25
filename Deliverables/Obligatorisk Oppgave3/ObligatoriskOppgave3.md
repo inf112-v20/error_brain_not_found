@@ -9,7 +9,7 @@ Team: error_no_brain_found
 The meeting minutes ended up looking a bit lack of words. Since we was more busy with doing code, explaining code to each
 other, and handout `Issues` to everyone, in the meeting. 
 
-### How does the roles work? Do you need to update the roles?  
+### Roles
 The roles in the team work ok. The teamleader takes responsibility of tasks like how to perform meetings in this new 
 situation, takes initiatives for making meeting minutes and so on. The teamleader and customer contact 
 have been developing code, the tester has been making tests to this code. Also the UX designer has started to work on his tasks.
@@ -17,14 +17,14 @@ We do not want to change teamlead or contact.
 For more depth information on the roles see [ObligatoriskOppgave2](https://github.com/inf112-v20/error_brain_not_found/blob/develop/Deliverables/Obligatorisk%20Oppgave2/ObligatoriskOppgave2.md),
 under `Roles`.
 
-### Experiences with the team or project-methods?   
+### Experiences with the team or project-methods   
 We are getting better at using issues, tags in issues and the projectboard. When a task needs to be done, 
 we make user stories, acceptance criteria's and tasks. This is copied into the issue, and the tasks are made as 
 check boxes so that we can see progress in the issue. Also an own issue for tests for this task is made and is tagging the issue 
 it should be testing, with acceptance criteria as tests to be made. This gives us a great overview of who is doing what, 
 and a great workflow because we can always see what to do next.
 
-### Do you think you have made good choices? If not, what can you do different?   
+### Do you think you have made good choices? If not, explain  
 In general yes, we think it was smart to device the team into roles like Developers, Tester etc, because then everyone know
 what to do. On the other hand, these roles have some overlap, for example that maybe the tester sees something that needs to be fixed, can not 
 reach some code, or that the developer/UX-designer needs a specific test. We are then assigning issues to each other and specify the task needs 
@@ -43,7 +43,6 @@ out.
 
 #### Improvement points from retrospective
 *   Lorem
-
 
 ### Prioritization in the future
 
