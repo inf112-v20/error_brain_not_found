@@ -28,7 +28,6 @@ public class Player {
         this.flagsCollected = new ArrayList<>();
         this.selectedCards = new ArrayList<>();
         this.allCards = new ArrayList<>();
-        this.allCards.add(new ProgramCard(10, 2, Rotate.NONE,"TEST"));
         setBackup(position, Direction.EAST);
     }
 
