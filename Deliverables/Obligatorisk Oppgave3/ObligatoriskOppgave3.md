@@ -34,17 +34,19 @@ your area of responsibility.
 
 ### Retrospective
 Working in this iteration has been different. We have not been able to meet in person and all our communication has moved 
-online. This have come with its own pros and cons. It tok some time for everyone to get used to the new situation, so the first 
+online. This have come with its own pros and cons. It took some time for everyone to get used to the new situation, so the first 
 week after the "campus-ban" wasn't the most productive. When everyone got in to the new situation we started to make the
 best of it. When people need help about something, they send someone in the team a message. And they often get the 
 answer faster now then what they did before. We meetings are going fine for now, but it will be harder as longer this ban
 keeps on. I think the way we parted the roles and made us survived the transition in a good way. Every role has one main
 responsibility area. When you have to move closer to someone else's area and you meet a wall we are fast to help each other 
-out.
+out. Also we have agreed on that if it is small changes/additions, this can be fixed even though it is not you area. 
 
 
 #### Improvement points from retrospective
-*   Lorem
+*   Make concrete tasks for each user story.   
+*   Fix small changes even though it is not you area.  
+*   Follow up issues on project board.  
 
 ### Prioritization in the future
 This iteration we have prioritized, and are done with:  
