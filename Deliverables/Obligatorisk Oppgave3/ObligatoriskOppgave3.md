@@ -6,7 +6,7 @@ Team: error_no_brain_found
 [Møte 4](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-4.)  
 [Møte 5](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-5.)   
 [Møte 6](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-6)  
-[Møte 7]()
+[Møte 7](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-7)
 The meeting minutes ended up looking a bit lack of words. Since we was more busy with doing code, explaining code to each
 other, and handout `Issues` to everyone, in the meeting. 
 
