@@ -32,6 +32,7 @@ public class Player {
         this.allCards = new ArrayList<>();
         this.damageTokens = 0;
         this.lifeTokens = 3;
+
         setBackup(position, Direction.EAST);
     }
 
