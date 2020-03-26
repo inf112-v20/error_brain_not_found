@@ -77,9 +77,6 @@ public class Board extends BoardLayers {
      * @param player to add to game and board
      */
     public void addPlayer(Player player) {
-        if (outsideBoard(player)) {
-            respawn(player);
-        }
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
         cell.setTile(getRobotTile(player));
         playerLayer.setCell((int) player.getPosition().x, (int) player.getPosition().y, cell);
@@ -188,16 +185,28 @@ public class Board extends BoardLayers {
     }
 
     /**
-     * Places a player in backup position
+     * Places a player in backup position or alternative position
      *
      * @param player to respawn
      */
     private void respawn(Player player) {
         if (hasPlayer(player.getBackupPosition())) {
-            player.chooseAlternativeBackupPosition(this);
+            player.chooseAlternativeBackupPosition(this, player.getBackupPosition());
+            player.setPosition(new Vector2(player.getAlternativeBackupPosition().x, player.getAlternativeBackupPosition().y));
+            player.setDirection(player.getAlternativeBackupDirection());
+        } else {
+            player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
+            player.setDirection(player.getBackupDirection());
         }
-        player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
-        player.setDirection(player.getBackupDirection());
+        addPlayer(player);
+    }
+
+    public void respawnPlayers() {
+        for (Player player : players) {
+            if (outsideBoard(player)) {
+                respawn(player);
+            }
+        }
     }
 
     public boolean validRespawnPosition(Vector2 position, Direction direction) {
@@ -360,6 +369,7 @@ public class Board extends BoardLayers {
             if (canPush(enemyPlayer, direction)) {
                 pushPlayer(enemyPlayer, direction);
             } else {
+                addPlayer(player);
                 return;
             }
         }

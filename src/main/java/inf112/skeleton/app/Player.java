@@ -15,6 +15,8 @@ public class Player {
     private final int playerNr;
     private Vector2 backupPosition;
     private Direction backupDirection;
+    private Vector2 alternativeBackupPosition;
+    private Direction alternativeBackupDirection;
     private Vector2 position;
     private Direction direction;
     private ArrayList<Flag> flagsCollected;
@@ -80,20 +82,44 @@ public class Player {
         return backupDirection;
     }
 
-    public void chooseAlternativeBackupPosition(Board board) {
-        ArrayList<Vector2> possiblePositions = board.getNeighbourhood(getBackupPosition());
+    public void setAlternativeBackup(Vector2 alternativeBackupPosition, Direction alternativeBackupDirection) {
+        if (this.alternativeBackupPosition == null) {
+            this.alternativeBackupPosition = new Vector2(alternativeBackupPosition);
+        } else {
+            this.alternativeBackupPosition.set(alternativeBackupPosition.x, alternativeBackupPosition.y);
+        }
+        this.alternativeBackupDirection = alternativeBackupDirection;
+    }
+
+    /**
+     * @return alternative backup position
+     */
+    public Vector2 getAlternativeBackupPosition() {
+        return alternativeBackupPosition;
+    }
+
+    /**
+     * @return alternative backup direction
+     */
+    public Direction getAlternativeBackupDirection() {
+        return alternativeBackupDirection;
+    }
+
+
+    public void chooseAlternativeBackupPosition(Board board, Vector2 position) {
+        ArrayList<Vector2> possiblePositions = board.getNeighbourhood(position);
         Collections.shuffle(possiblePositions);
         for (Vector2 pos : possiblePositions) {
             for (Direction dir : board.getDirectionRandomOrder()) {
                 if (board.validRespawnPosition(pos, dir)) {
-                    setBackup(pos, dir);
+                    setAlternativeBackup(pos, dir);
                     return;
                 }
             }
         }
-        setBackup(board.getStartPosition(getPlayerNr()), Direction.EAST);
+        setAlternativeBackup(board.getStartPosition(getPlayerNr()), Direction.EAST);
         if (board.hasPlayer(board.getStartPosition(getPlayerNr()))) {
-            chooseAlternativeBackupPosition(board);
+            chooseAlternativeBackupPosition(board, alternativeBackupPosition);
         }
     }
 
