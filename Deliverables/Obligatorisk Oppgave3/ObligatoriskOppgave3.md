@@ -42,7 +42,6 @@ keeps on. I think the way we parted the roles and made us survived the transitio
 responsibility area. When you have to move closer to someone else's area and you meet a wall we are fast to help each other 
 out. Also we have agreed on that if it is small changes/additions, this can be fixed even though it is not you area. 
 
-
 #### Improvement points from retrospective
 *   Make concrete tasks for each user story.   
 *   Fix small changes even though it is not you area.  
@@ -50,20 +49,20 @@ out. Also we have agreed on that if it is small changes/additions, this can be f
 
 ### Prioritization in the future
 This iteration we have prioritized, and are done with:  
-*   Holes: when a player is on hole it is respawned
-*   Lasers: making them work properly (get stopped by player and let player take damage)  
-*   Damage: Let player take damage
+*   Holes: when a player is on hole it is respawned  
+*   Lasers: making them work properly (get stopped by player and let player take damage)    
+*   Damage: Let player take damage  
 *   Game loop: When space is pressed the players use their programcards.  
-*   Menu-screen: Choose different boards for the game
-*   Flags: Let the player pick up flags so it can win  
-*   Rotatepad: rotate a player on a rotatepad
+*   Menu-screen: Choose different boards for the game  
+*   Flags: Let the player pick up flags so it can win    
+*   Rotatepad: rotate a player on a rotatepad  
 We have prioritized to get each component of the game to work properly (walls, lasers), so that we can make 
 a working game loop with all the different parts working together.   
 
 Next iteration we will focus on:  
 *   Show cards: Let the player see the cards on the screen   
 *   Belts: Make belts   
-*   Game loop:  Get a working game loop
+*   Game loop:  Get a working game loop  
 
 Skjermdump!!! 
 
@@ -232,15 +231,14 @@ Tasks:
 *   Test that events happen in right order
 *   Manual tests   
 
-
 #### Main criteria for MVP
-- [x]   The game should be able to run, show a board with starting robot and programcards to this robot.
-- [ ]   The player is able to pick programcards and place them so that the robot can move.
-- [ ]   The game should be able to do a round, and do the phases in the correct order in that round.
-- [x]   The robot should be able to win by going to the flags in a specific order. 
-- [x]   The robot is stopped by walls, pushed by other players and respawned when outside board/on hole. 
+- [x]   The game should be able to run, show a board with starting robot and programcards to this robot.  
+- [ ]   The player is able to pick programcards and place them so that the robot can move.  
+- [ ]   The game should be able to do a round, and do the phases in the correct order in that round.  
+- [x]   The robot should be able to win by going to the flags in a specific order.   
+- [x]   The robot is stopped by walls, pushed by other players and respawned when outside board/on hole.   
 - [ ]   The robot should be able to do a powerdown.  
-- [x]   The laser can shoot the robots and the robots take damage.  
+- [x]   The laser can shoot the robots and the robots take damage.   
 - [ ]   The belts move so the player can be moved by belts.  
 
 ## Task 3 - Productdelivery and codequality
