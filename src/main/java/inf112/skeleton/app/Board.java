@@ -198,6 +198,7 @@ public class Board extends BoardLayers {
      * @param player to respawn
      */
     public void respawn(Player player) {
+        removePlayerFromBoard(player);
         if (hasPlayer(player.getBackupPosition())) {
             player.chooseAlternativeBackupPosition(this, player.getBackupPosition());
             player.setPosition(new Vector2(player.getAlternativeBackupPosition().x, player.getAlternativeBackupPosition().y));
@@ -212,6 +213,7 @@ public class Board extends BoardLayers {
     public void respawnPlayers() {
         for (Player player : players) {
             if (outsideBoard(player)) {
+                player.decrementLifeTokens();
                 respawn(player);
             }
         }
