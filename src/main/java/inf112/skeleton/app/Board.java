@@ -1,5 +1,7 @@
 package inf112.skeleton.app;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -17,6 +19,11 @@ import java.util.List;
 public class Board extends BoardLayers {
 
     private ArrayList<Player> players;
+
+    private Sound scream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
+    private Sound activateLaser = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
+    private Sound wallImpact = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/ImpactWall.mp3"));
+    private Sound repairTile = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/Repair.mp3"));
 
     public Board(String mapPath, int numberOfPlayers) {
         super(mapPath);
@@ -165,6 +172,7 @@ public class Board extends BoardLayers {
     public boolean hasHole(Vector2 position) {
         for (Vector2 vector : holes) {
             if (vector.equals(position)) {
+                scream.play();
                 return true;
             }
         }
@@ -235,7 +243,7 @@ public class Board extends BoardLayers {
                 return player;
             }
         }
-        return players.get(0);
+        return null;
     }
 
     /**
@@ -361,6 +369,7 @@ public class Board extends BoardLayers {
         Direction direction = player.getDirection();
 
         if (!canGo(position, direction)) {
+            wallImpact.play(0.6f);
             addPlayer(player);
             return;
         }

@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
-import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.objects.Flag;
 
 import java.util.ArrayList;
@@ -24,6 +23,9 @@ public class Player {
     private ArrayList<ProgramCard> selectedCards;
     private ArrayList<ProgramCard> allCards;
 
+    private int damageTokens;
+    private int lifeTokens;
+
     public Player(Vector2 position, int playerNr) {
         this.position = position;
         this.direction = Direction.EAST;
@@ -31,6 +33,9 @@ public class Player {
         this.flagsCollected = new ArrayList<>();
         this.selectedCards = new ArrayList<>();
         this.allCards = new ArrayList<>();
+        this.damageTokens = 0;
+        this.lifeTokens = 3;
+
         setBackup(position, Direction.EAST);
     }
 
@@ -39,6 +44,7 @@ public class Player {
     }
 
     public ArrayList<ProgramCard> getSelectedCards() {
+        System.out.println(selectedCards);
         return selectedCards;
     }
 
@@ -51,6 +57,40 @@ public class Player {
     public void drawCards(Deck deck) {
         while (allCards.size() < 9) {
             allCards.add(deck.drawCard());
+        }
+    }
+
+    /**
+     * a int on how many damageTokens
+     *
+     * @return your damageTokens
+     */
+    public int getDamageTokens() {
+        return damageTokens;
+    }
+
+    public int resetDamageTokens() {
+        return this.damageTokens = 0;
+    }
+
+    public int getLifeTokens() {
+        return lifeTokens;
+    }
+
+    public void decrementLifeTokens() {
+        this.lifeTokens--;
+    }
+
+    public boolean isDead() {
+        return lifeTokens <= 0;
+    }
+
+    public void handleDamage(RallyGame game) {
+        this.damageTokens++;
+        if (damageTokens >= 10) {
+            lifeTokens--;
+            damageTokens = 0;
+            game.getBoard().respawn(this);
         }
     }
 
