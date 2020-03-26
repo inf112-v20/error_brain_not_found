@@ -189,7 +189,7 @@ public class Board extends BoardLayers {
      *
      * @param player to respawn
      */
-    private void respawn(Player player) {
+    public void respawn(Player player) {
         if (hasPlayer(player.getBackupPosition())) {
             player.chooseAlternativeBackupPosition(this, player.getBackupPosition());
             player.setPosition(new Vector2(player.getAlternativeBackupPosition().x, player.getAlternativeBackupPosition().y));
