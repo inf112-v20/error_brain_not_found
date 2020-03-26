@@ -90,7 +90,7 @@ public class RallyGame extends Game {
                 if (mainPlayer.hasAllFlags(board.getFlags().size())) {
                     setWinScreen();
                 }
-
+                board.respawnPlayers();
                 fireLasers();
                 removeDeadPlayers();
                 return super.keyDown(keycode);
