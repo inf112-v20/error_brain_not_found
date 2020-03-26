@@ -144,7 +144,6 @@ public class ProgramCardTest {
     @Test
     public void sequenceOfCardsTest() {
         player.setSelectedCards(moveOne, left, moveTwo, right, moveOne, uturn, moveTwo);
-        Vector2 beforePosition = player.getPosition();
         Vector2 afterPosition = new Vector2(0,2);
         for (int playedCards = 0; playedCards <= 6; playedCards++) {
             game.playCard(player);
