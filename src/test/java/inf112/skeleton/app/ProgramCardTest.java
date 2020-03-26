@@ -22,6 +22,11 @@ public class ProgramCardTest {
     private Deck deck;
     private RallyGame game;
     private Player player;
+    private ProgramCard right;
+    private ProgramCard left;
+    private ProgramCard uturn;
+    private ProgramCard moveOne;
+    private ProgramCard moveTwo;
 
     @Before
     public void setUp() {
@@ -38,6 +43,11 @@ public class ProgramCardTest {
         Board board = game.getBoard();
         board.addPlayer(player);
         this.deck = new Deck();
+        this.left = new ProgramCard(10, 0, Rotate.LEFT, "left");
+        this.right = new ProgramCard(10, 0, Rotate.RIGHT, "right");
+        this.uturn = new ProgramCard(10, 0, Rotate.UTURN, "uturn");
+        this.moveOne = new ProgramCard(10, 1, Rotate.NONE, "move 1");
+        this.moveTwo = new ProgramCard(10, 2, Rotate.NONE, "move 2");
     }
 
     @Test
@@ -55,32 +65,28 @@ public class ProgramCardTest {
 
     @Test
     public void playingUturnCardTest() {
-        ProgramCard uturnCard = new ProgramCard(10, 0, Rotate.UTURN, "uturn");
-        player.setSelectedCards(uturnCard);
+        player.setSelectedCards(uturn);
         game.playCard(player);
         assertEquals(Direction.WEST, player.getDirection());
     }
 
     @Test
     public void playingRightRotateCardTest() {
-        ProgramCard rightRotateCard = new ProgramCard(10, 0, Rotate.RIGHT, "right");
-        player.setSelectedCards(rightRotateCard);
+        player.setSelectedCards(right);
         game.playCard(player);
         assertEquals(Direction.SOUTH, player.getDirection());
     }
 
     @Test
     public void playingLeftRotateCardTest() {
-        ProgramCard leftRotateCard = new ProgramCard(10, 0, Rotate.LEFT, "left");
-        player.setSelectedCards(leftRotateCard);
+        player.setSelectedCards(left);
         game.playCard(player);
         assertEquals(Direction.NORTH, player.getDirection());
     }
 
     @Test
     public void playingMoveOneStepCardTest() {
-        ProgramCard moveOneStepCard = new ProgramCard(10, 1, Rotate.NONE, "move 1");
-        player.setSelectedCards(moveOneStepCard);
+        player.setSelectedCards(moveOne);
         Vector2 beforePosition = player.getPosition();
         Vector2 afterPosition = new Vector2(beforePosition.x + 1, beforePosition.y);
         game.playCard(player);
@@ -89,9 +95,7 @@ public class ProgramCardTest {
 
     @Test
     public void firstRotateThenMoveToCorrectPositionTest() {
-        ProgramCard rotateLeftCard = new ProgramCard(10, 0, Rotate.LEFT, "left");
-        ProgramCard movePlayerOneStepCard = new ProgramCard(10, 1, Rotate.NONE, "move 1");
-        player.setSelectedCards(rotateLeftCard, movePlayerOneStepCard);
+        player.setSelectedCards(left, moveOne);
         Vector2 beforePosition = player.getPosition();
         // Player is rotated left and therefore player will go up instead of to the right
         Vector2 afterPosition = new Vector2(beforePosition.x, beforePosition.y+1);
@@ -102,9 +106,7 @@ public class ProgramCardTest {
 
     @Test
     public void firstMoveThenRotateToCorrectRotationTest() {
-        ProgramCard rotateRightCard = new ProgramCard(10, 0, Rotate.RIGHT, "right");
-        ProgramCard movePlayerTwoStepCard = new ProgramCard(10, 2, Rotate.NONE, "move 2");
-        player.setSelectedCards(movePlayerTwoStepCard, rotateRightCard);
+        player.setSelectedCards(moveTwo, right);
         game.playCard(player);
         game.playCard(player);
         assertEquals(Direction.SOUTH, player.getDirection());
@@ -129,9 +131,6 @@ public class ProgramCardTest {
      */
     @Test
     public void sequenceOfRotateCardsTest() {
-        ProgramCard right = new ProgramCard(10, 0, Rotate.RIGHT, "right");
-        ProgramCard left = new ProgramCard(10, 0, Rotate.LEFT, "left");
-        ProgramCard uturn = new ProgramCard(10, 0, Rotate.UTURN, "uturn");
         player.setSelectedCards(right, left, left, uturn, right, uturn, right);
         for (int playedCards = 0; playedCards <= 6; playedCards++) {
             game.playCard(player);
@@ -139,7 +138,19 @@ public class ProgramCardTest {
         assertEquals(Direction.SOUTH, player.getDirection());
     }
 
-
-
+    /**
+     * Starting at (0,0) east, move one, rotate left, move two, rotate right, move one, turn around, move two should give
+     * (0, 2)
+     */
+    @Test
+    public void sequenceOfCardsTest() {
+        player.setSelectedCards(moveOne, left, moveTwo, right, moveOne, uturn, moveTwo);
+        Vector2 beforePosition = player.getPosition();
+        Vector2 afterPosition = new Vector2(0,2);
+        for (int playedCards = 0; playedCards <= 6; playedCards++) {
+            game.playCard(player);
+        }
+        assertEquals(afterPosition, player.getPosition());
+    }
 
 }
