@@ -29,7 +29,8 @@ In general yes, we think it was smart to device the team into roles like Develop
 what to do. On the other hand, these roles have some overlap, for example that maybe the tester sees something that needs to be fixed, can not 
 reach some code, or that the developer/UX-designer needs a specific test. We are then assigning issues to each other and specify the task needs 
 to be done, but sometimes this results in a lot of waiting for the person requesting these changing and the person needs to get this done before 
-doing anything else. We are going to discuss how to make a good solution for this.
+doing anything else. We have discussed how this can be handled, and agreed on that small fixes can be done even though it is not 
+your area of responsibility.
 
 ### Retrospective
 Working in this iteration has been different. We have not been able to meet in person and all our communication has moved 
@@ -41,10 +42,25 @@ keeps on. I think the way we parted the roles and made us survived the transitio
 responsibility area. When you have to move closer to someone else's area and you meet a wall we are fast to help each other 
 out.
 
+
 #### Improvement points from retrospective
 *   Lorem
 
 ### Prioritization in the future
+This iteration we have prioritized, and are done with:  
+*   Lasers: making them work properly (get stopped by player and let player take damage)  
+*   Walls: player can not go through walls  
+*   Game loop: When space is pressed the players use their programcards.  
+*   Menu-screen: Choose different boards for the game
+*   Flags: Let the player pick up flags so it can win  
+*   Rotatepad: rotate a player on a rotatepad
+We have prioritized to get each component of the game to work properly (walls, lasers), so that we can make 
+a working game loop with all the different parts working together.   
+
+Next iteration we will focus on:  
+*   Show cards: Let the player see the cards on the screen   
+*   Belts: Make belts   
+*   Game loop:  Get a working game loop
 
 Skjermdump!!! 
 
@@ -212,6 +228,14 @@ Tasks:
 *   Make loop for the game. 
 *   Test that events happen in right order
 *   Manual tests   
+
+
+#### Main criteria for MVP
+- [x]   The game should be able to run, show a board with starting robot and programcards to this robot.
+- [ ]   The player is able to pick programcards and place them so that the robot can move.
+- [ ]   The game should be able to do a round, and do the phases in the correct order in that round.
+- [x]   The robot should be able to win by going to the flags in a specific order. 
+- [x]   The robot is stopped by walls, and respawned when outside board. 
 
 ## Task 3 - Productdelivery and codequality
 ### Manual tests
