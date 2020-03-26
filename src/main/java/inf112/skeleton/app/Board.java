@@ -22,6 +22,7 @@ public class Board extends BoardLayers {
     private Sound wallImpact = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/ImpactWall.mp3"));
     private Sound repairTile = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/Repair.mp3"));
 
+
     public Board(String mapPath, int numberOfPlayers) {
         super(mapPath);
         this.players = new ArrayList<>();
@@ -168,7 +169,7 @@ public class Board extends BoardLayers {
         Vector2 position = player.getPosition();
         for (Vector2 vector : holes) {
             if (vector.equals(position)) {
-                scream.play();
+                scream.play(RallyGame.volume);
                 return true;
             }
         }
@@ -334,7 +335,7 @@ public class Board extends BoardLayers {
         Direction direction = player.getDirection();
 
         if (!canGo(position, direction)) {
-            wallImpact.play(0.6f);
+            wallImpact.play(RallyGame.volume);
             addPlayer(player);
             return;
         }

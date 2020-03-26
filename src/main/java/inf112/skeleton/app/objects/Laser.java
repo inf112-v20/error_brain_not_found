@@ -23,7 +23,7 @@ public class Laser {
     public void fire(RallyGame game, Vector2 position) {
         game.getBoard().addLaser(position, direction);
         if (game.getBoard().hasPlayer(position)) {
-            laserSound.play();
+            laserSound.play(RallyGame.volume);
             game.getBoard().getPlayer(position).handleDamage(game);
         } else if (game.getBoard().canGo(position, this.direction)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));
