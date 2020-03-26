@@ -145,6 +145,7 @@ public class BoardTest {
         Vector2 outsideOfBoardPosition = new Vector2(-1, 0);
         player.setPosition(outsideOfBoardPosition);
         board.addPlayer(player);
+        board.respawnPlayers();
         assertTrue(isInBackupState(player));
     }
 
@@ -187,6 +188,7 @@ public class BoardTest {
             Vector2 holePosition = getRandomHolePosition();
             player.setPosition(holePosition);
             board.addPlayer(player);
+            board.respawnPlayers();
             assertTrue(isInBackupState(player));
         }
     }
