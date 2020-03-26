@@ -6,7 +6,7 @@ Team: error_no_brain_found
 [Møte 4](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-4.)  
 [Møte 5](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-5.)   
 [Møte 6](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-6)  
-[Møte 7](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-7)
+[Møte 7](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-7)  
 The meeting minutes ended up looking a bit lack of words. Since we was more busy with doing code, explaining code to each
 other, and handout `Issues` to everyone, in the meeting. 
 
@@ -60,12 +60,19 @@ the team is getting better.
 ### Prioritization in the future
 This iteration we have prioritized, and are done with:  
 *   Holes: when a player is on hole it is respawned  
+
 *   Lasers: making them work properly (get stopped by player and let player take damage)    
+
 *   Damage: Let player take damage  
+
 *   Game loop: When space is pressed the players use their programcards.  
+
 *   Menu-screen: Choose different boards for the game  
+
 *   Flags: Let the player pick up flags so it can win    
+
 *   Rotatepad: rotate a player on a rotatepad  
+
 We have prioritized to get each component of the game to work properly (walls, lasers), so that we can make 
 a working game loop with all the different parts working together.   
 
@@ -246,14 +253,14 @@ Tasks:
 A testing version is up, but this is going to be continued on next sprint.
 
 #### Main criteria for MVP
-- [x]   The game should be able to run, show a board with starting robot and programcards to this robot.  
-- [ ]   The player is able to pick programcards and place them so that the robot can move.  
-- [ ]   The game should be able to do a round, and do the phases in the correct order in that round.  
-- [x]   The robot should be able to win by going to the flags in a specific order.   
-- [x]   The robot is stopped by walls, pushed by other players and respawned when outside board/on hole.   
-- [ ]   The robot should be able to do a powerdown.  
-- [x]   The laser can shoot the robots and the robots take damage.   
-- [ ]   The belts move so the player can be moved by belts.  
+* [x]   The game should be able to run, show a board with starting robot and programcards to this robot.  
+* [ ]   The player is able to pick programcards and place them so that the robot can move.  
+* [ ]   The game should be able to do a round, and do the phases in the correct order in that round.  
+* [x]   The robot should be able to win by going to the flags in a specific order.   
+* [x]   The robot is stopped by walls, pushed by other players and respawned when outside board/on hole.   
+* [ ]   The robot should be able to do a powerdown.  
+* [x]   The laser can shoot the robots and the robots take damage.   
+* [ ]   The belts move so the player can be moved by belts.  
 
 ## Task 3 - Productdelivery and codequality
 ### Manual tests
