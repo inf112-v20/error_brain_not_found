@@ -77,5 +77,69 @@ public class ProgramCardTest {
         assertEquals(Direction.NORTH, player.getDirection());
     }
 
+    @Test
+    public void playingMoveOneStepCardTest() {
+        ProgramCard moveOneStepCard = new ProgramCard(10, 1, Rotate.NONE, "move 1");
+        player.setSelectedCards(moveOneStepCard);
+        Vector2 beforePosition = player.getPosition();
+        Vector2 afterPosition = new Vector2(beforePosition.x + 1, beforePosition.y);
+        game.playCard(player);
+        assertEquals(afterPosition, player.getPosition());
+    }
+
+    @Test
+    public void firstRotateThenMoveToCorrectPositionTest() {
+        ProgramCard rotateLeftCard = new ProgramCard(10, 0, Rotate.LEFT, "left");
+        ProgramCard movePlayerOneStepCard = new ProgramCard(10, 1, Rotate.NONE, "move 1");
+        player.setSelectedCards(rotateLeftCard, movePlayerOneStepCard);
+        Vector2 beforePosition = player.getPosition();
+        // Player is rotated left and therefore player will go up instead of to the right
+        Vector2 afterPosition = new Vector2(beforePosition.x, beforePosition.y+1);
+        game.playCard(player);
+        game.playCard(player);
+        assertEquals(afterPosition, player.getPosition());
+    }
+
+    @Test
+    public void firstMoveThenRotateToCorrectRotationTest() {
+        ProgramCard rotateRightCard = new ProgramCard(10, 0, Rotate.RIGHT, "right");
+        ProgramCard movePlayerTwoStepCard = new ProgramCard(10, 2, Rotate.NONE, "move 2");
+        player.setSelectedCards(movePlayerTwoStepCard, rotateRightCard);
+        game.playCard(player);
+        game.playCard(player);
+        assertEquals(Direction.SOUTH, player.getDirection());
+    }
+
+    @Test
+    public void prioritizedCardsArePlayedFirstTest() {
+        Player player2 = new Player(new Vector2(0, 1), 6);
+        ProgramCard highPrioCard = new ProgramCard(10, 0, Rotate.LEFT, "left");
+        ProgramCard lowPrioCard = new ProgramCard(1, 0, Rotate.RIGHT, "right");
+        ArrayList<Player> players = new ArrayList<>();
+        player.setSelectedCards(lowPrioCard);
+        player2.setSelectedCards(highPrioCard);
+        players.add(player);
+        players.add(player2);
+        players.sort(new PlayerSorter());
+        assertEquals(player2, players.get(0));
+    }
+
+    /**
+     * Starting at east, a sequence of right, left, left, uturn, right, uturn, right should give south.
+     */
+    @Test
+    public void sequenceOfRotateCardsTest() {
+        ProgramCard right = new ProgramCard(10, 0, Rotate.RIGHT, "right");
+        ProgramCard left = new ProgramCard(10, 0, Rotate.LEFT, "left");
+        ProgramCard uturn = new ProgramCard(10, 0, Rotate.UTURN, "uturn");
+        player.setSelectedCards(right, left, left, uturn, right, uturn, right);
+        for (int playedCards = 0; playedCards <= 6; playedCards++) {
+            game.playCard(player);
+        }
+        assertEquals(Direction.SOUTH, player.getDirection());
+    }
+
+
+
 
 }
