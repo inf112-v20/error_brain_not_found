@@ -25,6 +25,7 @@ public class BoardTest {
     private Player player;
     private Random random;
     private ArrayList<Vector2> holes;
+    private Vector2 startPosition;
     private ArrayList<Flag> flags;
 
     @Before
@@ -35,7 +36,9 @@ public class BoardTest {
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
         this.board = new Board("assets/maps/Risky_Exchange.tmx", NUMBER_OF_PLAYERS_WHEN_STARTING_GAME);
-        this.player = new Player(new Vector2(0, 0), 1);
+        // Random position
+        this.startPosition = new Vector2(5,5);
+        this.player = new Player(startPosition, 1);
         this.holes = board.holes;
         this.flags = board.flags;
         // Sort the flags so player can go on them in correct order
@@ -186,6 +189,30 @@ public class BoardTest {
             board.addPlayer(player);
             assertTrue(isInBackupState(player));
         }
+    }
+
+    @Test
+    public void getWestNeighbourPositionTest() {
+        Vector2 neighbourPosition = new Vector2(startPosition.x -1, startPosition.y);
+        assertEquals(neighbourPosition, board.getNeighbourPosition(startPosition, Direction.WEST));
+    }
+
+    @Test
+    public void getEastNeighbourPositionTest() {
+        Vector2 neighbourPosition = new Vector2(startPosition.x +1, startPosition.y);
+        assertEquals(neighbourPosition, board.getNeighbourPosition(startPosition, Direction.EAST));
+    }
+
+    @Test
+    public void getSouthNeighbourPositionTest() {
+        Vector2 neighbourPosition = new Vector2(startPosition.x, startPosition.y - 1);
+        assertEquals(neighbourPosition, board.getNeighbourPosition(startPosition, Direction.SOUTH));
+    }
+
+    @Test
+    public void getNorthNeighbourPositionTest() {
+        Vector2 neighbourPosition = new Vector2(startPosition.x, startPosition.y + 1);
+        assertEquals(neighbourPosition, board.getNeighbourPosition(startPosition, Direction.NORTH));
     }
 
     @Test

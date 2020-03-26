@@ -25,4 +25,12 @@ public class Laser {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }
+
+    public Direction getDirection() {
+        return this.direction;
+    }
+
+    public Vector2 getStartPosition() {
+        return this.startPosition;
+    }
 }
