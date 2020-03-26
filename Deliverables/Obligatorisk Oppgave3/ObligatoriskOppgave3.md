@@ -30,17 +30,18 @@ In general yes, we think it was smart to device the team into roles like Develop
 what to do. On the other hand, these roles have some overlap, for example that maybe the tester sees something that needs to be fixed, can not 
 reach some code, or that the developer/UX-designer needs a specific test. We are then assigning issues to each other and specify the task needs 
 to be done, but sometimes this results in a lot of waiting for the person requesting these changing and the person needs to get this done before 
-doing anything else. We are going to discuss how to make a good solution for this.
+doing anything else. We have discussed how this can be handled, and agreed on that small fixes can be done even though it is not 
+your area of responsibility.
 
 ### Retrospective
 Working in this iteration has been different. We have not been able to meet in person and all our communication has moved 
-online. This have come with its own pros and cons. It tok some time for everyone to get used to the new situation, so the first 
+online. This have come with its own pros and cons. It took some time for everyone to get used to the new situation, so the first 
 week after the "campus-ban" wasn't the most productive. When everyone got in to the new situation we started to make the
 best of it. When people need help about something, they send someone in the team a message. And they often get the 
 answer faster now then what they did before. Meetings are going fine for now, but it will be harder as longer this ban
 keeps on. I think the way we parted the roles and made us survived the transition in a good way. Every role has one main
 responsibility area. When you have to move closer to someone else's area and you meet a wall we are fast to help each other 
-out. 
+out. Also we have agreed on that if it is small changes/additions, this can be fixed even though it is not you area. 
 
 We have have some work to do on planing what specific elements of the project need, so every member of the group have what
 they need. In some cases the test require specific methods, that the tester often has to ask for. So if we start planing better 
@@ -52,10 +53,26 @@ this to the team, so everyone in the team have an idea of what is going on at th
 the team is getting better.
 
 #### Improvement points from retrospective
-*   Planing out the features more.
-*   Make it easier to go into someones domain.
+*   Make concrete tasks for each user story.   
+*   Fix small changes even though it is not you area.  
+*   Follow up issues on project board.  
 
 ### Prioritization in the future
+This iteration we have prioritized, and are done with:  
+*   Holes: when a player is on hole it is respawned  
+*   Lasers: making them work properly (get stopped by player and let player take damage)    
+*   Damage: Let player take damage  
+*   Game loop: When space is pressed the players use their programcards.  
+*   Menu-screen: Choose different boards for the game  
+*   Flags: Let the player pick up flags so it can win    
+*   Rotatepad: rotate a player on a rotatepad  
+We have prioritized to get each component of the game to work properly (walls, lasers), so that we can make 
+a working game loop with all the different parts working together.   
+
+Next iteration we will focus on:  
+*   Show cards: Let the player see the cards on the screen   
+*   Belts: Make belts   
+*   Game loop:  Get a working game loop  
 
 Skjermdump!!! 
 
@@ -228,10 +245,33 @@ Tasks:
 
 A testing version is up, but this is going to be continued on next sprint.
 
+#### Main criteria for MVP
+- [x]   The game should be able to run, show a board with starting robot and programcards to this robot.  
+- [ ]   The player is able to pick programcards and place them so that the robot can move.  
+- [ ]   The game should be able to do a round, and do the phases in the correct order in that round.  
+- [x]   The robot should be able to win by going to the flags in a specific order.   
+- [x]   The robot is stopped by walls, pushed by other players and respawned when outside board/on hole.   
+- [ ]   The robot should be able to do a powerdown.  
+- [x]   The laser can shoot the robots and the robots take damage.   
+- [ ]   The belts move so the player can be moved by belts.  
+
 ## Task 3 - Productdelivery and codequality
 ### Manual tests
-The menu-screen goes away after clicking on it. 
-*   start the game then click somewhere on the screen. Then the game-screen should come.
+The start-screen goes away after clicking on it. 
+*   start the game then click somewhere on the screen. Then the menu-screen should come.  
+
+Game loop:  
+*   When the game has started press space once.
+*   Then all robots will use one programcard in turn, 5 times. (5 rounds) 
+*   Press space again after all robots have moved and the robots will do five more rounds.   
+
+Laser:  
+*   Press on of the keyboard-arrows and the lasers will be activated. 
+*   Stear your player in front of a laser. The laser should be stopped by a player.   
+
+Menu-screen:  
+*   Click on the start-menu (a picture). Then a screen with a roll-down menu and start and exit buttons should show.   
+*   Choose your board by choosing from the roll-down menu then click start. The board should show with players on it.
 
 ### Comment to automatic build tests
 Travis does not support the language `Java` on their Windows Build Environment. But 3/5 in our group run windows and it 
