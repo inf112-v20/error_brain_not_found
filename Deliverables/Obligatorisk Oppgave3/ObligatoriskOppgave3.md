@@ -49,7 +49,7 @@ out.
 ### Prioritization in the future
 This iteration we have prioritized, and are done with:  
 *   Lasers: making them work properly (get stopped by player and let player take damage)  
-*   Walls: player can not go through walls  
+*   Damage: Let player take damage
 *   Game loop: When space is pressed the players use their programcards.  
 *   Menu-screen: Choose different boards for the game
 *   Flags: Let the player pick up flags so it can win  
