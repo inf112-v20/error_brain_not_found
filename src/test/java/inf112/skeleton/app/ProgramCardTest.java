@@ -34,6 +34,7 @@ public class ProgramCardTest {
         // Already 4 players on board.
         //TODO: Let setupGame take in playerNumber as arg
         player = new Player(new Vector2(0,0), 5);
+        player.setDirection(Direction.EAST);
         Board board = game.getBoard();
         board.addPlayer(player);
         this.deck = new Deck();
@@ -53,12 +54,27 @@ public class ProgramCardTest {
     }
 
     @Test
-    public void playerMovesAccordingToCardTest() {
+    public void playingUturnCardTest() {
         ProgramCard uturnCard = new ProgramCard(10, 0, Rotate.UTURN, "uturn");
-        player.setDirection(Direction.EAST);
         player.setSelectedCards(uturnCard);
         game.playCard(player);
         assertEquals(Direction.WEST, player.getDirection());
+    }
+
+    @Test
+    public void playingRightRotateCardTest() {
+        ProgramCard rightRotateCard = new ProgramCard(10, 0, Rotate.RIGHT, "right");
+        player.setSelectedCards(rightRotateCard);
+        game.playCard(player);
+        assertEquals(Direction.SOUTH, player.getDirection());
+    }
+
+    @Test
+    public void playingLeftRotateCardTest() {
+        ProgramCard leftRotateCard = new ProgramCard(10, 0, Rotate.LEFT, "left");
+        player.setSelectedCards(leftRotateCard);
+        game.playCard(player);
+        assertEquals(Direction.NORTH, player.getDirection());
     }
 
 
