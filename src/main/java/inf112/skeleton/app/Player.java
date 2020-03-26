@@ -9,6 +9,7 @@ import inf112.skeleton.app.objects.Flag;
 
 import java.util.ArrayList;
 
+import java.util.Arrays;
 import java.util.Collections;
 
 public class Player {
