@@ -55,7 +55,7 @@ public abstract class BoardLayers {
         this.belts = new ArrayList<>();
 
         findFlags();
-        findRotatePadsAndHoles();
+        findRotatePadsAndHolesAndBelts();
         findLasers();
     }
 
