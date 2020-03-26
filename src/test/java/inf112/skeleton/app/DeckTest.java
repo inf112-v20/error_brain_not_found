@@ -9,7 +9,6 @@ import static org.junit.Assert.assertEquals;
 public class DeckTest {
 
     private Deck deck;
-    private final int NUMBER_OF_MOVE_ONE_CARDS = 6;
     private final int NUMBER_OF_CARDS = 78;
 
     @Before

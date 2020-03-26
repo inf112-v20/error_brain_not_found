@@ -5,21 +5,26 @@ import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
-import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.objects.Flag;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Player {
 
     private final int playerNr;
     private Vector2 backupPosition;
     private Direction backupDirection;
+    private Vector2 alternativeBackupPosition;
+    private Direction alternativeBackupDirection;
     private Vector2 position;
     private Direction direction;
     private ArrayList<Flag> flagsCollected;
     private ArrayList<ProgramCard> selectedCards;
     private ArrayList<ProgramCard> allCards;
+
+    private int damageTokens;
+    private int lifeTokens;
 
     public Player(Vector2 position, int playerNr) {
         this.position = position;
@@ -28,7 +33,9 @@ public class Player {
         this.flagsCollected = new ArrayList<>();
         this.selectedCards = new ArrayList<>();
         this.allCards = new ArrayList<>();
-        this.allCards.add(new ProgramCard(10, 2, Rotate.NONE,"TEST"));
+        this.damageTokens = 0;
+        this.lifeTokens = 3;
+
         setBackup(position, Direction.EAST);
     }
 
@@ -37,6 +44,7 @@ public class Player {
     }
 
     public ArrayList<ProgramCard> getSelectedCards() {
+        System.out.println(selectedCards);
         return selectedCards;
     }
 
@@ -49,6 +57,40 @@ public class Player {
     public void drawCards(Deck deck) {
         while (allCards.size() < 9) {
             allCards.add(deck.drawCard());
+        }
+    }
+
+    /**
+     * a int on how many damageTokens
+     *
+     * @return your damageTokens
+     */
+    public int getDamageTokens() {
+        return damageTokens;
+    }
+
+    public int resetDamageTokens() {
+        return this.damageTokens = 0;
+    }
+
+    public int getLifeTokens() {
+        return lifeTokens;
+    }
+
+    public void decrementLifeTokens() {
+        this.lifeTokens--;
+    }
+
+    public boolean isDead() {
+        return lifeTokens <= 0;
+    }
+
+    public void handleDamage(RallyGame game) {
+        this.damageTokens++;
+        if (damageTokens >= 10) {
+            lifeTokens--;
+            damageTokens = 0;
+            game.getBoard().respawn(this);
         }
     }
 
@@ -81,10 +123,53 @@ public class Player {
         return backupDirection;
     }
 
+    public void setAlternativeBackup(Vector2 alternativeBackupPosition, Direction alternativeBackupDirection) {
+        if (this.alternativeBackupPosition == null) {
+            this.alternativeBackupPosition = new Vector2(alternativeBackupPosition);
+        } else {
+            this.alternativeBackupPosition.set(alternativeBackupPosition.x, alternativeBackupPosition.y);
+        }
+        this.alternativeBackupDirection = alternativeBackupDirection;
+    }
+
+    /**
+     * @return alternative backup position
+     */
+    public Vector2 getAlternativeBackupPosition() {
+        return alternativeBackupPosition;
+    }
+
+    /**
+     * @return alternative backup direction
+     */
+    public Direction getAlternativeBackupDirection() {
+        return alternativeBackupDirection;
+    }
+
+
+    public void chooseAlternativeBackupPosition(Board board, Vector2 position) {
+        ArrayList<Vector2> possiblePositions = board.getNeighbourhood(position);
+        Collections.shuffle(possiblePositions);
+        for (Vector2 pos : possiblePositions) {
+            for (Direction dir : board.getDirectionRandomOrder()) {
+                if (board.validRespawnPosition(pos, dir)) {
+                    setAlternativeBackup(pos, dir);
+                    return;
+                }
+            }
+        }
+        setAlternativeBackup(board.getStartPosition(getPlayerNr()), Direction.EAST);
+        if (board.hasPlayer(board.getStartPosition(getPlayerNr()))) {
+            chooseAlternativeBackupPosition(board, alternativeBackupPosition);
+        }
+    }
+
     /**
      * @return number of player
      */
-    public int getPlayerNr() {return playerNr; }
+    public int getPlayerNr() {
+        return playerNr;
+    }
 
     /**
      * @return the {@link Vector2} to the player
@@ -147,6 +232,10 @@ public class Player {
 
     public boolean hasAllFlags(int numberOfFlags) {
         return flagsCollected.size() == numberOfFlags;
+    }
+
+    public boolean equals(Player other) {
+        return this.getPlayerNr() == other.getPlayerNr();
     }
 
     public String toString() {

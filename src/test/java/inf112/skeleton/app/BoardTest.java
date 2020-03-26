@@ -25,6 +25,7 @@ public class BoardTest {
     private Player player;
     private Random random;
     private ArrayList<Vector2> holes;
+    private Vector2 startPosition;
     private ArrayList<Flag> flags;
 
     @Before
@@ -35,22 +36,14 @@ public class BoardTest {
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
         this.board = new Board("assets/maps/Risky_Exchange.tmx", NUMBER_OF_PLAYERS_WHEN_STARTING_GAME);
-        this.player = new Player(new Vector2(0, 0), 1);
+        // Random position
+        this.startPosition = new Vector2(5,5);
+        this.player = new Player(startPosition, 1);
         this.holes = board.holes;
         this.flags = board.flags;
         // Sort the flags so player can go on them in correct order
         flags.sort(Comparator.comparingInt(Flag::getFlagnr));
         this.random = new Random();
-    }
-
-    /**
-     *
-     * @param player1
-     * @param player2
-     * @return true if players have same playerNumber
-     */
-    private boolean isEqualPlayers(Player player1, Player player2) {
-        return player1.getPlayerNr() == player2.getPlayerNr();
     }
 
     /**
@@ -152,6 +145,7 @@ public class BoardTest {
         Vector2 outsideOfBoardPosition = new Vector2(-1, 0);
         player.setPosition(outsideOfBoardPosition);
         board.addPlayer(player);
+        board.respawnPlayers();
         assertTrue(isInBackupState(player));
     }
 
@@ -186,6 +180,7 @@ public class BoardTest {
             assertTrue(board.outsideBoard(player));
         }
     }
+
     @Test
     public void playerOnRandomHoleIsRespawnedTest() {
         // Choose some random holes
@@ -193,8 +188,33 @@ public class BoardTest {
             Vector2 holePosition = getRandomHolePosition();
             player.setPosition(holePosition);
             board.addPlayer(player);
+            board.respawnPlayers();
             assertTrue(isInBackupState(player));
         }
+    }
+
+    @Test
+    public void getWestNeighbourPositionTest() {
+        Vector2 neighbourPosition = new Vector2(startPosition.x -1, startPosition.y);
+        assertEquals(neighbourPosition, board.getNeighbourPosition(startPosition, Direction.WEST));
+    }
+
+    @Test
+    public void getEastNeighbourPositionTest() {
+        Vector2 neighbourPosition = new Vector2(startPosition.x +1, startPosition.y);
+        assertEquals(neighbourPosition, board.getNeighbourPosition(startPosition, Direction.EAST));
+    }
+
+    @Test
+    public void getSouthNeighbourPositionTest() {
+        Vector2 neighbourPosition = new Vector2(startPosition.x, startPosition.y - 1);
+        assertEquals(neighbourPosition, board.getNeighbourPosition(startPosition, Direction.SOUTH));
+    }
+
+    @Test
+    public void getNorthNeighbourPositionTest() {
+        Vector2 neighbourPosition = new Vector2(startPosition.x, startPosition.y + 1);
+        assertEquals(neighbourPosition, board.getNeighbourPosition(startPosition, Direction.NORTH));
     }
 
     @Test
@@ -279,7 +299,7 @@ public class BoardTest {
         player2.setDirection(Direction.EAST);
         board.addPlayer(player);
         board.movePlayer(player2);
-        assertTrue(isEqualPlayers(player2, board.getPlayer(playerToBePushedPosition)));
+        assertEquals(player2, board.getPlayer(playerToBePushedPosition));
     }
 
     @Test
@@ -294,7 +314,7 @@ public class BoardTest {
         player2.setDirection(Direction.EAST);
         board.addPlayer(player);
         board.movePlayer(player2);
-        assertTrue(isEqualPlayers(player, board.getPlayer(playerIsPushedToPosition)));
+        assertEquals(player, board.getPlayer(playerIsPushedToPosition));
     }
 
     @Test
@@ -314,7 +334,7 @@ public class BoardTest {
         board.addPlayer(player2);
         board.addPlayer(player3);
         board.movePlayer(player);
-        assertTrue(isEqualPlayers(player2, board.getPlayer(positionToBePushedTo)));
+        assertEquals(player2, board.getPlayer(positionToBePushedTo));
     }
 
     @Test
@@ -326,7 +346,29 @@ public class BoardTest {
         Vector2 playerPushingPosition = new Vector2(0,4);
         player.setPosition(playerPushingPosition);
         player.setDirection(Direction.NORTH);
-        assertFalse(board.shouldPush(player));
+        board.addPlayer(player2);
+        board.addPlayer(player);
+        board.movePlayer(player);
+        assertEquals(player2, board.getPlayer(northWallPosition));
+    }
+
+    @Test
+    public void wallStopsPushingSeveralPlayersTest() {
+        // Found wall in Risky Exhange
+        Vector2 northWallPosition = new Vector2(0, 5);
+        Vector2 middlePosition = new Vector2(0, 4);
+        Player playerToBeStoppedByWall = new Player(northWallPosition, 2);
+        Player playerInMiddle = new Player(middlePosition, 3);
+        playerToBeStoppedByWall.setDirection(Direction.WEST);
+        playerInMiddle.setDirection(Direction.SOUTH);
+        Vector2 playerPushingPosition = new Vector2(0,3);
+        player.setPosition(playerPushingPosition);
+        player.setDirection(Direction.NORTH);
+        board.addPlayer(playerToBeStoppedByWall);
+        board.addPlayer(playerInMiddle);
+        board.addPlayer(player);
+        board.movePlayer(player);
+        assertEquals(playerToBeStoppedByWall, board.getPlayer(northWallPosition));
     }
 
 }
