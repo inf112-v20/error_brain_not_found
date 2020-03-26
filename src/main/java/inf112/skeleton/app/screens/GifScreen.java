@@ -9,7 +9,7 @@ import inf112.skeleton.app.RallyGame;
 public class GifScreen extends StandardScreen {
 
     private Animation<TextureRegion> animation;
-    float elapsed;
+    private float elapsed;
 
     public GifScreen(final RallyGame game) {
         super(game);

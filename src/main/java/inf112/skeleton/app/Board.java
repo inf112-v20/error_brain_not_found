@@ -1,5 +1,7 @@
 package inf112.skeleton.app;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
@@ -10,10 +12,18 @@ import inf112.skeleton.app.enums.TileID;
 import inf112.skeleton.app.objects.Flag;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class Board extends BoardLayers {
 
     private ArrayList<Player> players;
+
+    private Sound scream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
+    private Sound activateLaser = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
+    private Sound wallImpact = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/ImpactWall.mp3"));
+    private Sound repairTile = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/Repair.mp3"));
 
     public Board(String mapPath, int numberOfPlayers) {
         super(mapPath);
@@ -74,15 +84,39 @@ public class Board extends BoardLayers {
      * @param player to add to game and board
      */
     public void addPlayer(Player player) {
-        if (outsideBoard(player)) {
-            respawn(player);
-        }
         TiledMapTileLayer.Cell cell = new TiledMapTileLayer.Cell();
         cell.setTile(getRobotTile(player));
         playerLayer.setCell((int) player.getPosition().x, (int) player.getPosition().y, cell);
         if (!players.contains(player)) {
             players.add(player);
         }
+    }
+
+    public Vector2 getStartPosition(int number) {
+        for (int x = 0; x < groundLayer.getWidth(); x++) {
+            for (int y = 0; y < groundLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
+                int ID = cell.getTile().getId();
+                if (number == 1 && ID == TileID.START_POS1.getId()) {
+                    return new Vector2(x, y);
+                } else if (number == 2 && ID == TileID.START_POS2.getId()) {
+                    return new Vector2(x, y);
+                } else if (number == 3 && ID == TileID.START_POS3.getId()) {
+                    return new Vector2(x, y);
+                } else if (number == 4 && ID == TileID.START_POS4.getId()) {
+                    return new Vector2(x, y);
+                } else if (number == 5 && ID == TileID.START_POS5.getId()) {
+                    return new Vector2(x, y);
+                } else if (number == 6 && ID == TileID.START_POS6.getId()) {
+                    return new Vector2(x, y);
+                } else if (number == 7 && ID == TileID.START_POS7.getId()) {
+                    return new Vector2(x, y);
+                } else if (number == 8 && ID == TileID.START_POS8.getId()) {
+                    return new Vector2(x, y);
+                }
+            }
+        }
+        return null;
     }
 
     /**
@@ -95,28 +129,9 @@ public class Board extends BoardLayers {
         if (numPlayers == 0) {
             return;
         }
-        for (int x = 0; x < groundLayer.getWidth(); x++) {
-            for (int y = 0; y < groundLayer.getHeight(); y++) {
-                TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
-                int ID = cell.getTile().getId();
-                if (ID == TileID.START_POS1.getId()) {
-                    addPlayer(x, y, 1);
-                } else if (ID == TileID.START_POS2.getId() && numPlayers > 1) {
-                    addPlayer(x, y, 2);
-                } else if (ID == TileID.START_POS3.getId() && numPlayers > 2) {
-                    addPlayer(x, y, 3);
-                } else if (ID == TileID.START_POS4.getId() && numPlayers > 3) {
-                    addPlayer(x, y, 4);
-                } else if (ID == TileID.START_POS5.getId() && numPlayers > 4) {
-                    addPlayer(x, y, 5);
-                } else if (ID == TileID.START_POS6.getId() && numPlayers > 5) {
-                    addPlayer(x, y, 6);
-                } else if (ID == TileID.START_POS7.getId() && numPlayers > 6) {
-                    addPlayer(x, y, 7);
-                } else if (ID == TileID.START_POS8.getId() && numPlayers > 7) {
-                    addPlayer(x, y, 8);
-                }
-            }
+        for (int playerNr = 1; playerNr <= numPlayers; playerNr++) {
+            Vector2 position = getStartPosition(playerNr);
+            addPlayer((int) position.x, (int) position.y, playerNr);
         }
     }
 
@@ -151,13 +166,13 @@ public class Board extends BoardLayers {
     /**
      * Checks if player moves on to a hole
      *
-     * @param player that is checked
-     * @return true if the player moves onto a hole
+     * @param position that is checked
+     * @return true if the position contains a hole
      */
-    private boolean onHole(Player player) {
-        Vector2 position = player.getPosition();
+    public boolean hasHole(Vector2 position) {
         for (Vector2 vector : holes) {
             if (vector.equals(position)) {
+                scream.play();
                 return true;
             }
         }
@@ -174,17 +189,51 @@ public class Board extends BoardLayers {
                 player.getPosition().x >= this.boardWidth ||
                 player.getPosition().y < 0 ||
                 player.getPosition().y >= this.boardHeight ||
-                onHole(player);
+                hasHole(player.getPosition());
     }
 
     /**
-     * Places a player in backup position
+     * Places a player in backup position or alternative position
      *
      * @param player to respawn
      */
-    private void respawn(Player player) {
-        player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
-        player.setDirection(player.getBackupDirection());
+    public void respawn(Player player) {
+        removePlayerFromBoard(player);
+        if (hasPlayer(player.getBackupPosition())) {
+            player.chooseAlternativeBackupPosition(this, player.getBackupPosition());
+            player.setPosition(new Vector2(player.getAlternativeBackupPosition().x, player.getAlternativeBackupPosition().y));
+            player.setDirection(player.getAlternativeBackupDirection());
+        } else {
+            player.setPosition(new Vector2(player.getBackupPosition().x, player.getBackupPosition().y));
+            player.setDirection(player.getBackupDirection());
+        }
+        addPlayer(player);
+    }
+
+    public void respawnPlayers() {
+        for (Player player : players) {
+            if (outsideBoard(player)) {
+                player.decrementLifeTokens();
+                respawn(player);
+            }
+        }
+    }
+
+    public boolean validRespawnPosition(Vector2 position, Direction direction) {
+        Vector2 currPos = position;
+        for (int step = 0; step < 3; step++) {
+            if (hasPlayer(currPos)) {
+                return false;
+            }
+            currPos = getNeighbourPosition(currPos, direction);
+        }
+        return !hasHole(position);
+    }
+
+    public List<Direction> getDirectionRandomOrder() {
+        List<Direction> directions = Arrays.asList(Direction.values());
+        Collections.shuffle(directions);
+        return directions;
     }
 
     /**
@@ -196,7 +245,7 @@ public class Board extends BoardLayers {
                 return player;
             }
         }
-        return players.get(0);
+        return null;
     }
 
     /**
@@ -322,6 +371,7 @@ public class Board extends BoardLayers {
         Direction direction = player.getDirection();
 
         if (!canGo(position, direction)) {
+            wallImpact.play(0.6f);
             addPlayer(player);
             return;
         }
@@ -330,6 +380,7 @@ public class Board extends BoardLayers {
             if (canPush(enemyPlayer, direction)) {
                 pushPlayer(enemyPlayer, direction);
             } else {
+                addPlayer(player);
                 return;
             }
         }
@@ -359,6 +410,20 @@ public class Board extends BoardLayers {
         if (hasFlag(player.getPosition())) {
             pickUpFlag(player);
         }
+    }
+
+    public ArrayList<Vector2> getNeighbourhood(Vector2 position) {
+        ArrayList<Vector2> positions = new ArrayList<>();
+        for (int yi = -1; yi <= 1; yi++) {
+            for (int xi = -1; xi <= 1; xi++) {
+                int x = (int) (position.x + xi);
+                int y = (int) (position.y + yi);
+                if (x >= 0 && x < boardWidth && y >= 0 && y < boardHeight) {
+                    positions.add(new Vector2(x, y));
+                }
+            }
+        }
+        return positions;
     }
 
     /**
@@ -428,7 +493,8 @@ public class Board extends BoardLayers {
      */
     private boolean canPush(Player player, Direction direction) {
         if (hasPlayer(getNeighbourPosition(player.getPosition(), direction))) {
-            return canPush(getPlayer(getNeighbourPosition(player.getPosition(), direction)), direction);
+            return canGo(player.getPosition(), direction) &&
+                    canPush(getPlayer(getNeighbourPosition(player.getPosition(), direction)), direction);
         }
         return canGo(player.getPosition(), direction);
     }

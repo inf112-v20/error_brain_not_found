@@ -430,7 +430,8 @@ public class GifDecoder {
                 case 0x3b: // terminator
                     done = true;
                     break;
-                case 0x00: // bad byte, but keep going and see what happens break;
+                case 0x00: // bad byte, but keep going and see what happens
+                    break;
                 default:
                     status = STATUS_FORMAT_ERROR;
             }
