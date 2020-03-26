@@ -40,6 +40,7 @@ public class Player {
     }
 
     public ArrayList<ProgramCard> getSelectedCards() {
+        System.out.println(selectedCards);
         return selectedCards;
     }
 
@@ -62,6 +63,10 @@ public class Player {
      */
     public int getDamageTokens() {
         return damageTokens;
+    }
+
+    public int resetDamageTokens() {
+        return this.damageTokens = 0;
     }
 
     public int getLifeTokens() {

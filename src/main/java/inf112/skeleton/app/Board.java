@@ -81,6 +81,7 @@ public class Board extends BoardLayers {
     public void addPlayer(Player player) {
         if (outsideBoard(player)) {
             player.decrementLifeTokens();
+            player.resetDamageTokens();
             if (!player.isDead()) {
                 respawn(player);
             }
