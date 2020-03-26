@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
@@ -26,6 +27,8 @@ public class RallyGame extends Game {
     public ArrayList<Player> players;
     public Semaphore waitForCards;
     public boolean playing;
+    public Sound laserSound;
+    public Player mainPlayer;
 
     public void create() {
         this.setScreen(new LoadingScreen(this));
@@ -38,10 +41,13 @@ public class RallyGame extends Game {
         this.currentPlayer = board.getPlayer1();
         this.players = new ArrayList<>();
         this.players = board.getPlayers();
+        this.mainPlayer = board.getPlayer1();
 
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
         this.playing = true;
+
+        this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
 
         new Thread(this::doTurn).start();
 
@@ -54,25 +60,24 @@ public class RallyGame extends Game {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyUp(int keycode) {
-                Player player = board.getPlayer1();
-                if (player == null) {
+                if (mainPlayer.isDead()) {
                     return false;
                 }
 
                 removeLasers();
 
                 if (keycode == Input.Keys.RIGHT) {
-                    player.setDirection(Direction.EAST);
-                    board.movePlayer(player);
+                    mainPlayer.setDirection(Direction.EAST);
+                    board.movePlayer(mainPlayer);
                 } else if (keycode == Input.Keys.LEFT) {
-                    player.setDirection(Direction.WEST);
-                    board.movePlayer(player);
+                    mainPlayer.setDirection(Direction.WEST);
+                    board.movePlayer(mainPlayer);
                 } else if (keycode == Input.Keys.UP) {
-                    player.setDirection(Direction.NORTH);
-                    board.movePlayer(player);
+                    mainPlayer.setDirection(Direction.NORTH);
+                    board.movePlayer(mainPlayer);
                 } else if (keycode == Input.Keys.DOWN) {
-                    player.setDirection(Direction.SOUTH);
-                    board.movePlayer(player);
+                    mainPlayer.setDirection(Direction.SOUTH);
+                    board.movePlayer(mainPlayer);
                 } else if (keycode == Input.Keys.ESCAPE) {
                     Gdx.app.exit();
                 } else if (keycode == Input.Keys.SPACE) {
@@ -82,12 +87,12 @@ public class RallyGame extends Game {
                     return super.keyDown(keycode);
                 }
 
-                if (player.hasAllFlags(board.getFlags().size())) {
+                if (mainPlayer.hasAllFlags(board.getFlags().size())) {
                     setWinScreen();
                 }
                 board.respawnPlayers();
                 fireLasers();
-
+                removeDeadPlayers();
                 return super.keyDown(keycode);
             }
         });
@@ -105,6 +110,7 @@ public class RallyGame extends Game {
     }
 
     public void doTurn() {
+
         // TODO: Alle velger kort
         // TODO: Første kort spilles for alle i riktig rekkefølge
         // TODO: Gears roterer
@@ -126,7 +132,15 @@ public class RallyGame extends Game {
                 allPlayersPlayCard();
                 activateRotatePads();
 
+                fireLasers();
+                try {
+                    Thread.sleep(600);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                removeLasers();
             }
+            removeDeadPlayers();
             dealCards();
             selectCards();
         }
@@ -142,6 +156,17 @@ public class RallyGame extends Game {
         for (Player player : players) {
             player.drawCards(deck);
         }
+    }
+
+    public void removeDeadPlayers() {
+        ArrayList<Player> deadPlayers = new ArrayList<>();
+        for (Player player : players) {
+            if (player.isDead()) {
+                board.removePlayerFromBoard(player);
+                deadPlayers.add(player);
+            }
+        }
+        players.removeAll(deadPlayers);
     }
 
     public void allPlayersPlayCard() {
@@ -212,6 +237,7 @@ public class RallyGame extends Game {
         for (Laser laser : board.lasers) {
             laser.fire(this);
         }
+        //laserSound.play();
     }
 
     public void activateRotatePads(){
