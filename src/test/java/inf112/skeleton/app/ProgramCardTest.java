@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.objects.RotatePad;
 import org.junit.Before;
@@ -51,6 +52,14 @@ public class ProgramCardTest {
         assertEquals(5, player.getSelectedCards().size());
     }
 
+    @Test
+    public void playerMovesAccordingToCardTest() {
+        ProgramCard uturnCard = new ProgramCard(10, 0, Rotate.UTURN, "uturn");
+        player.setDirection(Direction.EAST);
+        player.setSelectedCards(uturnCard);
+        game.playCard(player);
+        assertEquals(Direction.WEST, player.getDirection());
+    }
 
 
 }

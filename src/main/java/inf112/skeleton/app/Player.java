@@ -9,7 +9,9 @@ import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.objects.Flag;
 
 import javax.swing.*;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Player {
 
@@ -146,10 +148,10 @@ public class Player {
      * Used for testing, so that we can decide what card the player is going to play, and then test that the player
      * does what the card says.
      *
-     * @param cards
+     * @param cards one or more cards (separated by comma) or a list of cards.
      */
-    public void setSelectedCards(ArrayList<ProgramCard> cards) {
-        this.selectedCards = cards;
+    public void setSelectedCards(ProgramCard... cards) {
+        this.selectedCards = new ArrayList<>(Arrays.asList(cards));
     }
 
     public ArrayList<Flag> getFlagsCollected() {
