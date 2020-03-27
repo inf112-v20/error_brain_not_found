@@ -47,8 +47,8 @@ public class BoardTest {
     }
 
     /**
-     * @param flag1
-     * @param flag2
+     * @param flag1 first flag
+     * @param flag2 second flag
      * @return true if two flags are equal
      */
     private boolean isEqualFlags(Flag flag1, Flag flag2) {

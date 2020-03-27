@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.objects.Laser;
 import org.junit.Before;
 import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -33,8 +34,7 @@ public class LaserTest {
     }
 
     /**
-     *
-     * @param lasers
+     * @param lasers on board
      * @return random laser laser from list given
      */
     private Laser getRandomLaser(ArrayList<Laser> lasers) {
@@ -44,8 +44,7 @@ public class LaserTest {
     }
 
     /**
-     *
-     * @param position
+     * @param position to check for laser
      * @return true if cell in this position from laserLayer has a laser on this cell.
      */
     private boolean hasLaser(Vector2 position) {
