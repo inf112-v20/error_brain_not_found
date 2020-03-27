@@ -6,7 +6,7 @@ import inf112.skeleton.app.RallyGame;
 
 public class LoadingScreen extends StandardScreen {
 
-    private Texture background;
+    private final Texture background;
     public LoadingScreen(final RallyGame game) {
         super(game);
         background = new Texture("assets/images/RoboRallyMenuScreen.png");
