@@ -8,12 +8,15 @@ import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Flag;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Player {
 
     private final int playerNr;
     private Vector2 backupPosition;
     private Direction backupDirection;
+    private Vector2 alternativeBackupPosition;
+    private Direction alternativeBackupDirection;
     private Vector2 position;
     private Direction direction;
     private ArrayList<Flag> flagsCollected;
@@ -32,6 +35,7 @@ public class Player {
         this.allCards = new ArrayList<>();
         this.damageTokens = 0;
         this.lifeTokens = 3;
+
         setBackup(position, Direction.EAST);
     }
 
@@ -119,10 +123,53 @@ public class Player {
         return backupDirection;
     }
 
+    public void setAlternativeBackup(Vector2 alternativeBackupPosition, Direction alternativeBackupDirection) {
+        if (this.alternativeBackupPosition == null) {
+            this.alternativeBackupPosition = new Vector2(alternativeBackupPosition);
+        } else {
+            this.alternativeBackupPosition.set(alternativeBackupPosition.x, alternativeBackupPosition.y);
+        }
+        this.alternativeBackupDirection = alternativeBackupDirection;
+    }
+
+    /**
+     * @return alternative backup position
+     */
+    public Vector2 getAlternativeBackupPosition() {
+        return alternativeBackupPosition;
+    }
+
+    /**
+     * @return alternative backup direction
+     */
+    public Direction getAlternativeBackupDirection() {
+        return alternativeBackupDirection;
+    }
+
+
+    public void chooseAlternativeBackupPosition(Board board, Vector2 position) {
+        ArrayList<Vector2> possiblePositions = board.getNeighbourhood(position);
+        Collections.shuffle(possiblePositions);
+        for (Vector2 pos : possiblePositions) {
+            for (Direction dir : board.getDirectionRandomOrder()) {
+                if (board.validRespawnPosition(pos, dir)) {
+                    setAlternativeBackup(pos, dir);
+                    return;
+                }
+            }
+        }
+        setAlternativeBackup(board.getStartPosition(getPlayerNr()), Direction.EAST);
+        if (board.hasPlayer(board.getStartPosition(getPlayerNr()))) {
+            chooseAlternativeBackupPosition(board, alternativeBackupPosition);
+        }
+    }
+
     /**
      * @return number of player
      */
-    public int getPlayerNr() {return playerNr; }
+    public int getPlayerNr() {
+        return playerNr;
+    }
 
     /**
      * @return the {@link Vector2} to the player
@@ -185,6 +232,10 @@ public class Player {
 
     public boolean hasAllFlags(int numberOfFlags) {
         return flagsCollected.size() == numberOfFlags;
+    }
+
+    public boolean equals(Player other) {
+        return this.getPlayerNr() == other.getPlayerNr();
     }
 
     public String toString() {

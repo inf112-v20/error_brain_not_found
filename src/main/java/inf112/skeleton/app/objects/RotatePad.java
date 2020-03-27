@@ -16,6 +16,7 @@ public class RotatePad {
         return rotate;
     }
 
+
     public Vector2 getPosition() {
         return position;
     }
