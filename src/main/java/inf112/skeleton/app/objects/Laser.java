@@ -6,8 +6,8 @@ import inf112.skeleton.app.enums.Direction;
 
 public class Laser {
 
-    final Vector2 startPosition;
-    final Direction direction;
+    private Vector2 startPosition;
+    private Direction direction;
 
     public Laser(int x, int y, Direction direction) {
         this.startPosition = new Vector2(x, y);

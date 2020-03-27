@@ -7,7 +7,7 @@ import inf112.skeleton.app.RallyGame;
 
 public class YouWinScreen extends StandardScreen {
 
-    private final Texture background;
+    private Texture background;
 
     public YouWinScreen(final RallyGame game) {
         super(game);

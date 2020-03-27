@@ -20,15 +20,15 @@ public class MenuScreen extends StandardScreen {
     private float START_BUTTON_Y;
     private float EXIT_BUTTON_Y;
 
-    public final SelectBox<String> selectMap;
+    public SelectBox<String> selectMap;
 
-    private final Texture background;
-    private final Texture startButtonInactive;
-    private final Texture startButtonActive;
-    private final Texture exitButtonInactive;
-    private final Texture exitButtonActive;
+    private Texture background;
+    private Texture startButtonInactive;
+    private Texture startButtonActive;
+    private Texture exitButtonInactive;
+    private Texture exitButtonActive;
 
-    private final Stage stage;
+    private Stage stage;
     public String select;
 
     public MenuScreen(RallyGame game) {

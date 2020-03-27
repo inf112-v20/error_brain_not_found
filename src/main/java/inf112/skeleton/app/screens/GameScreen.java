@@ -9,15 +9,15 @@ import inf112.skeleton.app.RallyGame;
 
 public class GameScreen extends StandardScreen {
 
-    private final TiledMapRenderer mapRenderer;
-    private final Texture lifeTokens;
-    private final Texture damageTokens;
+    private TiledMapRenderer mapRenderer;
+    private Texture lifeTokens;
+    private Texture damageTokens;
     private float tokensX;
     private float lifeTokensY;
     private float damageTokensY;
     private float tokensSize;
 
-    public GameScreen(final RallyGame game) {
+    public GameScreen(RallyGame game) {
         super(game);
 
         lifeTokens = new Texture("assets/images/lifeToken.png");

@@ -18,10 +18,10 @@ import java.util.List;
 
 public class Board extends BoardLayers {
 
-    private final ArrayList<Player> players;
+    private ArrayList<Player> players;
 
-    private final Sound scream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
-    private final Sound wallImpact = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/ImpactWall.mp3"));
+    private Sound scream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
+    private Sound wallImpact = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/ImpactWall.mp3"));
 
     public Board(String mapPath, int numberOfPlayers) {
         super(mapPath);

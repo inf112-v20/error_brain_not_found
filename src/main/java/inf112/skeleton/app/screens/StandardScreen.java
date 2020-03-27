@@ -8,9 +8,9 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import inf112.skeleton.app.RallyGame;
 
 public abstract class StandardScreen implements Screen {
-    protected final RallyGame game;
-    protected final OrthographicCamera camera;
-    protected final SpriteBatch batch;
+    protected RallyGame game;
+    protected OrthographicCamera camera;
+    protected SpriteBatch batch;
 
     public StandardScreen(final RallyGame game) {
         this.game = game;

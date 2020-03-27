@@ -17,11 +17,11 @@ public class Player {
     private Direction backupDirection;
     private Vector2 alternativeBackupPosition;
     private Direction alternativeBackupDirection;
-    private final Vector2 position;
+    private Vector2 position;
     private Direction direction;
-    private final ArrayList<Flag> flagsCollected;
-    private final ArrayList<ProgramCard> selectedCards;
-    private final ArrayList<ProgramCard> allCards;
+    private ArrayList<Flag> flagsCollected;
+    private ArrayList<ProgramCard> selectedCards;
+    private ArrayList<ProgramCard> allCards;
 
     private int damageTokens;
     private int lifeTokens;
