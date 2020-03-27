@@ -8,6 +8,7 @@ import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Flag;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class Player {
@@ -17,11 +18,11 @@ public class Player {
     private Direction backupDirection;
     private Vector2 alternativeBackupPosition;
     private Direction alternativeBackupDirection;
-    private Vector2 position;
+    private final Vector2 position;
     private Direction direction;
-    private ArrayList<Flag> flagsCollected;
+    private final ArrayList<Flag> flagsCollected;
     private ArrayList<ProgramCard> selectedCards;
-    private ArrayList<ProgramCard> allCards;
+    private final ArrayList<ProgramCard> allCards;
 
     private int damageTokens;
     private int lifeTokens;
@@ -89,7 +90,7 @@ public class Player {
         this.damageTokens++;
         if (damageTokens >= 10) {
             lifeTokens--;
-            damageTokens = 0;
+            resetDamageTokens();
             game.getBoard().respawn(this);
         }
     }
@@ -224,6 +225,17 @@ public class Player {
             default:
                 break;
         }
+    }
+
+    /**
+     * Update the selected cards for this player.
+     * Used for testing, so that we can decide what card the player is going to play, and then test that the player
+     * does what the card says.
+     *
+     * @param cards one or more cards (separated by comma) or a list of cards.
+     */
+    public void setSelectedCards(ProgramCard... cards) {
+        this.selectedCards = new ArrayList<>(Arrays.asList(cards));
     }
 
     public ArrayList<Flag> getFlagsCollected() {

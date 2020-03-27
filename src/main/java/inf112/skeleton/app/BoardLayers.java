@@ -16,21 +16,21 @@ import java.util.ArrayList;
 
 public abstract class BoardLayers {
 
-    public TiledMap tiledMap;
+    public final TiledMap tiledMap;
 
-    public TiledMapTileLayer playerLayer;
-    public TiledMapTileLayer flagLayer;
-    public TiledMapTileLayer wallLayer;
-    public TiledMapTileLayer laserLayer;
-    public TiledMapTileLayer groundLayer;
+    public final TiledMapTileLayer playerLayer;
+    public final TiledMapTileLayer flagLayer;
+    public final TiledMapTileLayer wallLayer;
+    public final TiledMapTileLayer laserLayer;
+    public final TiledMapTileLayer groundLayer;
 
     public final ArrayList<Laser> lasers;
     public final ArrayList<Flag> flags;
     public final ArrayList<RotatePad> rotatePads;
     public final ArrayList<Vector2> holes;
 
-    public int boardWidth;
-    public int boardHeight;
+    public final int boardWidth;
+    public final int boardHeight;
 
     public BoardLayers(String mapPath) {
         this.tiledMap = new TmxMapLoader().load(mapPath);
@@ -147,10 +147,6 @@ public abstract class BoardLayers {
     }
 
     public abstract TiledMap getMap();
-
-    public abstract TiledMapTileLayer getPlayerLayer();
-
-    public abstract TiledMapTileLayer getFlagLayer();
 
     public abstract TiledMapTileLayer getLaserLayer();
 }
