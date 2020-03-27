@@ -82,7 +82,7 @@ Next iteration we will focus on:
 *   Belts: Make belts   
 *   Game loop:  Get a working game loop  
 
-Skjermdump!!! 
+![Screenshot Project board](ScreenshotProjectBoard.png)
 
 ### Group dynamic and communication
 In general communication works fine, we communicate over slack and assign tasks to each other by making 
@@ -283,6 +283,14 @@ Menu-screen:
 *   Click on the start-menu (a picture). Then a screen with a roll-down menu and start and exit buttons should show.   
 *   Choose your board by choosing from the roll-down menu then click start. The board should show with players on it.
 
+### Bugs
+Game sometimes crashes after clicking on start menu
+
 ### Comment to automatic build tests
 Travis does not support the language `Java` on their Windows Build Environment. But 3/5 in our group run windows and it 
 runs on their computer.  
+
+### Comment to classdiagram
+The project is getting big so the diagram is no only the classes, if you want to se the content of the classes in the UML
+there is possible to put it on in the `ClassDiagramMandatoryAssignment3.uml` in the `Deliverables/Obligatorisk Oppgave3`
+folder.
