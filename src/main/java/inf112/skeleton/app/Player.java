@@ -39,10 +39,6 @@ public class Player {
         setBackup(position, Direction.EAST);
     }
 
-    public ArrayList<ProgramCard> getAllCards() {
-        return allCards;
-    }
-
     public ArrayList<ProgramCard> getSelectedCards() {
         System.out.println(selectedCards);
         return selectedCards;
@@ -67,10 +63,6 @@ public class Player {
      */
     public int getDamageTokens() {
         return damageTokens;
-    }
-
-    public int resetDamageTokens() {
-        return this.damageTokens = 0;
     }
 
     public int getLifeTokens() {
@@ -233,10 +225,6 @@ public class Player {
 
     public boolean hasAllFlags(int numberOfFlags) {
         return flagsCollected.size() == numberOfFlags;
-    }
-
-    public boolean equals(Player other) {
-        return this.getPlayerNr() == other.getPlayerNr();
     }
 
     public String toString() {
