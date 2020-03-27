@@ -8,6 +8,8 @@ import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Flag;
 
 import java.util.ArrayList;
+
+import java.util.Arrays;
 import java.util.Collections;
 
 public class Player {
@@ -224,6 +226,17 @@ public class Player {
             default:
                 break;
         }
+    }
+
+    /**
+     * Update the selected cards for this player.
+     * Used for testing, so that we can decide what card the player is going to play, and then test that the player
+     * does what the card says.
+     *
+     * @param cards one or more cards (separated by comma) or a list of cards.
+     */
+    public void setSelectedCards(ProgramCard... cards) {
+        this.selectedCards = new ArrayList<>(Arrays.asList(cards));
     }
 
     public ArrayList<Flag> getFlagsCollected() {
