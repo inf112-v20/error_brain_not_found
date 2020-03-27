@@ -90,6 +90,7 @@ public class Player {
         if (damageTokens >= 10) {
             lifeTokens--;
             damageTokens = 0;
+            game.getBoard().removePlayerFromBoard(this);
             game.getBoard().respawn(this);
         }
     }

@@ -235,7 +235,7 @@ public class RallyGame extends Game {
         for (Laser laser : board.lasers) {
             laser.fire(this);
         }
-        //laserSound.play();
+        laserSound.play();
     }
 
     public void activateRotatePads(){

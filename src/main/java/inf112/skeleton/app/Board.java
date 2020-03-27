@@ -210,6 +210,7 @@ public class Board extends BoardLayers {
     public void respawnPlayers() {
         for (Player player : players) {
             if (outsideBoard(player)) {
+                player.decrementLifeTokens();
                 respawn(player);
             }
         }
