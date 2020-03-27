@@ -372,7 +372,7 @@ public class Board extends BoardLayers {
         Direction direction = player.getDirection();
 
         if (!canGo(position, direction)) {
-            wallImpact.play(RallyGame.volume);
+            wallImpact.play(RallyGame.volume - 0.1f);
             addPlayer(player);
             return;
         }
