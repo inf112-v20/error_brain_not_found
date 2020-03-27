@@ -569,20 +569,6 @@ public class Board extends BoardLayers {
     }
 
     /**
-     * @return {@link TiledMapTileLayer} of player layer
-     */
-    public TiledMapTileLayer getPlayerLayer() {
-        return playerLayer;
-    }
-
-    /**
-     * @return {@link TiledMapTileLayer} of flag layer
-     */
-    public TiledMapTileLayer getFlagLayer() {
-        return flagLayer;
-    }
-
-    /**
      * @return {@link TiledMapTileLayer} of laser layer
      */
     public TiledMapTileLayer getLaserLayer() {

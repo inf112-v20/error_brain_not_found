@@ -8,7 +8,6 @@ import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Flag;
 
 import java.util.ArrayList;
-
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -22,7 +21,7 @@ public class Player {
     private final Vector2 position;
     private Direction direction;
     private final ArrayList<Flag> flagsCollected;
-    private final ArrayList<ProgramCard> selectedCards;
+    private ArrayList<ProgramCard> selectedCards;
     private final ArrayList<ProgramCard> allCards;
 
     private int damageTokens;
@@ -91,7 +90,7 @@ public class Player {
         this.damageTokens++;
         if (damageTokens >= 10) {
             lifeTokens--;
-            damageTokens = 0;
+            resetDamageTokens();
             game.getBoard().respawn(this);
         }
     }
