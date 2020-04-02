@@ -34,6 +34,18 @@ Tasks:
 *   Make graphics for showing cards 
 *   Manual test
 
+#### Make a program  
+User-story:  
+As a user I want to be able to arrange the cards, so that I can make a program for my robot.  
+
+Acceptance-criteria:  
+*   If I rearrange the cards, the cards are played in this order.  
+
+Tasks:  
+*   Create a method that takes input from screen and update how the cards are arranged in player.  
+*   Create a function that "lock" the cards so the user can tell the game the program to be made is done.  
+*   Create a method that lets the user rearrange the cards given.  
+
 #### Game loop
 User-story:
 As a player I want the game to go in a loop, so that events happen in a specific order. 
