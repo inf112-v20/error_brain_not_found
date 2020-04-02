@@ -86,13 +86,8 @@ public class Player {
         return lifeTokens <= 0;
     }
 
-    public void handleDamage(RallyGame game) {
+    public void handleDamage() {
         this.damageTokens++;
-        if (damageTokens >= 10) {
-            lifeTokens--;
-            resetDamageTokens();
-            game.getBoard().respawn(this);
-        }
     }
 
     /**

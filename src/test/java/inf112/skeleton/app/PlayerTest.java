@@ -60,6 +60,10 @@ public class PlayerTest {
         assertEquals(3, player.getLifeTokens());
     }
 
-
+    @Test
+    public void takeDamageIncreasesDamageTokenTest() {
+        int numberTokensBefore = player.getDamageTokens();
+        player.handleDamage();
+    }
 
 }

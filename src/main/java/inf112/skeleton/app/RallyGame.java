@@ -15,6 +15,7 @@ import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.LoadingScreen;
+import inf112.skeleton.app.screens.MenuScreen;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -30,7 +31,7 @@ public class RallyGame extends Game {
     public Player mainPlayer;
 
     public void create() {
-        this.setScreen(new LoadingScreen(this));
+        this.setScreen(new MenuScreen(this));
         startMusic();
     }
 
@@ -90,6 +91,7 @@ public class RallyGame extends Game {
                 }
                 board.respawnPlayers();
                 fireLasers();
+                decreaseLives();
                 removeDeadPlayers();
                 return super.keyDown(keycode);
             }
@@ -141,6 +143,20 @@ public class RallyGame extends Game {
             removeDeadPlayers();
             dealCards();
             selectCards();
+        }
+    }
+
+    /**
+     * Decrease lifetokens to each player that has collected 10 damagetokens.
+     * Reset damagetokens and respawn player.
+     */
+    public void decreaseLives() {
+        for (Player player : players) {
+            if (player.getDamageTokens() > 10) {
+                player.decrementLifeTokens();
+                player.resetDamageTokens();
+                board.respawn(player);
+            }
         }
     }
 
