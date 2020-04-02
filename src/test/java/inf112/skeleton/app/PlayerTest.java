@@ -50,4 +50,9 @@ public class PlayerTest {
         assertEquals(Direction.SOUTH, player.getDirection().turnRight());
     }
 
+    @Test
+    public void startWithNoDamageTokensTest() {
+        assertEquals(0, player.getDamageTokens());
+    }
+
 }
