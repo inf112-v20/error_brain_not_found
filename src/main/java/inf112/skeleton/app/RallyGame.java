@@ -27,7 +27,12 @@ public class RallyGame extends Game {
     public Semaphore waitForCards;
     public boolean playing;
     public Sound laserSound;
+    public static Music gameMusic;
     public Player mainPlayer;
+
+
+    public static float volume = 0.2f;
+    public boolean unMute = true;
 
     public void create() {
         this.setScreen(new LoadingScreen(this));
@@ -44,6 +49,7 @@ public class RallyGame extends Game {
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
         this.playing = true;
+
 
         this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
 
@@ -78,7 +84,12 @@ public class RallyGame extends Game {
                     board.movePlayer(mainPlayer);
                 } else if (keycode == Input.Keys.ESCAPE) {
                     Gdx.app.exit();
-                } else if (keycode == Input.Keys.SPACE) {
+                } else if (keycode == Input.Keys.M) {
+                    mute();
+                    muteMusic();
+                }
+
+                else if (keycode == Input.Keys.SPACE) {
                     cardsReady();
                     return super.keyDown(keycode);
                 } else {
@@ -96,11 +107,35 @@ public class RallyGame extends Game {
         });
     }
 
+    public void mute(){
+        if (unMute){
+            volume = 0f;
+            unMute = false;
+
+        }
+        else {
+            volume = 0.5f;
+            unMute = true;
+        }
+    }
+
+    public  void loadMusic() {
+        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
+    }
+
+    public  void muteMusic() {
+       if (!unMute){
+        gameMusic.setVolume(volume);}
+
+       gameMusic.setVolume(volume);
+
+    }
+
     public void startMusic() {
-        Music music = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
-        music.setLooping(true);
-        music.setVolume(1f);
-        music.play();
+        loadMusic();
+        gameMusic.setVolume(0.3f);
+        gameMusic.play();
+
     }
 
     private void cardsReady() {
