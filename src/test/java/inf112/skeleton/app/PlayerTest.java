@@ -2,11 +2,11 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.objects.Flag;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class PlayerTest {
 
@@ -37,7 +37,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void whenNewPlayerIsMadeDirectionIsSetToEastTest() {
+    public void backupDirectionIsEastTest() {
         assertEquals(Direction.EAST, player.getDirection());
     }
 
@@ -49,6 +49,33 @@ public class PlayerTest {
     @Test
     public void whenPlayersStartDirectionIsTurnedRightItGivesSouthDirectionTest() {
         assertEquals(Direction.SOUTH, player.getDirection().turnRight());
+    }
+
+    @Test
+    public void changingPositionDoesNotChangeBackupTest() {
+        Vector2 backupPosition = player.getBackupPosition();
+        player.setPosition(new Vector2(1, 0));
+        assertEquals(backupPosition, player.getBackupPosition());
+    }
+
+    @Test
+    public void backupPositionSameAsStartPositionTest() {
+        assertEquals(player.getBackupPosition(), player.getPosition());
+    }
+
+    @Test
+    public void playerPickedUpOneFlagDoesNotHaveAllFlagsTest() {
+        Flag flag = new Flag(1, 0,0);
+        player.pickUpFlag(flag, flag.getFlagnr());
+        int numberOfFlags = 3;
+        assertFalse(player.hasAllFlags(numberOfFlags));
+    }
+
+    @Test
+    public void tryingToPickUpFlagWhenNotStandingOnFlagDoesNotWorkTest() {
+        Flag flag = new Flag(1, 1,0);
+        player.pickUpFlag(flag, flag.getFlagnr());
+
     }
 
     @Test
