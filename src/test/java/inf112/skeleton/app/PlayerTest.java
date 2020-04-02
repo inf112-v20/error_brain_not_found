@@ -64,6 +64,7 @@ public class PlayerTest {
     public void takeDamageIncreasesDamageTokenTest() {
         int numberTokensBefore = player.getDamageTokens();
         player.handleDamage();
+        assertEquals(numberTokensBefore+1gi , player.getDamageTokens());
     }
 
 }
