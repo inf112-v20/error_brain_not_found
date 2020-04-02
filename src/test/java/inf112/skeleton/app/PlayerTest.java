@@ -55,4 +55,11 @@ public class PlayerTest {
         assertEquals(0, player.getDamageTokens());
     }
 
+    @Test
+    public void startWithThreeLivesTest() {
+        assertEquals(3, player.getLifeTokens());
+    }
+
+
+
 }
