@@ -169,6 +169,7 @@ public class RallyGame extends Game {
                 activateRotatePads();
 
                 fireLasers();
+                decreaseLives();
                 try {
                     Thread.sleep(600);
                 } catch (InterruptedException e) {
