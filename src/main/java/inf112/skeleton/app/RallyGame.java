@@ -151,7 +151,7 @@ public class RallyGame extends Game {
      */
     public void decreaseLives() {
         for (Player player : players) {
-            if (player.getDamageTokens() > 10) {
+            if (player.getDamageTokens() >= 10) {
                 player.decrementLifeTokens();
                 player.resetDamageTokens();
                 board.respawn(player);
