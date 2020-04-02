@@ -15,7 +15,6 @@ import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.LoadingScreen;
-import inf112.skeleton.app.screens.MenuScreen;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
