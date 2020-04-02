@@ -8,8 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 public class GameTest {
@@ -57,5 +56,15 @@ public class GameTest {
         fillUpDamageTokens(player);
         game.decreaseLives();
         assertTrue(player.isInBackupState());
+    }
+
+    @Test
+    public void deadPlayerAreRemovedFromGameTest() {
+        // Kill player
+        for (int livesTaken = 1; livesTaken <= 3; livesTaken++) {
+            player.decrementLifeTokens();
+        }
+        game.removeDeadPlayers();
+        assertFalse(game.players.contains(player));
     }
 }
