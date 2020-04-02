@@ -56,6 +56,46 @@ When I hit "m", there is no sound from the game.
 Tasks:
 *   Make method for muting the game. 
 
+
+#### Preferences  
+User-story:  
+As a user I want to be able to control the game volume, so I can adjust the volum to a comfortable level.  
+
+Acceptance-criteria:
+*   When I turn down volume, the sound goes down.  
+*   When I turn up volume, the sound goes up. 
+
+Tasks:  
+*   Create method for turning up/down volume. 
+*   Manuel tests.  
+
+
+#### AI 
+User-story:  
+As a user I want to be able to play against the machine, so that I can play the game alone.  
+
+Acceptance-criteria:  
+*   When I play the game the computer plays the other robot(s).  
+
+Tasks:  
+*   Create an AI that represent a player or more players. Need to be able to powerdown and make a program.  
+
+
+#### LAN  
+User-story:  
+As a user I want to be able to connect to other players, so we can play together.  
+
+Acceptance-criteria:  
+*   If I am the only one playing on the LAN, I will be the server in the game-session.  
+*   If there already are players in the game I will be a client in the game-session.   
+*   If I connect to another, then we are in the same game.  
+
+Tasks:  
+*   Create a method that tells if you should be host or client in the game.  
+*   If server: Create a class that creates a new game and wait for other players using sockets  
+*   If client: Create a new player and send this to server using sockets.
+*   Send input/output to/from server and the clients.
+
 #### Main criteria for MVP
 - [x] The game should be able to run, show a board with starting robot and programcards to this robot.  
 - [ ] The player is able to pick programcards and place them so that the robot can move.  
