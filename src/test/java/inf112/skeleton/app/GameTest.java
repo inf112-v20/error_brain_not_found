@@ -31,13 +31,30 @@ public class GameTest {
         board.addPlayer(player);
     }
 
-    @Test
-    public void lifeDecreasedWhenCollectedTenDamageTokensTest() {
-        int livesBefore = player.getLifeTokens();
+    /**
+     * Give the player ten damage tokens.
+     * @param player
+     */
+    private void fillUpDamageTokens(Player player) {
         for (int takeDamage = 1; takeDamage <= 10; takeDamage++) {
             player.handleDamage();
         }
+    }
+
+    @Test
+    public void lifeDecreasedWhenCollectedTenDamageTokensTest() {
+        int livesBefore = player.getLifeTokens();
+        fillUpDamageTokens(player);
         game.decreaseLives();
         assertEquals(livesBefore-1, player.getLifeTokens());
+    }
+
+    @Test
+    public void respawnIfTenCollectedDamageTokensTest() {
+        // Move player out of backupposition
+        game.getBoard().movePlayer(player);
+        fillUpDamageTokens(player);
+        game.decreaseLives();
+        assertEquals(player.getBackupPosition(), player.getPosition());
     }
 }
