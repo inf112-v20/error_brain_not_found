@@ -15,6 +15,7 @@ import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.LoadingScreen;
+import inf112.skeleton.app.screens.MenuScreen;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -35,7 +36,8 @@ public class RallyGame extends Game {
     public boolean unMute = true;
 
     public void create() {
-        this.setScreen(new LoadingScreen(this));
+        //TODO: Delete LoadingScreen if not used
+        this.setScreen(new MenuScreen(this));
         startMusic();
     }
 
