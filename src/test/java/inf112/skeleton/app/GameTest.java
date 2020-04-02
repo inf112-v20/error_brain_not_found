@@ -9,6 +9,7 @@ import org.junit.Test;
 
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 
 public class GameTest {
@@ -55,6 +56,6 @@ public class GameTest {
         game.getBoard().movePlayer(player);
         fillUpDamageTokens(player);
         game.decreaseLives();
-        assertEquals(player.getBackupPosition(), player.getPosition());
+        assertTrue(player.isInBackupState());
     }
 }
