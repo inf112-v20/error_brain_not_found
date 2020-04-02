@@ -31,7 +31,7 @@ public class RallyGame extends Game {
     public Player mainPlayer;
 
     public void create() {
-        this.setScreen(new MenuScreen(this));
+        this.setScreen(new LoadingScreen(this));
         startMusic();
     }
 
