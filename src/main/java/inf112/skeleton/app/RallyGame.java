@@ -33,42 +33,47 @@ public class RallyGame extends Game {
     public static Music gameMusic;
     public Player mainPlayer;
     private int numberOfPlayers;
-    private boolean IAmServer;
 
-    public GameServer server;
-    public Socket clientSocket;
+
 
     public static float volume = 0.2f;
     public boolean unMute = true;
 
     public void create() {
 
-        // Try to create a client socket.
-        try {
-            Socket clientSocket = new Socket("localhost", 9000);
-            System.out.println("I am a client :)");
+        Scanner scanner  = new Scanner(System.in);
+        System.out.println("Do you want to play LAN? [Y/N]");
+        if (scanner.nextLine().equals("Y") || scanner.nextLine().equals("y")) {
+            // Try to create a client socket.
+            try {
+                Socket clientSocket = new Socket("localhost", 9000);
+                System.out.println("I am a client :)");
 
-            // Send something to your server:
 
-            OutputStream output = clientSocket.getOutputStream();
-            PrintWriter writer = new PrintWriter(output, true);
-            writer.println("Hello :)");
-            //InputStream message = clientSocket.getInputStream();
-            //BufferedReader reader = new BufferedReader(new InputStreamReader(message));
-            //String numberOfPlayers= reader.readLine();
-            //this.numberOfPlayers = Integer.parseInt(numberOfPlayers);
-        } catch (UnknownHostException e) {
-            System.out.println("Did not find host.");
-        } catch (IOException e) {
-            System.out.println("Found no servers. :( Becoming a server..");
-            System.out.println("How many players?");
-            Scanner scanner = new Scanner(System.in);
-            this.numberOfPlayers = scanner.nextInt();
-            this.IAmServer = true;
-            ConnectionThread connection = new ConnectionThread(this.numberOfPlayers);
-            connection.start();
-            //this.numberOfPlayers = connection.getNumberOfPlayers();
+                // Get incoming messages
+                InputStream input = clientSocket.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                System.out.print(reader.readLine());
+                // Send something to your server
+
+                OutputStream output = clientSocket.getOutputStream();
+                PrintWriter writer = new PrintWriter(output, true);
+                writer.println("Hello :)");
+
+            } catch (UnknownHostException e) {
+                System.out.println("Did not find host.");
+            } catch (IOException e) {
+                System.out.println("Found no servers. :( Becoming a server..");
+                System.out.println("How many players?");
+                scanner = new Scanner(System.in);
+                this.numberOfPlayers = scanner.nextInt();
+                ConnectionThread connection = new ConnectionThread(this.numberOfPlayers);
+                connection.start();
+                //this.numberOfPlayers = connection.getNumberOfPlayers();
+            }
         }
+
+
         //TODO: Delete LoadingScreen if not used
         this.setScreen(new MenuScreen(this));
         startMusic();
@@ -99,20 +104,6 @@ public class RallyGame extends Game {
 
     }
 
-    private void sendMessage(String message) {
-        try {
-            if (!IAmServer) {
-                OutputStream output = clientSocket.getOutputStream();
-                PrintWriter writer = new PrintWriter(output, true);
-                //Scanner scanner = new Scanner(System.in);
-                //String input = scanner.nextLine();
-                writer.println(message);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 
     public void setInputProcessor() {
         Gdx.input.setInputProcessor(new InputAdapter() {
@@ -125,8 +116,6 @@ public class RallyGame extends Game {
                 removeLasers();
 
                 if (keycode == Input.Keys.RIGHT) {
-                    if (IAmServer) {sendMessage("moved to the right");}
-
                     mainPlayer.setDirection(Direction.EAST);
                     board.movePlayer(mainPlayer);
                 } else if (keycode == Input.Keys.LEFT) {

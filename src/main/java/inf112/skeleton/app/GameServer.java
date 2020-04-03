@@ -1,8 +1,8 @@
 package inf112.skeleton.app;
 
-import com.badlogic.gdx.Game;
 
 import java.io.*;
+import java.lang.reflect.Array;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -14,9 +14,11 @@ public class GameServer {
 
     private int numberOfClients;
     private ServerSocket serverSocket;
+    private ArrayList<ClientThreads> clients;
 
     public GameServer(int numberOfClients) {
         this.numberOfClients = numberOfClients;
+        this.clients = new ArrayList<>();
     }
 
     public void connect(int port) {
@@ -27,7 +29,11 @@ public class GameServer {
             int connected = 0;
             while (true) {
                 Socket socket = serverSocket.accept();
-                new ClientThreads(socket).start();
+                // Server is player 1
+                int playerNumber = connected +2;
+                ClientThreads client = new ClientThreads(socket, "Player " + playerNumber);
+                client.start();
+                clients.add(client);
                 connected++;
                 if (connected == this.numberOfClients) {
                     System.out.print("Connected! :)");
@@ -37,6 +43,7 @@ public class GameServer {
             e.printStackTrace();
         }
     }
+
 
 
 }

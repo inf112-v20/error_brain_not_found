@@ -12,14 +12,22 @@ import java.net.Socket;
 public class ClientThreads extends Thread {
 
     private Socket client;
+    private String name;
 
-    public ClientThreads(Socket client) {
+    public ClientThreads(Socket client, String name) {
         this.client = client;
+        this.name = name;
     }
 
     @Override
     public void run() {
         try {
+
+            // Let the player know what the playernumber is
+            OutputStream output = client.getOutputStream();
+            PrintWriter writer = new PrintWriter(output, true);
+            writer.println(name);
+
             // Get incoming messages
             InputStream input = client.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
