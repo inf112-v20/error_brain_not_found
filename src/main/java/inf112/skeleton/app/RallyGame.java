@@ -4,7 +4,6 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.net.SocketHints;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
@@ -13,7 +12,6 @@ import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.MenuScreen;
-import org.lwjgl.Sys;
 
 import java.io.*;
 import java.net.Socket;
@@ -64,10 +62,7 @@ public class RallyGame extends Game {
             this.numberOfPlayers = Integer.parseInt(reader.readLine());
             System.out.println(this.numberOfPlayers);
 
-            // Send something to your server
-            OutputStream output = clientSocket.getOutputStream();
-            PrintWriter writer = new PrintWriter(output, true);
-            writer.println("Hello :)");
+
 
         } catch (UnknownHostException e) {
             System.out.println("Did not find host.");
@@ -111,6 +106,22 @@ public class RallyGame extends Game {
 
     }
 
+    /**
+     * Sends a message to server.
+     * @param message
+     */
+    public void sendMessage(String message) {
+        // Send something to your server
+        try {
+            OutputStream output = clientSocket.getOutputStream();
+            PrintWriter writer = new PrintWriter(output, true);
+            writer.println(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
     public void setInputProcessor() {
         Gdx.input.setInputProcessor(new InputAdapter() {
@@ -125,6 +136,11 @@ public class RallyGame extends Game {
                 if (keycode == Input.Keys.RIGHT) {
                     mainPlayer.setDirection(Direction.EAST);
                     board.movePlayer(mainPlayer);
+                    if (!isServer) {
+                        sendMessage(mainPlayer.getPlayerNr() + "moved right");
+                    } else {
+                        connection.sendToAll(mainPlayer.getPlayerNr() + "moved right");
+                    }
                 } else if (keycode == Input.Keys.LEFT) {
                     mainPlayer.setDirection(Direction.WEST);
                     board.movePlayer(mainPlayer);

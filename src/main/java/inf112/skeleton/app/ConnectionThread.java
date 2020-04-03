@@ -23,5 +23,9 @@ public class ConnectionThread extends Thread {
         this.server.closeAll();
     }
 
+    public void sendToAll(String message) {
+        server.sendToAll(message);
+    }
+
 
 }

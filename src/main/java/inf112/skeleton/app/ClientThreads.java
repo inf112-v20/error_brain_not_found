@@ -26,9 +26,14 @@ public class ClientThreads extends Thread {
             writer.println(playerNumber);
 
             // Get incoming messages
-            InputStream input = client.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-            System.out.print(reader.readLine());
+            while (true) {
+                InputStream input = client.getInputStream();
+                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                System.out.print(reader.readLine());
+                if (reader.readLine() == null) {
+                    break;
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
