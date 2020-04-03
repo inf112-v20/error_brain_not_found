@@ -20,6 +20,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.concurrent.Semaphore;
 
 public class RallyGame extends Game {
@@ -34,6 +35,7 @@ public class RallyGame extends Game {
     public Player mainPlayer;
 
     private ServerSocket serverSocket;
+    private GameServer server;
 
     public static float volume = 0.2f;
     public boolean unMute = true;
@@ -72,13 +74,18 @@ public class RallyGame extends Game {
             System.out.println("I am a client :)");
             OutputStream output = clientSocket.getOutputStream();
             PrintWriter writer = new PrintWriter(output, true);
-            writer.println("Hello Dette er fra din klient :) ");
+            Scanner scanner = new Scanner(System.in);
+            String input = scanner.nextLine();
+            writer.println(input);
+
         } catch (UnknownHostException e) {
             System.out.println("Did not find localhost.");
         } catch (IOException e) {
             System.out.println("Found no servers. :( Creating one. :D");
-            createServer(9000, 2);
-
+            //createServer(9000, 2);
+            this.server = new GameServer(1);
+            server.connect(9000);
+            System.out.println(server.getMessage(1));
         }
     }
 
