@@ -13,6 +13,7 @@ import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.MenuScreen;
+import org.lwjgl.Sys;
 
 import java.io.*;
 import java.net.Socket;
@@ -47,18 +48,21 @@ public class RallyGame extends Game {
             Socket clientSocket = new Socket("localhost", 9000);
             System.out.println("I am a client :)");
 
-            //InputStream message = clientSocket.getInputStream();
-            //BufferedReader reader = new BufferedReader(new InputStreamReader(message));
-            //String numberOfPlayers= reader.readLine();
-            //this.numberOfPlayers = Integer.parseInt(numberOfPlayers);
-
+            InputStream message = clientSocket.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(message));
+            String numberOfPlayers= reader.readLine();
+            this.numberOfPlayers = Integer.parseInt(numberOfPlayers);
         } catch (UnknownHostException e) {
             System.out.println("Did not find host.");
         } catch (IOException e) {
             System.out.println("Found no servers. :( Becoming a server..");
+            System.out.println("How many players?");
+            Scanner scanner = new Scanner(System.in);
+            this.numberOfPlayers = scanner.nextInt();
             this.IAmServer = true;
-            Thread connection = new ConnectionThread();
+            ConnectionThread connection = new ConnectionThread(this.numberOfPlayers);
             connection.start();
+            //this.numberOfPlayers = connection.getNumberOfPlayers();
         }
         //TODO: Delete LoadingScreen if not used
         this.setScreen(new MenuScreen(this));
@@ -68,7 +72,7 @@ public class RallyGame extends Game {
 
     public void setupGame(String mapPath) {
 
-        this.board = new Board(mapPath, 4);
+        this.board = new Board(mapPath, this.numberOfPlayers);
         this.deck = new Deck();
         this.players = new ArrayList<>();
         this.players = board.getPlayers();
