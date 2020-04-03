@@ -29,10 +29,11 @@ public class ClientThreads extends Thread {
             while (true) {
                 InputStream input = client.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                System.out.print(reader.readLine());
-                if (reader.readLine() == null) {
+                String message = reader.readLine();
+                if (message == null) {
                     break;
                 }
+                System.out.print(message);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -54,7 +55,6 @@ public class ClientThreads extends Thread {
         }
 
     }
-
 
     /**
      * Close this socket.

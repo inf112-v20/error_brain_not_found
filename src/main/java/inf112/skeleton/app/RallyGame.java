@@ -62,6 +62,9 @@ public class RallyGame extends Game {
             this.numberOfPlayers = Integer.parseInt(reader.readLine());
             System.out.println(this.numberOfPlayers);
 
+            // Create new thread for listening keystrokes from server
+            GameClient client = new GameClient(clientSocket);
+            client.start();
 
 
         } catch (UnknownHostException e) {
