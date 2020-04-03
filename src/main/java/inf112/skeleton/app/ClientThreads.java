@@ -51,6 +51,19 @@ public class ClientThreads extends Thread {
 
     }
 
+
+    /**
+     * Close this socket.
+     *
+     */
+    public void close() {
+        try {
+            client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public int getPlayerNumber() {
         return playerNumber;
     }

@@ -58,5 +58,15 @@ public class GameServer {
     }
 
 
+    /**
+     * Close all connecting sockets.
+     */
+    public void closeAll() {
+        for (ClientThreads thread : clients) {
+            thread.close();
+        }
+    }
+
+
 
 }

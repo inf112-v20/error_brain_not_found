@@ -34,55 +34,15 @@ public class RallyGame extends Game {
     public Player mainPlayer;
     private int numberOfPlayers;
     private int myPlayerNumber;
-    private String myPlayerName;
-
+    private ConnectionThread connection;
+    private boolean isServer;
+    private Socket clientSocket;
 
 
     public static float volume = 0.2f;
     public boolean unMute = true;
 
     public void create() {
-
-        Scanner scanner  = new Scanner(System.in);
-       // System.out.println("Do you want to play LAN? [Y/N]");
-       // if (scanner.nextLine().equals("Y") || scanner.nextLine().equals("y")) {
-            // Try to create a client socket.
-            try {
-                Socket clientSocket = new Socket("localhost", 9000);
-                System.out.println("I am a client :)");
-
-                // Get your playerNumber
-                InputStream input = clientSocket.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                this.myPlayerNumber = Integer.parseInt(reader.readLine());
-                this.myPlayerName = "Player "+this.myPlayerNumber;
-                System.out.println(myPlayerName);
-
-                // Get your playerNumber
-                InputStream input2 = clientSocket.getInputStream();
-                BufferedReader reader2 = new BufferedReader(new InputStreamReader(input));
-                this.numberOfPlayers = Integer.parseInt(reader.readLine());
-                System.out.println(this.numberOfPlayers);
-
-                // Send something to your server
-                OutputStream output = clientSocket.getOutputStream();
-                PrintWriter writer = new PrintWriter(output, true);
-                writer.println("Hello :)");
-
-            } catch (UnknownHostException e) {
-                System.out.println("Did not find host.");
-            } catch (IOException e) {
-                System.out.println("Found no servers. :( Becoming a server..");
-                this.myPlayerNumber = 1;
-                System.out.println("How many players?");
-                scanner = new Scanner(System.in);
-                this.numberOfPlayers = scanner.nextInt();
-                ConnectionThread connection = new ConnectionThread(this.numberOfPlayers);
-                connection.start();
-           // }
-        }
-
-
         //TODO: Delete LoadingScreen if not used
         this.setScreen(new MenuScreen(this));
         startMusic();
@@ -91,12 +51,52 @@ public class RallyGame extends Game {
 
     public void setupGame(String mapPath) {
 
-        this.board = new Board(mapPath,2);
+        Scanner scanner  = new Scanner(System.in);
+        // System.out.println("Do you want to play LAN? [Y/N]");
+        // if (scanner.nextLine().equals("Y") || scanner.nextLine().equals("y")) {
+        // Try to create a client socket.
+        try {
+            this.clientSocket = new Socket("localhost", 9000);
+            System.out.println("I am a client :)");
+
+            // Get your playerNumber
+            InputStream input = clientSocket.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+            this.myPlayerNumber = Integer.parseInt(reader.readLine());
+            String myPlayerName = "Player " + this.myPlayerNumber;
+            System.out.println(myPlayerName);
+
+            // Get numberOfPlayers
+            InputStream input2 = clientSocket.getInputStream();
+            BufferedReader reader2 = new BufferedReader(new InputStreamReader(input));
+            this.numberOfPlayers = Integer.parseInt(reader.readLine());
+            System.out.println(this.numberOfPlayers);
+
+            // Send something to your server
+            OutputStream output = clientSocket.getOutputStream();
+            PrintWriter writer = new PrintWriter(output, true);
+            writer.println("Hello :)");
+
+        } catch (UnknownHostException e) {
+            System.out.println("Did not find host.");
+        } catch (IOException e) {
+            System.out.println("Found no servers. :( Becoming a server..");
+            this.isServer = true;
+            this.myPlayerNumber = 1;
+            System.out.println("How many players?");
+            scanner = new Scanner(System.in);
+            this.numberOfPlayers = scanner.nextInt();
+            this.connection = new ConnectionThread(this.numberOfPlayers);
+            connection.start();
+            // }
+        }
+
+
+        this.board = new Board(mapPath,this.numberOfPlayers);
         this.deck = new Deck();
         this.players = new ArrayList<>();
         this.players = board.getPlayers();
-        this.mainPlayer = board.getPlayer1();
-
+        this.mainPlayer = board.getPlayer(this.myPlayerNumber);
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
         this.playing = true;
@@ -371,6 +371,16 @@ public class RallyGame extends Game {
     }
 
     public void dispose() {
+        // Close all sockets when quitting game
+        if (isServer) {
+            this.connection.closeAll();
+        } else {
+            try {
+                this.clientSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         this.screen.dispose();
     }
 
