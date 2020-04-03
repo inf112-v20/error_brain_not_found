@@ -4,6 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.net.SocketHints;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
@@ -13,7 +14,8 @@ import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.MenuScreen;
 
-import java.io.IOException;
+import java.io.*;
+import java.lang.reflect.Array;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -31,6 +33,8 @@ public class RallyGame extends Game {
     public static Music gameMusic;
     public Player mainPlayer;
 
+    private ServerSocket serverSocket;
+
     public static float volume = 0.2f;
     public boolean unMute = true;
 
@@ -42,24 +46,6 @@ public class RallyGame extends Game {
     }
 
     public void setupGame(String mapPath) {
-
-        // Try to create a client socket.
-        try {
-            Socket clientSocket = new Socket("localhost", 9000);
-            System.out.println("I am a client :)");
-        } catch (UnknownHostException e) {
-            System.out.println("Did not find localhost.");
-        } catch (IOException e) {
-            System.out.println("Found no servers. :( Creating one. :D");
-            try {
-                ServerSocket serverSocket = new ServerSocket(9000);
-                //while (true) {
-                serverSocket.accept();
-                //}
-            } catch (IOException ex) {
-                System.out.println("No.");
-            }
-        }
 
         this.board = new Board(mapPath, 4);
         this.deck = new Deck();
@@ -79,6 +65,41 @@ public class RallyGame extends Game {
         setInputProcessor();
         dealCards();
         selectCards();
+
+        // Try to create a client socket.
+        try {
+            Socket clientSocket = new Socket("localhost", 9000);
+            System.out.println("I am a client :)");
+            OutputStream output = clientSocket.getOutputStream();
+            PrintWriter writer = new PrintWriter(output, true);
+            writer.println("Hello Dette er fra din klient :) ");
+        } catch (UnknownHostException e) {
+            System.out.println("Did not find localhost.");
+        } catch (IOException e) {
+            System.out.println("Found no servers. :( Creating one. :D");
+            createServer(9000, 2);
+
+        }
+    }
+
+    private void createServer(int port, int numberOfClients) {
+        try {
+            this.serverSocket = new ServerSocket(port);
+            ArrayList<Socket> sockets = new ArrayList<>();
+            int clients = 0;
+            while (clients < numberOfClients) {
+                Socket socket = serverSocket.accept();
+                sockets.add(socket);
+                clients++;
+            }
+            // Read data from client
+            InputStream input = sockets.get(0).getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+            String line = reader.readLine();
+            System.out.println(line);
+        } catch (IOException ex) {
+            System.out.println("Could not create server.");
+        }
     }
 
     public void setInputProcessor() {
