@@ -31,10 +31,6 @@ public class RallyGame extends Game {
     public static Music gameMusic;
     public Player mainPlayer;
 
-    private Socket clientSocket;
-    private ServerSocket serverSocket;
-
-
     public static float volume = 0.2f;
     public boolean unMute = true;
 
@@ -42,37 +38,28 @@ public class RallyGame extends Game {
         //TODO: Delete LoadingScreen if not used
         this.setScreen(new MenuScreen(this));
         startMusic();
+
+    }
+
+    public void setupGame(String mapPath) {
+
         // Try to create a client socket.
         try {
-            this.clientSocket = new Socket("localhost", 9000);
+            Socket clientSocket = new Socket("localhost", 9000);
+            System.out.println("I am a client :)");
         } catch (UnknownHostException e) {
             System.out.println("Did not find localhost.");
         } catch (IOException e) {
             System.out.println("Found no servers. :( Creating one. :D");
             try {
-                this.serverSocket = new ServerSocket(9000);
-                // Accept incoming requests
+                ServerSocket serverSocket = new ServerSocket(9000);
                 //while (true) {
-                  //  serverSocket.accept();
+                serverSocket.accept();
                 //}
             } catch (IOException ex) {
                 System.out.println("No.");
             }
         }
-
-        try {
-            if (!(clientSocket == null)) {
-                clientSocket.close();
-            }
-            if (!(serverSocket == null)) {
-                serverSocket.close();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public void setupGame(String mapPath) {
 
         this.board = new Board(mapPath, 4);
         this.deck = new Deck();
