@@ -10,12 +10,13 @@ public class ConnectionThread extends Thread {
         this.numberOfPlayers = numberOfPlayers;
     }
 
+    @Override
     public void run(){
         GameServer server = new GameServer(this.numberOfPlayers-1);
 
         server.connect(9000);
         // Let all clients start game with same amount of players.
-        server.broadcastMessage(numberOfPlayers+"");
+        //server.broadcastMessage(numberOfPlayers+"");
     }
 
 

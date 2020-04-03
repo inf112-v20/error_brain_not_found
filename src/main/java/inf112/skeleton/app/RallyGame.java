@@ -48,10 +48,15 @@ public class RallyGame extends Game {
             Socket clientSocket = new Socket("localhost", 9000);
             System.out.println("I am a client :)");
 
-            InputStream message = clientSocket.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(message));
-            String numberOfPlayers= reader.readLine();
-            this.numberOfPlayers = Integer.parseInt(numberOfPlayers);
+            // Send something to your server:
+
+            OutputStream output = clientSocket.getOutputStream();
+            PrintWriter writer = new PrintWriter(output, true);
+            writer.println("Hello :)");
+            //InputStream message = clientSocket.getInputStream();
+            //BufferedReader reader = new BufferedReader(new InputStreamReader(message));
+            //String numberOfPlayers= reader.readLine();
+            //this.numberOfPlayers = Integer.parseInt(numberOfPlayers);
         } catch (UnknownHostException e) {
             System.out.println("Did not find host.");
         } catch (IOException e) {
@@ -72,7 +77,7 @@ public class RallyGame extends Game {
 
     public void setupGame(String mapPath) {
 
-        this.board = new Board(mapPath, this.numberOfPlayers);
+        this.board = new Board(mapPath,2);
         this.deck = new Deck();
         this.players = new ArrayList<>();
         this.players = board.getPlayers();
