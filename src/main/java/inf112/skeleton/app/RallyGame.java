@@ -15,8 +15,6 @@ import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.MenuScreen;
 
 import java.io.*;
-import java.lang.reflect.Array;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -33,14 +31,35 @@ public class RallyGame extends Game {
     public Sound laserSound;
     public static Music gameMusic;
     public Player mainPlayer;
+    private int numberOfPlayers;
+    private boolean IAmServer;
 
-    private ServerSocket serverSocket;
-    private GameServer server;
+    public GameServer server;
+    public Socket clientSocket;
 
     public static float volume = 0.2f;
     public boolean unMute = true;
 
     public void create() {
+
+        // Try to create a client socket.
+        try {
+            Socket clientSocket = new Socket("localhost", 9000);
+            System.out.println("I am a client :)");
+
+            //InputStream message = clientSocket.getInputStream();
+            //BufferedReader reader = new BufferedReader(new InputStreamReader(message));
+            //String numberOfPlayers= reader.readLine();
+            //this.numberOfPlayers = Integer.parseInt(numberOfPlayers);
+
+        } catch (UnknownHostException e) {
+            System.out.println("Did not find host.");
+        } catch (IOException e) {
+            System.out.println("Found no servers. :( Becoming a server..");
+            this.IAmServer = true;
+            Thread connection = new ConnectionThread();
+            connection.start();
+        }
         //TODO: Delete LoadingScreen if not used
         this.setScreen(new MenuScreen(this));
         startMusic();
@@ -68,45 +87,22 @@ public class RallyGame extends Game {
         dealCards();
         selectCards();
 
-        // Try to create a client socket.
-        try {
-            Socket clientSocket = new Socket("localhost", 9000);
-            System.out.println("I am a client :)");
-            OutputStream output = clientSocket.getOutputStream();
-            PrintWriter writer = new PrintWriter(output, true);
-            Scanner scanner = new Scanner(System.in);
-            String input = scanner.nextLine();
-            writer.println(input);
 
-        } catch (UnknownHostException e) {
-            System.out.println("Did not find localhost.");
-        } catch (IOException e) {
-            System.out.println("Found no servers. :( Creating one. :D");
-            //createServer(9000, 2);
-            this.server = new GameServer(1);
-            server.connect(9000);
-            System.out.println(server.getMessage(1));
-        }
     }
 
-    private void createServer(int port, int numberOfClients) {
+    private void sendMessage(String message) {
         try {
-            this.serverSocket = new ServerSocket(port);
-            ArrayList<Socket> sockets = new ArrayList<>();
-            int clients = 0;
-            while (clients < numberOfClients) {
-                Socket socket = serverSocket.accept();
-                sockets.add(socket);
-                clients++;
+            if (!IAmServer) {
+                OutputStream output = clientSocket.getOutputStream();
+                PrintWriter writer = new PrintWriter(output, true);
+                //Scanner scanner = new Scanner(System.in);
+                //String input = scanner.nextLine();
+                writer.println(message);
             }
-            // Read data from client
-            InputStream input = sockets.get(0).getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-            String line = reader.readLine();
-            System.out.println(line);
-        } catch (IOException ex) {
-            System.out.println("Could not create server.");
+        } catch (IOException e) {
+            e.printStackTrace();
         }
+
     }
 
     public void setInputProcessor() {
@@ -120,6 +116,8 @@ public class RallyGame extends Game {
                 removeLasers();
 
                 if (keycode == Input.Keys.RIGHT) {
+                    if (IAmServer) {sendMessage("moved to the right");}
+
                     mainPlayer.setDirection(Direction.EAST);
                     board.movePlayer(mainPlayer);
                 } else if (keycode == Input.Keys.LEFT) {

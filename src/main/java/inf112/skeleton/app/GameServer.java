@@ -31,6 +31,7 @@ public class GameServer {
                 sockets.add(socket);
                 clients++;
             }
+            System.out.println("Connected! :)");
         } catch (IOException ex) {
             System.out.println("Could not create server.");
         }
