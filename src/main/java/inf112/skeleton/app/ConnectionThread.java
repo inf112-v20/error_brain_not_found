@@ -10,6 +10,9 @@ public class ConnectionThread extends Thread {
         this.numberOfPlayers = numberOfPlayers;
     }
 
+    /**
+     * What the thread is doing when it is started.
+     */
     public void run(){
         this.server = new GameServer(this.numberOfPlayers-1);
         server.connect(9000);

@@ -4,16 +4,19 @@ import java.io.*;
 import java.net.Socket;
 
 /**
- * Get continuos updates from server.
+ * Own thread for a client so client can get continous updates from server.
  */
-public class GameClient extends Thread {
+public class GameClientThread extends Thread {
 
     private Socket clientSocket;
 
-    public GameClient(Socket clientSocket) {
+    public GameClientThread(Socket clientSocket) {
         this.clientSocket = clientSocket;
     }
 
+    /**
+     * What the thread is doing when it is started.
+     */
     public void run() {
         try {
             // Get incoming messages

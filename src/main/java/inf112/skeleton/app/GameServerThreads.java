@@ -17,6 +17,9 @@ public class GameServerThreads extends Thread {
         this.playerNumber = playerNumber;
     }
 
+    /**
+     * What the thread is doing when it is started.
+     */
     public void run() {
         try {
 

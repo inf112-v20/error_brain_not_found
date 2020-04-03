@@ -63,7 +63,7 @@ public class RallyGame extends Game {
             System.out.println(this.numberOfPlayers);
 
             // Create new thread for listening keystrokes from server
-            GameClient client = new GameClient(clientSocket);
+            GameClientThread client = new GameClientThread(clientSocket);
             client.start();
 
 
@@ -114,6 +114,7 @@ public class RallyGame extends Game {
      * @param message
      */
     public void sendMessage(String message) {
+        //TODO: make this a method in client thread.
         // Send something to your server
         try {
             OutputStream output = clientSocket.getOutputStream();
