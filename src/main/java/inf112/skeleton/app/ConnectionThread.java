@@ -13,7 +13,7 @@ public class ConnectionThread extends Thread {
     public void run(){
         this.server = new GameServer(this.numberOfPlayers-1);
         server.connect(9000);
-        //server.sendToAll(numberOfPlayers+"");
+        server.sendToAll(numberOfPlayers+"");
     }
 
     /**

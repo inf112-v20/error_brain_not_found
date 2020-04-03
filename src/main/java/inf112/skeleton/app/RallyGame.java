@@ -59,10 +59,10 @@ public class RallyGame extends Game {
             System.out.println(myPlayerName);
 
             // Get numberOfPlayers
-            //InputStream input2 = clientSocket.getInputStream();
-            //BufferedReader reader2 = new BufferedReader(new InputStreamReader(input));
-            //this.numberOfPlayers = Integer.parseInt(reader.readLine());
-            //System.out.println(this.numberOfPlayers);
+            InputStream input2 = clientSocket.getInputStream();
+            BufferedReader reader2 = new BufferedReader(new InputStreamReader(input));
+            this.numberOfPlayers = Integer.parseInt(reader.readLine());
+            System.out.println(this.numberOfPlayers);
 
             // Send something to your server
             OutputStream output = clientSocket.getOutputStream();
@@ -90,7 +90,7 @@ public class RallyGame extends Game {
 
     public void setupGame(String mapPath) {
 
-        this.board = new Board(mapPath,7);
+        this.board = new Board(mapPath,this.numberOfPlayers);
         this.deck = new Deck();
         this.players = new ArrayList<>();
         this.players = board.getPlayers();
