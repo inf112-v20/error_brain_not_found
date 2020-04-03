@@ -13,7 +13,7 @@ public class GameServer {
 
     private int numberOfClients;
     private ServerSocket serverSocket;
-    private ArrayList<ClientThreads> clients;
+    private ArrayList<GameServerThreads> clients;
 
     public GameServer(int numberOfClients) {
         this.numberOfClients = numberOfClients;
@@ -30,7 +30,7 @@ public class GameServer {
                 // Server is player 1
                 System.out.println();
                 int playerNumber = connected+2;
-                ClientThreads client = new ClientThreads(socket, playerNumber);
+                GameServerThreads client = new GameServerThreads(socket, playerNumber);
                 client.start();
                 clients.add(client);
                 connected++;
@@ -48,7 +48,7 @@ public class GameServer {
      */
     public void sendToAll(String message) {
         System.out.println("Trying to broadcast.");
-        for (ClientThreads thread : clients) {
+        for (GameServerThreads thread : clients) {
             System.out.println("Thread: "+thread.getPlayerNumber());
             thread.sendMessage(message);
         }
@@ -59,7 +59,7 @@ public class GameServer {
      * Close all connecting sockets.
      */
     public void closeAll() {
-        for (ClientThreads thread : clients) {
+        for (GameServerThreads thread : clients) {
             if (thread != null) {
                 thread.close();
             }

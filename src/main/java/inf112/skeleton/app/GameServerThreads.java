@@ -7,12 +7,12 @@ import java.net.Socket;
 /**
  * Make a thread for each client connecting
  */
-public class ClientThreads extends Thread {
+public class GameServerThreads extends Thread {
 
     private Socket client;
     private int playerNumber;
 
-    public ClientThreads(Socket client, int playerNumber) {
+    public GameServerThreads(Socket client, int playerNumber) {
         this.client = client;
         this.playerNumber = playerNumber;
     }
