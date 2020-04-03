@@ -1,9 +1,6 @@
 package inf112.skeleton.app;
 
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
@@ -14,9 +11,12 @@ import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.screens.GifScreen;
-import inf112.skeleton.app.screens.LoadingScreen;
 import inf112.skeleton.app.screens.MenuScreen;
 
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
@@ -31,6 +31,9 @@ public class RallyGame extends Game {
     public static Music gameMusic;
     public Player mainPlayer;
 
+    private Socket clientSocket;
+    private ServerSocket serverSocket;
+
 
     public static float volume = 0.2f;
     public boolean unMute = true;
@@ -39,9 +42,38 @@ public class RallyGame extends Game {
         //TODO: Delete LoadingScreen if not used
         this.setScreen(new MenuScreen(this));
         startMusic();
+        // Try to create a client socket.
+        try {
+            this.clientSocket = new Socket("localhost", 9000);
+        } catch (UnknownHostException e) {
+            System.out.println("Did not find localhost.");
+        } catch (IOException e) {
+            System.out.println("Found no servers. :( Creating one. :D");
+            try {
+                this.serverSocket = new ServerSocket(9000);
+                // Accept incoming requests
+                //while (true) {
+                  //  serverSocket.accept();
+                //}
+            } catch (IOException ex) {
+                System.out.println("No.");
+            }
+        }
+
+        try {
+            if (!(clientSocket == null)) {
+                clientSocket.close();
+            }
+            if (!(serverSocket == null)) {
+                serverSocket.close();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void setupGame(String mapPath) {
+
         this.board = new Board(mapPath, 4);
         this.deck = new Deck();
         this.players = new ArrayList<>();
