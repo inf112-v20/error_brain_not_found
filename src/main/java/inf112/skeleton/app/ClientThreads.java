@@ -17,7 +17,6 @@ public class ClientThreads extends Thread {
         this.playerNumber = playerNumber;
     }
 
-    @Override
     public void run() {
         try {
 

@@ -43,14 +43,6 @@ public class RallyGame extends Game {
     public boolean unMute = true;
 
     public void create() {
-        //TODO: Delete LoadingScreen if not used
-        this.setScreen(new MenuScreen(this));
-        startMusic();
-
-    }
-
-    public void setupGame(String mapPath) {
-
         Scanner scanner  = new Scanner(System.in);
         // System.out.println("Do you want to play LAN? [Y/N]");
         // if (scanner.nextLine().equals("Y") || scanner.nextLine().equals("y")) {
@@ -67,10 +59,10 @@ public class RallyGame extends Game {
             System.out.println(myPlayerName);
 
             // Get numberOfPlayers
-            InputStream input2 = clientSocket.getInputStream();
-            BufferedReader reader2 = new BufferedReader(new InputStreamReader(input));
-            this.numberOfPlayers = Integer.parseInt(reader.readLine());
-            System.out.println(this.numberOfPlayers);
+            //InputStream input2 = clientSocket.getInputStream();
+            //BufferedReader reader2 = new BufferedReader(new InputStreamReader(input));
+            //this.numberOfPlayers = Integer.parseInt(reader.readLine());
+            //System.out.println(this.numberOfPlayers);
 
             // Send something to your server
             OutputStream output = clientSocket.getOutputStream();
@@ -90,9 +82,15 @@ public class RallyGame extends Game {
             connection.start();
             // }
         }
+        //TODO: Delete LoadingScreen if not used
+        this.setScreen(new MenuScreen(this));
+        startMusic();
 
+    }
 
-        this.board = new Board(mapPath,this.numberOfPlayers);
+    public void setupGame(String mapPath) {
+
+        this.board = new Board(mapPath,7);
         this.deck = new Deck();
         this.players = new ArrayList<>();
         this.players = board.getPlayers();
@@ -376,7 +374,9 @@ public class RallyGame extends Game {
             this.connection.closeAll();
         } else {
             try {
-                this.clientSocket.close();
+                if (this.clientSocket != null) {
+                    this.clientSocket.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }

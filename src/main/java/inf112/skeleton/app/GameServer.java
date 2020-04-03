@@ -2,7 +2,6 @@ package inf112.skeleton.app;
 
 
 import java.io.*;
-import java.lang.reflect.Array;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -24,29 +23,27 @@ public class GameServer {
     public void connect(int port) {
         try {
             this.serverSocket = new ServerSocket(port);
-            //this.sockets = new ArrayList<>();
             // Connect to several clients
             int connected = 0;
-            while (true) {
+            while (connected < this.numberOfClients) {
                 Socket socket = serverSocket.accept();
                 // Server is player 1
-                int playerNumber = connected +2;
+                System.out.println();
+                int playerNumber = connected+2;
                 ClientThreads client = new ClientThreads(socket, playerNumber);
                 client.start();
                 clients.add(client);
                 connected++;
-                if (connected == this.numberOfClients) {
-                    System.out.print("Connected! :)");
-                    break;
-                }
             }
+        System.out.println("Connected! :D");
+            serverSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Send a message to all connectiong clients.
+     * Send a message to all connecting clients.
      * @param message
      */
     public void sendToAll(String message) {
@@ -63,7 +60,14 @@ public class GameServer {
      */
     public void closeAll() {
         for (ClientThreads thread : clients) {
-            thread.close();
+            if (thread != null) {
+                thread.close();
+            }
+        }
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
