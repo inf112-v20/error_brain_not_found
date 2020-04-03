@@ -33,6 +33,8 @@ public class RallyGame extends Game {
     public static Music gameMusic;
     public Player mainPlayer;
     private int numberOfPlayers;
+    private int myPlayerNumber;
+    private String myPlayerName;
 
 
 
@@ -42,20 +44,27 @@ public class RallyGame extends Game {
     public void create() {
 
         Scanner scanner  = new Scanner(System.in);
-        System.out.println("Do you want to play LAN? [Y/N]");
-        if (scanner.nextLine().equals("Y") || scanner.nextLine().equals("y")) {
+       // System.out.println("Do you want to play LAN? [Y/N]");
+       // if (scanner.nextLine().equals("Y") || scanner.nextLine().equals("y")) {
             // Try to create a client socket.
             try {
                 Socket clientSocket = new Socket("localhost", 9000);
                 System.out.println("I am a client :)");
 
-
-                // Get incoming messages
+                // Get your playerNumber
                 InputStream input = clientSocket.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-                System.out.print(reader.readLine());
-                // Send something to your server
+                this.myPlayerNumber = Integer.parseInt(reader.readLine());
+                this.myPlayerName = "Player "+this.myPlayerNumber;
+                System.out.println(myPlayerName);
 
+                // Get your playerNumber
+                InputStream input2 = clientSocket.getInputStream();
+                BufferedReader reader2 = new BufferedReader(new InputStreamReader(input));
+                this.numberOfPlayers = Integer.parseInt(reader.readLine());
+                System.out.println(this.numberOfPlayers);
+
+                // Send something to your server
                 OutputStream output = clientSocket.getOutputStream();
                 PrintWriter writer = new PrintWriter(output, true);
                 writer.println("Hello :)");
@@ -64,13 +73,13 @@ public class RallyGame extends Game {
                 System.out.println("Did not find host.");
             } catch (IOException e) {
                 System.out.println("Found no servers. :( Becoming a server..");
+                this.myPlayerNumber = 1;
                 System.out.println("How many players?");
                 scanner = new Scanner(System.in);
                 this.numberOfPlayers = scanner.nextInt();
                 ConnectionThread connection = new ConnectionThread(this.numberOfPlayers);
                 connection.start();
-                //this.numberOfPlayers = connection.getNumberOfPlayers();
-            }
+           // }
         }
 
 

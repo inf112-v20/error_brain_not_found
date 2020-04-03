@@ -1,7 +1,5 @@
 package inf112.skeleton.app;
 
-import com.badlogic.gdx.net.SocketHints;
-import org.lwjgl.Sys;
 
 import java.io.*;
 import java.net.Socket;
@@ -12,11 +10,11 @@ import java.net.Socket;
 public class ClientThreads extends Thread {
 
     private Socket client;
-    private String name;
+    private int playerNumber;
 
-    public ClientThreads(Socket client, String name) {
+    public ClientThreads(Socket client, int playerNumber) {
         this.client = client;
-        this.name = name;
+        this.playerNumber = playerNumber;
     }
 
     @Override
@@ -26,7 +24,7 @@ public class ClientThreads extends Thread {
             // Let the player know what the playernumber is
             OutputStream output = client.getOutputStream();
             PrintWriter writer = new PrintWriter(output, true);
-            writer.println(name);
+            writer.println(playerNumber);
 
             // Get incoming messages
             InputStream input = client.getInputStream();
@@ -36,5 +34,24 @@ public class ClientThreads extends Thread {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * Send a message to this client.
+     * @param message
+     */
+    public void sendMessage(String message) {
+        try {
+            OutputStream output = client.getOutputStream();
+            PrintWriter writer = new PrintWriter(output, true);
+            writer.println(message);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public int getPlayerNumber() {
+        return playerNumber;
     }
 }

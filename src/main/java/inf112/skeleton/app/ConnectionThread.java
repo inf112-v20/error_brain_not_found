@@ -1,6 +1,5 @@
 package inf112.skeleton.app;
 
-import java.util.Scanner;
 
 public class ConnectionThread extends Thread {
 
@@ -14,7 +13,7 @@ public class ConnectionThread extends Thread {
     public void run(){
         GameServer server = new GameServer(this.numberOfPlayers-1);
         server.connect(9000);
-
+        server.sendToAll(numberOfPlayers+"");
     }
 
 

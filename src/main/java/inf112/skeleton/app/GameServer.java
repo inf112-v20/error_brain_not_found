@@ -31,16 +31,29 @@ public class GameServer {
                 Socket socket = serverSocket.accept();
                 // Server is player 1
                 int playerNumber = connected +2;
-                ClientThreads client = new ClientThreads(socket, "Player " + playerNumber);
+                ClientThreads client = new ClientThreads(socket, playerNumber);
                 client.start();
                 clients.add(client);
                 connected++;
                 if (connected == this.numberOfClients) {
                     System.out.print("Connected! :)");
+                    break;
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Send a message to all connectiong clients.
+     * @param message
+     */
+    public void sendToAll(String message) {
+        System.out.println("Trying to broadcast.");
+        for (ClientThreads thread : clients) {
+            System.out.println("Thread: "+thread.getPlayerNumber());
+            thread.sendMessage(message);
         }
     }
 
