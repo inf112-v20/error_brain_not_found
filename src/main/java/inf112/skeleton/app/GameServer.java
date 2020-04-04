@@ -25,7 +25,8 @@ public class GameServer {
      * Establish a connection at given portnumber, waiting for
      * number of clients to connect. Create a new thread for each client.
      * Close socket after connection.
-     * @param port
+     * @param port to open connection
+     * @param numberOfClients how many clients allowed to connect before closing welcoming socket
      */
     public void connect(int port, int numberOfClients) {
         try {
