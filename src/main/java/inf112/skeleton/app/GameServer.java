@@ -54,13 +54,21 @@ public class GameServer {
      * @param message
      */
     public void sendToAll(String message) {
-        System.out.println("Trying to broadcast.");
         for (GameServerThreads thread : clients) {
-            System.out.println("Thread: "+thread.getPlayerNumber());
             thread.sendMessage(message);
         }
     }
 
-    public void sendToAllExcept(int playerNr, String s) {
+    /**
+     * Send a message to all clients except player specified.
+     * @param playerNr player not to send message to
+     * @param message to send
+     */
+    public void sendToAllExcept(int playerNr, String message) {
+        for (GameServerThreads thread : clients) {
+            if (thread.getPlayerNumber() != playerNr) {
+                thread.sendMessage(message);
+            }
+        }
     }
 }
