@@ -1,6 +1,10 @@
 package inf112.skeleton.app;
 
-
+/**
+ * Make a new thread to make server connect to clients so that game.create()
+ * can finish, and the menu-screen is shown.
+ * @author  Jenny
+ */
 public class ConnectionThread extends Thread {
 
     private int numberOfPlayers;
@@ -14,9 +18,9 @@ public class ConnectionThread extends Thread {
      * What the thread is doing when it is started.
      */
     public void run(){
-        this.server = new GameServer(this.numberOfPlayers-1);
-        server.connect(9000);
-        server.sendToAll(numberOfPlayers+"");
+        this.server = new GameServer();
+        int numberOfClients = this.numberOfPlayers-1;
+        server.connect(9000, numberOfClients);
     }
 
     /**
@@ -26,6 +30,10 @@ public class ConnectionThread extends Thread {
         this.server.closeAll();
     }
 
+    /**
+     * Send a message to all clients connected to the server.
+     * @param message message to be sent
+     */
     public void sendToAll(String message) {
         server.sendToAll(message);
     }

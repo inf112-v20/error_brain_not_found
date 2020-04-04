@@ -49,6 +49,7 @@ public class RallyGame extends Game {
             this.clientSocket = new Socket("localhost", 9000);
             System.out.println("I am a client :)");
 
+            /*
             // Get your playerNumber
             InputStream input = clientSocket.getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(input));
@@ -57,14 +58,24 @@ public class RallyGame extends Game {
             System.out.println(myPlayerName);
 
             // Get numberOfPlayers
-            InputStream input2 = clientSocket.getInputStream();
-            BufferedReader reader2 = new BufferedReader(new InputStreamReader(input));
             this.numberOfPlayers = Integer.parseInt(reader.readLine());
             System.out.println(this.numberOfPlayers);
 
-            // Create new thread for listening keystrokes from server
+
+             */
+
+
+            // Create new thread for speaking to server
             GameClientThread client = new GameClientThread(clientSocket);
+            client.storeInitializationValuesFromSocket();
+            this.myPlayerNumber = client.getMyPlayerNumber();
+            this.numberOfPlayers = client.getNumberOfPlayers();
+            System.out.println("In game: " +myPlayerNumber);
+            System.out.println("In game: "+ numberOfPlayers);
             client.start();
+
+            System.out.println("Started client.");
+
 
 
         } catch (UnknownHostException e) {

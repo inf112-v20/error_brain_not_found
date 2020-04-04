@@ -5,16 +5,19 @@ import java.io.*;
 import java.net.Socket;
 
 /**
- * Make a thread for each client connecting
+ * Make a thread for each client connecting.
+ * @author Jenny
  */
 public class GameServerThreads extends Thread {
 
     private Socket client;
     private int playerNumber;
+    private int numberOfPlayers;
 
-    public GameServerThreads(Socket client, int playerNumber) {
+    public GameServerThreads(Socket client, int playerNumber, int numberOfPlayers) {
         this.client = client;
         this.playerNumber = playerNumber;
+        this.numberOfPlayers = numberOfPlayers;
     }
 
     /**
@@ -24,11 +27,12 @@ public class GameServerThreads extends Thread {
         try {
 
             // Let the player know what the playernumber is
-            OutputStream output = client.getOutputStream();
-            PrintWriter writer = new PrintWriter(output, true);
-            writer.println(playerNumber);
-
+            sendMessage(this.playerNumber+"");
+            System.out.println("Server has sent playernum");
             // Get incoming messages
+            sendMessage(this.numberOfPlayers+"");
+            System.out.println("Server has sent numplayers");
+
             while (true) {
                 InputStream input = client.getInputStream();
                 BufferedReader reader = new BufferedReader(new InputStreamReader(input));
