@@ -35,6 +35,7 @@ public class RallyGame extends Game {
     private ConnectionThread connection;
     private boolean isServer;
     private Socket clientSocket;
+    private GameClientThread client;
 
 
     public static float volume = 0.2f;
@@ -49,24 +50,8 @@ public class RallyGame extends Game {
             this.clientSocket = new Socket("localhost", 9000);
             System.out.println("I am a client :)");
 
-            /*
-            // Get your playerNumber
-            InputStream input = clientSocket.getInputStream();
-            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
-            this.myPlayerNumber = Integer.parseInt(reader.readLine());
-            String myPlayerName = "Player " + this.myPlayerNumber;
-            System.out.println(myPlayerName);
-
-            // Get numberOfPlayers
-            this.numberOfPlayers = Integer.parseInt(reader.readLine());
-            System.out.println(this.numberOfPlayers);
-
-
-             */
-
-
             // Create new thread for speaking to server
-            GameClientThread client = new GameClientThread(clientSocket);
+            this.client = new GameClientThread(clientSocket);
             client.storeInitializationValuesFromSocket();
             this.myPlayerNumber = client.getMyPlayerNumber();
             this.numberOfPlayers = client.getNumberOfPlayers();
@@ -120,24 +105,6 @@ public class RallyGame extends Game {
 
     }
 
-    /**
-     * Sends a message to server.
-     * @param message
-     */
-    public void sendMessage(String message) {
-        //TODO: make this a method in client thread.
-        // Send something to your server
-        try {
-            OutputStream output = clientSocket.getOutputStream();
-            PrintWriter writer = new PrintWriter(output, true);
-            writer.println(message);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
     public void setInputProcessor() {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
@@ -152,7 +119,7 @@ public class RallyGame extends Game {
                     mainPlayer.setDirection(Direction.EAST);
                     board.movePlayer(mainPlayer);
                     if (!isServer) {
-                        sendMessage(mainPlayer.getPlayerNr() + "moved right");
+                        client.sendMessage(mainPlayer.getPlayerNr() + "moved right");
                     } else {
                         connection.sendToAll(mainPlayer.getPlayerNr() + "moved right");
                     }

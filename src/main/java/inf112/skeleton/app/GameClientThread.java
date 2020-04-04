@@ -14,21 +14,26 @@ public class GameClientThread extends Thread {
     private int myPlayerNumber;
     private int numberOfPlayers;
     private InputStream input;
+    private OutputStream output;
     private BufferedReader reader;
+    private PrintWriter writer;
 
     public GameClientThread(Socket clientSocket) {
         this.clientSocket = clientSocket;
         try {
-            this.input = clientSocket.getInputStream();
+            this.input = this.clientSocket.getInputStream();
             this.reader = new BufferedReader(new InputStreamReader(input));
+            this.output = this.clientSocket.getOutputStream();
+            this.writer = new PrintWriter(output, true);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Listen for incoming messages from server.
+     * Listen for incoming messages from server when thread is started.
      */
+    @Override
     public void run() {
         while (true) {
             String message = getMessage();
@@ -61,6 +66,14 @@ public class GameClientThread extends Thread {
         System.out.println("From server, my playernumber: "+myPlayerNumber);
         this.numberOfPlayers = Integer.parseInt(getMessage());
         System.out.println("From server, numberofplayers "+numberOfPlayers);
+    }
+
+    /**
+     * Send a message to server.
+     * @param message message to be sent
+     */
+    public void sendMessage(String message) {
+        writer.println(message);
     }
 
     /**
