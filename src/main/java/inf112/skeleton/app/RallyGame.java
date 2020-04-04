@@ -36,7 +36,6 @@ public class RallyGame extends Game {
     private boolean isServer;
     private GameClientThread client;
 
-
     public static float volume = 0.2f;
     public boolean unMute = true;
 
@@ -361,8 +360,12 @@ public class RallyGame extends Game {
     public void dispose() {
         // Close your socket when quitting game
         if (!isServer) {
-            this.client.setClosed();
+            this.client.sendMessage("quit");
             this.client.close();
+        }
+        if (isServer) {
+            this.connection.getServer().sendToAll("Host is leaving.. ");
+            this.connection.getServer().disconnectAll();
         }
         this.screen.dispose();
     }

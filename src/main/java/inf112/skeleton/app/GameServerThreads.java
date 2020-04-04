@@ -13,11 +13,13 @@ public class GameServerThreads extends Thread {
     private Socket client;
     private int playerNumber;
     private int numberOfPlayers;
+    private GameServer server;
 
-    public GameServerThreads(Socket client, int playerNumber, int numberOfPlayers) {
+    public GameServerThreads(GameServer server, Socket client, int playerNumber, int numberOfPlayers) {
         this.client = client;
         this.playerNumber = playerNumber;
         this.numberOfPlayers = numberOfPlayers;
+        this.server = server;
     }
 
     /**
@@ -39,6 +41,13 @@ public class GameServerThreads extends Thread {
                 String message = reader.readLine();
                 if (message == null) {
                     break;
+                }
+                // Close client socket.
+                if (message.equals("quit")) {
+                    System.out.println("Player " + playerNumber + " is leaving...");
+                    server.disconnect(playerNumber);
+                    System.out.println("Disconnected player");
+                    return;
                 }
                 System.out.print(message);
             }
@@ -67,5 +76,12 @@ public class GameServerThreads extends Thread {
         return playerNumber;
     }
 
+    public void close() {
+        try {
+            this.client.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 }

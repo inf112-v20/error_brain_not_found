@@ -17,7 +17,6 @@ public class GameClientThread extends Thread {
     private OutputStream output;
     private BufferedReader reader;
     private PrintWriter writer;
-    private boolean isClosed;
 
     public GameClientThread(Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -36,9 +35,7 @@ public class GameClientThread extends Thread {
      */
     @Override
     public void run() {
-        System.out.println("Im still running");
-        while (!isClosed) {
-            System.out.println("Im still not closed running");
+        while (true) {
             String message = getMessage();
             if (message == null) {
                 break;
@@ -49,13 +46,17 @@ public class GameClientThread extends Thread {
 
     /**
      *
-     * @return message from this socket.
+     * @return message from this socket. Close socket if error.
      */
     public String getMessage() {
         try {
             return reader.readLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            try {
+                clientSocket.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
         return null;
     }
@@ -102,9 +103,5 @@ public class GameClientThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    public void setClosed() {
-        this.isClosed = true;
     }
 }

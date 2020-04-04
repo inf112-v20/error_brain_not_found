@@ -1,6 +1,7 @@
 package inf112.skeleton.app;
 
 
+import com.badlogic.gdx.Game;
 import sun.lwawt.macosx.CThreading;
 
 import java.io.*;
@@ -37,7 +38,7 @@ public class GameServer {
                 Socket socket = serverSocket.accept();
                 // Server is player 1
                 int playerNumber = connected+2;
-                GameServerThreads client = new GameServerThreads(socket, playerNumber, numberOfClients+1);
+                GameServerThreads client = new GameServerThreads(this, socket, playerNumber, numberOfClients+1);
                 System.out.println("I have connected to player" + playerNumber);
                 client.start();
                 clients.add(client);
@@ -70,6 +71,32 @@ public class GameServer {
             if (thread.getPlayerNumber() != playerNr) {
                 thread.sendMessage(message);
             }
+        }
+    }
+
+    /**
+     * Disconnect this player from the server. Stop the thread,
+     * and close socket.
+     * @param playerNumber
+     */
+    public void disconnect(int playerNumber) {
+        GameServerThreads threadToBeRemoved = null;
+        for (GameServerThreads thread : clients) {
+            if (thread.getPlayerNumber() == playerNumber) {
+                threadToBeRemoved = thread;
+                threadToBeRemoved.close();
+                System.out.print("Closed socket to " + playerNumber);
+            }
+        }
+        clients.remove(threadToBeRemoved);
+    }
+
+    /**
+     * Disconnect all players from server.
+     */
+    public void disconnectAll() {
+        for (GameServerThreads thread : clients) {
+            disconnect(thread.getPlayerNumber());
         }
     }
 }
