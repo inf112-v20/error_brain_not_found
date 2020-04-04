@@ -60,9 +60,6 @@ public class RallyGame extends Game {
             client.start();
 
             System.out.println("Started client.");
-
-
-
         } catch (UnknownHostException e) {
             System.out.println("Did not find host.");
         } catch (IOException e) {
@@ -79,7 +76,6 @@ public class RallyGame extends Game {
         //TODO: Delete LoadingScreen if not used
         this.setScreen(new MenuScreen(this));
         startMusic();
-
     }
 
     public void setupGame(String mapPath) {
@@ -93,7 +89,6 @@ public class RallyGame extends Game {
         this.waitForCards.tryAcquire();
         this.playing = true;
 
-
         this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
 
         new Thread(this::doTurn).start();
@@ -101,8 +96,6 @@ public class RallyGame extends Game {
         setInputProcessor();
         dealCards();
         selectCards();
-
-
     }
 
     public void setInputProcessor() {
@@ -119,9 +112,10 @@ public class RallyGame extends Game {
                     mainPlayer.setDirection(Direction.EAST);
                     board.movePlayer(mainPlayer);
                     if (!isServer) {
-                        client.sendMessage(mainPlayer.getPlayerNr() + "moved right");
+                        client.sendMessage(mainPlayer.getPlayerNr() + "moved right; ");
+                        connection.getServer().sendToAllExcept(mainPlayer.getPlayerNr(), mainPlayer.getPlayerNr() + " moved right;  ");
                     } else {
-                        connection.sendToAll(mainPlayer.getPlayerNr() + "moved right");
+                        connection.getServer().sendToAll(mainPlayer.getPlayerNr() + " moved right; ");
                     }
                 } else if (keycode == Input.Keys.LEFT) {
                     mainPlayer.setDirection(Direction.WEST);
@@ -367,17 +361,9 @@ public class RallyGame extends Game {
     }
 
     public void dispose() {
-        // Close all sockets when quitting game
-        if (isServer) {
-            this.connection.closeAll();
-        } else {
-            try {
-                if (this.clientSocket != null) {
-                    this.clientSocket.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        // Close your socket when quitting game
+        if (!isServer) {
+            this.client.close();
         }
         this.screen.dispose();
     }

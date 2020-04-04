@@ -61,22 +61,6 @@ public class GameServer {
         }
     }
 
-    /**
-     * Close all connecting sockets.
-     */
-    public void closeAll() {
-        for (GameServerThreads thread : clients) {
-            if (thread != null) {
-                thread.close();
-            }
-        }
-        try {
-            serverSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    public void sendToAllExcept(int playerNr, String s) {
     }
-
-
-
 }

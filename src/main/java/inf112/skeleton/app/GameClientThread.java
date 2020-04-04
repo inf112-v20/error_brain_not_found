@@ -91,4 +91,14 @@ public class GameClientThread extends Thread {
         return this.numberOfPlayers;
     }
 
+    /**
+     * Close the socket.
+     */
+    public void close() {
+        try {
+            this.clientSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

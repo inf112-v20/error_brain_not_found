@@ -24,19 +24,10 @@ public class ConnectionThread extends Thread {
     }
 
     /**
-     * Tell server to close all connections
+     *
+     * @return the gameserver handling the connections.
      */
-    public void closeAll() {
-        this.server.closeAll();
+    public GameServer getServer() {
+        return server;
     }
-
-    /**
-     * Send a message to all clients connected to the server.
-     * @param message message to be sent
-     */
-    public void sendToAll(String message) {
-        server.sendToAll(message);
-    }
-
-
 }
