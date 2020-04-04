@@ -34,7 +34,6 @@ public class RallyGame extends Game {
     private int myPlayerNumber;
     private ConnectionThread connection;
     private boolean isServer;
-    private Socket clientSocket;
     private GameClientThread client;
 
 
@@ -47,7 +46,7 @@ public class RallyGame extends Game {
         // if (scanner.nextLine().equals("Y") || scanner.nextLine().equals("y")) {
         // Try to create a client socket.
         try {
-            this.clientSocket = new Socket("localhost", 9000);
+            Socket clientSocket = new Socket("localhost", 9000);
             System.out.println("I am a client :)");
 
             // Create new thread for speaking to server
@@ -113,7 +112,6 @@ public class RallyGame extends Game {
                     board.movePlayer(mainPlayer);
                     if (!isServer) {
                         client.sendMessage(mainPlayer.getPlayerNr() + "moved right; ");
-                        connection.getServer().sendToAllExcept(mainPlayer.getPlayerNr(), mainPlayer.getPlayerNr() + " moved right;  ");
                     } else {
                         connection.getServer().sendToAll(mainPlayer.getPlayerNr() + " moved right; ");
                     }
@@ -363,6 +361,7 @@ public class RallyGame extends Game {
     public void dispose() {
         // Close your socket when quitting game
         if (!isServer) {
+            this.client.setClosed();
             this.client.close();
         }
         this.screen.dispose();
