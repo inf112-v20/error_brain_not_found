@@ -44,8 +44,8 @@ public class GameClientThread extends Thread {
             if (message == null) {
                 break;
             }
-            int playerNumber = Character.getNumericValue(message.charAt(0));
-            game.movePlayer(playerNumber, message);
+            //int playerNumber = Character.getNumericValue(message.charAt(0));
+            //game.movePlayer(playerNumber, message);
             System.out.print(message);
         }
     }

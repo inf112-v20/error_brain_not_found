@@ -35,6 +35,7 @@ public class RallyGame extends Game {
     private ConnectionThread connection;
     private boolean isServer;
     private GameClientThread client;
+    private ProgramCard card;
 
     public static float volume = 0.2f;
     public boolean unMute = true;
@@ -180,7 +181,7 @@ public class RallyGame extends Game {
 
     }
 
-    private void cardsReady() {
+    public void cardsReady() {
         waitForCards.release();
     }
 
@@ -275,7 +276,7 @@ public class RallyGame extends Game {
         playerOrder.removeIf(p -> p.getSelectedCards().isEmpty());
         playerOrder.sort(new PlayerSorter());
         for (Player player : playerOrder) {
-            playCard(player);
+            playCard(player, nextCard(player));
             // Wait 1 second for each player
             try {
                 Thread.sleep(1000);
@@ -285,8 +286,31 @@ public class RallyGame extends Game {
         }
     }
 
-    public void playCard(Player player) {
-        ProgramCard card = player.getSelectedCards().remove(0);
+    /**
+     * Get new card for player
+     * @param player
+     * @return the next card player is going to play
+     */
+    public ProgramCard nextCard(Player player) {
+        this.card = player.getSelectedCards().remove(0);
+        return card;
+    }
+
+    /**
+     *
+     * @param player
+     * @return ProgramCard player is currently playing
+     */
+    public ProgramCard getCard(Player player) {
+        return this.card;
+    }
+
+    /**
+     * Move player according to its playerCard.
+     * @param player
+     * @param card
+     */
+    public void playCard(Player player, ProgramCard card) {
         System.out.println(player.toString() + " played " + card.toString());
         switch (card.getRotate()) {
             case RIGHT:

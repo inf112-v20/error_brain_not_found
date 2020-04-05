@@ -116,4 +116,17 @@ public class GameServerThreads extends Thread {
         return null;
     }
 
+    /**
+     * Send a move to your client.
+     * @param move
+     */
+    public void sendMove(Move move) {
+        try {
+            ObjectOutputStream objectOutput = new ObjectOutputStream(client.getOutputStream());
+            objectOutput.writeObject(move);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
 }
