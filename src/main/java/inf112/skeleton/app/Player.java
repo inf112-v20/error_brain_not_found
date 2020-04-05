@@ -54,7 +54,7 @@ public class Player {
     /**
      * Prompt user to choose a program for the robot.
      */
-    public void selectCards() {
+    public void selectCardsViaTerminal() {
         while (selectedCards.size() < 5) {
             System.out.println("Input number from 1 to "+ (allCards.size() -1) + " to select your cards:");
             System.out.println(allCards);
@@ -64,6 +64,17 @@ public class Player {
         }
         System.out.print("Your program is: " + selectedCards);
     }
+
+    /**
+     * Select cards without user interaction.
+     */
+    public void selectCards() {
+        while (selectedCards.size() < 5) {
+            selectedCards.add(allCards.remove(0));
+        }
+        System.out.print("Your program is: " + selectedCards);
+    }
+
 
     /**
      *

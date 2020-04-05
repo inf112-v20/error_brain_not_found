@@ -29,6 +29,7 @@ public class RallyGame extends Game {
     public boolean playing;
     public Sound laserSound;
     public static Music gameMusic;
+
     public Player mainPlayer;
     private int numberOfPlayers;
     private int myPlayerNumber;
@@ -36,6 +37,7 @@ public class RallyGame extends Game {
     private boolean isServer;
     private GameClientThread client;
     private ProgramCard card;
+    private Converter converter;
 
     public static float volume = 0.2f;
     public boolean unMute = true;
@@ -79,7 +81,7 @@ public class RallyGame extends Game {
 
     public void setupGame(String mapPath) {
 
-        this.board = new Board(mapPath,this.numberOfPlayers);
+        this.board = new Board(mapPath, this.numberOfPlayers);
         this.deck = new Deck();
         this.players = new ArrayList<>();
         this.players = board.getPlayers();
@@ -88,13 +90,15 @@ public class RallyGame extends Game {
         this.waitForCards.tryAcquire();
         this.playing = true;
 
+        this.converter = new Converter();
+
         this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
 
         new Thread(this::doTurn).start();
 
         setInputProcessor();
         dealCards();
-        //selectCards();
+        selectCards();
     }
 
     public void setInputProcessor() {
@@ -131,7 +135,13 @@ public class RallyGame extends Game {
                     muteMusic();
                 }
                 else if (keycode == Input.Keys.S) {
-                    mainPlayer.selectCards();
+                    //mainPlayer.selectCards();
+                    if (!isServer) {
+                        client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), nextCard(mainPlayer)));
+                        playCard(mainPlayer, getCard(mainPlayer));
+                        System.out.println("Sent message to server. :)");
+                    }
+
                 }
                 else if (keycode == Input.Keys.SPACE) {
                     cardsReady();
@@ -277,6 +287,7 @@ public class RallyGame extends Game {
         // Add all players to order list, and remove players with no cards left
         playerOrder.removeIf(p -> p.getSelectedCards().isEmpty());
         playerOrder.sort(new PlayerSorter());
+
         for (Player player : playerOrder) {
             playCard(player, nextCard(player));
             // Wait 1 second for each player
@@ -313,7 +324,7 @@ public class RallyGame extends Game {
      * @param card
      */
     public void playCard(Player player, ProgramCard card) {
-        System.out.println(player.toString() + " played " + card.toString());
+        //System.out.println(player.toString() + " played " + card.toString());
         switch (card.getRotate()) {
             case RIGHT:
                 player.setDirection(player.getDirection().turnRight());
