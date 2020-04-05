@@ -43,15 +43,15 @@ public class Converter {
      * @return
      */
     public ProgramCard convertToCardAndExtractPlayer(String string) {
-        int i = 0;
-        Character character = string.charAt(i);
         ArrayList<String> strings = new ArrayList<>();
-        while (i < string.length()) {
-            StringBuilder str = new StringBuilder();
-            str.append(character);
-            i++;
-            if (string.charAt(i) == ' ') {
+        StringBuilder str = new StringBuilder();
+        for (int i = 0; i < string.length(); i++) {
+            Character character = string.charAt(i);
+            if (character == ' ') {
                 strings.add(str.toString());
+                str = new StringBuilder();
+            } else {
+                str.append(character);
             }
         }
         this.playerNumber = Integer.parseInt(strings.get(0));
