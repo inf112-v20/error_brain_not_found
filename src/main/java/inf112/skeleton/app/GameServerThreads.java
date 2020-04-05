@@ -59,13 +59,14 @@ public class GameServerThreads extends Thread {
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                 int playerNumber = converter.getPlayerNumber();
                 Player player = game.getBoard().getPlayer(playerNumber);
+                System.out.println(message);
+                System.out.println(message);
                 game.playCard(player, card);
                 //int playerNumber = Character.getNumericValue(message.charAt(0));
                 //game.movePlayer(playerNumber, message);
-                System.out.print(message);
+
                 //int playerNumber = Character.getNumericValue(message.charAt(0));
                 //game.movePlayer(playerNumber, message);
-                System.out.print(message);
 
                 //game.movePlayer(player, message);
                 // Close client socket if client is leaving.

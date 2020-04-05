@@ -97,6 +97,9 @@ public class Converter {
         if (message.contains("RIGHT")) {
             return Rotate.RIGHT;
         }
+        if (message.contains("NONE")) {
+            return Rotate.NONE;
+        }
         return null;
     }
 

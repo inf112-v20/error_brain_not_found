@@ -300,11 +300,16 @@ public class RallyGame extends Game {
     }
 
     /**
-     * Get new card for player
+     * Get new card for player. When hand is empty new cards are given.
      * @param player
      * @return the next card player is going to play
      */
     public ProgramCard nextCard(Player player) {
+        if (player.getSelectedCards().isEmpty()) {
+            System.out.println("Getting new cards...");
+            dealCards();
+            selectCards();
+        }
         this.card = player.getSelectedCards().remove(0);
         return card;
     }
