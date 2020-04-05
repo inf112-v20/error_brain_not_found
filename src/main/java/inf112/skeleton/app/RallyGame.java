@@ -110,7 +110,7 @@ public class RallyGame extends Game {
                     mainPlayer.setDirection(Direction.EAST);
                     board.movePlayer(mainPlayer);
                     if (!isServer) {
-                        client.sendMessage(mainPlayer.getPlayerNr() + "moved right; ");
+                        client.sendMessage(mainPlayer.getPlayerNr() + " moved right; ");
                     } else {
                         connection.getServer().sendToAll(mainPlayer.getPlayerNr() + " moved right; ");
                     }

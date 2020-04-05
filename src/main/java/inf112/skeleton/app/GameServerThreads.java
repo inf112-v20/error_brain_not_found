@@ -46,6 +46,7 @@ public class GameServerThreads extends Thread {
                 if (message == null) {
                     break;
                 }
+                int player = Integer.parseInt(String.valueOf(message.charAt(0)));
                 // Close client socket if client is leaving.
                 if (message.equals("quit")) {
                     server.sendToAllExcept(playerNumber, "Player " + playerNumber + " is leaving...");
@@ -56,6 +57,7 @@ public class GameServerThreads extends Thread {
                     return;
                 }
                 System.out.print(message);
+                server.sendToAllExcept(player, message);
             }
         } catch (IOException e) {
             // Close socket if exception
