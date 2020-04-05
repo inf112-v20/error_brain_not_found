@@ -9,16 +9,18 @@ public class ConnectionThread extends Thread {
 
     private int numberOfPlayers;
     private GameServer server;
+    private RallyGame game;
 
-    public ConnectionThread(int numberOfPlayers) {
+    public ConnectionThread(RallyGame game, int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
+        this.game = game;
     }
 
     /**
      * What the thread is doing when it is started.
      */
     public void run(){
-        this.server = new GameServer();
+        this.server = new GameServer(game);
         int numberOfClients = this.numberOfPlayers-1;
         server.connect(9000, numberOfClients);
     }

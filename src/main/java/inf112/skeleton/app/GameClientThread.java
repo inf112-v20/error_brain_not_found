@@ -4,6 +4,7 @@ import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
 import java.nio.Buffer;
+import java.util.ArrayList;
 
 /**
  * Own thread for a client so client can get continous updates from server.
@@ -18,7 +19,6 @@ public class GameClientThread extends Thread {
     private OutputStream output;
     private BufferedReader reader;
     private PrintWriter writer;
-    private boolean stop;
 
     public GameClientThread(Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -37,11 +37,12 @@ public class GameClientThread extends Thread {
      */
     @Override
     public void run() {
-        while (!stop) {
+        while (true) {
             String message = getMessage();
             if (message == null) {
                 break;
             }
+            int playerNumber = Character.getNumericValue(message.charAt(0));
             System.out.print(message);
         }
     }

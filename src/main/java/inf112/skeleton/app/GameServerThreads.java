@@ -1,11 +1,13 @@
 package inf112.skeleton.app;
 
 
+import jdk.nashorn.internal.objects.NativeFloat32Array;
 import org.lwjgl.Sys;
 
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.ArrayList;
 
 /**
  * Make a thread for each client connecting.
@@ -19,12 +21,16 @@ public class GameServerThreads extends Thread {
     private GameServer server;
     private InputStream input;
     private BufferedReader reader;
+    private ArrayList<String> moves;
+    private RallyGame game;
 
-    public GameServerThreads(GameServer server, Socket client, int playerNumber, int numberOfPlayers) {
+    public GameServerThreads(GameServer server, RallyGame game, Socket client, int playerNumber, int numberOfPlayers) {
         this.client = client;
         this.playerNumber = playerNumber;
         this.numberOfPlayers = numberOfPlayers;
         this.server = server;
+        this.moves = new ArrayList<>();
+        this.game = game;
     }
 
     /**
@@ -46,7 +52,8 @@ public class GameServerThreads extends Thread {
                 if (message == null) {
                     break;
                 }
-                int player = Integer.parseInt(String.valueOf(message.charAt(0)));
+                int player = Character.getNumericValue(message.charAt(0));
+                game.movePlayer(player, message);
                 // Close client socket if client is leaving.
                 if (message.equals("quit")) {
                     server.sendToAllExcept(playerNumber, "Player " + playerNumber + " is leaving...");
@@ -101,4 +108,12 @@ public class GameServerThreads extends Thread {
             e.printStackTrace();
         }
     }
+
+    public String getMove(int playerNumber) {
+        if (!moves.isEmpty()) {
+            return moves.get(playerNumber - 1);
+        }
+        return null;
+    }
+
 }

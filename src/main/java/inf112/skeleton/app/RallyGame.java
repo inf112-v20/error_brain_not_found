@@ -67,7 +67,7 @@ public class RallyGame extends Game {
             System.out.println("How many players?");
             scanner = new Scanner(System.in);
             this.numberOfPlayers = scanner.nextInt();
-            this.connection = new ConnectionThread(this.numberOfPlayers);
+            this.connection = new ConnectionThread(this, this.numberOfPlayers);
             connection.start();
             // }
         }
@@ -113,6 +113,7 @@ public class RallyGame extends Game {
                         client.sendMessage(mainPlayer.getPlayerNr() + " moved right; ");
                     } else {
                         connection.getServer().sendToAll(mainPlayer.getPlayerNr() + " moved right; ");
+                        //movePlayer(2, connection.getServer().getMove(2));
                     }
                 } else if (keycode == Input.Keys.LEFT) {
                     mainPlayer.setDirection(Direction.WEST);
@@ -219,6 +220,17 @@ public class RallyGame extends Game {
             dealCards();
             selectCards();
         }
+    }
+
+    /**
+     * Move a player on the board.
+     * @param playerNumber
+     * @param move
+     */
+    public void movePlayer(int playerNumber, String move) {
+        Player player = board.getPlayer(playerNumber);
+            player.setDirection(Direction.EAST);
+            board.movePlayer(player);
     }
 
     /**

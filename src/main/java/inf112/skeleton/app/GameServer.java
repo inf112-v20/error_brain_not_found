@@ -17,9 +17,11 @@ import java.util.ArrayList;
 public class GameServer {
 
     private ArrayList<GameServerThreads> clients;
+    private RallyGame game;
 
-    public GameServer() {
+    public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
+        this.game = game;
     }
 
     /**
@@ -38,7 +40,7 @@ public class GameServer {
                 Socket socket = serverSocket.accept();
                 // Server is player 1
                 int playerNumber = connected+2;
-                GameServerThreads client = new GameServerThreads(this, socket, playerNumber, numberOfClients+1);
+                GameServerThreads client = new GameServerThreads(this, game , socket, playerNumber, numberOfClients+1);
                 System.out.println("I have connected to player" + playerNumber);
                 client.start();
                 clients.add(client);
@@ -107,5 +109,14 @@ public class GameServer {
         for (GameServerThreads thread : clients) {
             disconnect(thread.getPlayerNumber());
         }
+    }
+
+    public String getMove(int playerNumber) {
+        for (GameServerThreads thread : clients) {
+            if (thread.getPlayerNumber() == playerNumber) {
+                return thread.getMove(playerNumber);
+            }
+        }
+        return null;
     }
 }
