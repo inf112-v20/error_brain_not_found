@@ -6,10 +6,12 @@ import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Flag;
+import org.lwjgl.Sys;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class Player {
 
@@ -51,8 +53,13 @@ public class Player {
 
     public void selectCards() {
         while (selectedCards.size() < 5) {
-            selectedCards.add(allCards.remove(0));
+            System.out.println("Input number from 1 to "+ (allCards.size() -1) + " to select your cards:");
+            System.out.println(allCards);
+            Scanner scanner = new Scanner(System.in);
+            System.out.println("Cards chosen "+ selectedCards.size());
+            selectedCards.add(allCards.remove(scanner.nextInt()));
         }
+        System.out.print("Your program is: " + selectedCards);
     }
 
     public void drawCards(Deck deck) {
