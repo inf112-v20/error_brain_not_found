@@ -44,9 +44,8 @@ public class GameClientThread extends Thread {
             if (message == null) {
                 break;
             }
-            System.out.print(message);
+            System.out.println(message);
             ProgramCard card = converter.convertToCardAndExtractPlayer(message);
-            System.out.print(card.toString());
             int playerNumber = converter.getPlayerNumber();
             Player player = game.getBoard().getPlayer(playerNumber);
             game.playCard(player, card);

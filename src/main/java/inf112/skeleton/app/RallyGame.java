@@ -98,7 +98,7 @@ public class RallyGame extends Game {
 
         setInputProcessor();
         dealCards();
-        selectCards();
+       // selectCards();
     }
 
     public void setInputProcessor() {
@@ -139,7 +139,7 @@ public class RallyGame extends Game {
                     if (!isServer) {
                         client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), nextCard(mainPlayer)));
                         playCard(mainPlayer, getCard(mainPlayer));
-                        System.out.println("Sent message to server. :)");
+                        System.out.println("Sent message to server. :)" + converter.convertToString(mainPlayer.getPlayerNr(), getCard(mainPlayer)));
                     }
 
                 }
@@ -307,8 +307,8 @@ public class RallyGame extends Game {
     public ProgramCard nextCard(Player player) {
         if (player.getSelectedCards().isEmpty()) {
             System.out.println("Getting new cards...");
-            dealCards();
-            selectCards();
+            mainPlayer.drawCards(deck);
+            mainPlayer.selectCards();
         }
         this.card = player.getSelectedCards().remove(0);
         return card;
@@ -329,7 +329,7 @@ public class RallyGame extends Game {
      * @param card
      */
     public void playCard(Player player, ProgramCard card) {
-        //System.out.println(player.toString() + " played " + card.toString());
+        System.out.println("IN GAME: "+player.toString() + " played " + card.toString());
         switch (card.getRotate()) {
             case RIGHT:
                 player.setDirection(player.getDirection().turnRight());

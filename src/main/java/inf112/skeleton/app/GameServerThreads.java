@@ -60,8 +60,8 @@ public class GameServerThreads extends Thread {
                 int playerNumber = converter.getPlayerNumber();
                 Player player = game.getBoard().getPlayer(playerNumber);
                 System.out.println(message);
-                System.out.println(message);
                 game.playCard(player, card);
+                System.out.println("Played" + message + "from " +player.getPlayerNr());
                 //int playerNumber = Character.getNumericValue(message.charAt(0));
                 //game.movePlayer(playerNumber, message);
 
@@ -78,7 +78,6 @@ public class GameServerThreads extends Thread {
                     System.out.println("Disconnected player");
                     return;
                 }
-                System.out.print(message);
                 server.sendToAllExcept(player, message);
 
 

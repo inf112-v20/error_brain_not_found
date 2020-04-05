@@ -3,6 +3,7 @@ package inf112.skeleton.app;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Rotate;
 
+import java.util.ArrayList;
 
 
 /**
@@ -27,10 +28,10 @@ public class Converter {
         String steps = String.valueOf(programCard.getDistance());
         String rotation = String.valueOf(programCard.getRotate());
         String name = programCard.getName();
-        string.append(player);
-        string.append(prio);
-        string.append(steps);
-        string.append(" " +rotation+ " ");
+        string.append(player + " ");
+        string.append(prio + " ");
+        string.append(steps + " ");
+        string.append(rotation+ " ");
         string.append(name);
         return string.toString();
     }
@@ -42,9 +43,20 @@ public class Converter {
      * @return
      */
     public ProgramCard convertToCardAndExtractPlayer(String string) {
-        this.playerNumber = Character.getNumericValue(string.charAt(0));
-        int prio = Character.getNumericValue(string.charAt(1));
-        int steps = Character.getNumericValue(string.charAt(2));
+        int i = 0;
+        Character character = string.charAt(i);
+        ArrayList<String> strings = new ArrayList<>();
+        while (i < string.length()) {
+            StringBuilder str = new StringBuilder();
+            str.append(character);
+            i++;
+            if (string.charAt(i) == ' ') {
+                strings.add(str.toString());
+            }
+        }
+        this.playerNumber = Integer.parseInt(strings.get(0));
+        int prio = Integer.parseInt(strings.get(0));
+        int steps = Integer.parseInt(strings.get(0));
         Rotate rotation = getRotation(string);
         String name = getName(string);
         return new ProgramCard(prio, steps, rotation, name);
