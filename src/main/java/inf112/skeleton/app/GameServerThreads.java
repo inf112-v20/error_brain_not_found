@@ -53,7 +53,7 @@ public class GameServerThreads extends Thread {
                     break;
                 }
                 int player = Character.getNumericValue(message.charAt(0));
-                game.movePlayer(player, message);
+                //game.movePlayer(player, message);
                 // Close client socket if client is leaving.
                 if (message.equals("quit")) {
                     server.sendToAllExcept(playerNumber, "Player " + playerNumber + " is leaving...");
@@ -109,4 +109,22 @@ public class GameServerThreads extends Thread {
         }
     }
 
+    public Program getProgram() {
+        try {
+            ObjectInputStream inputStream = new ObjectInputStream(client.getInputStream());
+            Program program = (Program) inputStream.readObject();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public void sendProgram(Program program) {
+        try {
+            ObjectOutputStream outputStream = new ObjectOutputStream(client.getOutputStream());
+            outputStream.writeObject(program);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 }

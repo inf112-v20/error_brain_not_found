@@ -132,7 +132,11 @@ public class RallyGame extends Game {
                 }
                 else if (keycode == Input.Keys.S) {
                     mainPlayer.selectCards();
+                    Program myProgram = new Program(mainPlayer, mainPlayer.getSelectedCards());
 
+                    if (isServer) {
+                        connection.getServer().collectPrograms();
+                    }
                 }
                 else if (keycode == Input.Keys.SPACE) {
                     cardsReady();

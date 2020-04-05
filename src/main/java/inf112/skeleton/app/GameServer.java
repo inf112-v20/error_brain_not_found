@@ -2,6 +2,7 @@ package inf112.skeleton.app;
 
 
 import com.badlogic.gdx.Game;
+import com.sun.deploy.net.MessageHeader;
 import org.lwjgl.Sys;
 import sun.lwawt.macosx.CThreading;
 
@@ -18,6 +19,7 @@ public class GameServer {
 
     private ArrayList<GameServerThreads> clients;
     private RallyGame game;
+    private ArrayList<Program> programs;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
@@ -111,4 +113,21 @@ public class GameServer {
         }
     }
 
+    /**
+     * Collect all programs sent to server.
+     */
+    public void collectPrograms() {
+        for (GameServerThreads thread : clients) {
+            programs.add(thread.getProgram());
+        }
+    }
+
+    /**
+     * Send out programs to all clients
+     */
+    public void distributePrograms() {
+        for (int i = 0; i < programs.size(); i++) {
+            clients.get(i).sendProgram(programs.get(i));
+        }
+    }
 }

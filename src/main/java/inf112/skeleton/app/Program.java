@@ -2,6 +2,7 @@ package inf112.skeleton.app;
 
 import inf112.skeleton.app.cards.ProgramCard;
 
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 
 /**
@@ -29,4 +30,5 @@ public class Program {
     public ArrayList<ProgramCard> getProgram() {
         return program;
     }
+
 }
