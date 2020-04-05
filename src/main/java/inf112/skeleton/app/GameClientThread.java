@@ -2,6 +2,7 @@ package inf112.skeleton.app;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.nio.Buffer;
 
 /**
@@ -17,6 +18,7 @@ public class GameClientThread extends Thread {
     private OutputStream output;
     private BufferedReader reader;
     private PrintWriter writer;
+    private boolean stop;
 
     public GameClientThread(Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -35,7 +37,7 @@ public class GameClientThread extends Thread {
      */
     @Override
     public void run() {
-        while (true) {
+        while (!stop) {
             String message = getMessage();
             if (message == null) {
                 break;
@@ -53,6 +55,7 @@ public class GameClientThread extends Thread {
             return reader.readLine();
         } catch (IOException e) {
             try {
+                // Close socket if exception
                 clientSocket.close();
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -99,9 +102,11 @@ public class GameClientThread extends Thread {
      */
     public void close() {
         try {
+            System.out.println("Closed socket " + myPlayerNumber + " clientside.");
             this.clientSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
+
 }

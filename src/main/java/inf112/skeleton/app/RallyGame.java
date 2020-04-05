@@ -357,16 +357,22 @@ public class RallyGame extends Game {
         }
     }
 
+    /**
+     * Close sockets on exit.
+     */
     public void dispose() {
-        // Tell server you are leaving and close your socket when quitting game
+        // Tell server you are leaving. Close your socket.
         if (!isServer) {
             this.client.sendMessage("quit");
+            System.out.println("Sent message server..");
             this.client.close();
+            System.out.println("Finish.");
         }
         // Close all sockets in serverthread
         if (isServer) {
             this.connection.getServer().sendToAll("Host is leaving.. ");
             this.connection.getServer().disconnectAll();
+            System.out.println("Finish.");
         }
         this.screen.dispose();
     }

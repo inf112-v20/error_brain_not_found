@@ -2,6 +2,7 @@ package inf112.skeleton.app;
 
 
 import com.badlogic.gdx.Game;
+import org.lwjgl.Sys;
 import sun.lwawt.macosx.CThreading;
 
 import java.io.*;
@@ -15,7 +16,6 @@ import java.util.ArrayList;
  */
 public class GameServer {
 
-    private ServerSocket serverSocket;
     private ArrayList<GameServerThreads> clients;
 
     public GameServer() {
@@ -31,7 +31,7 @@ public class GameServer {
      */
     public void connect(int port, int numberOfClients) {
         try {
-            this.serverSocket = new ServerSocket(port);
+            ServerSocket serverSocket = new ServerSocket(port);
             // Connect to several clients
             int connected = 0;
             while (connected < numberOfClients) {
@@ -75,20 +75,29 @@ public class GameServer {
     }
 
     /**
-     * Disconnect this player from the server. Stop the thread,
-     * and close socket.
+     * Disconnect this player from the server and close socket.
      * @param playerNumber
      */
     public void disconnect(int playerNumber) {
-        GameServerThreads threadToBeRemoved = null;
         for (GameServerThreads thread : clients) {
             if (thread.getPlayerNumber() == playerNumber) {
-                threadToBeRemoved = thread;
-                threadToBeRemoved.close();
-                System.out.print("Closed socket to " + playerNumber);
+                thread.close();
             }
         }
-        clients.remove(threadToBeRemoved);
+    }
+
+    /**
+     * Remove a client from the list.
+     * @param playerNumber number of player to remove.
+     */
+    public void remove(int playerNumber) {
+        GameServerThreads playerToRemove = null;
+        for (GameServerThreads thread : clients) {
+            if (thread.getPlayerNumber() == playerNumber) {
+                playerToRemove = thread;
+            }
+        }
+        clients.remove(playerToRemove);
     }
 
     /**

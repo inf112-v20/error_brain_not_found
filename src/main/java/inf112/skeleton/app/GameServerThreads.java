@@ -1,8 +1,11 @@
 package inf112.skeleton.app;
 
 
+import org.lwjgl.Sys;
+
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * Make a thread for each client connecting.
@@ -14,6 +17,8 @@ public class GameServerThreads extends Thread {
     private int playerNumber;
     private int numberOfPlayers;
     private GameServer server;
+    private InputStream input;
+    private BufferedReader reader;
 
     public GameServerThreads(GameServer server, Socket client, int playerNumber, int numberOfPlayers) {
         this.client = client;
@@ -27,7 +32,6 @@ public class GameServerThreads extends Thread {
      */
     public void run() {
         try {
-
             // Let the player know what the playernumber is
             sendMessage(this.playerNumber+"");
             System.out.println("Server has sent playernum");
@@ -36,25 +40,31 @@ public class GameServerThreads extends Thread {
             System.out.println("Server has sent numplayers");
 
             while (true) {
-                InputStream input = client.getInputStream();
-                BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+                input = client.getInputStream();
+                reader = new BufferedReader(new InputStreamReader(input));
                 String message = reader.readLine();
                 if (message == null) {
                     break;
                 }
-                // Close client socket.
+                // Close client socket if client is leaving.
                 if (message.equals("quit")) {
+                    server.sendToAllExcept(playerNumber, "Player " + playerNumber + " is leaving...");
                     System.out.println("Player " + playerNumber + " is leaving...");
                     server.disconnect(playerNumber);
+                    server.remove(playerNumber);
                     System.out.println("Disconnected player");
                     return;
                 }
                 System.out.print(message);
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            // Close socket if exception
+            try {
+                client.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
-
     }
 
     /**
@@ -67,7 +77,12 @@ public class GameServerThreads extends Thread {
             PrintWriter writer = new PrintWriter(output, true);
             writer.println(message);
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println("Closing socket from sendmsg");
+            try {
+                client.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
         }
 
     }
@@ -78,10 +93,10 @@ public class GameServerThreads extends Thread {
 
     public void close() {
         try {
+            System.out.println("Closed socket " + playerNumber + " serverside.");
             this.client.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-
 }
