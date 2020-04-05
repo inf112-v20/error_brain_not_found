@@ -1,15 +1,8 @@
 package inf112.skeleton.app;
 
 import inf112.skeleton.app.cards.ProgramCard;
-import inf112.skeleton.app.enums.Direction;
-import inf112.skeleton.app.enums.Rotate;
-
-import java.awt.image.DirectColorModel;
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
-import java.nio.Buffer;
-import java.util.ArrayList;
 
 /**
  * Own thread for a client so client can get continous updates from server.
@@ -25,10 +18,12 @@ public class GameClientThread extends Thread {
     private BufferedReader reader;
     private PrintWriter writer;
     private RallyGame game;
+    private Converter converter;
 
     public GameClientThread(RallyGame game, Socket clientSocket) {
         this.clientSocket = clientSocket;
         this.game = game;
+        this.converter = new Converter();
         try {
             this.input = this.clientSocket.getInputStream();
             this.reader = new BufferedReader(new InputStreamReader(input));
@@ -49,12 +44,10 @@ public class GameClientThread extends Thread {
             if (message == null) {
                 break;
             }
-            int playerNumber = getPlayerNumber(message);
+            ProgramCard card = converter.convertToCardAndExtractPlayer(message);
+            int playerNumber = converter.getPlayerNumber();
             Player player = game.getBoard().getPlayer(playerNumber);
-            Direction direction = getDirection(message);
-            int steps = getSteps(message);
-            int prio =
-            game.movePlayer(player, direction, steps);
+            game.playCard(player, card);
             //int playerNumber = Character.getNumericValue(message.charAt(0));
             //game.movePlayer(playerNumber, message);
             System.out.print(message);

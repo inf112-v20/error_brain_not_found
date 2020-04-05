@@ -1,6 +1,7 @@
 package inf112.skeleton.app;
 
 
+import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
 import jdk.nashorn.internal.objects.NativeFloat32Array;
 import org.lwjgl.Sys;
@@ -24,6 +25,7 @@ public class GameServerThreads extends Thread {
     private BufferedReader reader;
     private ArrayList<String> moves;
     private RallyGame game;
+    private Converter converter;
 
     public GameServerThreads(GameServer server, RallyGame game, Socket client, int playerNumber, int numberOfPlayers) {
         this.client = client;
@@ -32,6 +34,7 @@ public class GameServerThreads extends Thread {
         this.server = server;
         this.moves = new ArrayList<>();
         this.game = game;
+        this.converter = new Converter();
     }
 
     /**
@@ -53,11 +56,13 @@ public class GameServerThreads extends Thread {
                 if (message == null) {
                     break;
                 }
-                int playerNumber = Character.getNumericValue(message.charAt(0));
+                ProgramCard card = converter.convertToCardAndExtractPlayer(message);
+                int playerNumber = converter.getPlayerNumber();
                 Player player = game.getBoard().getPlayer(playerNumber);
-                Direction direction = getDirection(message);
-                int steps = getSteps(message);
-                game.movePlayer(player, direction, steps);
+                game.playCard(player, card);
+                //int playerNumber = Character.getNumericValue(message.charAt(0));
+                //game.movePlayer(playerNumber, message);
+                System.out.print(message);
                 //int playerNumber = Character.getNumericValue(message.charAt(0));
                 //game.movePlayer(playerNumber, message);
                 System.out.print(message);
