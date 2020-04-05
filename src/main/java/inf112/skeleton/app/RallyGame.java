@@ -49,7 +49,7 @@ public class RallyGame extends Game {
             System.out.println("I am a client :)");
 
             // Create new thread for speaking to server
-            this.client = new GameClientThread(clientSocket);
+            this.client = new GameClientThread(this, clientSocket);
             client.storeInitializationValuesFromSocket();
             this.myPlayerNumber = client.getMyPlayerNumber();
             this.numberOfPlayers = client.getNumberOfPlayers();
@@ -113,7 +113,6 @@ public class RallyGame extends Game {
                         client.sendMessage(mainPlayer.getPlayerNr() + " moved right; ");
                     } else {
                         connection.getServer().sendToAll(mainPlayer.getPlayerNr() + " moved right; ");
-                        //movePlayer(2, connection.getServer().getMove(2));
                     }
                 } else if (keycode == Input.Keys.LEFT) {
                     mainPlayer.setDirection(Direction.WEST);
@@ -229,8 +228,8 @@ public class RallyGame extends Game {
      */
     public void movePlayer(int playerNumber, String move) {
         Player player = board.getPlayer(playerNumber);
-            player.setDirection(Direction.EAST);
-            board.movePlayer(player);
+        player.setDirection(Direction.EAST);
+        board.movePlayer(player);
     }
 
     /**

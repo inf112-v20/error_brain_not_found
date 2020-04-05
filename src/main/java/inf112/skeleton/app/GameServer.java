@@ -110,13 +110,4 @@ public class GameServer {
             disconnect(thread.getPlayerNumber());
         }
     }
-
-    public String getMove(int playerNumber) {
-        for (GameServerThreads thread : clients) {
-            if (thread.getPlayerNumber() == playerNumber) {
-                return thread.getMove(playerNumber);
-            }
-        }
-        return null;
-    }
 }

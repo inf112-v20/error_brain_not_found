@@ -19,9 +19,11 @@ public class GameClientThread extends Thread {
     private OutputStream output;
     private BufferedReader reader;
     private PrintWriter writer;
+    private RallyGame game;
 
-    public GameClientThread(Socket clientSocket) {
+    public GameClientThread(RallyGame game, Socket clientSocket) {
         this.clientSocket = clientSocket;
+        this.game = game;
         try {
             this.input = this.clientSocket.getInputStream();
             this.reader = new BufferedReader(new InputStreamReader(input));
@@ -43,6 +45,7 @@ public class GameClientThread extends Thread {
                 break;
             }
             int playerNumber = Character.getNumericValue(message.charAt(0));
+            game.movePlayer(playerNumber, message);
             System.out.print(message);
         }
     }
