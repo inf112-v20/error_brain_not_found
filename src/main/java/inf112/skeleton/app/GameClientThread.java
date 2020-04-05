@@ -1,5 +1,10 @@
 package inf112.skeleton.app;
 
+import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.enums.Rotate;
+
+import java.awt.image.DirectColorModel;
 import java.io.*;
 import java.net.Socket;
 import java.net.SocketException;
@@ -44,11 +49,44 @@ public class GameClientThread extends Thread {
             if (message == null) {
                 break;
             }
+            int playerNumber = getPlayerNumber(message);
+            Player player = game.getBoard().getPlayer(playerNumber);
+            Direction direction = getDirection(message);
+            int steps = getSteps(message);
+            int prio =
+            game.movePlayer(player, direction, steps);
             //int playerNumber = Character.getNumericValue(message.charAt(0));
             //game.movePlayer(playerNumber, message);
             System.out.print(message);
+
+
         }
     }
+
+    /**
+     * Get number of the player who is sending message. Is at position 0.
+     */
+    public int getPlayerNumber(String message) {
+        return Character.getNumericValue(message.charAt(0));
+    }
+
+    /**
+     * Get prioritation for this card. Is at position 5 in string.
+     */
+    public int getPrioritation(String message) {
+        return Character.getNumericValue(message.charAt(5));
+    }
+
+    /**
+     * Get number of steps player is supposed to move. Is at position 3 in string.
+     * @param message
+     * @return int steps
+     */
+    private int getSteps(String message) {
+        return Character.getNumericValue(message.charAt(3));
+    }
+
+
 
     /**
      *

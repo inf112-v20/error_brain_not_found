@@ -1,11 +1,6 @@
 package inf112.skeleton.app;
 
 
-import com.badlogic.gdx.Game;
-import com.sun.deploy.net.MessageHeader;
-import org.lwjgl.Sys;
-import sun.lwawt.macosx.CThreading;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -19,7 +14,6 @@ public class GameServer {
 
     private ArrayList<GameServerThreads> clients;
     private RallyGame game;
-    private ArrayList<Program> programs;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
@@ -67,12 +61,12 @@ public class GameServer {
 
     /**
      * Send a message to all clients except player specified.
-     * @param playerNr player not to send message to
+     * @param player player not to send message to
      * @param message to send
      */
-    public void sendToAllExcept(int playerNr, String message) {
+    public void sendToAllExcept(Player player, String message) {
         for (GameServerThreads thread : clients) {
-            if (thread.getPlayerNumber() != playerNr) {
+            if (thread.getPlayerNumber() != player.getPlayerNr()) {
                 thread.sendMessage(message);
             }
         }
@@ -110,24 +104,6 @@ public class GameServer {
     public void disconnectAll() {
         for (GameServerThreads thread : clients) {
             disconnect(thread.getPlayerNumber());
-        }
-    }
-
-    /**
-     * Collect all programs sent to server.
-     */
-    public void collectPrograms() {
-        for (GameServerThreads thread : clients) {
-            programs.add(thread.getProgram());
-        }
-    }
-
-    /**
-     * Send out programs to all clients
-     */
-    public void distributePrograms() {
-        for (int i = 0; i < programs.size(); i++) {
-            clients.get(i).sendProgram(programs.get(i));
         }
     }
 }

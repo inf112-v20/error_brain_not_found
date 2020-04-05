@@ -1,6 +1,7 @@
 package inf112.skeleton.app;
 
 
+import inf112.skeleton.app.enums.Direction;
 import jdk.nashorn.internal.objects.NativeFloat32Array;
 import org.lwjgl.Sys;
 
@@ -52,11 +53,19 @@ public class GameServerThreads extends Thread {
                 if (message == null) {
                     break;
                 }
-                int player = Character.getNumericValue(message.charAt(0));
+                int playerNumber = Character.getNumericValue(message.charAt(0));
+                Player player = game.getBoard().getPlayer(playerNumber);
+                Direction direction = getDirection(message);
+                int steps = getSteps(message);
+                game.movePlayer(player, direction, steps);
+                //int playerNumber = Character.getNumericValue(message.charAt(0));
+                //game.movePlayer(playerNumber, message);
+                System.out.print(message);
+
                 //game.movePlayer(player, message);
                 // Close client socket if client is leaving.
                 if (message.equals("quit")) {
-                    server.sendToAllExcept(playerNumber, "Player " + playerNumber + " is leaving...");
+                    server.sendToAllExcept(player, "Player " + playerNumber + " is leaving...");
                     System.out.println("Player " + playerNumber + " is leaving...");
                     server.disconnect(playerNumber);
                     server.remove(playerNumber);
@@ -65,6 +74,8 @@ public class GameServerThreads extends Thread {
                 }
                 System.out.print(message);
                 server.sendToAllExcept(player, message);
+
+
             }
         } catch (IOException e) {
             // Close socket if exception
@@ -75,6 +86,36 @@ public class GameServerThreads extends Thread {
             }
         }
     }
+
+/**
+ * Get number of steps player is supposed to move.
+ * @param message
+ * @return int steps
+ */
+private int getSteps(String message) {
+        return Character.getNumericValue(message.charAt(3));
+        }
+
+/**
+ * Get the direction that the player is moving to.
+ * @param message
+ * @return direction to player
+ */
+public Direction getDirection(String message) {
+        if (message.contains("east")) {
+        return Direction.EAST;
+        }
+        if (message.contains("west")) {
+        return Direction.WEST;
+        }
+        if (message.contains("south")) {
+        return Direction.SOUTH;
+        }
+        if (message.contains("north")) {
+        return Direction.NORTH;
+        }
+        return null;
+        }
 
     /**
      * Send a message to this client.
@@ -104,25 +145,6 @@ public class GameServerThreads extends Thread {
         try {
             System.out.println("Closed socket " + playerNumber + " serverside.");
             this.client.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    public Program getProgram() {
-        try {
-            ObjectInputStream inputStream = new ObjectInputStream(client.getInputStream());
-            Program program = (Program) inputStream.readObject();
-        } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-    public void sendProgram(Program program) {
-        try {
-            ObjectOutputStream outputStream = new ObjectOutputStream(client.getOutputStream());
-            outputStream.writeObject(program);
         } catch (IOException e) {
             e.printStackTrace();
         }
