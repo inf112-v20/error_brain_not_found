@@ -51,6 +51,9 @@ public class Player {
         return selectedCards;
     }
 
+    /**
+     * Prompt user to choose a program for the robot.
+     */
     public void selectCards() {
         while (selectedCards.size() < 5) {
             System.out.println("Input number from 1 to "+ (allCards.size() -1) + " to select your cards:");
@@ -60,6 +63,14 @@ public class Player {
             selectedCards.add(allCards.remove(scanner.nextInt()));
         }
         System.out.print("Your program is: " + selectedCards);
+    }
+
+    /**
+     *
+     * @param ArrayList<ProgramCard> program for this robot
+     */
+    public ArrayList<ProgramCard> getProgram() {
+        return selectedCards;
     }
 
     public void drawCards(Deck deck) {

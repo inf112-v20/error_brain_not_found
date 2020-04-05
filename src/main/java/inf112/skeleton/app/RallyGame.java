@@ -94,7 +94,7 @@ public class RallyGame extends Game {
 
         setInputProcessor();
         dealCards();
-        selectCards();
+        //selectCards();
     }
 
     public void setInputProcessor() {
@@ -130,7 +130,10 @@ public class RallyGame extends Game {
                     mute();
                     muteMusic();
                 }
+                else if (keycode == Input.Keys.S) {
+                    mainPlayer.selectCards();
 
+                }
                 else if (keycode == Input.Keys.SPACE) {
                     cardsReady();
                     return super.keyDown(keycode);

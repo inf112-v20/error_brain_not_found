@@ -109,24 +109,4 @@ public class GameServerThreads extends Thread {
         }
     }
 
-    public String getMove(int playerNumber) {
-        if (!moves.isEmpty()) {
-            return moves.get(playerNumber - 1);
-        }
-        return null;
-    }
-
-    /**
-     * Send a move to your client.
-     * @param move
-     */
-    public void sendMove(Move move) {
-        try {
-            ObjectOutputStream objectOutput = new ObjectOutputStream(client.getOutputStream());
-            objectOutput.writeObject(move);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 }
