@@ -44,7 +44,7 @@ public class Player {
     }
 
     public ArrayList<ProgramCard> getSelectedCards() {
-        System.out.println(selectedCards);
+        System.out.println(selectedCards + "getSelectedCard");
         return selectedCards;
     }
 
@@ -59,6 +59,8 @@ public class Player {
             allCards.add(deck.drawCard());
         }
     }
+
+    //public boolean hasLockedCards(){ }
 
     /**
      * a int on how many damageTokens
