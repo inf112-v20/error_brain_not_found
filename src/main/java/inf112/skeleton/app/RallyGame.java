@@ -26,8 +26,11 @@ public class RallyGame extends Game {
 
     public Board board;
     public Deck deck;
+<<<<<<< HEAD
     public Player currentPlayer;
     public GameScreen gameScreen;
+=======
+>>>>>>> 75f226310cb9276c7a6924766dffacb08fdac1c3
     public ArrayList<Player> players;
     public Semaphore waitForCards;
     public boolean playing;
@@ -49,7 +52,6 @@ public class RallyGame extends Game {
     public void setupGame(String mapPath) {
         this.board = new Board(mapPath, 4);
         this.deck = new Deck();
-        this.currentPlayer = board.getPlayer1();
         this.players = new ArrayList<>();
         this.players = board.getPlayers();
         this.mainPlayer = board.getPlayer1();
@@ -286,7 +288,7 @@ public class RallyGame extends Game {
         for (Laser laser : board.lasers) {
             laser.fire(this);
         }
-        //laserSound.play();
+        laserSound.play();
     }
 
     public void activateRotatePads(){
@@ -315,10 +317,6 @@ public class RallyGame extends Game {
                 }
             }
         }
-    }
-
-    public void render() {
-        super.render();
     }
 
     public void dispose() {

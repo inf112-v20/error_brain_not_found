@@ -53,7 +53,8 @@ public class RotatePadTest {
 
     /**
      * Get only left rotate pads.
-     * @param rotatePads
+     *
+     * @param rotatePads on board
      * @return list of left rotate pads
      */
     private ArrayList<RotatePad> getLeftRotatePads(ArrayList<RotatePad> rotatePads) {
@@ -68,7 +69,8 @@ public class RotatePadTest {
 
     /**
      * Get only right rotate pads.
-     * @param rotatePads
+     *
+     * @param rotatePads on board
      * @return list of right rotate pads
      */
     private ArrayList<RotatePad> getRightRotatePads(ArrayList<RotatePad> rotatePads) {

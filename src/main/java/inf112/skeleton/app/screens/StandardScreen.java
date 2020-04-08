@@ -10,7 +10,7 @@ import inf112.skeleton.app.RallyGame;
 public abstract class StandardScreen implements Screen {
     protected final RallyGame game;
     protected final OrthographicCamera camera;
-    protected SpriteBatch batch;
+    protected final SpriteBatch batch;
 
     public StandardScreen(final RallyGame game) {
         this.game = game;

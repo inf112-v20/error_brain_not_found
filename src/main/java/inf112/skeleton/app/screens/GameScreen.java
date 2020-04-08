@@ -13,11 +13,17 @@ import inf112.skeleton.app.cards.ShowHand;
 
 public class GameScreen extends StandardScreen {
 
+<<<<<<< HEAD
     private TiledMapRenderer mapRenderer;
     private Texture lifeTokens;
     private Texture damageTokens;
     private Texture confirmProgramCardsButton = new Texture(Gdx.files.internal("assets/images/ConfirmButton.png"));
     private Texture confirmProgramCardsNotReadyButton = new Texture(Gdx.files.internal("assets/images/ConfirmButtonNotReady.png"));
+=======
+    private final TiledMapRenderer mapRenderer;
+    private final Texture lifeTokens;
+    private final Texture damageTokens;
+>>>>>>> 75f226310cb9276c7a6924766dffacb08fdac1c3
     private float tokensX;
     private float lifeTokensY;
     private float damageTokensY;
