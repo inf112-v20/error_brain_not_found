@@ -1,4 +1,14 @@
-#### User-stories 
+# Mandatory Assignment 3 
+Team: error_no_brain_found
+
+## Task 1 - Team and project
+### Meeting minutes
+
+[Meeting 8](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-8)
+
+
+## Task 2 - Requirements
+### User-stories 
 
 #### Belts
 User-story:
