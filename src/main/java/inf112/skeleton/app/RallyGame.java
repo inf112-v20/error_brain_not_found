@@ -109,6 +109,7 @@ public class RallyGame extends Game {
                 }
                 board.respawnPlayers();
                 fireLasers();
+                decreaseLives();
                 removeDeadPlayers();
                 return super.keyDown(keycode);
             }
@@ -191,6 +192,20 @@ public class RallyGame extends Game {
             removeDeadPlayers();
             dealCards();
             selectCards();
+        }
+    }
+
+    /**
+     * Decrease lifetokens to each player that has collected 10 damagetokens.
+     * Reset damagetokens and respawn player.
+     */
+    public void decreaseLives() {
+        for (Player player : players) {
+            if (player.getDamageTokens() >= 10) {
+                player.decrementLifeTokens();
+                player.resetDamageTokens();
+                board.respawn(player);
+            }
         }
     }
 
