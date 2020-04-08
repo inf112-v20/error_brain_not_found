@@ -26,11 +26,8 @@ public class RallyGame extends Game {
 
     public Board board;
     public Deck deck;
-<<<<<<< HEAD
-    public Player currentPlayer;
-    public GameScreen gameScreen;
-=======
->>>>>>> 75f226310cb9276c7a6924766dffacb08fdac1c3
+
+
     public ArrayList<Player> players;
     public Semaphore waitForCards;
     public boolean playing;
@@ -59,7 +56,7 @@ public class RallyGame extends Game {
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
         this.playing = true;
-        showHand = new ShowHand(currentPlayer,board);
+        showHand = new ShowHand(mainPlayer,board);
 
 
         this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
