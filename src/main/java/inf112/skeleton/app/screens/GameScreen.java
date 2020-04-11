@@ -40,7 +40,7 @@ public class GameScreen extends StandardScreen {
         this.mapRenderer = new OrthogonalTiledMapRenderer(game.getBoard().getMap());
         mapRenderer.setView(camera);
         updateTokens();
-        showHand = new ShowHand(game.currentPlayer,board);
+        showHand = new ShowHand(game.mainPlayer, board);
     }
 
     @Override
