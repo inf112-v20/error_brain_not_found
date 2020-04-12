@@ -153,8 +153,11 @@ public class GameServer {
         return clients.size() + 1;
     }
 
+    /**
+     * Play players programcard five times.
+     */
     public void doAllMoves() {
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             allPlayOneMove();
         }
         moves = new HashMap<>();
