@@ -118,6 +118,31 @@ Tasks:
 *   If client: Create a new player and send this to server using sockets.
 *   Send input/output to/from server and the clients.
 
+#### Power down 
+User-story:  
+As a player I want to power down, so I can take away my damage.
+
+Acceptance-criteria:  
+*   If I am in power down I will clear my damage points.  
+*   If I am in power down I can not move.   
+*   If I am in power down I do not fire lasers.  
+
+Tasks:  
+*   Create a boolean that tells if a player is in power down mode.  
+*   Create a button so that a player can announce their power down.  
+
+
+#### Robot fire lasers  
+User-story:  
+As a player I want to be able to shoot lasers, so that other players can take damage.  
+
+Acceptance-criteria:  
+*   If I shoot another player the player will take damage.  
+
+Tasks:  
+*   Create a function in player that activates shooting.  
+
+
 #### Main criteria for MVP
 - [x] The game should be able to run, show a board with starting robot and programcards to this robot.  
 - [ ] The player is able to pick programcards and place them so that the robot can move.  
