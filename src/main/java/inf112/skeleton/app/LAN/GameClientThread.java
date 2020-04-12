@@ -46,14 +46,16 @@ public class GameClientThread extends Thread {
             if (message == null) {
                 break;
             }
+            if (message.equals("Host is leaving.. ")) {
+                System.out.println(message);
+                close();
+                return;
+            }
             System.out.println(message);
             ProgramCard card = converter.convertToCardAndExtractPlayer(message);
             int playerNumber = converter.getPlayerNumber();
             Player player = game.getBoard().getPlayer(playerNumber);
             game.playCard(player, card);
-            //int playerNumber = Character.getNumericValue(message.charAt(0));
-            //game.movePlayer(playerNumber, message);
-
 
         }
     }
