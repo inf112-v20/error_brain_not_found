@@ -138,8 +138,7 @@ public class RallyGame extends Game {
                         client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), nextCard(mainPlayer)));
                         System.out.println("Sent message to server. :)" + converter.convertToString(mainPlayer.getPlayerNr(), getCard(mainPlayer)));
                     } else {
-                        //playCard(mainPlayer, nextCard(mainPlayer));
-                        //connection.getServer().sendToAll(converter.convertToString(mainPlayer.getPlayerNr(), getCard(mainPlayer)));
+                        connection.getServer().putMove(mainPlayer.getPlayerNr(), nextCard(mainPlayer));
                     }
 
                 }

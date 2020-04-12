@@ -132,14 +132,14 @@ public class GameServer {
 
     /**
      *
-     * @return true if all clients have registered their move.
+     * @return true if all players have registered their move.
      */
     public boolean gotAllMoves() {
-        return moves.size() == getNumberOfClients();
+        return moves.size() == getNumberOfPlayers();
     }
 
-    public int getNumberOfClients() {
-        return clients.size();
+    public int getNumberOfPlayers() {
+        return clients.size() + 1;
     }
 
     public void doAllMoves() {
