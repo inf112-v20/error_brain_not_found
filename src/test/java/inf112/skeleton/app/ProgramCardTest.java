@@ -155,7 +155,6 @@ public class ProgramCardTest {
      * Starting at (0,0) east, move one, rotate left, move two, rotate right, move one, turn around, move two should give
      * (0, 2)
      */
-
     @Test
     public void sequenceOfCardsTest() {
         player.setSelectedCards(moveOne, left, moveTwo, right, moveOne, uturn, moveTwo);

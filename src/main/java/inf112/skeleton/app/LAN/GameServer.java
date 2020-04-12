@@ -19,7 +19,7 @@ public class GameServer {
 
     private ArrayList<GameServerThreads> clients;
     private RallyGame game;
-    private HashMap<Integer, ProgramCard> moves;
+    private HashMap<Integer, ArrayList<ProgramCard>> moves;
     private Converter converter;
 
     public GameServer(RallyGame game) {
@@ -118,13 +118,17 @@ public class GameServer {
 
     /**
      * Register a new move for a player. If player already has registered move,
-     * do not add.
+     * add it to list of cards belonging to the player.
      * @param playerNumber
      * @param card
      */
     public void putMove(int playerNumber, ProgramCard card) {
-        if (!moves.containsKey(playerNumber)) {
-            moves.put(playerNumber, card);
+        if (moves.containsKey(playerNumber)) {
+            moves.get(playerNumber).add(card);
+        } else {
+            ArrayList<ProgramCard> cards = new ArrayList<>();
+            cards.add(card);
+            moves.put(playerNumber, cards);
         }
     }
 
@@ -141,13 +145,14 @@ public class GameServer {
     }
 
     public void doAllMoves() {
-        for (Map.Entry<Integer, ProgramCard> move : moves.entrySet()) {
-            int thisPlayerNumber = move.getKey();
-            ProgramCard thisCard = move.getValue();
-            Player thisPlayer = game.getBoard().getPlayer(thisPlayerNumber);
-            game.playCard(thisPlayer, thisCard);
-            System.out.println("Doing move for " + thisPlayerNumber + " " + thisCard.getName());
-            sendToAll(converter.convertToString(thisPlayerNumber, thisCard));
+        for (Map.Entry<Integer, ArrayList<ProgramCard>> move : moves.entrySet()) {
+            int playerNumber = move.getKey();
+            ArrayList<ProgramCard> cards = move.getValue();
+            Player player = game.getBoard().getPlayer(playerNumber);
+            ProgramCard playingCard = cards.remove(0);
+            //game.playCard(thisPlayer, thisCard);
+            sendToAll(converter.convertToString(playerNumber, playingCard));
+            game.playCard(player, playingCard);
         }
         moves = new HashMap<>();
     }

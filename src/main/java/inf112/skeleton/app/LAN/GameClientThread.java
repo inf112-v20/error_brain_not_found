@@ -5,6 +5,9 @@ import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Own thread for a client so client can get continous updates from server.
@@ -21,6 +24,7 @@ public class GameClientThread extends Thread {
     private PrintWriter writer;
     private RallyGame game;
     private Converter converter;
+    private HashMap<Object, Object> moves;
 
     public GameClientThread(RallyGame game, Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -56,6 +60,8 @@ public class GameClientThread extends Thread {
             if (message.contains("Player")) {
                 System.out.println(message);
             } else {
+                System.out.println(message);
+
                 System.out.println(message);
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                 int playerNumber = converter.getPlayerNumber();

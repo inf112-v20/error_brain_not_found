@@ -133,12 +133,8 @@ public class RallyGame extends Game {
                     muteMusic();
                 }
                 else if (keycode == Input.Keys.S) {
-                    if (!isServer) {
-                        client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), nextCard(mainPlayer)));
-                    } else {
-                        serverThread.getServer().putMove(mainPlayer.getPlayerNr(), nextCard(mainPlayer));
-                    }
-
+                    selectCards();
+                    sendProgram();
                 }
                 else if (keycode == Input.Keys.SPACE) {
                     cardsReady();
@@ -157,6 +153,21 @@ public class RallyGame extends Game {
                 return super.keyDown(keycode);
             }
         });
+    }
+
+    /**
+     * Give all mainplayer's selected cards to the server.
+     */
+    public void sendProgram() {
+        if (!isServer) {
+            for (ProgramCard card : mainPlayer.getSelectedCards()) {
+                client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), card));
+            }
+        } else {
+            for (ProgramCard card : mainPlayer.getSelectedCards()) {
+                serverThread.getServer().putMove(mainPlayer.getPlayerNr(), card);
+            }
+        }
     }
 
     public void mute(){
