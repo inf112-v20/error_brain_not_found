@@ -140,14 +140,13 @@ public class GameServer {
         if (moves.size() < getNumberOfPlayers()) {
             return false;
         }
-        boolean receivedAllCards = true;
         for (Map.Entry<Integer, ArrayList<ProgramCard>> move : moves.entrySet()) {
             ArrayList<ProgramCard> cards = move.getValue();
             if (cards.size() < 5) {
-                receivedAllCards = false;
+                return false;
             }
         }
-        return receivedAllCards;
+        return true;
     }
 
     public int getNumberOfPlayers() {
