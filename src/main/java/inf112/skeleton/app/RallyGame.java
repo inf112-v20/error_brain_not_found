@@ -2,20 +2,21 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.Board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.objects.Laser;
+import inf112.skeleton.app.objects.Player.Player;
+import inf112.skeleton.app.objects.Player.PlayerSorter;
 import inf112.skeleton.app.objects.RotatePad;
-import inf112.skeleton.app.screens.GifScreen;
-import inf112.skeleton.app.screens.MenuScreen;
-import inf112.skeleton.app.screens.StandardScreen;
+import inf112.skeleton.app.screens.GifScreen.GifScreen;
+import inf112.skeleton.app.screens.MenuScreen.MenuScreen;
+import inf112.skeleton.app.screens.StandardScreen.StandardScreen;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -25,18 +26,16 @@ public class RallyGame extends Game {
     public Board board;
     public Deck deck;
 
-
     public ArrayList<Player> players;
     public Semaphore waitForCards;
     public boolean playing;
     public Sound laserSound;
-    public static Music gameMusic;
-    public Player mainPlayer;
+    public Music gameMusic;
+    public Player currentPlayer;
     public boolean gameIsRunning = false;
 
-
-    public static float volume = 0.05f;
-    public boolean unMute = true;
+    public float volume;
+    public boolean muted;
 
     public void create() {
         this.setScreen(new MenuScreen(this));
@@ -44,72 +43,28 @@ public class RallyGame extends Game {
     }
 
     public void setupGame(String mapPath) {
-        this.board = new Board(mapPath, 4);
+        this.board = new Board(mapPath, 1);
         this.deck = new Deck();
         this.players = new ArrayList<>();
         this.players = board.getPlayers();
-        this.mainPlayer = board.getPlayer1();
+        this.currentPlayer = board.getPlayer1();
 
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
         this.playing = true;
 
-
         this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
 
         new Thread(this::doTurn).start();
 
-        setInputProcessor();
         dealCards();
         //selectCards();
     }
 
-    public void setInputProcessor() {
-        Gdx.input.setInputProcessor(new InputAdapter() {
-            @Override
-            public boolean keyUp(int keycode) {
-                if (mainPlayer.isDead()) {
-                    return false;
-                }
-
-                removeLasers();
-
-                if (keycode == Input.Keys.RIGHT) {
-                    mainPlayer.setDirection(Direction.EAST);
-                    board.movePlayer(mainPlayer);
-                } else if (keycode == Input.Keys.LEFT) {
-                    mainPlayer.setDirection(Direction.WEST);
-                    board.movePlayer(mainPlayer);
-                } else if (keycode == Input.Keys.UP) {
-                    mainPlayer.setDirection(Direction.NORTH);
-                    board.movePlayer(mainPlayer);
-                } else if (keycode == Input.Keys.DOWN) {
-                    mainPlayer.setDirection(Direction.SOUTH);
-                    board.movePlayer(mainPlayer);
-                } else if (keycode == Input.Keys.ESCAPE) {
-                    Gdx.app.exit();
-                } else if (keycode == Input.Keys.M) {
-                    mute();
-                    muteMusic();
-                }
-
-                else if (keycode == Input.Keys.SPACE) {
-                    cardsReady();
-                    return super.keyDown(keycode);
-                } else {
-                    return super.keyDown(keycode);
-                }
-
-                if (mainPlayer.hasAllFlags(board.getFlags().size())) {
-                    setWinScreen();
-                }
-                board.respawnPlayers();
-                fireLasers();
-                decreaseLives();
-                removeDeadPlayers();
-                return super.keyDown(keycode);
-            }
-        });
+    public void confirmCards() {
+        if (currentPlayer.getSelectedCards().size() == 5) {
+            cardsReady();
+        }
     }
 
     public StandardScreen getScreen() {
@@ -117,34 +72,24 @@ public class RallyGame extends Game {
     }
 
     public void mute() {
-        if (unMute) {
-            volume = 0f;
-            unMute = false;
-
-        } else {
+        if (muted) {
             volume = 0.5f;
-            unMute = true;
+            muted = false;
+        } else {
+            volume = 0f;
+            muted = true;
         }
+        gameMusic.setVolume(volume);
     }
 
     public void loadMusic() {
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
     }
 
-    public  void muteMusic() {
-       if (!unMute){
-        gameMusic.setVolume(volume);
-       }
-
-       gameMusic.setVolume(volume);
-
-    }
-
     public void startMusic() {
         loadMusic();
-        gameMusic.setVolume(0.03f);
+        gameMusic.setVolume(0.5f);
         gameMusic.play();
-
     }
 
     private void cardsReady() {
@@ -152,8 +97,6 @@ public class RallyGame extends Game {
     }
 
     public void doTurn() {
-
-
 
         // TODO: Alle velger kort
         // TODO: Første kort spilles for alle i riktig rekkefølge
@@ -175,22 +118,26 @@ public class RallyGame extends Game {
             }
             for (int i = 0; i < 5; i++) {
 
-
                 System.out.println("Runde " + (i + 1));
-               // allPlayersPlayCard();
+                allPlayersPlayCard();
+                wait(500);
                 activateRotatePads();
-
+                wait(500);
                 fireLasers();
-                try {
-                    Thread.sleep(600);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+                wait(300);
                 removeLasers();
             }
             removeDeadPlayers();
             dealCards();
             selectCards();
+        }
+    }
+
+    private void wait(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -279,11 +226,20 @@ public class RallyGame extends Game {
             default:
                 break;
         }
+
         deck.addCardToDiscardPile(card);
     }
 
+    public void checkForWinner() {
+        for (Player player : players) {
+            if (player.hasAllFlags(board.getFlags().size())) {
+                setWinScreen();
+            }
+        }
+    }
+
     public void setWinScreen() {
-        this.dispose();
+        this.screen.dispose();
         this.setScreen(new GifScreen(this));
     }
 
@@ -299,7 +255,7 @@ public class RallyGame extends Game {
         for (Laser laser : board.lasers) {
             laser.fire(this);
         }
-        laserSound.play();
+        laserSound.play(0.2f);
     }
 
     public void activateRotatePads(){
@@ -328,10 +284,6 @@ public class RallyGame extends Game {
                 }
             }
         }
-    }
-
-    public void dispose() {
-        this.screen.dispose();
     }
 
     public Board getBoard() {

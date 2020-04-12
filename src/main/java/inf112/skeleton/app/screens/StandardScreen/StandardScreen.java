@@ -1,6 +1,7 @@
-package inf112.skeleton.app.screens;
+package inf112.skeleton.app.screens.StandardScreen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -15,34 +16,40 @@ public abstract class StandardScreen implements Screen {
     public final SpriteBatch batch;
     public final Stage stage;
     public final FitViewport viewport;
-    private float elapsed;
+    private final InputMultiplexer inputMultiplexer;
+    protected float elapsed;
 
     public StandardScreen(final RallyGame game) {
         this.game = game;
-        this.batch = new SpriteBatch();
+
         this.camera = new OrthographicCamera();
+
         this.viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
         this.viewport.apply(true);
+
+        this.batch = new SpriteBatch();
         this.batch.setProjectionMatrix(camera.combined);
+
         this.stage = new Stage(viewport, batch);
 
-        Gdx.input.setInputProcessor(stage);
+        this.inputMultiplexer = new InputMultiplexer();
+        inputMultiplexer.addProcessor(stage);
+        inputMultiplexer.addProcessor(new SettingsInput(game));
     }
 
     @Override
     public void show() {
-        // Empty functions gives bad code quality
+        Gdx.input.setInputProcessor(inputMultiplexer);
     }
 
     @Override
     public void render(float v) {
-        // Empty functions gives bad code quality
-    }
-
-    public void renderSettings(float v) {
         Gdx.gl.glClearColor(v, v, v, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         elapsed += Gdx.graphics.getDeltaTime();
+
+        stage.act(v);
+        stage.draw();
     }
 
     @Override

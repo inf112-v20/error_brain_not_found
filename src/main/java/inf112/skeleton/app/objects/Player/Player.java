@@ -1,7 +1,8 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.objects.Player;
 
 
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.Board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
@@ -45,8 +46,13 @@ public class Player {
     }
 
     public ArrayList<ProgramCard> getSelectedCards() {
-        System.out.println(selectedCards + "getSelectedCard");
         return selectedCards;
+    }
+
+    public void selectCard(ProgramCard card) {
+        if (selectedCards.size() < 5) {
+            selectedCards.add(card);
+        }
     }
 
     public void selectCards() {

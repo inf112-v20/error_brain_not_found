@@ -1,4 +1,4 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.screens.MenuScreen;
 
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;

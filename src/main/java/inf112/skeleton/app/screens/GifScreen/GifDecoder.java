@@ -1,4 +1,4 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.screens.GifScreen;
 
 /* Copyright by Johannes Borchardt */
 /* LibGdx conversion 2014 by Anton Persson */

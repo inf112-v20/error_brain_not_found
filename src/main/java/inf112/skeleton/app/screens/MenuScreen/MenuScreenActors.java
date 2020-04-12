@@ -1,21 +1,25 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.screens.MenuScreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
-import inf112.skeleton.app.screens.GameScreen;
+import inf112.skeleton.app.RallyGame;
+import inf112.skeleton.app.screens.GameScreen.GameScreen;
 
 import java.io.File;
 import java.util.Objects;
 
 public class MenuScreenActors {
 
+    private final Stage stage;
+    private final RallyGame game;
     public MenuButtonSkin buttonSkin;
     public Skin skin;
 
@@ -28,7 +32,12 @@ public class MenuScreenActors {
     public float START_BUTTON_Y;
     public float EXIT_BUTTON_Y;
 
-    public MenuScreenActors() {
+    public SelectBox<String> selectMap;
+
+    public MenuScreenActors(RallyGame game, Stage stage) {
+        this.game = game;
+        this.stage = stage;
+
         screenWidth = Gdx.graphics.getWidth();
         screenHeight = Gdx.graphics.getHeight();
 
@@ -42,7 +51,7 @@ public class MenuScreenActors {
         skin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
     }
 
-    public ImageButton initializeStartButton(RallyGame game, SelectBox<String> selectMap) {
+    public void initializeStartButton() {
         ImageButton.ImageButtonStyle startButtonStyle = new ImageButton.ImageButtonStyle();
         startButtonStyle.up = buttonSkin.menuButtonSkin.getDrawable("Start button");
         startButtonStyle.over = buttonSkin.menuButtonSkin.getDrawable("Start button over");
@@ -54,7 +63,6 @@ public class MenuScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.setupGame("assets/maps/" + selectMap.getSelected() + ".tmx");
-                game.getScreen().dispose();
                 game.setScreen(new GameScreen(game));
             }
 
@@ -63,10 +71,10 @@ public class MenuScreenActors {
                 return true;
             }
         });
-        return startButton;
+        stage.addActor(startButton);
     }
 
-    public ImageButton initializeExitButton() {
+    public void initializeExitButton() {
         ImageButton.ImageButtonStyle exitButtonStyle = new ImageButton.ImageButtonStyle();
         exitButtonStyle.up = buttonSkin.menuButtonSkin.getDrawable("Exit button");
         exitButtonStyle.over = buttonSkin.menuButtonSkin.getDrawable("Exit button over");
@@ -85,16 +93,16 @@ public class MenuScreenActors {
                 return true;
             }
         });
-        return exitButton;
+        stage.addActor(exitButton);
     }
 
-    public SelectBox<String> initializeSelectMap() {
-        SelectBox<String> selectMap = new SelectBox<>(skin);
+    public void initializeSelectMap() {
+        selectMap = new SelectBox<>(skin);
         selectMap.setItems(getMaps());
         selectMap.setSelected("assets/maps/Risky Exchange.tmx");
         selectMap.setWidth(BUTTON_WIDTH * .87f);
         selectMap.setPosition(BUTTON_X - selectMap.getWidth(), START_BUTTON_Y - BUTTON_HEIGHT / 2);
-        return selectMap;
+        stage.addActor(selectMap);
     }
 
     private Array<String> getMaps() {
@@ -108,9 +116,9 @@ public class MenuScreenActors {
         return mapArray;
     }
 
-    public Image initializeBackground() {
+    public void initializeBackground() {
         Image background = new Image(new Texture("assets/images/GUI_Edited.jpg"));
         background.setSize(screenWidth, screenHeight);
-        return background;
+        stage.addActor(background);
     }
 }
