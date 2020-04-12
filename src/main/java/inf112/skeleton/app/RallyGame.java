@@ -9,15 +9,13 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
-import inf112.skeleton.app.cards.ShowHand;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
-import inf112.skeleton.app.screens.GameScreen;
 import inf112.skeleton.app.screens.GifScreen;
-import inf112.skeleton.app.screens.LoadingScreen;
 import inf112.skeleton.app.screens.MenuScreen;
+import inf112.skeleton.app.screens.StandardScreen;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -34,7 +32,6 @@ public class RallyGame extends Game {
     public Sound laserSound;
     public static Music gameMusic;
     public Player mainPlayer;
-    public ShowHand showHand;
     public boolean gameIsRunning = false;
 
 
@@ -56,7 +53,6 @@ public class RallyGame extends Game {
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
         this.playing = true;
-        showHand = new ShowHand(mainPlayer,board);
 
 
         this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
@@ -116,19 +112,22 @@ public class RallyGame extends Game {
         });
     }
 
-    public void mute(){
-        if (unMute){
+    public StandardScreen getScreen() {
+        return (StandardScreen) super.getScreen();
+    }
+
+    public void mute() {
+        if (unMute) {
             volume = 0f;
             unMute = false;
 
-        }
-        else {
+        } else {
             volume = 0.5f;
             unMute = true;
         }
     }
 
-    public  void loadMusic() {
+    public void loadMusic() {
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
     }
 

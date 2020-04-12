@@ -1,22 +1,29 @@
 package inf112.skeleton.app.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import inf112.skeleton.app.Board;
 import inf112.skeleton.app.Player;
+import inf112.skeleton.app.ProgramCardButtons;
 import inf112.skeleton.app.RallyGame;
-import inf112.skeleton.app.cards.ProgramCard;
-import inf112.skeleton.app.cards.ShowHand;
 
 public class GameScreen extends StandardScreen {
 
+    private Skin skin;
 
     private TiledMapRenderer mapRenderer;
-    private Texture lifeTokens;
-    private Texture damageTokens;
+    private Image lifeTokens;
+    private Image damageTokens;
+    private ImageButton confirmButton;
     private Texture confirmProgramCardsButton = new Texture(Gdx.files.internal("assets/images/ConfirmButton.png"));
     private Texture confirmProgramCardsNotReadyButton = new Texture(Gdx.files.internal("assets/images/ConfirmButtonNotReady.png"));
 
@@ -24,7 +31,6 @@ public class GameScreen extends StandardScreen {
     private float lifeTokensY;
     private float damageTokensY;
     private float tokensSize;
-    private ShowHand showHand;
     private Board board;
     private Player player;
     private Texture[] texture;
@@ -33,98 +39,60 @@ public class GameScreen extends StandardScreen {
     public GameScreen(final RallyGame game) {
         super(game);
 
-        lifeTokens = new Texture("assets/images/lifeToken.png");
-        damageTokens = new Texture("assets/images/damageToken.png");
+        skin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
 
-        super.camera.setToOrtho(false, game.board.getWidth() * 400, game.board.getHeight() * 400);
-        this.mapRenderer = new OrthogonalTiledMapRenderer(game.getBoard().getMap());
+        // TODO: Confirmbutton
+        makeConfirmButton();
+        // TODO: Life tokens
+        lifeTokens = new Image(new Texture("assets/images/lifeToken.png"));
+        //lifeTokens.setSize();
+        //lifeTokens.setPosition();
+        // TODO: Damage tokens
+        damageTokens = new Image(new Texture("assets/images/damageToken.png"));
+        //damageTokens.setSize();
+        //damageTokens.setPosition();
+        // TODO: Cards
+        ProgramCardButtons cards = new ProgramCardButtons();
+        cards.initializeButtons(game, stage);
+        // TODO: Map
+        float unitScale = 45 / 300f;
+        this.mapRenderer = new OrthogonalTiledMapRenderer(game.getBoard().getMap(), unitScale, batch);
         mapRenderer.setView(camera);
-        updateTokens();
-        showHand = new ShowHand(game.mainPlayer, board);
+
+        stage.addActor(confirmButton);
+        //stage.addActor(lifeTokens);
+        //stage.addActor(damageTokens);
     }
 
     @Override
     public void render(float v) {
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         renderSettings(v);
-
-        updateTokens();
         mapRenderer.render();
-        batch.begin();
-        renderLifeTokens();
-        renderDamageTokens();
-        if (chooseStartingProgrammingCards()){
-            renderStartProgramCards();
-            // TODO: draw(confirmProgramCardsNotReadyButton) if cards are chosen, else draw(confirmProgramCardsButton)
-            // TODO: if confirmProgramCardsButton are clicked, dispose/make chooseStartingProgramCards false and give player the cards
-        }
-        batch.draw(confirmProgramCardsButton, (float) (Gdx.graphics.getWidth() / 1.2),10,tokensSize,tokensSize);
-
-        batch.end();
-    }
-    private boolean chooseStartingProgrammingCards() {
-        return game.gameIsRunning;
+        stage.act(v);
+        stage.draw();
     }
 
-    public void updateTokens() {
-        tokensSize = camera.viewportHeight / 8;
-        tokensX = 10;
-        lifeTokensY = camera.viewportHeight - tokensSize;
-        damageTokensY = lifeTokensY - tokensSize;
-    }
+    private void makeConfirmButton() {
+        TextureAtlas atlas = new TextureAtlas();
+        TextureRegion confirmTexture = new TextureRegion(new Texture("assets/images/ConfirmButtonNotReady.png"));
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+        atlas.addRegion("Confirm button", confirmTexture);
+        Skin skin = new Skin(atlas);
+        style.up = skin.getDrawable("Confirm button");
+        confirmButton = new ImageButton(style);
+        confirmButton.setSize(50, 50);
+        confirmButton.setPosition(910, 0);
+        confirmButton.addListener(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                System.out.println("Pressed ready button");
+                // TODO: Start runde
+            }
 
-    public void renderDamageTokens() {
-        for (int i = 0; i < game.mainPlayer.getDamageTokens(); i++) {
-            batch.draw(damageTokens, tokensX + i * tokensSize, damageTokensY, tokensSize, tokensSize);
-        }
-    }
-
-    public void renderLifeTokens() {
-        for (int i = 0; i < game.mainPlayer.getLifeTokens(); i++) {
-            batch.draw(lifeTokens, tokensX + i * tokensSize, lifeTokensY, tokensSize, tokensSize);
-        }
-    }
-    private void drawConfirmButton(){
-
-    }
-
-    public void renderStartProgramCards(){
-
-        for (int i = 0; i <9; i++){
-            printAllCards(game.mainPlayer.getAllCards().get(i));
-            //texture = new Texture[player.getAllCards().size()];
-            //System.out.println(i);
-            batch.draw(this.cards,i * camera.viewportHeight/5 , camera.viewportHeight-140,  (tokensSize*2)-30,tokensSize*2);
-                    //110*i+180,camera.viewportHeight-camera.viewportHeight/4,camera.viewportHeight/5,camera.viewportHeight/4);
-        }
-
-    }
-
-    public void printAllCards(ProgramCard card) {
-        switch (card.getRotate()) {
-            case RIGHT:
-                cards = new Texture(Gdx.files.internal("assets/programCards/RightTurn.jpg"));
-                break;
-            case LEFT:
-                cards = new Texture(Gdx.files.internal("assets/programCards/LeftTurn.jpg"));
-                break;
-            case UTURN:
-                cards = new Texture(Gdx.files.internal("assets/programCards/U-Turn.jpg"));
-                break;
-            case NONE:
-                if (card.getDistance() >= 1 ) {
-                    if (card.getDistance() == 1) {
-                        cards = new Texture(Gdx.files.internal("assets/programCards/Move1.jpg"));
-                    } else if (card.getDistance() == 2){
-                        cards = new Texture(Gdx.files.internal("assets/programCards/Move2.jpg"));
-                    }
-                    else if (card.getDistance() == 3){
-                        cards = new Texture(Gdx.files.internal("assets/programCards/Move3.jpg"));
-                    }
-                }
-                break;
-            default:
-                break;
-        }
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
     }
 }
