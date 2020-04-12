@@ -59,8 +59,6 @@ public class RallyGame extends Game {
             client.storeInitializationValuesFromSocket();
             this.myPlayerNumber = client.getMyPlayerNumber();
             this.numberOfPlayers = client.getNumberOfPlayers();
-            System.out.println("In game: " +myPlayerNumber);
-            System.out.println("In game: "+ numberOfPlayers);
             client.start();
 
             System.out.println("Started client.");
@@ -134,6 +132,7 @@ public class RallyGame extends Game {
                 }
                 else if (keycode == Input.Keys.S) {
                     selectCards();
+                    System.out.print("Your program is: " + mainPlayer.getSelectedCards());
                     sendProgram();
                 }
                 else if (keycode == Input.Keys.SPACE) {
@@ -162,6 +161,7 @@ public class RallyGame extends Game {
         if (!isServer) {
             for (ProgramCard card : mainPlayer.getSelectedCards()) {
                 client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), card));
+                System.out.println("Sent " + card.getName() + " to server.");
             }
         } else {
             for (ProgramCard card : mainPlayer.getSelectedCards()) {
@@ -317,7 +317,6 @@ public class RallyGame extends Game {
      * @param card
      */
     public void playCard(Player player, ProgramCard card) {
-        System.out.println("IN GAME: "+player.toString() + " played " + card.toString());
         switch (card.getRotate()) {
             case RIGHT:
                 player.setDirection(player.getDirection().turnRight());

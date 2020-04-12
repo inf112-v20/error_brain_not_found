@@ -72,7 +72,6 @@ public class Player {
         while (selectedCards.size() < 5) {
             selectedCards.add(allCards.remove(0));
         }
-        System.out.print("Your program is: " + selectedCards);
     }
 
 

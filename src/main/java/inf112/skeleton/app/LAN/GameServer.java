@@ -133,11 +133,23 @@ public class GameServer {
     }
 
     /**
-     *
+     * Check if all players have sent their program, consisting of 5 cards.
      * @return true if all players have registered their move.
      */
     public boolean gotAllMoves() {
-        return moves.size() == getNumberOfPlayers();
+        if (moves.size() < getNumberOfPlayers()) {
+            return false;
+        }
+        System.out.println("Checking moves.");
+        boolean receivedAllCards = true;
+        for (Map.Entry<Integer, ArrayList<ProgramCard>> move : moves.entrySet()) {
+            ArrayList<ProgramCard> cards = move.getValue();
+            if (cards.size() < 5) {
+                System.out.println("Not ready");
+                receivedAllCards = false;
+            }
+        }
+        return receivedAllCards;
     }
 
     public int getNumberOfPlayers() {
@@ -145,15 +157,26 @@ public class GameServer {
     }
 
     public void doAllMoves() {
+        for (int i = 0; i < 4; i++) {
+            System.out.println("Card nr: "+i);
+            allPlayOneMove();
+        }
+        moves = new HashMap<>();
+    }
+
+    /**
+     * Play one move from the selected cards of all players, send this move
+     * to all players.
+     */
+    public void allPlayOneMove() {
+        System.out.println(moves);
         for (Map.Entry<Integer, ArrayList<ProgramCard>> move : moves.entrySet()) {
             int playerNumber = move.getKey();
             ArrayList<ProgramCard> cards = move.getValue();
             Player player = game.getBoard().getPlayer(playerNumber);
             ProgramCard playingCard = cards.remove(0);
-            //game.playCard(thisPlayer, thisCard);
             sendToAll(converter.convertToString(playerNumber, playingCard));
             game.playCard(player, playingCard);
         }
-        moves = new HashMap<>();
     }
 }

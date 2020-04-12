@@ -36,6 +36,13 @@ public class GameServerThreads extends Thread {
         this.game = game;
         this.converter = new Converter();
 
+        try {
+            input = client.getInputStream();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        reader = new BufferedReader(new InputStreamReader(input));
+
     }
 
     /**
@@ -51,9 +58,9 @@ public class GameServerThreads extends Thread {
             System.out.println("Server has sent numplayers");
 
             while (true) {
-                input = client.getInputStream();
-                reader = new BufferedReader(new InputStreamReader(input));
+                System.out.println("Back on top. :)");
                 String message = reader.readLine();
+                System.out.println("Read message");
                 if (message == null) {
                     break;
                 }
@@ -70,13 +77,15 @@ public class GameServerThreads extends Thread {
                 }
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                 int playerNumber = converter.getPlayerNumber();
+                System.out.println("Got move " + card.getName() + " from player " + playerNumber);
                 server.putMove(playerNumber, card);
-                System.out.println("Moves: "+server.gotAllMoves() + " Numplay; " + numberOfPlayers);
-                // Wait for all clients to send their card.
+                System.out.println("Sent move " + card.getName() + " from player " + playerNumber);
+                // Wait for all clients to send their cards.
                 if (server.gotAllMoves()) {
                     System.out.println("Doing moves");
                     server.doAllMoves();
                 }
+                System.out.println("Not moving yet.");
 
             }
         } catch (IOException e) {
