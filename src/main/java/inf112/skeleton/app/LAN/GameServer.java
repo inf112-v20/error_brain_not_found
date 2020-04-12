@@ -1,5 +1,8 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.LAN;
 
+
+import inf112.skeleton.app.Player;
+import inf112.skeleton.app.RallyGame;
 
 import java.io.*;
 import java.net.ServerSocket;

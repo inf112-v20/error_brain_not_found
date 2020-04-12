@@ -4,6 +4,9 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.LAN.ConnectionThread;
+import inf112.skeleton.app.LAN.Converter;
+import inf112.skeleton.app.LAN.GameClientThread;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
@@ -114,11 +117,6 @@ public class RallyGame extends Game {
                 if (keycode == Input.Keys.RIGHT) {
                     mainPlayer.setDirection(Direction.EAST);
                     board.movePlayer(mainPlayer);
-                    if (!isServer) {
-                        client.sendMessage(mainPlayer.getPlayerNr() + " moved right; ");
-                    } else {
-                        connection.getServer().sendToAll(mainPlayer.getPlayerNr() + " moved right; ");
-                    }
                 } else if (keycode == Input.Keys.LEFT) {
                     mainPlayer.setDirection(Direction.WEST);
                     board.movePlayer(mainPlayer);
@@ -135,11 +133,13 @@ public class RallyGame extends Game {
                     muteMusic();
                 }
                 else if (keycode == Input.Keys.S) {
-                    //mainPlayer.selectCards();
                     if (!isServer) {
-                        client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), nextCard(mainPlayer)));
-                        playCard(mainPlayer, getCard(mainPlayer));
+                        playCard(mainPlayer, nextCard(mainPlayer));
+                        client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), getCard(mainPlayer)));
                         System.out.println("Sent message to server. :)" + converter.convertToString(mainPlayer.getPlayerNr(), getCard(mainPlayer)));
+                    } else {
+                        playCard(mainPlayer, nextCard(mainPlayer));
+                        connection.getServer().sendToAll(converter.convertToString(mainPlayer.getPlayerNr(), getCard(mainPlayer)));
                     }
 
                 }

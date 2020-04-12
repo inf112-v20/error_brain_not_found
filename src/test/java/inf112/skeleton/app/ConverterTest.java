@@ -1,5 +1,6 @@
 package inf112.skeleton.app;
 
+import inf112.skeleton.app.LAN.Converter;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Rotate;
 import org.junit.Test;

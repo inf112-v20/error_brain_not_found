@@ -1,4 +1,4 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.LAN;
 
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Rotate;

@@ -1,4 +1,6 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.LAN;
+
+import inf112.skeleton.app.RallyGame;
 
 /**
  * Make a new thread to make server connect to clients so that game.create()

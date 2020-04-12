@@ -1,14 +1,13 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.LAN;
 
 
+import inf112.skeleton.app.Player;
+import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
-import jdk.nashorn.internal.objects.NativeFloat32Array;
-import org.lwjgl.Sys;
 
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.ArrayList;
 
 /**
