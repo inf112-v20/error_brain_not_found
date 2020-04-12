@@ -134,9 +134,7 @@ public class RallyGame extends Game {
                 }
                 else if (keycode == Input.Keys.S) {
                     if (!isServer) {
-                        //playCard(mainPlayer, nextCard(mainPlayer));
                         client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), nextCard(mainPlayer)));
-                        System.out.println("Sent message to server. :)" + converter.convertToString(mainPlayer.getPlayerNr(), getCard(mainPlayer)));
                     } else {
                         connection.getServer().putMove(mainPlayer.getPlayerNr(), nextCard(mainPlayer));
                     }

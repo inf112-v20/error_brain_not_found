@@ -1,7 +1,5 @@
 package inf112.skeleton.app.LAN;
 
-
-import com.sun.javaws.exceptions.InvalidArgumentException;
 import inf112.skeleton.app.Player;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
