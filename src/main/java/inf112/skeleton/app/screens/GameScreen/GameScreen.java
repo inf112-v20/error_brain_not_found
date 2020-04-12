@@ -20,7 +20,7 @@ public class GameScreen extends StandardScreen {
         actors.initializeDamageTokens();
 
         float tileHeight = 300f;
-        float prefTileHeight = Gdx.graphics.getHeight() / 12f;
+        float prefTileHeight = (float) Gdx.graphics.getHeight() / game.getBoard().boardHeight;
         float unitScale = prefTileHeight / tileHeight;
 
         this.mapRenderer = new OrthogonalTiledMapRenderer(game.getBoard().getMap(), unitScale, batch);
@@ -30,6 +30,7 @@ public class GameScreen extends StandardScreen {
     @Override
     public void render(float v) {
         super.render(v);
+        game.checkForWinner();
         mapRenderer.render();
     }
 }

@@ -106,8 +106,6 @@ public class RallyGame extends Game {
         // TODO: Spiller skyter
         // TODO: Laser skyter
         while (playing) {
-            gameIsRunning = true;
-
             try {
                 waitForCards.acquire();
             } catch (InterruptedException e) {
@@ -120,16 +118,16 @@ public class RallyGame extends Game {
 
                 System.out.println("Runde " + (i + 1));
                 allPlayersPlayCard();
-                wait(500);
-                activateRotatePads();
-                wait(500);
-                fireLasers();
-                wait(300);
-                removeLasers();
+                //wait(500);
+                //activateRotatePads();
+                //wait(500);
+                //fireLasers();
+                //wait(300);
+                //removeLasers();
+                wait(200);
             }
             removeDeadPlayers();
             dealCards();
-            selectCards();
         }
     }
 
@@ -163,8 +161,8 @@ public class RallyGame extends Game {
     public void dealCards() {
         for (Player player : players) {
             player.drawCards(deck);
-            player.drawCards(deck);
         }
+
     }
 
     public void removeDeadPlayers() {
