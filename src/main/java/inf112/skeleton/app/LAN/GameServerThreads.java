@@ -58,9 +58,7 @@ public class GameServerThreads extends Thread {
             System.out.println("Server has sent numplayers");
 
             while (true) {
-                System.out.println("Back on top. :)");
                 String message = reader.readLine();
-                System.out.println("Read message");
                 if (message == null) {
                     break;
                 }
@@ -77,16 +75,11 @@ public class GameServerThreads extends Thread {
                 }
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                 int playerNumber = converter.getPlayerNumber();
-                System.out.println("Got move " + card.getName() + " from player " + playerNumber);
                 server.putMove(playerNumber, card);
-                System.out.println("Sent move " + card.getName() + " from player " + playerNumber);
                 // Wait for all clients to send their cards.
                 if (server.gotAllMoves()) {
-                    System.out.println("Doing moves");
                     server.doAllMoves();
                 }
-                System.out.println("Not moving yet.");
-
             }
         } catch (IOException e) {
             // Close socket if exception

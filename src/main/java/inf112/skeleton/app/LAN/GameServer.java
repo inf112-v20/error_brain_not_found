@@ -140,12 +140,10 @@ public class GameServer {
         if (moves.size() < getNumberOfPlayers()) {
             return false;
         }
-        System.out.println("Checking moves.");
         boolean receivedAllCards = true;
         for (Map.Entry<Integer, ArrayList<ProgramCard>> move : moves.entrySet()) {
             ArrayList<ProgramCard> cards = move.getValue();
             if (cards.size() < 5) {
-                System.out.println("Not ready");
                 receivedAllCards = false;
             }
         }
@@ -158,7 +156,6 @@ public class GameServer {
 
     public void doAllMoves() {
         for (int i = 0; i < 4; i++) {
-            System.out.println("Card nr: "+i);
             allPlayOneMove();
         }
         moves = new HashMap<>();
