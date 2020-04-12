@@ -4,7 +4,7 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
-import inf112.skeleton.app.LAN.ConnectionThread;
+import inf112.skeleton.app.LAN.ServerThread;
 import inf112.skeleton.app.LAN.Converter;
 import inf112.skeleton.app.LAN.GameClientThread;
 import inf112.skeleton.app.cards.Deck;
@@ -36,7 +36,7 @@ public class RallyGame extends Game {
     public Player mainPlayer;
     private int numberOfPlayers;
     private int myPlayerNumber;
-    private ConnectionThread connection;
+    private ServerThread serverThread;
     private boolean isServer;
     private GameClientThread client;
     private ProgramCard card;
@@ -73,8 +73,8 @@ public class RallyGame extends Game {
             System.out.println("How many players?");
             scanner = new Scanner(System.in);
             this.numberOfPlayers = scanner.nextInt();
-            this.connection = new ConnectionThread(this, this.numberOfPlayers);
-            connection.start();
+            this.serverThread = new ServerThread(this, this.numberOfPlayers);
+            serverThread.start();
             // }
         }
         //TODO: Delete LoadingScreen if not used
@@ -136,7 +136,7 @@ public class RallyGame extends Game {
                     if (!isServer) {
                         client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), nextCard(mainPlayer)));
                     } else {
-                        connection.getServer().putMove(mainPlayer.getPlayerNr(), nextCard(mainPlayer));
+                        serverThread.getServer().putMove(mainPlayer.getPlayerNr(), nextCard(mainPlayer));
                     }
 
                 }
@@ -301,15 +301,6 @@ public class RallyGame extends Game {
     }
 
     /**
-     *
-     * @param player
-     * @return ProgramCard player is currently playing
-     */
-    public ProgramCard getCard(Player player) {
-        return this.card;
-    }
-
-    /**
      * Move player according to its playerCard.
      * @param player
      * @param card
@@ -409,8 +400,8 @@ public class RallyGame extends Game {
         }
         // Close all sockets in serverthread
         if (isServer) {
-            this.connection.getServer().sendToAll("Host is leaving.. ");
-            this.connection.getServer().disconnectAll();
+            this.serverThread.getServer().sendToAll("Host is leaving.. ");
+            this.serverThread.getServer().disconnectAll();
             System.out.println("Finish.");
         }
         this.screen.dispose();

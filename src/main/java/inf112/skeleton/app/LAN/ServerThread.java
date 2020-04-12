@@ -7,13 +7,13 @@ import inf112.skeleton.app.RallyGame;
  * can finish, and the menu-screen is shown.
  * @author  Jenny
  */
-public class ConnectionThread extends Thread {
+public class ServerThread extends Thread {
 
     private int numberOfPlayers;
     private GameServer server;
     private RallyGame game;
 
-    public ConnectionThread(RallyGame game, int numberOfPlayers) {
+    public ServerThread(RallyGame game, int numberOfPlayers) {
         this.numberOfPlayers = numberOfPlayers;
         this.game = game;
     }
