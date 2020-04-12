@@ -43,6 +43,22 @@ public class Converter {
      * @return
      */
     public ProgramCard convertToCardAndExtractPlayer(String string) {
+        ArrayList<String> strings = splitBySpace(string);
+        this.playerNumber = Integer.parseInt(strings.get(0));
+        int prio = Integer.parseInt(strings.get(1));
+        int steps = Integer.parseInt(strings.get(2));
+        Rotate rotation = getRotation(string);
+        String name = getName(string);
+        return new ProgramCard(prio, steps, rotation, name);
+    }
+
+    /**
+     * Put words separated by spaces in a list.
+     * So "This is an example" becomes ["This", "is", "an", "example"].
+     * @param string
+     * @return ArrayList<String> List of string with index at spaces.
+     */
+    public ArrayList<String> splitBySpace(String string) {
         ArrayList<String> strings = new ArrayList<>();
         StringBuilder str = new StringBuilder();
         for (int i = 0; i < string.length(); i++) {
@@ -50,16 +66,14 @@ public class Converter {
             if (character == ' ') {
                 strings.add(str.toString());
                 str = new StringBuilder();
+            } else if (i == string.length()-1) {
+                str.append(character);
+                strings.add(str.toString());
             } else {
                 str.append(character);
             }
         }
-        this.playerNumber = Integer.parseInt(strings.get(0));
-        int prio = Integer.parseInt(strings.get(0));
-        int steps = Integer.parseInt(strings.get(0));
-        Rotate rotation = getRotation(string);
-        String name = getName(string);
-        return new ProgramCard(prio, steps, rotation, name);
+        return strings;
     }
 
     public int getPlayerNumber() {
@@ -90,7 +104,7 @@ public class Converter {
         if (string.contains("Move 2")) {
             return "Move 2";
         }
-        return null;
+        return "Could not match name.";
     }
 
 
