@@ -46,44 +46,24 @@ public class GameClientThread extends Thread {
             if (message == null) {
                 break;
             }
+            // If host leaves
             if (message.equals("Host is leaving.. ")) {
                 System.out.println(message);
                 close();
                 return;
             }
-            System.out.println(message);
-            ProgramCard card = converter.convertToCardAndExtractPlayer(message);
-            int playerNumber = converter.getPlayerNumber();
-            Player player = game.getBoard().getPlayer(playerNumber);
-            game.playCard(player, card);
-
+            // If another player leaves.
+            if (message.contains("Player")) {
+                System.out.println(message);
+            } else {
+                System.out.println(message);
+                ProgramCard card = converter.convertToCardAndExtractPlayer(message);
+                int playerNumber = converter.getPlayerNumber();
+                Player player = game.getBoard().getPlayer(playerNumber);
+                game.playCard(player, card);
+            }
         }
     }
-
-    /**
-     * Get number of the player who is sending message. Is at position 0.
-     */
-    public int getPlayerNumber(String message) {
-        return Character.getNumericValue(message.charAt(0));
-    }
-
-    /**
-     * Get prioritation for this card. Is at position 5 in string.
-     */
-    public int getPrioritation(String message) {
-        return Character.getNumericValue(message.charAt(5));
-    }
-
-    /**
-     * Get number of steps player is supposed to move. Is at position 3 in string.
-     * @param message
-     * @return int steps
-     */
-    private int getSteps(String message) {
-        return Character.getNumericValue(message.charAt(3));
-    }
-
-
 
     /**
      *

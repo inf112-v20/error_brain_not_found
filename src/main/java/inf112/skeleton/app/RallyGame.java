@@ -134,12 +134,12 @@ public class RallyGame extends Game {
                 }
                 else if (keycode == Input.Keys.S) {
                     if (!isServer) {
-                        playCard(mainPlayer, nextCard(mainPlayer));
-                        client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), getCard(mainPlayer)));
+                        //playCard(mainPlayer, nextCard(mainPlayer));
+                        client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), nextCard(mainPlayer)));
                         System.out.println("Sent message to server. :)" + converter.convertToString(mainPlayer.getPlayerNr(), getCard(mainPlayer)));
                     } else {
-                        playCard(mainPlayer, nextCard(mainPlayer));
-                        connection.getServer().sendToAll(converter.convertToString(mainPlayer.getPlayerNr(), getCard(mainPlayer)));
+                        //playCard(mainPlayer, nextCard(mainPlayer));
+                        //connection.getServer().sendToAll(converter.convertToString(mainPlayer.getPlayerNr(), getCard(mainPlayer)));
                     }
 
                 }
@@ -232,17 +232,6 @@ public class RallyGame extends Game {
             dealCards();
             selectCards();
         }
-    }
-
-    /**
-     * Move a player on the board.
-     * @param playerNumber
-     * @param move
-     */
-    public void movePlayer(int playerNumber, String move) {
-        Player player = board.getPlayer(playerNumber);
-        player.setDirection(Direction.EAST);
-        board.movePlayer(player);
     }
 
     /**

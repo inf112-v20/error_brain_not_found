@@ -1,13 +1,17 @@
 package inf112.skeleton.app.LAN;
 
 
+import com.sun.javaws.exceptions.InvalidArgumentException;
 import inf112.skeleton.app.Player;
 import inf112.skeleton.app.RallyGame;
+import inf112.skeleton.app.cards.ProgramCard;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A server for handling connection between players.
@@ -17,10 +21,14 @@ public class GameServer {
 
     private ArrayList<GameServerThreads> clients;
     private RallyGame game;
+    private HashMap<Integer, ProgramCard> moves;
+    private Converter converter;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
         this.game = game;
+        this.moves = new HashMap<>();
+        this.converter = new Converter();
     }
 
     /**
@@ -108,5 +116,41 @@ public class GameServer {
         for (GameServerThreads thread : clients) {
             disconnect(thread.getPlayerNumber());
         }
+    }
+
+    /**
+     * Register a new move for a player. If player already has registered move,
+     * do not add.
+     * @param playerNumber
+     * @param card
+     */
+    public void putMove(int playerNumber, ProgramCard card) {
+        if (!moves.containsKey(playerNumber)) {
+            moves.put(playerNumber, card);
+        }
+    }
+
+    /**
+     *
+     * @return true if all clients have registered their move.
+     */
+    public boolean gotAllMoves() {
+        return moves.size() == getNumberOfClients();
+    }
+
+    public int getNumberOfClients() {
+        return clients.size();
+    }
+
+    public void doAllMoves() {
+        for (Map.Entry<Integer, ProgramCard> move : moves.entrySet()) {
+            int thisPlayerNumber = move.getKey();
+            ProgramCard thisCard = move.getValue();
+            Player thisPlayer = game.getBoard().getPlayer(thisPlayerNumber);
+            game.playCard(thisPlayer, thisCard);
+            System.out.println("Doing move for " + thisPlayerNumber + " " + thisCard.getName());
+            sendToAll(converter.convertToString(thisPlayerNumber, thisCard));
+        }
+        moves = new HashMap<>();
     }
 }
