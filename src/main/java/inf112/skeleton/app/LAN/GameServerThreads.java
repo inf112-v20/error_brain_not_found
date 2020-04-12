@@ -77,12 +77,6 @@ public class GameServerThreads extends Thread {
                     System.out.println("Doing moves");
                     server.doAllMoves();
                 }
-                //Player player = game.getBoard().getPlayer(playerNumber);
-                //System.out.println(message);
-                //game.playCard(player, card);
-                //System.out.println("Played" + message + "from " +player.getPlayerNr());
-                //server.sendToAllExcept(player, message);
-
 
             }
         } catch (IOException e) {
@@ -94,36 +88,6 @@ public class GameServerThreads extends Thread {
             }
         }
     }
-
-/**
- * Get number of steps player is supposed to move.
- * @param message
- * @return int steps
- */
-private int getSteps(String message) {
-        return Character.getNumericValue(message.charAt(3));
-        }
-
-/**
- * Get the direction that the player is moving to.
- * @param message
- * @return direction to player
- */
-public Direction getDirection(String message) {
-        if (message.contains("east")) {
-        return Direction.EAST;
-        }
-        if (message.contains("west")) {
-        return Direction.WEST;
-        }
-        if (message.contains("south")) {
-        return Direction.SOUTH;
-        }
-        if (message.contains("north")) {
-        return Direction.NORTH;
-        }
-        return null;
-        }
 
     /**
      * Send a message to this client.

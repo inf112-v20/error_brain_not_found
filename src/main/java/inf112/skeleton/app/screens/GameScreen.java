@@ -32,7 +32,6 @@ public class GameScreen extends StandardScreen {
     public void render(float v) {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         renderSettings(v);
-
         updateTokens();
         mapRenderer.render();
         batch.begin();
