@@ -16,13 +16,11 @@ import java.util.ArrayList;
 
 public class GameScreenActors {
 
-    public final float tilePx = 300;
     public final float mapHeight = 12;
     public final float mapWidth = 16;
     public final float programCardRatio = 0.72f;
     public float screenWidth;
     public float screenHeight;
-    public float mapScale;
     public float mapRightPx;
     public float programCardWidth;
     public float programCardHeight;
