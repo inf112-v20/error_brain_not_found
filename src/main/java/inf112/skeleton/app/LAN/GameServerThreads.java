@@ -5,6 +5,7 @@ import inf112.skeleton.app.Player;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
+import org.lwjgl.Sys;
 
 import java.io.*;
 import java.net.Socket;
@@ -78,8 +79,12 @@ public class GameServerThreads extends Thread {
                 Player player = game.getBoard().getPlayer(playerNumber);
                 addSelectedCard(player, card);
                 if (allPlayersHaveSelectedCards()) {
+                    for (Player play : game.getBoard().getPlayers()) {
+                        System.out.println("Player " + play.getPlayerNr() + " "+play.getSelectedCards());
+                    }
                     server.sendSelectedCardsToAll();
                     game.cardsReady();
+                    return;
                 }
             }
         } catch (IOException e) {

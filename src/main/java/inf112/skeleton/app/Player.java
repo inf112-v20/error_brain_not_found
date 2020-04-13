@@ -47,7 +47,6 @@ public class Player {
     }
 
     public ArrayList<ProgramCard> getSelectedCards() {
-        System.out.println(selectedCards);
         return selectedCards;
     }
 

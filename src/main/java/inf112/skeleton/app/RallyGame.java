@@ -132,8 +132,8 @@ public class RallyGame extends Game {
                 }
                 else if (keycode == Input.Keys.S) {
                     mainPlayer.selectCards();
-                    System.out.print("Your program is: " + mainPlayer.getSelectedCards());
-                    sendProgram();
+                    System.out.println("Your program is: " + mainPlayer.getSelectedCards());
+                    sendSelectedCards();
                 }
                 else if (keycode == Input.Keys.SPACE) {
                     cardsReady();
@@ -157,15 +157,10 @@ public class RallyGame extends Game {
     /**
      * Give all mainplayer's selected cards to the server.
      */
-    public void sendProgram() {
+    public void sendSelectedCards() {
         if (!isServer) {
             for (ProgramCard card : mainPlayer.getSelectedCards()) {
                 client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), card));
-                System.out.println("Sent " + card.getName() + " to server.");
-            }
-        } else {
-            for (ProgramCard card : mainPlayer.getSelectedCards()) {
-                serverThread.getServer().putMove(mainPlayer.getPlayerNr(), card);
             }
         }
     }
@@ -236,9 +231,12 @@ public class RallyGame extends Game {
                 }
                 removeLasers();
             }
+            board.respawnPlayers();
             removeDeadPlayers();
             dealCards();
-            selectCards();
+            mainPlayer.selectCards();
+            System.out.println("Your program is: " + mainPlayer.getSelectedCards());
+            sendSelectedCards();
         }
     }
 

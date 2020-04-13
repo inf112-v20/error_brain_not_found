@@ -60,15 +60,20 @@ public class GameClientThread extends Thread {
             if (message.contains("Player")) {
                 System.out.println(message);
             } else {
-                System.out.println(message);
+                //System.out.println(message);
 
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                 int playerNumber = converter.getPlayerNumber();
                 Player player = game.getBoard().getPlayer(playerNumber);
 
                 player.addSelectedCard(card);
+
                 if (allPlayersHaveSelectedCards()) {
+                    for (Player play : game.getBoard().getPlayers()) {
+                        System.out.println("Player " + play.getPlayerNr() + " "+play.getSelectedCards());
+                    }
                     game.cardsReady();
+                    return;
                 }
 
                // game.playCard(player, card);
