@@ -16,12 +16,23 @@ import java.util.ArrayList;
 
 public class GameScreenActors {
 
+    public final float tilePx = 300;
+    public final float mapHeight = 12;
+    public final float mapWidth = 16;
+    public final float programCardRatio = 0.72f;
+    public float screenWidth;
+    public float screenHeight;
+    public float mapScale;
+    public float mapRightPx;
+    public float programCardWidth;
+    public float programCardHeight;
+    public float confirmButtonSize;
+    public float damageTokenSize;
+    public float lifeTokenSize;
+
     private final RallyGame game;
     private final Stage stage;
     private ProgramCardSkin cardSkin;
-    private float cardWidth;
-    private float cardHeight;
-    private float ratio;
     private ArrayList<ImageButton> programCardButtons;
     private ArrayList<Image> damageTokens;
     private ArrayList<Image> lifeTokens;
@@ -29,15 +40,20 @@ public class GameScreenActors {
     public GameScreenActors(RallyGame game, Stage stage) {
         this.game = game;
         this.stage = stage;
-
         programCardButtons = new ArrayList<>();
         damageTokens = new ArrayList<>();
         lifeTokens = new ArrayList<>();
 
         cardSkin = new ProgramCardSkin();
-        ratio = 242 / 173f;
-        cardWidth = 240 / 3f;
-        cardHeight = cardWidth * ratio;
+
+        screenWidth = game.getScreen().viewport.getScreenWidth();
+        screenHeight = game.getScreen().viewport.getScreenHeight();
+        mapRightPx = (screenHeight / mapHeight) * mapWidth;
+        programCardWidth = (screenWidth - mapRightPx) / 3;
+        programCardHeight = programCardWidth / programCardRatio;
+        lifeTokenSize = (screenWidth - mapRightPx) / 4;
+        confirmButtonSize = lifeTokenSize;
+        damageTokenSize = lifeTokenSize * 0.8f;
     }
 
     public void initializeProgramCardButtons() {
@@ -48,8 +64,8 @@ public class GameScreenActors {
                 ImageButton.ImageButtonStyle cardStyle = new ImageButton.ImageButtonStyle();
                 cardStyle.up = cardSkin.getSkins().getDrawable(card.getName());
                 ImageButton cardButton = new ImageButton(cardStyle);
-                cardButton.setSize(cardWidth, cardHeight);
-                cardButton.setPosition(720 + cardWidth * dx, game.getScreen().viewport.getWorldHeight() - cardHeight * dy);
+                cardButton.setSize(programCardWidth, programCardHeight);
+                cardButton.setPosition(mapRightPx + programCardWidth * dx, screenHeight - programCardHeight * dy);
                 cardButton.addListener(new InputListener() {
                     @Override
                     public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
@@ -76,8 +92,8 @@ public class GameScreenActors {
         Skin skin = new Skin(atlas);
         style.up = skin.getDrawable("Confirm button");
         ImageButton confirmButton = new ImageButton(style);
-        confirmButton.setSize(60, 60);
-        confirmButton.setPosition(900, 0);
+        confirmButton.setSize(confirmButtonSize, confirmButtonSize);
+        confirmButton.setPosition(screenWidth - confirmButtonSize, 0);
         confirmButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
@@ -93,30 +109,30 @@ public class GameScreenActors {
     }
 
     public void initializeDamageTokens() {
-        for (int y = 60; y <= 156; y += 48) {
-            for (int x = 720; x <= 840; x += 60) {
-                newDamageToken(x, y, 48, 48);
+        for (float y = lifeTokenSize; y < lifeTokenSize + 3 * damageTokenSize; y += damageTokenSize) {
+            for (float x = mapRightPx; x < mapRightPx + 3 * damageTokenSize; x += damageTokenSize) {
+                newDamageToken(x, y);
             }
         }
     }
 
-    public void newDamageToken(int x, int y, int width, int height) {
+    public void newDamageToken(float x, float y) {
         Image token = new Image(new Texture("assets/images/damageToken.png"));
-        token.setSize(width, height);
+        token.setSize(damageTokenSize, damageTokenSize);
         token.setPosition(x, y);
         damageTokens.add(token);
         stage.addActor(token);
     }
 
     public void initializeLifeTokens() {
-        for (int x = 720; x <= 840; x += 60) {
-            newLifeToken(x, 0, 60, 60);
+        for (float x = mapRightPx; x < mapRightPx + 3 * lifeTokenSize; x += lifeTokenSize) {
+            newLifeToken(x, 0);
         }
     }
 
-    public void newLifeToken(int x, int y, int width, int height) {
+    public void newLifeToken(float x, float y) {
         Image token = new Image(new Texture("assets/images/lifeToken.png"));
-        token.setSize(width, height);
+        token.setSize(lifeTokenSize, lifeTokenSize);
         token.setPosition(x, y);
         lifeTokens.add(token);
         stage.addActor(token);

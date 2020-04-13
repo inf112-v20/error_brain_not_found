@@ -33,14 +33,12 @@ public class RallyGame extends Game {
     public Sound laserSound;
     public Music gameMusic;
     public Player currentPlayer;
-    public boolean gameIsRunning = false;
 
     public float volume;
     public boolean muted;
 
     public void create() {
         this.setScreen(new MenuScreen(this));
-        startMusic();
     }
 
     public void setupGame(String mapPath) {

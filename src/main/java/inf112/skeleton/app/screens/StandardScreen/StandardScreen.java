@@ -24,7 +24,7 @@ public abstract class StandardScreen implements Screen {
 
         this.camera = new OrthographicCamera();
 
-        this.viewport = new FitViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), camera);
+        this.viewport = new FitViewport(Gdx.graphics.getHeight() * (16 / 9f), Gdx.graphics.getHeight(), camera);
         this.viewport.apply(true);
 
         this.batch = new SpriteBatch();
