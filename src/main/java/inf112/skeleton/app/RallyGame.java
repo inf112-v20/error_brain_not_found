@@ -236,7 +236,16 @@ public class RallyGame extends Game {
             dealCards();
             mainPlayer.selectCards();
             System.out.println("Your program is: " + mainPlayer.getSelectedCards());
+            letClientsAndServerContinue();
             sendSelectedCards();
+        }
+    }
+
+    public void letClientsAndServerContinue() {
+        if (!isServer) {
+            client.continueListening();
+        } else {
+            serverThread.getServer().continueAll();
         }
     }
 

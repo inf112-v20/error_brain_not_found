@@ -119,4 +119,13 @@ public class GameServer {
             }
         }
     }
+
+    /**
+     * Let all serverthreads continue loop
+     */
+    public void continueAll() {
+        for (GameServerThreads client : clients) {
+            client.continueListening();
+        }
+    }
 }

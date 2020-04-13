@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 /**
  * Own thread for a client so client can get continous updates from server.
@@ -24,12 +25,14 @@ public class GameClientThread extends Thread {
     private PrintWriter writer;
     private RallyGame game;
     private Converter converter;
-    private HashMap<Object, Object> moves;
+    private Semaphore continueListening;
 
     public GameClientThread(RallyGame game, Socket clientSocket) {
         this.clientSocket = clientSocket;
         this.game = game;
         this.converter = new Converter();
+        this.continueListening = new Semaphore(1);
+        continueListening.tryAcquire();
         try {
             this.input = this.clientSocket.getInputStream();
             this.reader = new BufferedReader(new InputStreamReader(input));
@@ -70,15 +73,42 @@ public class GameClientThread extends Thread {
 
                 if (allPlayersHaveSelectedCards()) {
                     for (Player play : game.getBoard().getPlayers()) {
-                        System.out.println("Player " + play.getPlayerNr() + " "+play.getSelectedCards());
+                        System.out.println("Player " + play.getPlayerNr() + " " + play.getSelectedCards());
                     }
-                    game.cardsReady();
-                    return;
+
+                    startDoTurn();
+                    waitForDoTurnToFinish();
+                    //return;
                 }
 
                // game.playCard(player, card);
             }
         }
+    }
+
+    /**
+     * Wait for doTurn to realease in game.
+     */
+    private void waitForDoTurnToFinish() {
+        try {
+            continueListening.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Tell game that cards are ready, doTurn can begin.
+     */
+    private void startDoTurn() {
+        game.cardsReady();
+    }
+
+    /**
+     * Let client continue loop
+     */
+    public void continueListening() {
+        continueListening.release();
     }
 
     /**

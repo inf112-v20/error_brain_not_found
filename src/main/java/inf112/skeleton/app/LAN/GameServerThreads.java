@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Semaphore;
 
 /**
  * Make a thread for each client connecting.
@@ -27,6 +28,7 @@ public class GameServerThreads extends Thread {
     private BufferedReader reader;
     private RallyGame game;
     private Converter converter;
+    private Semaphore continueListening;
 
     public GameServerThreads(GameServer server, RallyGame game, Socket client, int playerNumber, int numberOfPlayers) {
         this.client = client;
@@ -35,6 +37,8 @@ public class GameServerThreads extends Thread {
         this.server = server;
         this.game = game;
         this.converter = new Converter();
+        this.continueListening = new Semaphore(1);
+        continueListening.tryAcquire();
 
         try {
             input = client.getInputStream();
@@ -83,8 +87,9 @@ public class GameServerThreads extends Thread {
                         System.out.println("Player " + play.getPlayerNr() + " "+play.getSelectedCards());
                     }
                     server.sendSelectedCardsToAll();
-                    game.cardsReady();
-                    return;
+
+                    startDoTurn();
+                    waitForDoTurnToFinish();
                 }
             }
         } catch (IOException e) {
@@ -96,6 +101,32 @@ public class GameServerThreads extends Thread {
             }
         }
     }
+
+    /**
+     * Wait for doTurn to realease in game.
+     */
+    private void waitForDoTurnToFinish() {
+        try {
+            continueListening.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Tell game that cards are ready, doTurn can begin.
+     */
+    private void startDoTurn() {
+        game.cardsReady();
+    }
+
+    /**
+     * Let client continue loop
+     */
+    public void continueListening() {
+        continueListening.release();
+    }
+
 
     /**
      * Add a card to players program.
