@@ -30,7 +30,6 @@ public class GameScreen extends StandardScreen {
     @Override
     public void render(float v) {
         super.render(v);
-        game.checkForWinner();
         mapRenderer.render();
     }
 }

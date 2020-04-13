@@ -2,6 +2,7 @@ package inf112.skeleton.app;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
@@ -58,13 +59,18 @@ public class RallyGame extends Game {
         new Thread(this::doTurn).start();
 
         dealCards();
-        //selectCards();
     }
 
     public void confirmCards() {
         if (currentPlayer.getSelectedCards().size() == 5) {
             cardsReady();
         }
+    }
+
+    @Override
+    public void setScreen(Screen screen) {
+        screen.dispose();
+        super.setScreen(screen);
     }
 
     public StandardScreen getScreen() {
@@ -118,20 +124,20 @@ public class RallyGame extends Game {
 
                 System.out.println("Runde " + (i + 1));
                 allPlayersPlayCard();
-                //wait(500);
-                //activateRotatePads();
-                //wait(500);
-                //fireLasers();
-                //wait(300);
-                //removeLasers();
-                wait(200);
+                sleep(500);
+                activateRotatePads();
+                sleep(500);
+                fireLasers();
+                sleep(300);
+                removeLasers();
+                sleep(1000);
             }
             removeDeadPlayers();
             dealCards();
         }
     }
 
-    private void wait(int milliseconds) {
+    private void sleep(int milliseconds) {
         try {
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
@@ -184,11 +190,7 @@ public class RallyGame extends Game {
         for (Player player : playerOrder) {
             playCard(player);
             // Wait 1 second for each player
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            sleep(1000);
         }
     }
 
@@ -213,32 +215,18 @@ public class RallyGame extends Game {
                     board.movePlayer(player);
                     // Wait 500 ms for each move except last one
                     if (i < card.getDistance() - 1) {
-                        try {
-                            Thread.sleep(500);
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                        sleep(500);
                     }
                 }
                 break;
             default:
                 break;
         }
-
         deck.addCardToDiscardPile(card);
     }
 
-    public void checkForWinner() {
-        for (Player player : players) {
-            if (player.hasAllFlags(board.getFlags().size())) {
-                setWinScreen();
-            }
-        }
-    }
-
     public void setWinScreen() {
-        this.screen.dispose();
-        this.setScreen(new GifScreen(this));
+        setScreen(new GifScreen(this));
     }
 
     public void removeLasers() {
