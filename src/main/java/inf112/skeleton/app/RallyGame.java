@@ -69,7 +69,9 @@ public class RallyGame extends Game {
 
     @Override
     public void setScreen(Screen screen) {
-        screen.dispose();
+        if (this.screen != null) {
+            this.screen.dispose();
+        }
         super.setScreen(screen);
     }
 

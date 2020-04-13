@@ -12,6 +12,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
 
+import java.util.ArrayList;
+
 public class GameScreenActors {
 
     private final RallyGame game;
@@ -20,10 +22,17 @@ public class GameScreenActors {
     private float cardWidth;
     private float cardHeight;
     private float ratio;
+    private ArrayList<ImageButton> programCardButtons;
+    private ArrayList<Image> damageTokens;
+    private ArrayList<Image> lifeTokens;
 
     public GameScreenActors(RallyGame game, Stage stage) {
         this.game = game;
         this.stage = stage;
+
+        programCardButtons = new ArrayList<>();
+        damageTokens = new ArrayList<>();
+        lifeTokens = new ArrayList<>();
 
         cardSkin = new ProgramCardSkin();
         ratio = 242 / 173f;
@@ -52,6 +61,7 @@ public class GameScreenActors {
                         return true;
                     }
                 });
+                programCardButtons.add(cardButton);
                 stage.addActor(cardButton);
                 idx++;
             }
@@ -60,7 +70,7 @@ public class GameScreenActors {
 
     public void initializeConfirmButton() {
         TextureAtlas atlas = new TextureAtlas();
-        TextureRegion confirmTexture = new TextureRegion(new Texture("assets/images/ConfirmButtonNotReady.png"));
+        TextureRegion confirmTexture = new TextureRegion(new Texture("assets/images/ConfirmButton.png"));
         ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
         atlas.addRegion("Confirm button", confirmTexture);
         Skin skin = new Skin(atlas);
@@ -83,67 +93,32 @@ public class GameScreenActors {
     }
 
     public void initializeDamageTokens() {
-        Image damageToken1 = new Image(new Texture("assets/images/damageToken.png"));
-        damageToken1.setSize(48, 48);
-        damageToken1.setPosition(720, 60);
-        stage.addActor(damageToken1);
+        for (int y = 60; y <= 156; y += 48) {
+            for (int x = 720; x <= 840; x += 60) {
+                newDamageToken(x, y, 48, 48);
+            }
+        }
+    }
 
-        Image damageToken2 = new Image(new Texture("assets/images/damageToken.png"));
-        damageToken2.setSize(48, 48);
-        damageToken2.setPosition(780, 60);
-        stage.addActor(damageToken2);
-
-        Image damageToken3 = new Image(new Texture("assets/images/damageToken.png"));
-        damageToken3.setSize(48, 48);
-        damageToken3.setPosition(840, 60);
-        stage.addActor(damageToken3);
-
-        Image damageToken4 = new Image(new Texture("assets/images/damageToken.png"));
-        damageToken4.setSize(48, 48);
-        damageToken4.setPosition(720, 108);
-        stage.addActor(damageToken4);
-
-        Image damageToken5 = new Image(new Texture("assets/images/damageToken.png"));
-        damageToken5.setSize(48, 48);
-        damageToken5.setPosition(780, 108);
-        stage.addActor(damageToken5);
-
-        Image damageToken6 = new Image(new Texture("assets/images/damageToken.png"));
-        damageToken6.setSize(48, 48);
-        damageToken6.setPosition(840, 108);
-        stage.addActor(damageToken6);
-
-        Image damageToken7 = new Image(new Texture("assets/images/damageToken.png"));
-        damageToken7.setSize(48, 48);
-        damageToken7.setPosition(720, 156);
-        stage.addActor(damageToken7);
-
-        Image damageToken8 = new Image(new Texture("assets/images/damageToken.png"));
-        damageToken8.setSize(48, 48);
-        damageToken8.setPosition(780, 156);
-        stage.addActor(damageToken8);
-
-        Image damageToken9 = new Image(new Texture("assets/images/damageToken.png"));
-        damageToken9.setSize(48, 48);
-        damageToken9.setPosition(840, 156);
-        stage.addActor(damageToken9);
-
+    public void newDamageToken(int x, int y, int width, int height) {
+        Image token = new Image(new Texture("assets/images/damageToken.png"));
+        token.setSize(width, height);
+        token.setPosition(x, y);
+        damageTokens.add(token);
+        stage.addActor(token);
     }
 
     public void initializeLifeTokens() {
-        Image lifeToken1 = new Image(new Texture("assets/images/lifeToken.png"));
-        lifeToken1.setSize(60, 60);
-        lifeToken1.setPosition(720, 0);
-        stage.addActor(lifeToken1);
+        for (int x = 720; x <= 840; x += 60) {
+            newLifeToken(x, 0, 60, 60);
+        }
+    }
 
-        Image lifeToken2 = new Image(new Texture("assets/images/lifeToken.png"));
-        lifeToken2.setSize(60, 60);
-        lifeToken2.setPosition(780, 0);
-        stage.addActor(lifeToken2);
-
-        Image lifeToken3 = new Image(new Texture("assets/images/lifeToken.png"));
-        lifeToken3.setSize(60, 60);
-        lifeToken3.setPosition(840, 0);
-        stage.addActor(lifeToken3);
+    public void newLifeToken(int x, int y, int width, int height) {
+        Image token = new Image(new Texture("assets/images/lifeToken.png"));
+        token.setSize(width, height);
+        token.setPosition(x, y);
+        lifeTokens.add(token);
+        stage.addActor(token);
     }
 }
