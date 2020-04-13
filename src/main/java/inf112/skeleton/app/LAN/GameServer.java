@@ -2,14 +2,11 @@ package inf112.skeleton.app.LAN;
 
 import inf112.skeleton.app.Player;
 import inf112.skeleton.app.RallyGame;
-import inf112.skeleton.app.cards.ProgramCard;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * A server for handling connection between players.
@@ -19,14 +16,10 @@ public class GameServer {
 
     private ArrayList<GameServerThreads> clients;
     private RallyGame game;
-    private HashMap<Integer, ArrayList<ProgramCard>> moves;
-    private Converter converter;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
         this.game = game;
-        this.moves = new HashMap<>();
-        this.converter = new Converter();
     }
 
     /**
@@ -113,69 +106,6 @@ public class GameServer {
     public void disconnectAll() {
         for (GameServerThreads thread : clients) {
             disconnect(thread.getPlayerNumber());
-        }
-    }
-
-    /**
-     * Register a new move for a player. If player already has registered move,
-     * add it to list of cards belonging to the player.
-     * @param playerNumber
-     * @param card
-     */
-    public void putMove(int playerNumber, ProgramCard card) {
-        if (moves.containsKey(playerNumber)) {
-            moves.get(playerNumber).add(card);
-        } else {
-            ArrayList<ProgramCard> cards = new ArrayList<>();
-            cards.add(card);
-            moves.put(playerNumber, cards);
-        }
-    }
-
-    /**
-     * Check if all players have sent their program, consisting of 5 cards.
-     * @return true if all players have registered their move.
-     */
-    public boolean gotAllMoves() {
-        if (moves.size() < getNumberOfPlayers()) {
-            return false;
-        }
-        for (Map.Entry<Integer, ArrayList<ProgramCard>> move : moves.entrySet()) {
-            ArrayList<ProgramCard> cards = move.getValue();
-            if (cards.size() < 5) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public int getNumberOfPlayers() {
-        return clients.size() + 1;
-    }
-
-    /**
-     * Play players programcard five times.
-     */
-    public void doAllMoves() {
-        for (int i = 0; i < 5; i++) {
-            allPlayOneMove();
-        }
-        moves = new HashMap<>();
-    }
-
-    /**
-     * Play one move from the selected cards of all players, send this move
-     * to all players.
-     */
-    public void allPlayOneMove() {
-        System.out.println(moves);
-        for (Map.Entry<Integer, ArrayList<ProgramCard>> move : moves.entrySet()) {
-            int playerNumber = move.getKey();
-            ArrayList<ProgramCard> cards = move.getValue();
-            Player player = game.getBoard().getPlayer(playerNumber);
-            ProgramCard playingCard = cards.remove(0);
-            sendToAll(converter.convertToString(playerNumber, playingCard));
-            game.playCard(player, playingCard);
         }
     }
 

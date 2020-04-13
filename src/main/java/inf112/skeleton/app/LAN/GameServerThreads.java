@@ -81,14 +81,6 @@ public class GameServerThreads extends Thread {
                     server.sendSelectedCardsToAll();
                     game.cardsReady();
                 }
-                /*
-                server.putMove(playerNumber, card);
-                // Wait for all clients to send their cards.
-                if (server.gotAllMoves()) {
-                    server.doAllMoves();
-                }
-
-                 */
             }
         } catch (IOException e) {
             // Close socket if exception
