@@ -224,6 +224,7 @@ public class RallyGame extends Game {
                 activateRotatePads();
 
                 fireLasers();
+                board.respawnPlayers();
                 try {
                     Thread.sleep(600);
                 } catch (InterruptedException e) {
@@ -231,7 +232,6 @@ public class RallyGame extends Game {
                 }
                 removeLasers();
             }
-            board.respawnPlayers();
             removeDeadPlayers();
             dealCards();
             mainPlayer.selectCards();
