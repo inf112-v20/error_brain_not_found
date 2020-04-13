@@ -74,13 +74,14 @@ public class Player {
         }
     }
 
-
     /**
-     *
-     * @param ArrayList<ProgramCard> program for this robot
+     * Add a card to your program if program is not full.
+     * @param card to add.
      */
-    public ArrayList<ProgramCard> getProgram() {
-        return selectedCards;
+    public void addSelectedCard(ProgramCard card) {
+        if (selectedCards.size() < 5) {
+            selectedCards.add(card);
+        }
     }
 
     public void drawCards(Deck deck) {

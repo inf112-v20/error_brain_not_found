@@ -61,12 +61,32 @@ public class GameClientThread extends Thread {
                 System.out.println(message);
             } else {
                 System.out.println(message);
+
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                 int playerNumber = converter.getPlayerNumber();
                 Player player = game.getBoard().getPlayer(playerNumber);
-                game.playCard(player, card);
+
+                player.addSelectedCard(card);
+                if (allPlayersHaveSelectedCards()) {
+                    game.cardsReady();
+                }
+
+               // game.playCard(player, card);
             }
         }
+    }
+
+    /**
+     *
+     * @return true if all players have selected their cards.
+     */
+    public boolean allPlayersHaveSelectedCards() {
+        for (Player player : game.getBoard().getPlayers()) {
+            if (player.getSelectedCards().size() < 5) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**

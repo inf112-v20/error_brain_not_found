@@ -24,7 +24,6 @@ public class GameServerThreads extends Thread {
     private GameServer server;
     private InputStream input;
     private BufferedReader reader;
-
     private RallyGame game;
     private Converter converter;
 
@@ -75,11 +74,21 @@ public class GameServerThreads extends Thread {
                 }
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                 int playerNumber = converter.getPlayerNumber();
+
+                Player player = game.getBoard().getPlayer(playerNumber);
+                addSelectedCard(player, card);
+                if (allPlayersHaveSelectedCards()) {
+                    server.sendSelectedCardsToAll();
+                    game.cardsReady();
+                }
+                /*
                 server.putMove(playerNumber, card);
                 // Wait for all clients to send their cards.
                 if (server.gotAllMoves()) {
                     server.doAllMoves();
                 }
+
+                 */
             }
         } catch (IOException e) {
             // Close socket if exception
@@ -88,6 +97,38 @@ public class GameServerThreads extends Thread {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * Add a card to players program.
+     * @param player
+     * @param card
+     */
+    public void addSelectedCard(Player player, ProgramCard card) {
+        player.addSelectedCard(card);
+    }
+
+    /**
+     *
+     * @return true if all players have selected their cards.
+     */
+    public boolean allPlayersHaveSelectedCards() {
+        for (Player player : game.getBoard().getPlayers()) {
+            if (player.getSelectedCards().size() < 5) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Send given players selected cards to this client
+     * @param player
+     */
+    public void sendSelectedCards(Player player) {
+        for (ProgramCard card : player.getSelectedCards()) {
+            sendMessage(converter.convertToString(player.getPlayerNr(), card));
         }
     }
 

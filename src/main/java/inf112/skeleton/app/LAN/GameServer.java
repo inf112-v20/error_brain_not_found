@@ -178,4 +178,15 @@ public class GameServer {
             game.playCard(player, playingCard);
         }
     }
+
+    /**
+     * Send program to all clients.
+     */
+    public void sendSelectedCardsToAll() {
+        for (GameServerThreads client : clients) {
+            for (Player player : game.getBoard().getPlayers()) {
+                client.sendSelectedCards(player);
+            }
+        }
+    }
 }

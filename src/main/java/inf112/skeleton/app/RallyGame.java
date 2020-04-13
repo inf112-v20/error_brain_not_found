@@ -131,7 +131,7 @@ public class RallyGame extends Game {
                     muteMusic();
                 }
                 else if (keycode == Input.Keys.S) {
-                    selectCards();
+                    mainPlayer.selectCards();
                     System.out.print("Your program is: " + mainPlayer.getSelectedCards());
                     sendProgram();
                 }
