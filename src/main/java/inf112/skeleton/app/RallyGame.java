@@ -75,16 +75,16 @@ public class RallyGame extends Game {
 
                 if (keycode == Input.Keys.RIGHT) {
                     mainPlayer.setDirection(Direction.EAST);
-                    board.movePlayer(mainPlayer);
+                    board.movePlayer(mainPlayer, null);
                 } else if (keycode == Input.Keys.LEFT) {
                     mainPlayer.setDirection(Direction.WEST);
-                    board.movePlayer(mainPlayer);
+                    board.movePlayer(mainPlayer, null);
                 } else if (keycode == Input.Keys.UP) {
                     mainPlayer.setDirection(Direction.NORTH);
-                    board.movePlayer(mainPlayer);
+                    board.movePlayer(mainPlayer, null);
                 } else if (keycode == Input.Keys.DOWN) {
                     mainPlayer.setDirection(Direction.SOUTH);
-                    board.movePlayer(mainPlayer);
+                    board.movePlayer(mainPlayer, null);
                 } else if (keycode == Input.Keys.ESCAPE) {
                     Gdx.app.exit();
                 } else if (keycode == Input.Keys.M) {
@@ -255,7 +255,7 @@ public class RallyGame extends Game {
                 break;
             case NONE:
                 for (int i = 0; i < card.getDistance(); i++) {
-                    board.movePlayer(player);
+                    board.movePlayer(player, null);
                     // Wait 500 ms for each move except last one
                     if (i < card.getDistance() - 1) {
                         try {
@@ -336,18 +336,8 @@ public class RallyGame extends Game {
 
                 if (player.getPosition().equals(belt.getPosition())){
 
-                    switch (direction){
-                        case NORTH:
-                            player.setPosition(new Vector2(positionX, positionY + 1));
-                        case EAST:
-                            player.setPosition(new Vector2(positionX + 1, positionY));
-                        case WEST:
-                            player.setPosition(new Vector2(positionX - 1, positionY));
-                        case SOUTH:
-                            player.setPosition(new Vector2(positionX, positionY - 1));
-                        default:
-                            System.out.println("There is something wrong her! ERROR");
-                            return;
+
+
                     }
                 }
             }

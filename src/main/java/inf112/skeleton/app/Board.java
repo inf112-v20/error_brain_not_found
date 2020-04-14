@@ -365,9 +365,11 @@ public class Board extends BoardLayers {
      *
      * @param player that is suppose to move
      */
-    public void movePlayer(Player player) {
+    public void movePlayer(Player player, Direction direction) {
         Vector2 position = player.getPosition();
-        Direction direction = player.getDirection();
+        if (direction == null){
+            direction = player.getDirection();
+        }
 
         if (!canGo(position, direction)) {
             wallImpact.play(RallyGame.volume - 0.1f);
