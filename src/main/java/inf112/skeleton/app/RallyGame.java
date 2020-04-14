@@ -41,6 +41,7 @@ public class RallyGame extends Game {
     public boolean muted;
 
     public void create() {
+        this.buttonSkins = new ButtonSkin();
         this.setScreen(new MenuScreen(this));
     }
 
@@ -50,7 +51,6 @@ public class RallyGame extends Game {
         this.players = new ArrayList<>();
         this.players = board.getPlayers();
         this.mainPlayer = board.getPlayer1();
-        this.buttonSkins = new ButtonSkin();
 
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();

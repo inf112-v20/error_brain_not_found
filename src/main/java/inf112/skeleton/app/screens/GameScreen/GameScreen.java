@@ -8,12 +8,13 @@ import inf112.skeleton.app.screens.StandardScreen.StandardScreen;
 
 public class GameScreen extends StandardScreen {
 
-    private TiledMapRenderer mapRenderer;
+    private final TiledMapRenderer mapRenderer;
+    private final GameScreenActors actors;
 
     public GameScreen(final RallyGame game) {
         super(game);
 
-        GameScreenActors actors = new GameScreenActors(game, stage);
+        actors = new GameScreenActors(game, stage);
         actors.initializeProgramCardButtons();
         actors.initializeConfirmButton();
         actors.initializeLifeTokens();
@@ -28,6 +29,7 @@ public class GameScreen extends StandardScreen {
 
     @Override
     public void render(float v) {
+        actors.updateButtons();
         super.render(v);
         mapRenderer.render();
     }

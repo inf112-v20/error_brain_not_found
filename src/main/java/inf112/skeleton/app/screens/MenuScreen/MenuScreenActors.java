@@ -37,8 +37,8 @@ public class MenuScreenActors {
         this.game = game;
         this.stage = stage;
 
-        screenWidth = game.getScreen().viewport.getScreenWidth();
-        screenHeight = game.getScreen().viewport.getScreenHeight();
+        screenWidth = Gdx.graphics.getWidth();
+        screenHeight = Gdx.graphics.getHeight();
 
         BUTTON_WIDTH = (float) (screenWidth * 0.25);
         BUTTON_HEIGHT = (float) (screenHeight * 0.25);
@@ -51,8 +51,8 @@ public class MenuScreenActors {
 
     public void initializeStartButton() {
         ImageButton.ImageButtonStyle startButtonStyle = new ImageButton.ImageButtonStyle();
-        startButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Start active");
-        startButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Start inactive");
+        startButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Start");
+        startButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Start over");
 
         ImageButton startButton = new ImageButton(startButtonStyle);
         startButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -74,8 +74,8 @@ public class MenuScreenActors {
 
     public void initializeExitButton() {
         ImageButton.ImageButtonStyle exitButtonStyle = new ImageButton.ImageButtonStyle();
-        exitButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Exit active");
-        exitButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Exit inactive");
+        exitButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Exit");
+        exitButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Exit over");
 
         ImageButton exitButton = new ImageButton(exitButtonStyle);
         exitButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);

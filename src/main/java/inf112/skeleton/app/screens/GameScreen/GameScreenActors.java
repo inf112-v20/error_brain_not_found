@@ -141,11 +141,28 @@ public class GameScreenActors {
     }
 
     public void updateButtons() {
+        updateConfirm();
+        updateLifeToken();
+        updateDamageToken();
+    }
+
+    public void updateConfirm() {
         if (game.mainPlayer.getSelectedCards().size() == 5) {
             confirmButton.getStyle().up = game.buttonSkins.getSkins().getDrawable("Confirm ready");
         } else {
             confirmButton.getStyle().up = game.buttonSkins.getSkins().getDrawable("Confirm not ready");
         }
+    }
 
+    public void updateLifeToken() {
+        for (int i = 0; i < 3; i++) {
+            lifeTokens.get(i).setVisible(i < game.mainPlayer.getLifeTokens());
+        }
+    }
+
+    public void updateDamageToken() {
+        for (int i = 0; i < 10; i++) {
+            damageTokens.get(i).setVisible(i < game.mainPlayer.getDamageTokens());
+        }
     }
 }
