@@ -65,9 +65,9 @@ public class Deck {
             if (priority % 7 == 0) {
                 deck.push(new ProgramCard(priority * 10, 0, Rotate.UTURN, "U-turn"));
             } else if (priority % 2 == 0) {
-                deck.push(new ProgramCard(priority * 10, 0, Rotate.RIGHT, "Right rotate"));
+                deck.push(new ProgramCard(priority * 10, 0, Rotate.RIGHT, "Right turn"));
             } else {
-                deck.push(new ProgramCard(priority * 10, 0, Rotate.LEFT, "Left rotate"));
+                deck.push(new ProgramCard(priority * 10, 0, Rotate.LEFT, "Left turn"));
             }
         }
     }

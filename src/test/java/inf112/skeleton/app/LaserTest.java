@@ -5,7 +5,9 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.objects.Laser;
+import inf112.skeleton.app.objects.Player.Player;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,7 +30,7 @@ public class LaserTest {
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
         this.game = new RallyGame();
-        this.game.setupGame("assets/maps/Risky_Exchange.tmx");
+        this.game.setupGame("assets/maps/Risky Exchange.tmx");
         this.board = game.getBoard();
         this.lasers = board.lasers;
     }

@@ -3,8 +3,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Flag;
+import inf112.skeleton.app.objects.Player.Player;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,7 +37,7 @@ public class BoardTest {
         Gdx.gl = mock(GL20.class);
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
-        this.board = new Board("assets/maps/Risky_Exchange.tmx", NUMBER_OF_PLAYERS_WHEN_STARTING_GAME);
+        this.board = new Board("assets/maps/Risky Exchange.tmx", NUMBER_OF_PLAYERS_WHEN_STARTING_GAME);
         // Random position
         this.startPosition = new Vector2(5,5);
         this.player = new Player(startPosition, 1);
