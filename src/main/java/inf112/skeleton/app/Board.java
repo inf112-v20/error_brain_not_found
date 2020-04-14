@@ -364,6 +364,7 @@ public class Board extends BoardLayers {
      * Add player to cell that corresponds to player position
      *
      * @param player that is suppose to move
+     * @param direction the {@link Direction} the player should be moved in, if set to null use the player direction.
      */
     public void movePlayer(Player player, Direction direction) {
         Vector2 position = player.getPosition();

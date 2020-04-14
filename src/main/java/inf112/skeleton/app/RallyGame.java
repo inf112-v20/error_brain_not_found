@@ -15,7 +15,6 @@ import inf112.skeleton.app.objects.Belt;
 import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.screens.GifScreen;
-import inf112.skeleton.app.screens.LoadingScreen;
 import inf112.skeleton.app.screens.MenuScreen;
 
 import java.util.ArrayList;
@@ -324,6 +323,13 @@ public class RallyGame extends Game {
             }
         }
     }
+
+    /**
+     * <p>
+     *     Activate the belts on the map, so they pushes the player in the direction of the belt.
+     * </p>
+     * @param onlyExpress if true then the pool of belts should be set to expressBelts
+     */
     public void activateBelts(boolean onlyExpress) {
         ArrayList<Belt> belts;
 
