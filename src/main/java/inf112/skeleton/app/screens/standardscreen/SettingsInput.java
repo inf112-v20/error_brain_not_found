@@ -18,8 +18,10 @@ public class SettingsInput extends InputAdapter {
         switch (keycode) {
             case Input.Keys.ESCAPE:
                 Gdx.app.exit();
+                break;
             case Input.Keys.M:
                 game.mute();
+                break;
             default:
                 // Fuck u Codacy
         }
