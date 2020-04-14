@@ -103,14 +103,20 @@ public class RallyGame extends Game {
     }
 
     public void doTurn() {
-
-        // TODO: Alle velger kort
-        // TODO: Første kort spilles for alle i riktig rekkefølge
-        // TODO: Gears roterer
-        // TODO: Express belt flytter én
-        // TODO: Express belt og vanlig belt flytter én
-        // TODO: Spiller skyter
-        // TODO: Laser skyter
+        /*
+        1. Deal the Program cards.
+        2. Arrange your Program cards face down among your
+           five registers.
+        3. Announce intent to power down or continue running
+           NEXT turn.
+        4. Complete each register in order:
+                A. Reveal Program Cards
+                B. Robots Move
+                C. Board Elements Move (Gears, Express belt, normal belt)
+                D. Lasers Fire (Player, then board)
+                E. Touch Checkpoints (Flag, Repair)
+        5. Clean up any end-of-turn effects
+        */
         while (playing) {
             try {
                 waitForCards.acquire();

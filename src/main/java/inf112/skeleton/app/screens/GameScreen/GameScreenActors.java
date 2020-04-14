@@ -30,14 +30,15 @@ public class GameScreenActors {
 
     private final RallyGame game;
     private final Stage stage;
-    private ProgramCardSkin cardSkin;
-    private ArrayList<ImageButton> programCardButtons;
-    private ArrayList<Image> damageTokens;
-    private ArrayList<Image> lifeTokens;
+    private final ProgramCardSkin cardSkin;
+    private final ArrayList<ImageButton> programCardButtons;
+    private final ArrayList<Image> damageTokens;
+    private final ArrayList<Image> lifeTokens;
 
     public GameScreenActors(RallyGame game, Stage stage) {
         this.game = game;
         this.stage = stage;
+
         programCardButtons = new ArrayList<>();
         damageTokens = new ArrayList<>();
         lifeTokens = new ArrayList<>();
@@ -51,7 +52,7 @@ public class GameScreenActors {
         programCardHeight = programCardWidth / programCardRatio;
         lifeTokenSize = (screenWidth - mapRightPx) / 4;
         confirmButtonSize = lifeTokenSize;
-        damageTokenSize = lifeTokenSize * 0.8f;
+        damageTokenSize = (screenWidth - mapRightPx) / 5;
     }
 
     public void initializeProgramCardButtons() {
@@ -107,8 +108,8 @@ public class GameScreenActors {
     }
 
     public void initializeDamageTokens() {
-        for (float y = lifeTokenSize; y < lifeTokenSize + 3 * damageTokenSize; y += damageTokenSize) {
-            for (float x = mapRightPx; x < mapRightPx + 3 * damageTokenSize; x += damageTokenSize) {
+        for (float y = lifeTokenSize; y < lifeTokenSize + 2 * damageTokenSize; y += damageTokenSize) {
+            for (float x = mapRightPx; x < mapRightPx + 5 * damageTokenSize; x += damageTokenSize) {
                 newDamageToken(x, y);
             }
         }
