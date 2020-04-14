@@ -137,9 +137,10 @@ public class RallyGame extends Game {
                 allPlayersPlayCard();
                 sleep(500);
                 activateRotatePads();
+                sleep(250);
                 activateBelts(true);
+                sleep(250);
                 activateBelts(false);
-
                 sleep(500);
                 fireLasers();
                 sleep(300);
@@ -323,11 +324,7 @@ public class RallyGame extends Game {
                         board.addPlayer(player);
                     }
                     board.movePlayer(player, direction);
-                    try {
-                        Thread.sleep(600);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                    sleep(500);
                 }
             }
         }
