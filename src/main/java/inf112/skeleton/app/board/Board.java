@@ -1,4 +1,4 @@
-package inf112.skeleton.app.Board;
+package inf112.skeleton.app.board;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;

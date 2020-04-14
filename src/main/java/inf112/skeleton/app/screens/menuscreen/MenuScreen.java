@@ -1,7 +1,7 @@
-package inf112.skeleton.app.screens.MenuScreen;
+package inf112.skeleton.app.screens.menuscreen;
 
 import inf112.skeleton.app.RallyGame;
-import inf112.skeleton.app.screens.StandardScreen.StandardScreen;
+import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
 
 public class MenuScreen extends StandardScreen {

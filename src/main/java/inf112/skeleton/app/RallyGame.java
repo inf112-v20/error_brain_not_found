@@ -6,7 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
-import inf112.skeleton.app.Board.Board;
+import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
@@ -16,9 +16,9 @@ import inf112.skeleton.app.objects.Player.Player;
 import inf112.skeleton.app.objects.Player.PlayerSorter;
 import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.screens.ButtonSkin;
-import inf112.skeleton.app.screens.GifScreen.GifScreen;
-import inf112.skeleton.app.screens.MenuScreen.MenuScreen;
-import inf112.skeleton.app.screens.StandardScreen.StandardScreen;
+import inf112.skeleton.app.screens.gifscreen.GifScreen;
+import inf112.skeleton.app.screens.menuscreen.MenuScreen;
+import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -116,7 +116,7 @@ public class RallyGame extends Game {
         4. Complete each register in order:
                 A. Reveal Program Cards
                 B. Robots Move
-                C. Board Elements Move (Gears, Express belt, normal belt)
+                C. board Elements Move (Gears, Express belt, normal belt)
                 D. Lasers Fire (Player, then board)
                 E. Touch Checkpoints (Flag, Repair)
         5. Clean up any end-of-turn effects

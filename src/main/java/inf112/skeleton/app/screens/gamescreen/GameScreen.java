@@ -1,10 +1,10 @@
-package inf112.skeleton.app.screens.GameScreen;
+package inf112.skeleton.app.screens.gamescreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import inf112.skeleton.app.RallyGame;
-import inf112.skeleton.app.screens.StandardScreen.StandardScreen;
+import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
 public class GameScreen extends StandardScreen {
 

@@ -3,7 +3,7 @@ package inf112.skeleton.app.screens;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import inf112.skeleton.app.RallyGame;
-import inf112.skeleton.app.screens.StandardScreen.StandardScreen;
+import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
 public class YouWinScreen extends StandardScreen {
 

@@ -1,4 +1,4 @@
-package inf112.skeleton.app.screens.MenuScreen;
+package inf112.skeleton.app.screens.menuscreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import inf112.skeleton.app.RallyGame;
-import inf112.skeleton.app.screens.GameScreen.GameScreen;
+import inf112.skeleton.app.screens.gamescreen.GameScreen;
 
 import java.io.File;
 import java.util.Objects;

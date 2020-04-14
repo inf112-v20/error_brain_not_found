@@ -5,8 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import inf112.skeleton.app.RallyGame;
-import inf112.skeleton.app.screens.MenuScreen.MenuScreen;
-import inf112.skeleton.app.screens.StandardScreen.StandardScreen;
+import inf112.skeleton.app.screens.menuscreen.MenuScreen;
+import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
 
 public class LoadingScreen extends StandardScreen {
