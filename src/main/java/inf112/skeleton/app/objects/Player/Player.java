@@ -50,8 +50,10 @@ public class Player {
     }
 
     public void selectCard(ProgramCard card) {
-        if (selectedCards.size() < 5) {
+        if (!selectedCards.contains(card) && selectedCards.size() < 5) {
             selectedCards.add(card);
+        } else {
+            selectedCards.remove(card);
         }
     }
 
@@ -78,8 +80,8 @@ public class Player {
         return damageTokens;
     }
 
-    public int resetDamageTokens() {
-        return this.damageTokens = 0;
+    public void resetDamageTokens() {
+        this.damageTokens = 0;
     }
 
     public int getLifeTokens() {

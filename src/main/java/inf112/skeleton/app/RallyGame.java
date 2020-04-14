@@ -32,7 +32,7 @@ public class RallyGame extends Game {
     public boolean playing;
     public Sound laserSound;
     public Music gameMusic;
-    public Player currentPlayer;
+    public Player mainPlayer;
 
     public float volume;
     public boolean muted;
@@ -46,7 +46,7 @@ public class RallyGame extends Game {
         this.deck = new Deck();
         this.players = new ArrayList<>();
         this.players = board.getPlayers();
-        this.currentPlayer = board.getPlayer1();
+        this.mainPlayer = board.getPlayer1();
 
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
@@ -60,7 +60,7 @@ public class RallyGame extends Game {
     }
 
     public void confirmCards() {
-        if (currentPlayer.getSelectedCards().size() == 5) {
+        if (mainPlayer.getSelectedCards().size() == 5) {
             cardsReady();
         }
     }

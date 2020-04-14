@@ -59,7 +59,7 @@ public class GameScreenActors {
         int idx = 0;
         for (int dy = 1; dy <= 3; dy++) {
             for (int dx = 0; dx <= 2; dx++) {
-                ProgramCard card = game.currentPlayer.getAllCards().get(idx);
+                ProgramCard card = game.mainPlayer.getAllCards().get(idx);
                 ImageButton.ImageButtonStyle cardStyle = new ImageButton.ImageButtonStyle();
                 cardStyle.up = cardSkin.getSkins().getDrawable(card.getName());
                 ImageButton cardButton = new ImageButton(cardStyle);
@@ -68,7 +68,7 @@ public class GameScreenActors {
                 cardButton.addListener(new InputListener() {
                     @Override
                     public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                        game.currentPlayer.selectCard(card);
+                        game.mainPlayer.selectCard(card);
                     }
 
                     @Override
