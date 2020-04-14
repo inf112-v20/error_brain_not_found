@@ -144,6 +144,7 @@ public class RallyGame extends Game {
             }
             board.respawnPlayers();
             removeDeadPlayers();
+            discardCards();
             dealCards();
         }
     }
@@ -171,7 +172,7 @@ public class RallyGame extends Game {
     }
 
     public void selectCards() {
-       // for (Player player : players) { player.selectCards(); }
+        // for (Player player : players) { player.selectCards(); }
 
     }
 
@@ -179,7 +180,10 @@ public class RallyGame extends Game {
         for (Player player : players) {
             player.drawCards(deck);
         }
+    }
 
+    public void discardCards() {
+        mainPlayer.discardAllCards(deck);
     }
 
     public void removeDeadPlayers() {

@@ -69,7 +69,10 @@ public class Player {
         }
     }
 
-    //public boolean hasLockedCards(){ }
+    public void discardAllCards(Deck deck) {
+        deck.addCardsToDiscardPile(allCards);
+        allCards.clear();
+    }
 
     /**
      * a int on how many damageTokens
