@@ -20,7 +20,6 @@ public class MenuScreenActors {
 
     private final Stage stage;
     private final RallyGame game;
-    public MenuButtonSkin buttonSkin;
     public Skin skin;
 
     public float screenWidth;
@@ -38,8 +37,8 @@ public class MenuScreenActors {
         this.game = game;
         this.stage = stage;
 
-        screenWidth = Gdx.graphics.getWidth();
-        screenHeight = Gdx.graphics.getHeight();
+        screenWidth = game.getScreen().viewport.getScreenWidth();
+        screenHeight = game.getScreen().viewport.getScreenHeight();
 
         BUTTON_WIDTH = (float) (screenWidth * 0.25);
         BUTTON_HEIGHT = (float) (screenHeight * 0.25);
@@ -47,14 +46,13 @@ public class MenuScreenActors {
         EXIT_BUTTON_Y = (float) (screenHeight * 0.5 - BUTTON_HEIGHT);
         BUTTON_X = (float) (screenWidth * 0.5 - BUTTON_WIDTH * 0.5);
 
-        buttonSkin = new MenuButtonSkin();
         skin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
     }
 
     public void initializeStartButton() {
         ImageButton.ImageButtonStyle startButtonStyle = new ImageButton.ImageButtonStyle();
-        startButtonStyle.up = buttonSkin.menuButtonSkin.getDrawable("Start button");
-        startButtonStyle.over = buttonSkin.menuButtonSkin.getDrawable("Start button over");
+        startButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Start active");
+        startButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Start inactive");
 
         ImageButton startButton = new ImageButton(startButtonStyle);
         startButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -76,8 +74,8 @@ public class MenuScreenActors {
 
     public void initializeExitButton() {
         ImageButton.ImageButtonStyle exitButtonStyle = new ImageButton.ImageButtonStyle();
-        exitButtonStyle.up = buttonSkin.menuButtonSkin.getDrawable("Exit button");
-        exitButtonStyle.over = buttonSkin.menuButtonSkin.getDrawable("Exit button over");
+        exitButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Exit active");
+        exitButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Exit inactive");
 
         ImageButton exitButton = new ImageButton(exitButtonStyle);
         exitButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
