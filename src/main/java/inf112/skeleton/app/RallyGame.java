@@ -16,8 +16,6 @@ import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.Player.Player;
 import inf112.skeleton.app.objects.Player.PlayerSorter;
 import inf112.skeleton.app.objects.RotatePad;
-import inf112.skeleton.app.screens.GifScreen;
-import inf112.skeleton.app.screens.MenuScreen;
 import inf112.skeleton.app.screens.ButtonSkin;
 import inf112.skeleton.app.screens.gifscreen.GifScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
