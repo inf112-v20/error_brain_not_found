@@ -169,7 +169,7 @@ public class GameScreenActors {
 
     public void updateCards() {
         for (int i = 0; i < 9; i++) {
-            ProgramCard card = game.mainPlayer.getSelectedCards().get(i);
+            ProgramCard card = game.mainPlayer.getAllCards().get(i);
             ImageButton cardButton = programCardButtons.get(i);
             cardButton.getStyle().up = cardSkin.getSkins().getDrawable(card.getName());
         }
