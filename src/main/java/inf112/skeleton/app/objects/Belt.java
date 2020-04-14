@@ -15,14 +15,16 @@ import inf112.skeleton.app.enums.Rotate;
  */
 public class Belt {
 
-    private Vector2 position;
+    private final Rotate rotation;
+    private final Vector2 position;
 
-    private Direction direction;
-    private int power;
+    private final Direction direction;
+    private final int power;
 
-    public Belt(Direction direction, int power, Vector2 position){
+    public Belt(Direction direction, Rotate rotation, int power, Vector2 position) {
         this.direction = direction;
         this.position = position;
+        this.rotation = rotation;
         this.power = power;
     }
 
@@ -32,6 +34,10 @@ public class Belt {
 
     public Direction getDirection() {
         return direction;
+    }
+
+    public Rotate getRotation() {
+        return rotation;
     }
 
     public int getPower() {
