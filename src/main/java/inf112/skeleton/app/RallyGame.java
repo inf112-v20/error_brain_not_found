@@ -142,6 +142,7 @@ public class RallyGame extends Game {
                 removeLasers();
                 sleep(1000);
             }
+            board.respawnPlayers();
             removeDeadPlayers();
             dealCards();
         }
