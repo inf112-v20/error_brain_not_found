@@ -168,6 +168,8 @@ public class RallyGame extends Game {
                 System.out.println("Runde " + (i + 1));
                 allPlayersPlayCard();
                 activateRotatePads();
+                activateBelts(true);
+                activateBelts(false);
 
                 fireLasers();
                 try {
@@ -305,12 +307,15 @@ public class RallyGame extends Game {
                     switch (rotateDirection) {
                         case LEFT:
                             player.setDirection(playerDirection.turnLeft());
+                            board.addPlayer(player);
                             break;
                         case RIGHT:
                             player.setDirection(playerDirection.turnRight());
+                            board.addPlayer(player);
                             break;
                         case UTURN:
                             player.setDirection(playerDirection.turnAround());
+                            board.addPlayer(player);
                             break;
                         default:
                             // Will never happen
@@ -330,15 +335,11 @@ public class RallyGame extends Game {
 
         for (Player player : board.getPlayers()) {
             for (Belt belt : belts){
-                float positionX = player.getPosition().x;
-                float positionY = player.getPosition().y;
                 Direction direction = belt.getDirection();
 
                 if (player.getPosition().equals(belt.getPosition())){
+                    board.movePlayer(player, direction);
 
-
-
-                    }
                 }
             }
         }
