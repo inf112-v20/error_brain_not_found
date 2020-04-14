@@ -142,8 +142,9 @@ public class GameScreenActors {
 
     public void updateButtons() {
         updateConfirm();
-        updateLifeToken();
-        updateDamageToken();
+        updateLifeTokens();
+        updateDamageTokens();
+        updateCards();
     }
 
     public void updateConfirm() {
@@ -154,15 +155,23 @@ public class GameScreenActors {
         }
     }
 
-    public void updateLifeToken() {
+    public void updateLifeTokens() {
         for (int i = 0; i < 3; i++) {
             lifeTokens.get(i).setVisible(i < game.mainPlayer.getLifeTokens());
         }
     }
 
-    public void updateDamageToken() {
+    public void updateDamageTokens() {
         for (int i = 0; i < 10; i++) {
             damageTokens.get(i).setVisible(i < game.mainPlayer.getDamageTokens());
+        }
+    }
+
+    public void updateCards() {
+        for (int i = 0; i < 9; i++) {
+            ProgramCard card = game.mainPlayer.getSelectedCards().get(i);
+            ImageButton cardButton = programCardButtons.get(i);
+            cardButton.getStyle().up = cardSkin.getSkins().getDrawable(card.getName());
         }
     }
 }
