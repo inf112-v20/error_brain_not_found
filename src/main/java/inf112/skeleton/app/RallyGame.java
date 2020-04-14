@@ -11,6 +11,7 @@ import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.Rotate;
+import inf112.skeleton.app.objects.Belt;
 import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.screens.GifScreen;
@@ -143,6 +144,7 @@ public class RallyGame extends Game {
             removeDeadPlayers();
             dealCards();
             selectCards();
+
         }
     }
 
@@ -262,6 +264,40 @@ public class RallyGame extends Game {
                             break;
                         default:
                             // Will never happen
+                    }
+                }
+            }
+        }
+    }
+    public void activateBelts(boolean onlyExpress) {
+        ArrayList<Belt> belts;
+
+        if (onlyExpress){
+            belts = board.expressBelts;
+        } else {
+            belts = board.belts;
+        }
+
+        for (Player player : board.getPlayers()) {
+            for (Belt belt : belts){
+                float positionX = player.getPosition().x;
+                float positionY = player.getPosition().y;
+                Direction direction = belt.getDirection();
+
+                if (player.getPosition().equals(belt.getPosition())){
+
+                    switch (direction){
+                        case NORTH:
+                            player.setPosition(new Vector2(positionX, positionY + 1));
+                        case EAST:
+                            player.setPosition(new Vector2(positionX + 1, positionY));
+                        case WEST:
+                            player.setPosition(new Vector2(positionX - 1, positionY));
+                        case SOUTH:
+                            player.setPosition(new Vector2(positionX, positionY - 1));
+                        default:
+                            System.out.println("There is something wrong her! ERROR");
+                            return;
                     }
                 }
             }
