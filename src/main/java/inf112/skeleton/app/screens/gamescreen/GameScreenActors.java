@@ -111,31 +111,31 @@ public class GameScreenActors {
     }
 
     public void initializeDamageTokens() {
-        for (float y = lifeTokenSize; y < lifeTokenSize + 2 * damageTokenSize; y += damageTokenSize) {
-            for (float x = mapRightPx; x < mapRightPx + 5 * damageTokenSize; x += damageTokenSize) {
+        for (double y = lifeTokenSize; y < lifeTokenSize + 2 * damageTokenSize; y += damageTokenSize) {
+            for (double x = mapRightPx; x < mapRightPx + 5 * damageTokenSize; x += damageTokenSize) {
                 newDamageToken(x, y);
             }
         }
     }
 
-    public void newDamageToken(float x, float y) {
+    public void newDamageToken(double x, double y) {
         Image token = new Image(new Texture("assets/images/damageToken.png"));
         token.setSize(damageTokenSize, damageTokenSize);
-        token.setPosition(x, y);
+        token.setPosition((float) x, (float) y);
         damageTokens.add(token);
         stage.addActor(token);
     }
 
     public void initializeLifeTokens() {
-        for (float x = mapRightPx; x < mapRightPx + 3 * lifeTokenSize; x += lifeTokenSize) {
+        for (double x = mapRightPx; x < mapRightPx + 3 * lifeTokenSize; x += lifeTokenSize) {
             newLifeToken(x, 0);
         }
     }
 
-    public void newLifeToken(float x, float y) {
+    public void newLifeToken(double x, double y) {
         Image token = new Image(new Texture("assets/images/lifeToken.png"));
         token.setSize(lifeTokenSize, lifeTokenSize);
-        token.setPosition(x, y);
+        token.setPosition((float) x, (float) y);
         lifeTokens.add(token);
         stage.addActor(token);
     }
