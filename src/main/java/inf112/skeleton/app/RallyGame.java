@@ -319,6 +319,11 @@ public class RallyGame extends Game {
                         default:
                             // Will never happen
                     }
+                    try {
+                        Thread.sleep(600);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
@@ -344,14 +349,20 @@ public class RallyGame extends Game {
                 Direction direction = belt.getDirection();
 
                 if (player.getPosition().equals(belt.getPosition())){
+
                     if (belt.getRotation() == Rotate.LEFT){
                         player.setDirection(player.getDirection().turnLeft());
                         board.addPlayer(player);
-                    } else if (belt.getRotation() == Rotate.RIGHT){
+                    } else if (belt.getRotation() == Rotate.RIGHT) {
                         player.setDirection(player.getDirection().turnRight());
                         board.addPlayer(player);
                     }
                     board.movePlayer(player, direction);
+                    try {
+                        Thread.sleep(600);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
