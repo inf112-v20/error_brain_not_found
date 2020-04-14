@@ -9,9 +9,9 @@ import inf112.skeleton.app.RallyGame;
 
 public class GameScreen extends StandardScreen {
 
-    private TiledMapRenderer mapRenderer;
-    private Texture lifeTokens;
-    private Texture damageTokens;
+    private final TiledMapRenderer mapRenderer;
+    private final Texture lifeTokens;
+    private final Texture damageTokens;
     private float tokensX;
     private float lifeTokensY;
     private float damageTokensY;

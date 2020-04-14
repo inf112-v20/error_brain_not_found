@@ -3,11 +3,11 @@ package inf112.skeleton.app.cards;
 import inf112.skeleton.app.enums.Rotate;
 
 public class ProgramCard {
-    private int priority;
-    private int distance;
-    private String name;
+    private final int priority;
+    private final int distance;
+    private final String name;
 
-    private Rotate rotate;
+    private final Rotate rotate;
 
     public ProgramCard(int priority, int distance, Rotate rotate, String name) {
         this.priority = priority;

@@ -16,6 +16,7 @@ import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.LoadingScreen;
+import inf112.skeleton.app.screens.MenuScreen;
 
 import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
@@ -24,22 +25,26 @@ public class RallyGame extends Game {
 
     public Board board;
     public Deck deck;
-    public Player currentPlayer;
     public ArrayList<Player> players;
     public Semaphore waitForCards;
     public boolean playing;
     public Sound laserSound;
+    public static Music gameMusic;
     public Player mainPlayer;
 
+
+    public static float volume = 0.2f;
+    public boolean unMute = true;
+
     public void create() {
-        this.setScreen(new LoadingScreen(this));
+        //TODO: Delete LoadingScreen if not used
+        this.setScreen(new MenuScreen(this));
         startMusic();
     }
 
     public void setupGame(String mapPath) {
         this.board = new Board(mapPath, 4);
         this.deck = new Deck();
-        this.currentPlayer = board.getPlayer1();
         this.players = new ArrayList<>();
         this.players = board.getPlayers();
         this.mainPlayer = board.getPlayer1();
@@ -47,6 +52,7 @@ public class RallyGame extends Game {
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
         this.playing = true;
+
 
         this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
 
@@ -81,7 +87,12 @@ public class RallyGame extends Game {
                     board.movePlayer(mainPlayer);
                 } else if (keycode == Input.Keys.ESCAPE) {
                     Gdx.app.exit();
-                } else if (keycode == Input.Keys.SPACE) {
+                } else if (keycode == Input.Keys.M) {
+                    mute();
+                    muteMusic();
+                }
+
+                else if (keycode == Input.Keys.SPACE) {
                     cardsReady();
                     return super.keyDown(keycode);
                 } else {
@@ -93,17 +104,42 @@ public class RallyGame extends Game {
                 }
                 board.respawnPlayers();
                 fireLasers();
+                decreaseLives();
                 removeDeadPlayers();
                 return super.keyDown(keycode);
             }
         });
     }
 
+    public void mute(){
+        if (unMute){
+            volume = 0f;
+            unMute = false;
+
+        }
+        else {
+            volume = 0.5f;
+            unMute = true;
+        }
+    }
+
+    public  void loadMusic() {
+        gameMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
+    }
+
+    public  void muteMusic() {
+       if (!unMute){
+        gameMusic.setVolume(volume);}
+
+       gameMusic.setVolume(volume);
+
+    }
+
     public void startMusic() {
-        Music music = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
-        music.setLooping(true);
-        music.setVolume(1f);
-        music.play();
+        loadMusic();
+        gameMusic.setVolume(0.3f);
+        gameMusic.play();
+
     }
 
     private void cardsReady() {
@@ -145,6 +181,20 @@ public class RallyGame extends Game {
             dealCards();
             selectCards();
 
+        }
+    }
+
+    /**
+     * Decrease lifetokens to each player that has collected 10 damagetokens.
+     * Reset damagetokens and respawn player.
+     */
+    public void decreaseLives() {
+        for (Player player : players) {
+            if (player.getDamageTokens() >= 10) {
+                player.decrementLifeTokens();
+                player.resetDamageTokens();
+                board.respawn(player);
+            }
         }
     }
 
@@ -239,7 +289,7 @@ public class RallyGame extends Game {
         for (Laser laser : board.lasers) {
             laser.fire(this);
         }
-        //laserSound.play();
+        laserSound.play();
     }
 
     public void activateRotatePads() {
@@ -302,10 +352,6 @@ public class RallyGame extends Game {
                 }
             }
         }
-    }
-
-    public void render() {
-        super.render();
     }
 
     public void dispose() {
