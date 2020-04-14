@@ -28,6 +28,8 @@ public class GameScreenActors {
     public float damageTokenSize;
     public float lifeTokenSize;
 
+    private ImageButton confirmButton;
+
     private final RallyGame game;
     private final Stage stage;
     private final ProgramCardSkin cardSkin;
@@ -69,6 +71,7 @@ public class GameScreenActors {
                     @Override
                     public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                         game.mainPlayer.selectCard(card);
+                        System.out.println(game.mainPlayer.getSelectedCards());
                     }
 
                     @Override
@@ -90,7 +93,7 @@ public class GameScreenActors {
         atlas.addRegion("Confirm button", confirmTexture);
         Skin skin = new Skin(atlas);
         style.up = skin.getDrawable("Confirm button");
-        ImageButton confirmButton = new ImageButton(style);
+        confirmButton = new ImageButton(style);
         confirmButton.setSize(confirmButtonSize, confirmButtonSize);
         confirmButton.setPosition(screenWidth - confirmButtonSize, 0);
         confirmButton.addListener(new InputListener() {
@@ -135,5 +138,14 @@ public class GameScreenActors {
         token.setPosition(x, y);
         lifeTokens.add(token);
         stage.addActor(token);
+    }
+
+    public void updateButtons() {
+        if (game.mainPlayer.getSelectedCards().size() == 5) {
+            confirmButton.getStyle().up = game.buttonSkins.getSkins().getDrawable("Confirm ready");
+        } else {
+            confirmButton.getStyle().up = game.buttonSkins.getSkins().getDrawable("Confirm not ready");
+        }
+
     }
 }

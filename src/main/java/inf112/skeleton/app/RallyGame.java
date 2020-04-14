@@ -15,6 +15,7 @@ import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.Player.Player;
 import inf112.skeleton.app.objects.Player.PlayerSorter;
 import inf112.skeleton.app.objects.RotatePad;
+import inf112.skeleton.app.screens.GameScreen.ButtonSkin;
 import inf112.skeleton.app.screens.GifScreen.GifScreen;
 import inf112.skeleton.app.screens.MenuScreen.MenuScreen;
 import inf112.skeleton.app.screens.StandardScreen.StandardScreen;
@@ -34,6 +35,8 @@ public class RallyGame extends Game {
     public Music gameMusic;
     public Player mainPlayer;
 
+    public ButtonSkin buttonSkins;
+
     public float volume;
     public boolean muted;
 
@@ -47,6 +50,7 @@ public class RallyGame extends Game {
         this.players = new ArrayList<>();
         this.players = board.getPlayers();
         this.mainPlayer = board.getPlayer1();
+        this.buttonSkins = new ButtonSkin();
 
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
