@@ -87,15 +87,12 @@ public class GameClientThread extends Thread {
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                 Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
                 if (allPlayersHaveSelectedCards()){
-                    System.out.println("Got all cards");
                     startDoTurn();
                     waitForDoTurnToFinish();
                 } else {
                     player.addSelectedCard(card);
-                    System.out.println("Player " + player.getPlayerNr() + " Sel "+ player.getAllCards());
                 }
             }
-            System.out.println(message);
         }
     }
 

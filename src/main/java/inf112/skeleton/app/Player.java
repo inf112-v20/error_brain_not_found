@@ -51,17 +51,7 @@ public class Player {
     }
 
     /**
-     * Add a card to players card so player can select them
-     * @param card to add
-     */
-    public void addDealtCard(ProgramCard card) {
-        if (allCards.size() < 9) {
-            allCards.add(card);
-        }
-    }
-
-    /**
-     * Select cards without user interaction.
+     * Select cards from all cards.
      */
     public void selectCards() {
         while (selectedCards.size() < 5) {

@@ -147,6 +147,7 @@ public class GameServer {
 
     /**
      * Send deck to all players.
+     * @param deck to send
      */
     public void sendDeckToAll(Deck deck) {
         Stack stack = deck.getDeck();

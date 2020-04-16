@@ -4,15 +4,10 @@ package inf112.skeleton.app.LAN;
 import inf112.skeleton.app.Player;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
-import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.Messages;
-import org.lwjgl.Sys;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -79,9 +74,6 @@ public class GameServerThreads extends Thread {
                 Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
                 addSelectedCard(player, card);
                 if (allPlayersHaveSelectedCards()) {
-                    for (Player play : game.getBoard().getPlayers()) {
-                        System.out.println("Player " + play.getPlayerNr() + " "+play.getSelectedCards());
-                    }
                     server.sendSelectedCardsToAll();
                     startDoTurn();
                     waitForDoTurnToFinish();

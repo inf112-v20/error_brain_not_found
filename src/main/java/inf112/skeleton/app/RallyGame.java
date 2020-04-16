@@ -43,7 +43,6 @@ public class RallyGame extends Game {
     private GameClientThread client;
     private ProgramCard card;
     private Converter converter;
-    private Semaphore waitForServerToDealCards;
 
     public static float volume = 0.2f;
     public boolean unMute = true;
@@ -92,8 +91,6 @@ public class RallyGame extends Game {
         this.mainPlayer = board.getPlayer(this.myPlayerNumber);
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
-        this.waitForServerToDealCards = new Semaphore(1);
-        this.waitForServerToDealCards.tryAcquire();
         this.playing = true;
 
         this.converter = new Converter();
