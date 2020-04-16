@@ -2,12 +2,16 @@ package inf112.skeleton.app.LAN;
 
 import inf112.skeleton.app.Player;
 import inf112.skeleton.app.RallyGame;
+import inf112.skeleton.app.cards.Deck;
+import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Messages;
 
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Stack;
 
 /**
  * A server for handling connection between players.
@@ -18,10 +22,12 @@ public class GameServer {
     private ArrayList<GameServerThreads> clients;
     private RallyGame game;
     private boolean allClientsConnected;
+    private Converter converter;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
         this.game = game;
+        this.converter = new Converter();
     }
 
     /**
@@ -140,15 +146,18 @@ public class GameServer {
     }
 
     /**
-     * Send all cards dealt by game to all players
+     * Send deck to all players.
      */
-    public void sendDealtCardsToAll() {
+    public void sendDeckToAll(Deck deck) {
+        Stack stack = deck.getDeck();
+        Iterator iter = stack.iterator();
         for (GameServerThreads client : clients) {
-            client.sendMessage(Messages.DEAL_CARDS_BEGIN.toString());
-            for (Player player : game.getBoard().getPlayers()) {
-                client.sendDealtCards(player);
+            client.sendMessage(Messages.DECK_BEGIN.toString());
+            while (iter.hasNext()) {
+                ProgramCard card = (ProgramCard) iter.next();
+                client.sendMessage(converter.convertToString(card));
             }
-            client.sendMessage(Messages.DEAL_CARDS_END.toString());
+            client.sendMessage(Messages.DECK_END.toString());
         }
     }
 

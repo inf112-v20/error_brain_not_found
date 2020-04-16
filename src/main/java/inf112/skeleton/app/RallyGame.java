@@ -14,7 +14,6 @@ import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
-import inf112.skeleton.app.screens.GameScreen;
 import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.MenuScreen;
 
@@ -23,6 +22,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Stack;
 import java.util.concurrent.Semaphore;
 
 public class RallyGame extends Game {
@@ -135,12 +135,15 @@ public class RallyGame extends Game {
                     mute();
                     muteMusic();
                 }
+                // Send deck to all players.
                 else if (keycode == Input.Keys.D) {
                     if (isServer) {
                         if (serverThread.getServer().allClientsAreConnected()) {
-                            System.out.println("Dealing cards");
+                            System.out.println("Dealing deck");
+                            deck = new Deck();
+                            deck.shuffleDeck();
                             dealCards();
-                            serverThread.getServer().sendDealtCardsToAll();
+                            serverThread.getServer().sendDeckToAll(deck);
                             System.out.println("Dealt cards");
                         } else {
                             System.out.println("Need to wait for players to connect before dealing cards.");
@@ -148,6 +151,7 @@ public class RallyGame extends Game {
                     }
                 }
                 else if (keycode == Input.Keys.S) {
+                    dealCards();
                     if (mainPlayer.getAllCards().size() >= 9) {
                         mainPlayer.selectCards();
                     } else {
@@ -263,6 +267,9 @@ public class RallyGame extends Game {
         }
     }
 
+    /**
+     * After playing cards, let server and clients exhange more cards.
+     */
     public void letClientsAndServerContinue() {
         if (!isServer) {
             client.continueListening();
@@ -449,11 +456,11 @@ public class RallyGame extends Game {
         return this.board;
     }
 
-
     /**
-     * Realese so doTurn can continue and client can select cards.
+     * Is used when server has sent the stack to all players.
+     * @param stack of cards for this game.
      */
-    public void serverHasDealtCards() {
-        waitForServerToDealCards.release();
+    public void setDeck(Stack<ProgramCard> stack) {
+        this.deck.setDeck(stack);
     }
 }

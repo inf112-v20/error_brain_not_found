@@ -37,6 +37,38 @@ public class Converter {
     }
 
     /**
+     *
+     * @param programCard
+     * @return programcard as a string
+     */
+    public String convertToString(ProgramCard programCard) {
+        StringBuilder string = new StringBuilder();
+        String prio = String.valueOf(programCard.getPriority());
+        String steps = String.valueOf(programCard.getDistance());
+        String rotation = String.valueOf(programCard.getRotate());
+        String name = programCard.getName();
+        string.append(prio + " ");
+        string.append(steps + " ");
+        string.append(rotation+ " ");
+        string.append(name);
+        return string.toString();
+    }
+
+    /**
+     * Convert a string to a corresponding programcard.
+     * @param string
+     * @return programcard
+     */
+    public ProgramCard convertToCard(String string) {
+        ArrayList<String> strings = splitBySpace(string);
+        int prio = Integer.parseInt(strings.get(0));
+        int steps = Integer.parseInt(strings.get(1));
+        Rotate rotation = getRotation(string);
+        String name = getName(string);
+        return new ProgramCard(prio, steps, rotation, name);
+    }
+
+    /**
      * Convert a string to a corresponding programcard. Playernumber to player
      * owning this card is stored in {@link #getPlayerNumber()}
      * @param string

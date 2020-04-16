@@ -2,6 +2,7 @@ package inf112.skeleton.app.LAN;
 
 import inf112.skeleton.app.Player;
 import inf112.skeleton.app.RallyGame;
+import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Messages;
 import org.lwjgl.Sys;
@@ -11,6 +12,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -30,6 +32,7 @@ public class GameClientThread extends Thread {
     private Converter converter;
     private Semaphore continueListening;
     private boolean receivedCards;
+    private Stack<ProgramCard> stack;
 
     public GameClientThread(RallyGame game, Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -67,24 +70,29 @@ public class GameClientThread extends Thread {
                 int playerNumber = Character.getNumericValue(message.charAt(0));
                 System.out.println("Player " + playerNumber + " left game.");
             }
-            else if (message.equals(Messages.DEAL_CARDS_BEGIN.toString())) {
+            else if (message.equals(Messages.DECK_BEGIN.toString())) {
                     receivedCards = false;
+                    System.out.println(message);
+                    stack = new Stack<>();
             }
-            else if (message.equals(Messages.DEAL_CARDS_END.toString())) {
+            else if (message.equals(Messages.DECK_END.toString())) {
                     receivedCards = true;
+                    System.out.println(message + "Sending to game.");
+                    game.setDeck(stack);
             }
-            else {
+            else if (!receivedCards) {
+                ProgramCard card = converter.convertToCard(message);
+                stack.add(card);
+            } else {
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                 Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
                 if (allPlayersHaveSelectedCards()){
                     System.out.println("Got all cards");
                     startDoTurn();
                     waitForDoTurnToFinish();
-                } else if (!receivedCards) {
-                    System.out.println("Adding cards" + card.toString());
-                    player.addDealtCard(card);
                 } else {
                     player.addSelectedCard(card);
+                    System.out.println("Player " + player.getPlayerNr() + " Sel "+ player.getAllCards());
                 }
             }
             System.out.println(message);
@@ -123,20 +131,6 @@ public class GameClientThread extends Thread {
     public boolean allPlayersHaveSelectedCards() {
         for (Player player : game.getBoard().getPlayers()) {
             if (player.getSelectedCards().size() < 5) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    /**
-     *
-     * @return true if all players have got their cards.
-     */
-    public boolean allPlayersHaveReceivedCards() {
-        for (Player player : game.getBoard().getPlayers()) {
-            if (player.getAllCards().size() < 9) {
-                System.out.println("Player " + player.getPlayerNr() + " has " + player.getAllCards().size() + " dealt cards.");
                 return false;
             }
         }

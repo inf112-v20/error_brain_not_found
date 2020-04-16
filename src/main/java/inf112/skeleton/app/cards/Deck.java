@@ -90,4 +90,12 @@ public class Deck {
             }
         }
     }
+
+    public Stack getDeck() {
+        return deck;
+    }
+
+    public void setDeck(Stack<ProgramCard> stack) {
+        this.deck = stack;
+    }
 }
