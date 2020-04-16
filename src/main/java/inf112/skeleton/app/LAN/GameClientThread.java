@@ -3,6 +3,8 @@ package inf112.skeleton.app.LAN;
 import inf112.skeleton.app.Player;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.enums.Messages;
+
 import java.io.*;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -54,16 +56,17 @@ public class GameClientThread extends Thread {
                 break;
             }
             // If host leaves
-            if (message.equals("Host is leaving.. ")) {
+            if (message.equals(Messages.HOST_LEAVES.toString())) {
                 System.out.println(message);
                 close();
                 return;
             }
             // If another player leaves.
-            if (message.contains("Player")) {
-                System.out.println(message);
+            if (message.contains(Messages.QUIT.toString())) {
+                int playerNumber = Character.getNumericValue(message.charAt(0));
+                System.out.println("Player " + playerNumber + " left game.");
             } else {
-                //System.out.println(message);
+                System.out.println(message);
 
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                 int playerNumber = converter.getPlayerNumber();
@@ -78,10 +81,8 @@ public class GameClientThread extends Thread {
 
                     startDoTurn();
                     waitForDoTurnToFinish();
-                    //return;
                 }
 
-               // game.playCard(player, card);
             }
         }
     }
@@ -147,9 +148,7 @@ public class GameClientThread extends Thread {
      */
     public void storeInitializationValuesFromSocket() {
         this.myPlayerNumber = Integer.parseInt(getMessage());
-        System.out.println("From server, my playernumber: "+myPlayerNumber);
         this.numberOfPlayers = Integer.parseInt(getMessage());
-        System.out.println("From server, numberofplayers "+numberOfPlayers);
     }
 
     /**
@@ -180,11 +179,20 @@ public class GameClientThread extends Thread {
      */
     public void close() {
         try {
-            System.out.println("Closed socket " + myPlayerNumber + " clientside.");
             this.clientSocket.close();
+            System.out.println(Messages.CLOSED.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Create a string to send if you are exiting game.
+     * @param playerNumber
+     * @return string for quitting game
+     */
+    public String createQuitMessage(int playerNumber) {
+        return playerNumber + Messages.QUIT.toString();
     }
 
 }

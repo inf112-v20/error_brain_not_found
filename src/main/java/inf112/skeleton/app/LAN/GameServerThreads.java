@@ -5,6 +5,7 @@ import inf112.skeleton.app.Player;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.enums.Messages;
 import org.lwjgl.Sys;
 
 import java.io.*;
@@ -56,10 +57,7 @@ public class GameServerThreads extends Thread {
         try {
             // Let the player know what the playernumber is
             sendMessage(this.playerNumber+"");
-            System.out.println("Server has sent playernum");
-            // Get incoming messages
             sendMessage(this.numberOfPlayers+"");
-            System.out.println("Server has sent numplayers");
 
             while (true) {
                 String message = reader.readLine();
@@ -67,13 +65,13 @@ public class GameServerThreads extends Thread {
                     break;
                 }
                 // Close client socket if client is leaving, decrease num of players..
-                if (message.equals("quit")) {
+                if (message.contains(Messages.QUIT.toString())) {
+                    int playerNumber = Character.getNumericValue(message.charAt(0));
                     Player player = game.getBoard().getPlayer(playerNumber);
                     server.sendToAllExcept(player, "Player " + playerNumber + " is leaving...");
                     System.out.println("Player " + playerNumber + " is leaving...");
                     server.disconnect(playerNumber);
                     server.remove(playerNumber);
-                    System.out.println("Disconnected player");
                     numberOfPlayers--;
                     return;
                 }
@@ -138,6 +136,16 @@ public class GameServerThreads extends Thread {
     }
 
     /**
+     * Send given players dealt cards to this client
+     * @param player
+     */
+    public void sendDealtCards(Player player) {
+        for (ProgramCard card : player.getAllCards()) {
+            sendMessage(converter.convertToString(player.getPlayerNr(), card));
+        }
+    }
+
+    /**
      *
      * @return true if all players have selected their cards.
      */
@@ -186,7 +194,6 @@ public class GameServerThreads extends Thread {
 
     public void close() {
         try {
-            System.out.println("Closed socket " + playerNumber + " serverside.");
             this.client.close();
         } catch (IOException e) {
             e.printStackTrace();

@@ -2,6 +2,7 @@ package inf112.skeleton.app.LAN;
 
 import inf112.skeleton.app.Player;
 import inf112.skeleton.app.RallyGame;
+import inf112.skeleton.app.enums.Messages;
 
 import java.io.*;
 import java.net.ServerSocket;
@@ -128,4 +129,18 @@ public class GameServer {
             client.continueListening();
         }
     }
+
+    /**
+     * Send all cards dealt by game to all players
+     */
+    public void sendDealtCardsToAll() {
+        for (GameServerThreads client : clients) {
+            client.sendMessage(Messages.DEAL_CARDS_BEGIN.toString());
+            for (Player player : game.getBoard().getPlayers()) {
+                client.sendDealtCards(player);
+            }
+            client.sendMessage(Messages.DEAL_CARDS_END.toString());
+        }
+    }
+
 }
