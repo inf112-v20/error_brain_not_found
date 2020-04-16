@@ -144,9 +144,11 @@ public class GameServer {
      */
     public void sendDealtCardsToAll() {
         for (GameServerThreads client : clients) {
+            client.sendMessage(Messages.DEAL_CARDS_BEGIN.toString());
             for (Player player : game.getBoard().getPlayers()) {
                 client.sendDealtCards(player);
             }
+            client.sendMessage(Messages.DEAL_CARDS_END.toString());
         }
     }
 

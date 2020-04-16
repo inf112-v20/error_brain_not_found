@@ -4,6 +4,7 @@ import inf112.skeleton.app.Player;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Messages;
+import org.lwjgl.Sys;
 
 import java.io.*;
 import java.net.Socket;
@@ -28,7 +29,7 @@ public class GameClientThread extends Thread {
     private RallyGame game;
     private Converter converter;
     private Semaphore continueListening;
-    private boolean haveSelectedCards;
+    private boolean receivedCards;
 
     public GameClientThread(RallyGame game, Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -65,30 +66,29 @@ public class GameClientThread extends Thread {
             else if (message.contains(Messages.QUIT.toString())) {
                 int playerNumber = Character.getNumericValue(message.charAt(0));
                 System.out.println("Player " + playerNumber + " left game.");
-            } else {
+            }
+            else if (message.equals(Messages.DEAL_CARDS_BEGIN.toString())) {
+                    receivedCards = false;
+            }
+            else if (message.equals(Messages.DEAL_CARDS_END.toString())) {
+                    receivedCards = true;
+            }
+            else {
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                 Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
-                if (!allPlayersHaveReceivedCards() && !haveSelectedCards) {
+                if (allPlayersHaveSelectedCards()){
+                    System.out.println("Got all cards");
+                    startDoTurn();
+                    waitForDoTurnToFinish();
+                } else if (!receivedCards) {
+                    System.out.println("Adding cards" + card.toString());
                     player.addDealtCard(card);
-                    System.out.println(allPlayersHaveReceivedCards());
-                    System.out.println("Added dealt card ");
                 } else {
-                    System.out.println("Done receiving dealt cards");
-                    for (Player play : game.getBoard().getPlayers()) {
-                        System.out.println("Player " + play.getPlayerNr() + " "+play.getSelectedCards());
-                    }
                     player.addSelectedCard(card);
-                    if (allPlayersHaveSelectedCards()) {
-                        startDoTurn();
-                        waitForDoTurnToFinish();
-                    }
                 }
             }
+            System.out.println(message);
         }
-    }
-
-    public void haveSelectedCards() {
-        haveSelectedCards = true;
     }
 
     /**
@@ -212,5 +212,4 @@ public class GameClientThread extends Thread {
     public String createQuitMessage(int playerNumber) {
         return playerNumber + Messages.QUIT.toString();
     }
-
 }

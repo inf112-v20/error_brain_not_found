@@ -14,6 +14,7 @@ import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
+import inf112.skeleton.app.screens.GameScreen;
 import inf112.skeleton.app.screens.GifScreen;
 import inf112.skeleton.app.screens.MenuScreen;
 
@@ -42,6 +43,7 @@ public class RallyGame extends Game {
     private GameClientThread client;
     private ProgramCard card;
     private Converter converter;
+    private Semaphore waitForServerToDealCards;
 
     public static float volume = 0.2f;
     public boolean unMute = true;
@@ -90,6 +92,8 @@ public class RallyGame extends Game {
         this.mainPlayer = board.getPlayer(this.myPlayerNumber);
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
+        this.waitForServerToDealCards = new Semaphore(1);
+        this.waitForServerToDealCards.tryAcquire();
         this.playing = true;
 
         this.converter = new Converter();
@@ -139,14 +143,15 @@ public class RallyGame extends Game {
                             serverThread.getServer().sendDealtCardsToAll();
                             System.out.println("Dealt cards");
                         } else {
-                            System.out.println("Need to wait for players to connect.");
+                            System.out.println("Need to wait for players to connect before dealing cards.");
                         }
                     }
                 }
                 else if (keycode == Input.Keys.S) {
-                    mainPlayer.selectCards();
-                    if (!isServer) {
-                        client.haveSelectedCards();
+                    if (mainPlayer.getAllCards().size() >= 9) {
+                        mainPlayer.selectCards();
+                    } else {
+                        System.out.println("Need to get cards first.");
                     }
                     System.out.println("Your program is: " + mainPlayer.getSelectedCards());
                     sendSelectedCards();
@@ -251,6 +256,7 @@ public class RallyGame extends Game {
             removeDeadPlayers();
             dealCards();
             mainPlayer.selectCards();
+            System.out.println(mainPlayer.getSelectedCards());
             System.out.println("Your program is: " + mainPlayer.getSelectedCards());
             letClientsAndServerContinue();
             sendSelectedCards();
@@ -444,4 +450,10 @@ public class RallyGame extends Game {
     }
 
 
+    /**
+     * Realese so doTurn can continue and client can select cards.
+     */
+    public void serverHasDealtCards() {
+        waitForServerToDealCards.release();
+    }
 }
