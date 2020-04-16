@@ -78,8 +78,8 @@ public class RallyGame extends Game {
         new Thread(this::doTurn).start();
 
         setInputProcessor();
-        //dealCards();
-        // selectCards();
+        dealCards();
+        selectCards();
     }
 
     /**

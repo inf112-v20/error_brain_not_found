@@ -61,7 +61,6 @@ public class GameClientThread extends Thread {
         this.numberOfPlayers = Integer.parseInt(getMessage());
         game.setPlayerNumber(myPlayerNumber);
         game.setNumberOfPlayers(numberOfPlayers);
-        System.out.print(myPlayerNumber + " " + numberOfPlayers);
 
         game.gotInitializedValues();
 
@@ -71,8 +70,6 @@ public class GameClientThread extends Thread {
             if (message == null) {
                 break;
             }
-
-            System.out.println(message);
             if (message.equals(Messages.HOST_LEAVES.toString())) {
                 System.out.println(message);
                 close();
@@ -85,12 +82,10 @@ public class GameClientThread extends Thread {
             }
             else if (message.equals(Messages.DECK_BEGIN.toString())) {
                     receivedCards = false;
-                    System.out.println(message);
                     stack = new Stack<>();
             }
             else if (message.equals(Messages.DECK_END.toString())) {
                     receivedCards = true;
-                    System.out.println(message + "Sending to game.");
                     game.setDeck(stack);
             }
             else if (!receivedCards) {
@@ -171,21 +166,6 @@ public class GameClientThread extends Thread {
      */
     public void sendMessage(String message) {
         writer.println(message);
-    }
-
-    /**
-     * @return playernumber assigned to this client by server
-     */
-    public int getMyPlayerNumber() {
-        return this.myPlayerNumber;
-    }
-
-    /**
-     *
-     * @return numberOfPlayers in this game
-     */
-    public int getNumberOfPlayers() {
-        return this.numberOfPlayers;
     }
 
     /**
