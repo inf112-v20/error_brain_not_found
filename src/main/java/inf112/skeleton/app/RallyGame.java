@@ -56,6 +56,36 @@ public class RallyGame extends Game {
         this.waitForInitializeValues.tryAcquire();
     }
 
+    /**
+     * Set up a game without connection for multiplayer. Uses player 1 as mainplayer.
+     * @param mapPath
+     * @param numberOfPlayers
+     */
+    public void setUpGameWithoutConnection(String mapPath, int numberOfPlayers) {
+        this.board = new Board(mapPath, numberOfPlayers);
+        this.deck = new Deck();
+        this.players = new ArrayList<>();
+        this.players = board.getPlayers();
+        this.mainPlayer = board.getPlayer(1);
+        this.waitForCards = new Semaphore(1);
+        this.waitForCards.tryAcquire();
+        this.playing = true;
+
+        this.converter = new Converter();
+
+        this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
+
+        new Thread(this::doTurn).start();
+
+        setInputProcessor();
+        //dealCards();
+        // selectCards();
+    }
+
+    /**
+     * Set up game with a connection.
+     * @param mapPath
+     */
     public void setupGame(String mapPath) {
 
         setUpConnection();
@@ -150,9 +180,6 @@ public class RallyGame extends Game {
                             System.out.println("Need to wait for players to connect before dealing cards.");
                         }
                     }
-                }
-                else if(keycode == Input.Keys.L) {
-                    setUpConnection();
                 }
                 else if (keycode == Input.Keys.S) {
                     dealCards();
