@@ -55,12 +55,25 @@ public class GameClientThread extends Thread {
      */
     @Override
     public void run() {
+
+        // Get playernum and numberOfPlayers
+        this.myPlayerNumber = Integer.parseInt(getMessage());
+        this.numberOfPlayers = Integer.parseInt(getMessage());
+        game.setPlayerNumber(myPlayerNumber);
+        game.setNumberOfPlayers(numberOfPlayers);
+        System.out.print(myPlayerNumber + " " + numberOfPlayers);
+
+        game.gotInitializedValues();
+
         while (true) {
+
             String message = getMessage();
             if (message == null) {
                 break;
             }
-            else if (message.equals(Messages.HOST_LEAVES.toString())) {
+
+            System.out.println(message);
+            if (message.equals(Messages.HOST_LEAVES.toString())) {
                 System.out.println(message);
                 close();
                 return;
@@ -150,14 +163,6 @@ public class GameClientThread extends Thread {
             }
         }
         return null;
-    }
-
-    /**
-     * Read the playerNumber and numberOfPlayers that server has given to this player.
-     */
-    public void storeInitializationValuesFromSocket() {
-        this.myPlayerNumber = Integer.parseInt(getMessage());
-        this.numberOfPlayers = Integer.parseInt(getMessage());
     }
 
     /**

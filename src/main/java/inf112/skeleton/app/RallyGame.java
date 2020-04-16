@@ -43,46 +43,22 @@ public class RallyGame extends Game {
     private GameClientThread client;
     private ProgramCard card;
     private Converter converter;
+    private Semaphore waitForInitializeValues;
 
     public static float volume = 0.2f;
     public boolean unMute = true;
 
     public void create() {
-        Scanner scanner  = new Scanner(System.in);
-        // System.out.println("Do you want to play LAN? [Y/N]");
-        // if (scanner.nextLine().equals("Y") || scanner.nextLine().equals("y")) {
-        // Try to create a client socket.
-        try {
-            Socket clientSocket = new Socket("localhost", 9000);
-            System.out.println("I am a client :)");
-
-            // Create new thread for speaking to server
-            this.client = new GameClientThread(this, clientSocket);
-            client.storeInitializationValuesFromSocket();
-            this.myPlayerNumber = client.getMyPlayerNumber();
-            this.numberOfPlayers = client.getNumberOfPlayers();
-            client.start();
-
-            System.out.println("Started client.");
-        } catch (UnknownHostException e) {
-            System.out.println("Did not find host.");
-        } catch (IOException e) {
-            System.out.println("Found no servers. :( Becoming a server..");
-            this.isServer = true;
-            this.myPlayerNumber = 1;
-            System.out.println("How many players?");
-            scanner = new Scanner(System.in);
-            this.numberOfPlayers = scanner.nextInt();
-            this.serverThread = new ServerThread(this, this.numberOfPlayers);
-            serverThread.start();
-            // }
-        }
         //TODO: Delete LoadingScreen if not used
         this.setScreen(new MenuScreen(this));
         startMusic();
+        this.waitForInitializeValues = new Semaphore(1);
+        this.waitForInitializeValues.tryAcquire();
     }
 
     public void setupGame(String mapPath) {
+
+        setUpConnection();
 
         this.board = new Board(mapPath, this.numberOfPlayers);
         this.deck = new Deck();
@@ -102,6 +78,34 @@ public class RallyGame extends Game {
         setInputProcessor();
         //dealCards();
        // selectCards();
+    }
+
+    public void setUpConnection() {
+        // Try to create a client socket.
+        try {
+            Socket clientSocket = new Socket("localhost", 9000);
+            System.out.println("I am a client :)");
+
+            // Create new thread for speaking to server
+            this.client = new GameClientThread(this, clientSocket);
+            client.start();
+            try {
+                waitForInitializeValues.acquire();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        } catch (UnknownHostException e) {
+            System.out.println("Did not find host.");
+        } catch (IOException e) {
+            this.isServer = true;
+            this.myPlayerNumber = 1;
+            System.out.println("How many players?");
+            Scanner scanner = new Scanner(System.in);
+            //TODO: Create check for number
+            this.numberOfPlayers = scanner.nextInt();
+            this.serverThread = new ServerThread(this, this.numberOfPlayers);
+            serverThread.start();
+            }
     }
 
     public void setInputProcessor() {
@@ -147,6 +151,9 @@ public class RallyGame extends Game {
                         }
                     }
                 }
+                else if(keycode == Input.Keys.L) {
+                    setUpConnection();
+                }
                 else if (keycode == Input.Keys.S) {
                     dealCards();
                     if (mainPlayer.getAllCards().size() >= 9) {
@@ -174,6 +181,13 @@ public class RallyGame extends Game {
                 return super.keyDown(keycode);
             }
         });
+    }
+
+    /**
+     * Wait for server to send playernumber and number of players
+     */
+    public void gotInitializedValues() {
+        waitForInitializeValues.release();
     }
 
     /**
@@ -459,5 +473,13 @@ public class RallyGame extends Game {
      */
     public void setDeck(Stack<ProgramCard> stack) {
         this.deck.setDeck(stack);
+    }
+
+    public void setPlayerNumber(int playerNumber) {
+        this.myPlayerNumber = playerNumber;
+    }
+
+    public void setNumberOfPlayers(int numberOfPlayers) {
+        this.numberOfPlayers = numberOfPlayers;
     }
 }
