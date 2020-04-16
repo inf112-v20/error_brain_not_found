@@ -101,10 +101,6 @@ public class RallyGame extends Game {
         setInputProcessor();
         //dealCards();
        // selectCards();
-        if (isServer) {
-            dealCards();
-            serverThread.getServer().sendDealtCardsToAll();
-        }
     }
 
     public void setInputProcessor() {
@@ -135,8 +131,23 @@ public class RallyGame extends Game {
                     mute();
                     muteMusic();
                 }
+                else if (keycode == Input.Keys.D) {
+                    if (isServer) {
+                        if (serverThread.getServer().allClientsAreConnected()) {
+                            System.out.println("Dealing cards");
+                            dealCards();
+                            serverThread.getServer().sendDealtCardsToAll();
+                            System.out.println("Dealt cards");
+                        } else {
+                            System.out.println("Need to wait for players to connect.");
+                        }
+                    }
+                }
                 else if (keycode == Input.Keys.S) {
                     mainPlayer.selectCards();
+                    if (!isServer) {
+                        client.haveSelectedCards();
+                    }
                     System.out.println("Your program is: " + mainPlayer.getSelectedCards());
                     sendSelectedCards();
                 }

@@ -76,16 +76,13 @@ public class GameServerThreads extends Thread {
                     return;
                 }
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
-                int playerNumber = converter.getPlayerNumber();
-
-                Player player = game.getBoard().getPlayer(playerNumber);
+                Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
                 addSelectedCard(player, card);
                 if (allPlayersHaveSelectedCards()) {
                     for (Player play : game.getBoard().getPlayers()) {
                         System.out.println("Player " + play.getPlayerNr() + " "+play.getSelectedCards());
                     }
                     server.sendSelectedCardsToAll();
-
                     startDoTurn();
                     waitForDoTurnToFinish();
                 }

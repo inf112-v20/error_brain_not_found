@@ -28,6 +28,7 @@ public class GameClientThread extends Thread {
     private RallyGame game;
     private Converter converter;
     private Semaphore continueListening;
+    private boolean haveSelectedCards;
 
     public GameClientThread(RallyGame game, Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -55,36 +56,39 @@ public class GameClientThread extends Thread {
             if (message == null) {
                 break;
             }
-            // If host leaves
-            if (message.equals(Messages.HOST_LEAVES.toString())) {
+            else if (message.equals(Messages.HOST_LEAVES.toString())) {
                 System.out.println(message);
                 close();
                 return;
             }
             // If another player leaves.
-            if (message.contains(Messages.QUIT.toString())) {
+            else if (message.contains(Messages.QUIT.toString())) {
                 int playerNumber = Character.getNumericValue(message.charAt(0));
                 System.out.println("Player " + playerNumber + " left game.");
             } else {
-                System.out.println(message);
-
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
-                int playerNumber = converter.getPlayerNumber();
-                Player player = game.getBoard().getPlayer(playerNumber);
-
-                player.addSelectedCard(card);
-
-                if (allPlayersHaveSelectedCards()) {
+                Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
+                if (!allPlayersHaveReceivedCards() && !haveSelectedCards) {
+                    player.addDealtCard(card);
+                    System.out.println(allPlayersHaveReceivedCards());
+                    System.out.println("Added dealt card ");
+                } else {
+                    System.out.println("Done receiving dealt cards");
                     for (Player play : game.getBoard().getPlayers()) {
-                        System.out.println("Player " + play.getPlayerNr() + " " + play.getSelectedCards());
+                        System.out.println("Player " + play.getPlayerNr() + " "+play.getSelectedCards());
                     }
-
-                    startDoTurn();
-                    waitForDoTurnToFinish();
+                    player.addSelectedCard(card);
+                    if (allPlayersHaveSelectedCards()) {
+                        startDoTurn();
+                        waitForDoTurnToFinish();
+                    }
                 }
-
             }
         }
+    }
+
+    public void haveSelectedCards() {
+        haveSelectedCards = true;
     }
 
     /**
@@ -119,6 +123,20 @@ public class GameClientThread extends Thread {
     public boolean allPlayersHaveSelectedCards() {
         for (Player player : game.getBoard().getPlayers()) {
             if (player.getSelectedCards().size() < 5) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     *
+     * @return true if all players have got their cards.
+     */
+    public boolean allPlayersHaveReceivedCards() {
+        for (Player player : game.getBoard().getPlayers()) {
+            if (player.getAllCards().size() < 9) {
+                System.out.println("Player " + player.getPlayerNr() + " has " + player.getAllCards().size() + " dealt cards.");
                 return false;
             }
         }

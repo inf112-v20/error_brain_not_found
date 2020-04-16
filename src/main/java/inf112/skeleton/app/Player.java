@@ -51,17 +51,13 @@ public class Player {
     }
 
     /**
-     * Prompt user to choose a program for the robot.
+     * Add a card to players card so player can select them
+     * @param card to add
      */
-    public void selectCardsViaTerminal() {
-        while (selectedCards.size() < 5) {
-            System.out.println("Input number from 1 to "+ (allCards.size() -1) + " to select your cards:");
-            System.out.println(allCards);
-            Scanner scanner = new Scanner(System.in);
-            System.out.println("Cards chosen "+ selectedCards.size());
-            selectedCards.add(allCards.remove(scanner.nextInt()));
+    public void addDealtCard(ProgramCard card) {
+        if (allCards.size() < 9) {
+            allCards.add(card);
         }
-        System.out.print("Your program is: " + selectedCards);
     }
 
     /**

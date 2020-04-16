@@ -17,6 +17,7 @@ public class GameServer {
 
     private ArrayList<GameServerThreads> clients;
     private RallyGame game;
+    private boolean allClientsConnected;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
@@ -45,11 +46,19 @@ public class GameServer {
                 clients.add(client);
                 connected++;
             }
+            allClientsConnected = true;
             System.out.println("Connected! :D");
             serverSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * @return true if all clients have connected to server
+     */
+    public boolean allClientsAreConnected() {
+        return allClientsConnected;
     }
 
     /**
@@ -135,11 +144,9 @@ public class GameServer {
      */
     public void sendDealtCardsToAll() {
         for (GameServerThreads client : clients) {
-            client.sendMessage(Messages.DEAL_CARDS_BEGIN.toString());
             for (Player player : game.getBoard().getPlayers()) {
                 client.sendDealtCards(player);
             }
-            client.sendMessage(Messages.DEAL_CARDS_END.toString());
         }
     }
 
