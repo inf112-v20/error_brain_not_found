@@ -80,25 +80,20 @@ public class GameClientThread extends Thread {
             } else if (message.equals(Messages.DECK_BEGIN.toString())) {
                 stack = new Stack<>();
                 receivingDeck = true;
-                System.out.println("Begin stack");
             } else if (message.equals(Messages.DECK_END.toString())){
                 receivingDeck = false;
                 game.setDeck(stack);
-                System.out.println("Done deck.");
-                System.out.println("I am player "+ myPlayerNumber);
+                System.out.println("Received deck.");
             } else if (receivingDeck) {
                 ProgramCard card = converter.convertToCard(message);
                 stack.add(card);
             } else if (message.equals(Messages.START_TURN.toString())) {
-                System.out.println("Starting turn");
                 startDoTurn();
-                waitForDoTurnToFinish();
+                waitForTurnToFinish();
             } else {
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                 Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
-                System.out.println(message + " from server");
                 player.addSelectedCard(card);
-                System.out.println("Added " + card + " to player " + player.getPlayerNr());
             }
         }
     }
@@ -106,7 +101,7 @@ public class GameClientThread extends Thread {
     /**
      * Wait for doTurn to realease in game.
      */
-    private void waitForDoTurnToFinish() {
+    private void waitForTurnToFinish() {
         try {
             continueListening.acquire();
         } catch (InterruptedException e) {
@@ -126,20 +121,6 @@ public class GameClientThread extends Thread {
      */
     public void continueListening() {
         continueListening.release();
-    }
-
-    /**
-     *
-     * @return true if all players have selected their cards.
-     */
-    public boolean allPlayersHaveSelectedCards() {
-        for (Player player : game.getBoard().getPlayers()) {
-            System.out.println("Player " + player.getPlayerNr() + " " + player.getSelectedCards());
-            if (player.getSelectedCards().size() < 5) {
-                return false;
-            }
-        }
-        return true;
     }
 
     /**

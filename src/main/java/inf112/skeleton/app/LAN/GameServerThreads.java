@@ -53,8 +53,7 @@ public class GameServerThreads extends Thread {
             // Let the player know what the playernumber is
             sendMessage(this.playerNumber+"");
             sendMessage(this.numberOfPlayers+"");
-
-            server.haveSentInitialValues();
+            server.haveSentPlayerNumberAndNumberOfPlayers();
 
             while (true) {
                 String message = reader.readLine();
@@ -74,7 +73,6 @@ public class GameServerThreads extends Thread {
                 }
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                 Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
-                System.out.println(playerNumber + " have sent " + card);
                 addSelectedCard(player, card);
                 if (allPlayersHaveSelectedCards()) {
                     server.sendSelectedCardsToAll();

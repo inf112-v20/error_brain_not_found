@@ -25,14 +25,14 @@ public class GameServer {
     private boolean allClientsConnected;
     private Converter converter;
     private Deck deck;
-    private Semaphore haveSentInitialValues;
+    private Semaphore haveSentPlayerNumberAndNumberOfPlayers;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
         this.game = game;
         this.converter = new Converter();
-        this.haveSentInitialValues = new Semaphore(1);
-        haveSentInitialValues.tryAcquire();
+        this.haveSentPlayerNumberAndNumberOfPlayers = new Semaphore(1);
+        haveSentPlayerNumberAndNumberOfPlayers.tryAcquire();
         this.deck = new Deck();
         deck.shuffleDeck();
     }
@@ -64,11 +64,10 @@ public class GameServer {
             serverSocket.close();
             // Give all connected players deck
             try {
-                haveSentInitialValues.acquire();
+                haveSentPlayerNumberAndNumberOfPlayers.acquire();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("Dealing deck");
             game.setDeck(deck.getDeck());
             sendDeckToAll(deck);
             System.out.println("Done dealing deck.");
@@ -81,8 +80,8 @@ public class GameServer {
      * Let server know that playernumber and numberofplayers have been sent,
      * so deck now can be sent.
      */
-    public void haveSentInitialValues() {
-        haveSentInitialValues.release();
+    public void haveSentPlayerNumberAndNumberOfPlayers() {
+        haveSentPlayerNumberAndNumberOfPlayers.release();
     }
 
     /**

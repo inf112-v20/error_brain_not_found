@@ -114,6 +114,14 @@ public class RallyGame extends Game {
        // selectCards();
     }
 
+    /**
+     * Try to establish a connection with host IP on port portNumber. If no connection
+     * can be made because no host is found, your computer hosts on localhost so other
+     * players can connect to your computer.
+     *
+     * @param hostIP IP to connect to
+     * @param portNumber to establish connection with
+     */
     public void setUpConnection(String hostIP, int portNumber) {
         // Try to create a client socket.
         try {
@@ -128,6 +136,7 @@ public class RallyGame extends Game {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            System.out.println("I am player " + myPlayerNumber);
         } catch (UnknownHostException e) {
             System.out.println("Did not find host.");
         } catch (IOException e) {
@@ -273,17 +282,14 @@ public class RallyGame extends Game {
         // TODO: Spiller skyter
         // TODO: Laser skyter
         while (playing) {
-            System.out.println("Starting turn in game");
             try {
                 waitForCards.acquire();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            System.out.println("Waited for cards");
             if (Thread.interrupted()) {
                 return;
             }
-            System.out.print("Starting rounds");
             for (int i = 0; i < 5; i++) {
                 System.out.println("Runde " + (i + 1));
                 allPlayersPlayCard();
