@@ -23,11 +23,14 @@ public class GameServer {
     private RallyGame game;
     private boolean allClientsConnected;
     private Converter converter;
+    private Deck deck;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
         this.game = game;
         this.converter = new Converter();
+        this.deck = new Deck();
+        deck.shuffleDeck();
     }
 
     /**
@@ -55,6 +58,11 @@ public class GameServer {
             allClientsConnected = true;
             System.out.println("Connected! :D");
             serverSocket.close();
+            // Give all connected players deck
+            System.out.println("Dealing deck");
+            game.setDeck(deck.getDeck());
+            sendDeckToAll(deck);
+            System.out.println("Done dealing deck.");
         } catch (IOException e) {
             e.printStackTrace();
         }

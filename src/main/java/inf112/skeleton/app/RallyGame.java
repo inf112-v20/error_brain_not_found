@@ -88,24 +88,23 @@ public class RallyGame extends Game {
      */
     public void setupGame(String mapPath) {
 
+        this.deck = new Deck();
+
         setUpConnection();
 
         this.board = new Board(mapPath, this.numberOfPlayers);
-        this.deck = new Deck();
         this.players = new ArrayList<>();
         this.players = board.getPlayers();
         this.mainPlayer = board.getPlayer(this.myPlayerNumber);
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
         this.playing = true;
-
         this.converter = new Converter();
-
         this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
-
         new Thread(this::doTurn).start();
 
         setInputProcessor();
+
         //dealCards();
        // selectCards();
     }
