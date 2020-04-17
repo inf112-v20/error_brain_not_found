@@ -175,9 +175,9 @@ public class GameServer {
      * @param deck to send
      */
     public void sendDeckToAll(Deck deck) {
-        Stack stack = deck.getDeck();
-        Iterator iter = stack.iterator();
         for (GameServerThreads client : clients) {
+            Stack<ProgramCard> stack = deck.getDeck();
+            Iterator iter = stack.iterator();
             client.sendMessage(Messages.DECK_BEGIN.toString());
             while (iter.hasNext()) {
                 ProgramCard card = (ProgramCard) iter.next();
