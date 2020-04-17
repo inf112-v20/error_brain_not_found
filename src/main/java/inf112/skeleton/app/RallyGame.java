@@ -43,7 +43,7 @@ public class RallyGame extends Game {
     private GameClientThread client;
     private ProgramCard card;
     private Converter converter;
-    private Semaphore waitForInitializeValues;
+    private Semaphore waitForServerToSendPlayernumberAndNumberOfPlayers;
 
     public static float volume = 0.2f;
     public boolean unMute = true;
@@ -52,8 +52,8 @@ public class RallyGame extends Game {
         //TODO: Delete LoadingScreen if not used
         this.setScreen(new MenuScreen(this));
         startMusic();
-        this.waitForInitializeValues = new Semaphore(1);
-        this.waitForInitializeValues.tryAcquire();
+        this.waitForServerToSendPlayernumberAndNumberOfPlayers = new Semaphore(1);
+        this.waitForServerToSendPlayernumberAndNumberOfPlayers.tryAcquire();
     }
 
     /**
@@ -90,11 +90,11 @@ public class RallyGame extends Game {
 
         this.deck = new Deck();
 
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("What is host IP? ");
-        String hostIP = scanner.nextLine();
-        System.out.println("What is portNumber?");
-        int portNumber = scanner.nextInt();
+        //Scanner scanner = new Scanner(System.in);
+        //System.out.println("What is host IP? ");
+        String hostIP = "localhost"; //scanner.nextLine();
+        //System.out.println("What is portNumber?");
+        int portNumber = 9000; //scanner.nextInt();
         setUpConnection(hostIP, portNumber);
 
         this.board = new Board(mapPath, this.numberOfPlayers);
@@ -124,7 +124,7 @@ public class RallyGame extends Game {
             this.client = new GameClientThread(this, clientSocket);
             client.start();
             try {
-                waitForInitializeValues.acquire();
+                waitForServerToSendPlayernumberAndNumberOfPlayers.acquire();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -187,11 +187,7 @@ public class RallyGame extends Game {
                 }
                 else if (keycode == Input.Keys.S) {
                     dealCards();
-                    if (mainPlayer.getAllCards().size() >= 9) {
-                        mainPlayer.selectCards();
-                    } else {
-                        System.out.println("Need to get cards first.");
-                    }
+                    mainPlayer.selectCards();
                     System.out.println("Your program is: " + mainPlayer.getSelectedCards());
                     sendSelectedCards();
                 }
@@ -215,10 +211,10 @@ public class RallyGame extends Game {
     }
 
     /**
-     * Wait for server to send playernumber and number of players
+     * Tell game that client have received init values to start game.
      */
-    public void gotInitializedValues() {
-        waitForInitializeValues.release();
+    public void gotPlayerNumberAndNumberOfPlayers() {
+        waitForServerToSendPlayernumberAndNumberOfPlayers.release();
     }
 
     /**
@@ -277,14 +273,17 @@ public class RallyGame extends Game {
         // TODO: Spiller skyter
         // TODO: Laser skyter
         while (playing) {
+            System.out.println("Starting turn in game");
             try {
                 waitForCards.acquire();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            System.out.println("Waited for cards");
             if (Thread.interrupted()) {
                 return;
             }
+            System.out.print("Starting rounds");
             for (int i = 0; i < 5; i++) {
                 System.out.println("Runde " + (i + 1));
                 allPlayersPlayCard();

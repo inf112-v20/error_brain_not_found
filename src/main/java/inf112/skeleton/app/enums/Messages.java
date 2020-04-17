@@ -5,5 +5,6 @@ public enum Messages {
     HOST_LEAVES,
     DECK_BEGIN,
     DECK_END,
-    CLOSED;
+    CLOSED,
+    START_TURN;
 }

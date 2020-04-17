@@ -74,9 +74,11 @@ public class GameServerThreads extends Thread {
                 }
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                 Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
+                System.out.println(playerNumber + " have sent " + card);
                 addSelectedCard(player, card);
                 if (allPlayersHaveSelectedCards()) {
                     server.sendSelectedCardsToAll();
+                    server.sendToAll(Messages.START_TURN.toString());
                     startDoTurn();
                     waitForDoTurnToFinish();
                 }
@@ -127,16 +129,6 @@ public class GameServerThreads extends Thread {
     }
 
     /**
-     * Send given players dealt cards to this client
-     * @param player
-     */
-    public void sendDealtCards(Player player) {
-        for (ProgramCard card : player.getAllCards()) {
-            sendMessage(converter.convertToString(player.getPlayerNr(), card));
-        }
-    }
-
-    /**
      *
      * @return true if all players have selected their cards.
      */
@@ -156,6 +148,7 @@ public class GameServerThreads extends Thread {
     public void sendSelectedCards(Player player) {
         for (ProgramCard card : player.getSelectedCards()) {
             sendMessage(converter.convertToString(player.getPlayerNr(), card));
+            System.out.println("Server sent " + card + " to " + player.getPlayerNr());
         }
     }
 

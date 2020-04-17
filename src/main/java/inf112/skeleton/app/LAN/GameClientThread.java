@@ -55,17 +55,16 @@ public class GameClientThread extends Thread {
      */
     @Override
     public void run() {
-        // Get playernum and numberOfPlayers
+        // Get playernum and numberOfPlayers from server
         this.myPlayerNumber = Integer.parseInt(getMessage());
         this.numberOfPlayers = Integer.parseInt(getMessage());
         game.setPlayerNumber(myPlayerNumber);
         game.setNumberOfPlayers(numberOfPlayers);
-
-        game.gotInitializedValues();
-
+        game.gotPlayerNumberAndNumberOfPlayers();
 
         while (true) {
             String message = getMessage();
+            System.out.println(message);
             if (message == null) {
                 break;
             }
@@ -86,19 +85,20 @@ public class GameClientThread extends Thread {
                 receivingDeck = false;
                 game.setDeck(stack);
                 System.out.println("Done deck.");
+                System.out.println("I am player "+ myPlayerNumber);
             } else if (receivingDeck) {
                 ProgramCard card = converter.convertToCard(message);
                 stack.add(card);
-                System.out.println("Added to stack");
+            } else if (message.equals(Messages.START_TURN.toString())) {
+                System.out.println("Starting turn");
+                startDoTurn();
+                waitForDoTurnToFinish();
             } else {
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                 Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
-                if (allPlayersHaveSelectedCards()) {
-                    startDoTurn();
-                    waitForDoTurnToFinish();
-                } else {
-                    player.addSelectedCard(card);
-                }
+                System.out.println(message + " from server");
+                player.addSelectedCard(card);
+                System.out.println("Added " + card + " to player " + player.getPlayerNr());
             }
         }
     }
@@ -134,6 +134,7 @@ public class GameClientThread extends Thread {
      */
     public boolean allPlayersHaveSelectedCards() {
         for (Player player : game.getBoard().getPlayers()) {
+            System.out.println("Player " + player.getPlayerNr() + " " + player.getSelectedCards());
             if (player.getSelectedCards().size() < 5) {
                 return false;
             }
