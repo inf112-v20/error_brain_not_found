@@ -3,8 +3,8 @@ package inf112.skeleton.app.LAN;
 import inf112.skeleton.app.RallyGame;
 
 /**
- * Make a new thread to make server connect to clients so that game.create()
- * can finish, and the menu-screen is shown.
+ * Make a new thread to make server connect to clients so that game.setUo()
+ * can finish, and the game-screen is shown.
  * @author  Jenny
  */
 public class ServerThread extends Thread {
@@ -12,10 +12,12 @@ public class ServerThread extends Thread {
     private int numberOfPlayers;
     private GameServer server;
     private RallyGame game;
+    private int portNumber;
 
-    public ServerThread(RallyGame game, int numberOfPlayers) {
+    public ServerThread(RallyGame game, int numberOfPlayers, int portNumber) {
         this.numberOfPlayers = numberOfPlayers;
         this.game = game;
+        this.portNumber = portNumber;
     }
 
     /**
@@ -24,7 +26,7 @@ public class ServerThread extends Thread {
     public void run(){
         this.server = new GameServer(game);
         int numberOfClients = this.numberOfPlayers-1;
-        server.connect(9000, numberOfClients);
+        server.connect(portNumber, numberOfClients);
     }
 
     /**

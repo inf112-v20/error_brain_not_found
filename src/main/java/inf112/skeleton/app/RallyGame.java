@@ -90,7 +90,12 @@ public class RallyGame extends Game {
 
         this.deck = new Deck();
 
-        setUpConnection();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("What is host IP? ");
+        String hostIP = scanner.nextLine();
+        System.out.println("What is portNumber?");
+        int portNumber = scanner.nextInt();
+        setUpConnection(hostIP, portNumber);
 
         this.board = new Board(mapPath, this.numberOfPlayers);
         this.players = new ArrayList<>();
@@ -109,11 +114,11 @@ public class RallyGame extends Game {
        // selectCards();
     }
 
-    public void setUpConnection() {
+    public void setUpConnection(String hostIP, int portNumber) {
         // Try to create a client socket.
         try {
-            Socket clientSocket = new Socket("localhost", 9000);
-            System.out.println("I am a client :)");
+            Socket clientSocket = new Socket(hostIP, portNumber);
+            System.out.println("I am a client, connected to " + hostIP + " port " + portNumber);
 
             // Create new thread for speaking to server
             this.client = new GameClientThread(this, clientSocket);
@@ -132,7 +137,7 @@ public class RallyGame extends Game {
             Scanner scanner = new Scanner(System.in);
             //TODO: Create check for number
             this.numberOfPlayers = scanner.nextInt();
-            this.serverThread = new ServerThread(this, this.numberOfPlayers);
+            this.serverThread = new ServerThread(this, this.numberOfPlayers, portNumber);
             serverThread.start();
             }
     }
