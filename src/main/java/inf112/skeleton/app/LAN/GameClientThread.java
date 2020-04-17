@@ -31,8 +31,8 @@ public class GameClientThread extends Thread {
     private RallyGame game;
     private Converter converter;
     private Semaphore continueListening;
-    private boolean receivedCards;
     private Stack<ProgramCard> stack;
+    private boolean receivingDeck;
 
     public GameClientThread(RallyGame game, Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -55,7 +55,6 @@ public class GameClientThread extends Thread {
      */
     @Override
     public void run() {
-
         // Get playernum and numberOfPlayers
         this.myPlayerNumber = Integer.parseInt(getMessage());
         this.numberOfPlayers = Integer.parseInt(getMessage());
@@ -64,8 +63,8 @@ public class GameClientThread extends Thread {
 
         game.gotInitializedValues();
 
-        while (true) {
 
+        while (true) {
             String message = getMessage();
             if (message == null) {
                 break;
@@ -79,22 +78,22 @@ public class GameClientThread extends Thread {
             else if (message.contains(Messages.QUIT.toString())) {
                 int playerNumber = Character.getNumericValue(message.charAt(0));
                 System.out.println("Player " + playerNumber + " left game.");
-            }
-            else if (message.equals(Messages.DECK_BEGIN.toString())) {
-                    receivedCards = false;
-                    stack = new Stack<>();
-            }
-            else if (message.equals(Messages.DECK_END.toString())) {
-                    receivedCards = true;
-                    game.setDeck(stack);
-            }
-            else if (!receivedCards) {
+            } else if (message.equals(Messages.DECK_BEGIN.toString())) {
+                stack = new Stack<>();
+                receivingDeck = true;
+                System.out.println("Begin stack");
+            } else if (message.equals(Messages.DECK_END.toString())){
+                receivingDeck = false;
+                game.setDeck(stack);
+                System.out.println("Done deck.");
+            } else if (receivingDeck) {
                 ProgramCard card = converter.convertToCard(message);
                 stack.add(card);
+                System.out.println("Added to stack");
             } else {
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                 Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
-                if (allPlayersHaveSelectedCards()){
+                if (allPlayersHaveSelectedCards()) {
                     startDoTurn();
                     waitForDoTurnToFinish();
                 } else {

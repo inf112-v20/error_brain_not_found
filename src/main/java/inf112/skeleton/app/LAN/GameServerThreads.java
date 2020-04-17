@@ -54,6 +54,8 @@ public class GameServerThreads extends Thread {
             sendMessage(this.playerNumber+"");
             sendMessage(this.numberOfPlayers+"");
 
+            server.haveSentInitialValues();
+
             while (true) {
                 String message = reader.readLine();
                 if (message == null) {

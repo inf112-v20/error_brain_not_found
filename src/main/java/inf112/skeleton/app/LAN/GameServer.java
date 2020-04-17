@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Stack;
+import java.util.concurrent.Semaphore;
 
 /**
  * A server for handling connection between players.
@@ -24,11 +25,14 @@ public class GameServer {
     private boolean allClientsConnected;
     private Converter converter;
     private Deck deck;
+    private Semaphore haveSentInitialValues;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
         this.game = game;
         this.converter = new Converter();
+        this.haveSentInitialValues = new Semaphore(1);
+        haveSentInitialValues.tryAcquire();
         this.deck = new Deck();
         deck.shuffleDeck();
     }
@@ -59,6 +63,11 @@ public class GameServer {
             System.out.println("Connected! :D");
             serverSocket.close();
             // Give all connected players deck
+            try {
+                haveSentInitialValues.acquire();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             System.out.println("Dealing deck");
             game.setDeck(deck.getDeck());
             sendDeckToAll(deck);
@@ -66,6 +75,14 @@ public class GameServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Let server know that playernumber and numberofplayers have been sent,
+     * so deck now can be sent.
+     */
+    public void haveSentInitialValues() {
+        haveSentInitialValues.release();
     }
 
     /**
