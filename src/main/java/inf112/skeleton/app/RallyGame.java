@@ -124,7 +124,6 @@ public class RallyGame extends Game {
         5. Clean up any end-of-turn effects
         */
         while (playing) {
-            // Deal the Program cards.
             try {
                 waitForCards.acquire();
             } catch (InterruptedException e) {
@@ -171,6 +170,9 @@ public class RallyGame extends Game {
                 removeDeadPlayers();
                 sleep(1000);
             }
+            respawnPlayers();
+            removeDeadPlayers();
+            discardCards();
             dealCards();
         }
     }
@@ -187,6 +189,16 @@ public class RallyGame extends Game {
         }
     }
 
+    public void dealCards() {
+        for (Player player : players) {
+            player.drawCards(deck);
+        }
+    }
+
+    public void discardCards() {
+        mainPlayer.discardAllCards(deck);
+    }
+
     /**
      * Decrease lifetokens to each player that has collected 10 damagetokens.
      * Reset damagetokens and respawn player.
@@ -201,21 +213,22 @@ public class RallyGame extends Game {
         }
     }
 
-    public void dealCards() {
-        for (Player player : players) {
-            player.drawCards(deck);
-        }
-    }
-
     public void removeDeadPlayers() {
-        ArrayList<Player> deadPlayers = new ArrayList<>();
         for (Player player : players) {
             if (player.isDead()) {
                 board.removePlayerFromBoard(player);
-                deadPlayers.add(player);
             }
         }
-        players.removeAll(deadPlayers);
+    }
+
+    public void respawnPlayers() {
+        for (Player player : players) {
+            if (board.outsideBoard(player) || player.getDamageTokens() == 10) {
+                player.decrementLifeTokens();
+                player.resetDamageTokens();
+                board.respawn(player);
+            }
+        }
     }
 
     public void allPlayersPlayCard() {
@@ -226,7 +239,9 @@ public class RallyGame extends Game {
         for (Player player : playerOrder) {
             playCard(player);
             // Wait 1 second for each player
-            sleep(1000);
+            sleep(500);
+            removeDeadPlayers();
+            sleep(500);
         }
     }
 
@@ -379,7 +394,10 @@ public class RallyGame extends Game {
     }
 
     public void dispose() {
-        this.screen.dispose();
+        gameMusic.dispose();
+        laserSound.dispose();
+        board.dispose();
+        screen.dispose();
     }
 
     public Board getBoard() {

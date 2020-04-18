@@ -222,15 +222,6 @@ public class Board extends BoardLayers {
         addPlayer(player);
     }
 
-    public void respawnPlayers() {
-        for (Player player : players) {
-            if (outsideBoard(player)) {
-                player.decrementLifeTokens();
-                respawn(player);
-            }
-        }
-    }
-
     public boolean validRespawnPosition(Vector2 position, Direction direction) {
         Vector2 currPos = position;
         for (int step = 0; step < 3; step++) {
@@ -467,6 +458,15 @@ public class Board extends BoardLayers {
         return neighbourPosition;
     }
 
+    public void respawnPlayers() {
+        for (Player player : players) {
+            if (outsideBoard(player)) {
+                player.decrementLifeTokens();
+                respawn(player);
+            }
+        }
+    }
+
     public boolean hasPlayer(Vector2 position) {
         for (Player enemyPlayer : players) {
             if (enemyPlayer.getPosition().equals(position)) {
@@ -617,5 +617,11 @@ public class Board extends BoardLayers {
     @Override
     public TiledMap getMap() {
         return tiledMap;
+    }
+
+    public void dispose() {
+        wallImpact.dispose();
+        scream.dispose();
+        tiledMap.dispose();
     }
 }

@@ -89,6 +89,10 @@ public class Player {
     public void setBeltPushPos(Vector2 position) {
         this.beltPushPos = position;
     }
+    public void discardAllCards(Deck deck) {
+        deck.addCardsToDiscardPile(allCards);
+        allCards.clear();
+    }
 
     /**
      * a int on how many damageTokens
@@ -290,6 +294,6 @@ public class Player {
     }
 
     public String toString() {
-        return "player " + getPlayerNr();
+        return "Player " + getPlayerNr();
     }
 }
