@@ -56,7 +56,7 @@ public abstract class BoardLayers {
         this.expressBelts = new ArrayList<>();
 
         findFlags();
-        findRotatePadsAndHolesAndBelts();
+        findPadsHolesBelts();
         findLasers();
     }
 
@@ -68,7 +68,7 @@ public abstract class BoardLayers {
      * For better runtime the method finds the {@link RotatePad}'s, holes and {@link Belt}'s these are all on the same
      * layer. Could have been three different methods but then the run time would have been three times higher.
      */
-    public void findRotatePadsAndHolesAndBelts() {
+    public void findPadsHolesBelts() {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);

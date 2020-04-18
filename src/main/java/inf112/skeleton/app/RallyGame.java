@@ -371,9 +371,9 @@ public class RallyGame extends Game {
     }
 
     public void setPlayerDirectionAfterBeltPush(Player player, Direction beltDirection, Direction turnRight, Direction leftTurn) {
-        if (beltDirection == turnRight) {
+        if (beltDirection.equals(turnRight)) {
             player.setDirection(player.getDirection().turnRight());
-        } else if (beltDirection == leftTurn) {
+        } else if (beltDirection.equals(leftTurn)) {
             player.setDirection(player.getDirection().turnLeft());
         }
     }
