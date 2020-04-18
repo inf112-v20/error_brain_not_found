@@ -1,4 +1,4 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.board;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -10,6 +10,7 @@ import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.TileID;
 import inf112.skeleton.app.objects.Flag;
+import inf112.skeleton.app.objects.player.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -171,7 +172,7 @@ public class Board extends BoardLayers {
     public boolean hasHole(Vector2 position) {
         for (Vector2 vector : holes) {
             if (vector.equals(position)) {
-                scream.play(RallyGame.volume);
+                scream.play(0.2f);
                 return true;
             }
         }
@@ -207,15 +208,6 @@ public class Board extends BoardLayers {
             player.setDirection(player.getBackupDirection());
         }
         addPlayer(player);
-    }
-
-    public void respawnPlayers() {
-        for (Player player : players) {
-            if (outsideBoard(player)) {
-                player.decrementLifeTokens();
-                respawn(player);
-            }
-        }
     }
 
     public boolean validRespawnPosition(Vector2 position, Direction direction) {
@@ -370,7 +362,7 @@ public class Board extends BoardLayers {
         Direction direction = player.getDirection();
 
         if (!canGo(position, direction)) {
-            wallImpact.play(RallyGame.volume - 0.1f);
+            wallImpact.play(0.2f);
             addPlayer(player);
             return;
         }
@@ -449,6 +441,15 @@ public class Board extends BoardLayers {
                 break;
         }
         return neighbourPosition;
+    }
+
+    public void respawnPlayers() {
+        for (Player player : players) {
+            if (outsideBoard(player)) {
+                player.decrementLifeTokens();
+                respawn(player);
+            }
+        }
     }
 
     public boolean hasPlayer(Vector2 position) {
@@ -600,5 +601,11 @@ public class Board extends BoardLayers {
     @Override
     public TiledMap getMap() {
         return tiledMap;
+    }
+
+    public void dispose() {
+        wallImpact.dispose();
+        scream.dispose();
+        tiledMap.dispose();
     }
 }

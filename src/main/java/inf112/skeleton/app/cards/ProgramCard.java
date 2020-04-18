@@ -20,6 +20,8 @@ public class ProgramCard {
         return priority;
     }
 
+
+
     public int getDistance() {
         return distance;
     }
@@ -31,4 +33,6 @@ public class ProgramCard {
     public String toString() {
         return name + ": " + priority;
     }
+
+    public String getName(){return name;}
 }

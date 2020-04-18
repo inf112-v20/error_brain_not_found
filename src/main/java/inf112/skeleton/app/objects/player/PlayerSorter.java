@@ -1,4 +1,4 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.objects.player;
 
 import java.util.Comparator;
 

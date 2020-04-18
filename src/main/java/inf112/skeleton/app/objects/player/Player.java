@@ -1,7 +1,8 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.objects.player;
 
 
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
@@ -45,8 +46,15 @@ public class Player {
     }
 
     public ArrayList<ProgramCard> getSelectedCards() {
-        System.out.println(selectedCards);
         return selectedCards;
+    }
+
+    public void selectCard(ProgramCard card) {
+        if (!selectedCards.contains(card) && selectedCards.size() < 5) {
+            selectedCards.add(card);
+        } else {
+            selectedCards.remove(card);
+        }
     }
 
     public void selectCards() {
@@ -61,6 +69,11 @@ public class Player {
         }
     }
 
+    public void discardAllCards(Deck deck) {
+        deck.addCardsToDiscardPile(allCards);
+        allCards.clear();
+    }
+
     /**
      * a int on how many damageTokens
      *
@@ -70,8 +83,8 @@ public class Player {
         return damageTokens;
     }
 
-    public int resetDamageTokens() {
-        return this.damageTokens = 0;
+    public void resetDamageTokens() {
+        this.damageTokens = 0;
     }
 
     public int getLifeTokens() {
