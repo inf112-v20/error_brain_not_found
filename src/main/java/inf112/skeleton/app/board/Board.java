@@ -593,4 +593,10 @@ public class Board extends BoardLayers {
     public TiledMap getMap() {
         return tiledMap;
     }
+
+    public void dispose() {
+        wallImpact.dispose();
+        scream.dispose();
+        tiledMap.dispose();
+    }
 }

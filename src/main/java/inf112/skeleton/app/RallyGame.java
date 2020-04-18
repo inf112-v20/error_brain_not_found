@@ -275,6 +275,13 @@ public class RallyGame extends Game {
         }
     }
 
+    public void dispose() {
+        gameMusic.dispose();
+        laserSound.dispose();
+        board.dispose();
+        screen.dispose();
+    }
+
     public Board getBoard() {
         return this.board;
     }
