@@ -10,7 +10,6 @@ import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
-import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.objects.Belt;
 import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.Player.Player;
@@ -118,6 +117,11 @@ public class RallyGame extends Game {
                 A. Reveal Program Cards
                 B. Robots Move
                 C. board Elements Move (Gears, Express belt, normal belt)
+                    1. Express conveyor belts move 1 space in the direction of the arrows.
+                    2. Express conveyor belts and normal conveyor belts move 1 space in the
+                       direction of the arrows.
+                    3. Pushers push if active.
+                    4. Gears rotate 90° in the direction of the arrows.
                 D. Lasers Fire (Player, then board)
                 E. Touch Checkpoints (Flag, Repair)
         5. Clean up any end-of-turn effects
@@ -134,21 +138,39 @@ public class RallyGame extends Game {
             for (int i = 0; i < 5; i++) {
 
                 System.out.println("Runde " + (i + 1));
+
+                // All players play one card in the correct order
                 allPlayersPlayCard();
-                sleep(500);
-                activateRotatePads();
                 sleep(250);
+
+                // Express belts move 1
                 activateBelts(true);
                 sleep(250);
+
+                // All belts move 1
                 activateBelts(false);
                 sleep(500);
+
+                // Rotate pads rotate
+                activateRotatePads();
+                sleep(500);
+
+                // Fire lasers for 250 ms
                 fireLasers();
-                sleep(300);
+                sleep(250);
                 removeLasers();
+                sleep(250);
+
+                removeDeadPlayers();
                 sleep(1000);
             }
-            removeDeadPlayers();
             dealCards();
+        }
+    }
+
+    private void pickUpFlags() {
+        for (Player player : players) {
+            board.pickUpFlag(player);
         }
     }
 
@@ -172,11 +194,6 @@ public class RallyGame extends Game {
                 board.respawn(player);
             }
         }
-    }
-
-    public void selectCards() {
-       // for (Player player : players) { player.selectCards(); }
-
     }
 
     public void dealCards() {
@@ -261,35 +278,14 @@ public class RallyGame extends Game {
 
     public void activateRotatePads() {
         for (Player player : board.getPlayers()) {
-            for (RotatePad rotatePad : board.rotatePads) {
+            for (RotatePad pad : board.rotatePads) {
                 Vector2 playerPosition = player.getPosition();
-                Vector2 rotePadPosition = rotatePad.getPosition();
+                Vector2 padPosition = pad.getPosition();
 
-                if (playerPosition.equals(rotePadPosition)) {
-                    Rotate rotateDirection = rotatePad.getRotate();
-                    Direction playerDirection = player.getDirection();
-
-                    switch (rotateDirection) {
-                        case LEFT:
-                            player.setDirection(playerDirection.turnLeft());
-                            board.addPlayer(player);
-                            break;
-                        case RIGHT:
-                            player.setDirection(playerDirection.turnRight());
-                            board.addPlayer(player);
-                            break;
-                        case UTURN:
-                            player.setDirection(playerDirection.turnAround());
-                            board.addPlayer(player);
-                            break;
-                        default:
-                            // Will never happen
-                    }
-                    try {
-                        Thread.sleep(600);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
+                if (playerPosition.equals(padPosition)) {
+                    pad.rotate(player);
+                    board.addPlayer(player);
+                    sleep(500);
                 }
             }
         }
@@ -302,32 +298,93 @@ public class RallyGame extends Game {
      * @param onlyExpress if true then the pool of belts should be set to expressBelts
      */
     public void activateBelts(boolean onlyExpress) {
-        ArrayList<Belt> belts;
-
-        if (onlyExpress){
-            belts = board.expressBelts;
-        } else {
-            belts = board.belts;
-        }
-
+        ArrayList<Belt> belts = onlyExpress ? board.expressBelts : board.belts;
         for (Player player : board.getPlayers()) {
-            for (Belt belt : belts){
-                Direction direction = belt.getDirection();
-
-                if (player.getPosition().equals(belt.getPosition())){
-
-                    if (belt.getRotation() == Rotate.LEFT){
-                        player.setDirection(player.getDirection().turnLeft());
-                        board.addPlayer(player);
-                    } else if (belt.getRotation() == Rotate.RIGHT) {
-                        player.setDirection(player.getDirection().turnRight());
-                        board.addPlayer(player);
-                    }
-                    board.movePlayer(player, direction);
-                    sleep(500);
+            for (Belt belt : belts) {
+                if (player.getPosition().equals(belt.getPosition())) {
+                    beltPush(player, belt);
                 }
             }
         }
+        validateBeltPushPos();
+        updateBoard();
+    }
+
+    private void updateBoard() {
+        board.removePlayersFromBoard();
+        updatePositionsAfterBeltPush();
+        board.updateBoard();
+    }
+
+    public void validateBeltPushPos() {
+        for (Player player : players) {
+            for (Player otherPlayer : players) {
+                if (!player.equals(otherPlayer) && player.getBeltPushPos().equals(otherPlayer.getBeltPushPos())) {
+                    player.setBeltPushPos(null);
+                    otherPlayer.setBeltPushPos(null);
+                }
+            }
+        }
+    }
+
+    public void updatePositionsAfterBeltPush() {
+        for (Player player : players) {
+            if (player.getBeltPushPos() != null) {
+                player.setPosition(player.getBeltPushPos());
+                player.setBeltPushPos(null);
+            }
+        }
+    }
+
+    public void beltPush(Player player, Belt belt) {
+        Direction lastPush = player.getBeltPushDir();
+        Direction beltDirection = belt.getDirection();
+        if (lastPush != null) {
+            switch (lastPush) {
+                case NORTH:
+                    switch (beltDirection) {
+                        case EAST:
+                            player.setDirection(player.getDirection().turnRight());
+                            break;
+                        case WEST:
+                            player.setDirection(player.getDirection().turnLeft());
+                            break;
+                    }
+                    break;
+                case SOUTH:
+                    switch (beltDirection) {
+                        case EAST:
+                            player.setDirection(player.getDirection().turnLeft());
+                            break;
+                        case WEST:
+                            player.setDirection(player.getDirection().turnRight());
+                            break;
+                    }
+                    break;
+                case EAST:
+                    switch (beltDirection) {
+                        case NORTH:
+                            player.setDirection(player.getDirection().turnLeft());
+                            break;
+                        case SOUTH:
+                            player.setDirection(player.getDirection().turnRight());
+                            break;
+                    }
+                    break;
+                case WEST:
+                    switch (beltDirection) {
+                        case NORTH:
+                            player.setDirection(player.getDirection().turnRight());
+                            break;
+                        case SOUTH:
+                            player.setDirection(player.getDirection().turnLeft());
+                            break;
+                    }
+                    break;
+            }
+        }
+        player.setBeltPushDir(beltDirection);
+        player.setBeltPushPos(board.getNeighbourPosition(player.getPosition(), beltDirection));
     }
 
     public void dispose() {

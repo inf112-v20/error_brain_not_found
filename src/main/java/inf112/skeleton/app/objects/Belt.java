@@ -43,5 +43,4 @@ public class Belt {
     public int getPower() {
         return power;
     }
-
 }

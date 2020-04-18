@@ -24,6 +24,8 @@ public class Player {
     private final ArrayList<Flag> flagsCollected;
     private ArrayList<ProgramCard> selectedCards;
     private final ArrayList<ProgramCard> allCards;
+    private Direction beltPushDir;
+    private Vector2 beltPushPos;
 
     private int damageTokens;
     private int lifeTokens;
@@ -37,6 +39,8 @@ public class Player {
         this.allCards = new ArrayList<>();
         this.damageTokens = 0;
         this.lifeTokens = 3;
+        this.beltPushDir = null;
+        this.beltPushPos = null;
 
         setBackup(position, Direction.EAST);
     }
@@ -69,7 +73,21 @@ public class Player {
         }
     }
 
-    //public boolean hasLockedCards(){ }
+    public Direction getBeltPushDir() {
+        return beltPushDir;
+    }
+
+    public void setBeltPushDir(Direction direction) {
+        this.beltPushDir = direction;
+    }
+
+    public Vector2 getBeltPushPos() {
+        return beltPushPos;
+    }
+
+    public void setBeltPushPos(Vector2 position) {
+        this.beltPushPos = position;
+    }
 
     /**
      * a int on how many damageTokens

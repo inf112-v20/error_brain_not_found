@@ -415,6 +415,46 @@ public class Board extends BoardLayers {
         }
     }
 
+    public void beltPush(Player player, Direction direction) {
+        Vector2 position = player.getPosition();
+
+        if (!canGo(position, direction)) {
+            return;
+        }
+
+        removePlayerFromBoard(player);
+
+        switch (direction) {
+            case NORTH:
+                position.y++;
+                break;
+            case EAST:
+                position.x++;
+                break;
+            case WEST:
+                position.x--;
+                break;
+            case SOUTH:
+                position.y--;
+                break;
+            default:
+                break;
+        }
+        player.setPosition(position);
+    }
+
+    public void updateBoard() {
+        for (Player player : players) {
+            addPlayer(player);
+        }
+    }
+
+    public void removePlayersFromBoard() {
+        for (Player player : players) {
+            removePlayerFromBoard(player);
+        }
+    }
+
     public ArrayList<Vector2> getNeighbourhood(Vector2 position) {
         ArrayList<Vector2> positions = new ArrayList<>();
         for (int yi = -1; yi <= 1; yi++) {
