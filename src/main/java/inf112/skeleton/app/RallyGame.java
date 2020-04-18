@@ -176,11 +176,7 @@ public class RallyGame extends Game {
     }
 
     private void pickUpFlags() {
-        for (Player player : players) {
-            if (board.hasFlag(player.getPosition())) {
-                board.pickUpFlag(player);
-            }
-        }
+        board.pickUpFlags();
     }
 
     private void sleep(int milliseconds) {

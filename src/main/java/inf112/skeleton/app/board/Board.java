@@ -196,6 +196,14 @@ public class Board extends BoardLayers {
                 position.y >= this.boardHeight;
     }
 
+    public void pickUpFlags() {
+        for (Player player : players) {
+            if (hasFlag(player.getPosition())) {
+                pickUpFlag(player);
+            }
+        }
+    }
+
     /**
      * Places a player in backup position or alternative position
      *
