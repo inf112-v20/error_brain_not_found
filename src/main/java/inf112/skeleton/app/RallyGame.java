@@ -127,6 +127,8 @@ public class RallyGame extends Game {
         5. Clean up any end-of-turn effects
         */
         while (playing) {
+            // Deal the Program cards.
+            dealCards();
             try {
                 waitForCards.acquire();
             } catch (InterruptedException e) {
@@ -149,22 +151,28 @@ public class RallyGame extends Game {
 
                 // All belts move 1
                 activateBelts(false);
-                sleep(500);
+                sleep(250);
 
                 // Rotate pads rotate
                 activateRotatePads();
+                sleep(250);
+
+                firePlayerLaser();
+                sleep(250);
+                removeLasers();
                 sleep(500);
 
                 // Fire lasers for 250 ms
                 fireLasers();
                 sleep(250);
                 removeLasers();
-                sleep(250);
+                sleep(500);
 
                 removeDeadPlayers();
                 sleep(1000);
+                System.out.println("Pos: " + mainPlayer.getPosition());
+                System.out.println("Dir: " + mainPlayer.getDirection());
             }
-            dealCards();
         }
     }
 
@@ -232,28 +240,26 @@ public class RallyGame extends Game {
         switch (card.getRotate()) {
             case RIGHT:
                 player.setDirection(player.getDirection().turnRight());
-                board.rotatePlayer(player);
                 break;
             case LEFT:
                 player.setDirection(player.getDirection().turnLeft());
-                board.rotatePlayer(player);
                 break;
             case UTURN:
                 player.setDirection(player.getDirection().turnAround());
-                board.rotatePlayer(player);
                 break;
             case NONE:
                 for (int i = 0; i < card.getDistance(); i++) {
                     board.movePlayer(player, null);
-                    // Wait 500 ms for each move except last one
+                    // Wait 300 ms for each move except last one
                     if (i < card.getDistance() - 1) {
-                        sleep(500);
+                        sleep(300);
                     }
                 }
                 break;
             default:
                 break;
         }
+        board.addPlayer(player);
         deck.addCardToDiscardPile(card);
     }
 
@@ -267,6 +273,13 @@ public class RallyGame extends Game {
                 board.laserLayer.setCell(x, y, null);
             }
         }
+    }
+
+    public void firePlayerLaser() {
+        for (Player player : players) {
+            player.fire(this);
+        }
+        laserSound.play(0.2f);
     }
 
     public void fireLasers() {

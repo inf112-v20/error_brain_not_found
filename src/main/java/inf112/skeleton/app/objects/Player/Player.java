@@ -2,6 +2,7 @@ package inf112.skeleton.app.objects.Player;
 
 
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
@@ -247,6 +248,19 @@ public class Player {
                 break;
             default:
                 break;
+        }
+    }
+
+    public void fire(RallyGame game) {
+        fire(game, game.board.getNeighbourPosition(position, direction));
+    }
+
+    public void fire(RallyGame game, Vector2 position) {
+        game.getBoard().addLaser(position, direction);
+        if (game.getBoard().hasPlayer(position)) {
+            game.getBoard().getPlayer(position).handleDamage();
+        } else if (game.getBoard().canFire(position, direction)) {
+            fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }
 

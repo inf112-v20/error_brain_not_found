@@ -185,11 +185,14 @@ public class Board extends BoardLayers {
      * @param player to check
      */
     public boolean outsideBoard(Player player) {
-        return player.getPosition().x < 0 ||
-                player.getPosition().x >= this.boardWidth ||
-                player.getPosition().y < 0 ||
-                player.getPosition().y >= this.boardHeight ||
-                hasHole(player.getPosition());
+        return outsideBoard(player.getPosition()) || hasHole(player.getPosition());
+    }
+
+    public boolean outsideBoard(Vector2 position) {
+        return position.x < 0 ||
+                position.x >= this.boardWidth ||
+                position.y < 0 ||
+                position.y >= this.boardHeight;
     }
 
     /**
@@ -246,6 +249,10 @@ public class Board extends BoardLayers {
             }
         }
         return null;
+    }
+
+    public boolean canFire(Vector2 position, Direction direction) {
+        return canGo(position, direction) && !outsideBoard(getNeighbourPosition(position, direction));
     }
 
     /**
@@ -347,16 +354,6 @@ public class Board extends BoardLayers {
         return false;
     }
 
-
-    /**
-     * Add player to the board, so the direction is correct
-     * @param player that should be rotated
-     *
-     */
-    public void rotatePlayer(Player player) {
-        addPlayer(player);
-    }
-
     /**
      * Check if it is possible to move in the direction the player are facing.
      * Check if player should and can push another player, if not return
@@ -409,38 +406,7 @@ public class Board extends BoardLayers {
 
         player.setPosition(position);
         addPlayer(player);
-
-        if (hasFlag(player.getPosition())) {
-            pickUpFlag(player);
-        }
-    }
-
-    public void beltPush(Player player, Direction direction) {
-        Vector2 position = player.getPosition();
-
-        if (!canGo(position, direction)) {
-            return;
-        }
-
-        removePlayerFromBoard(player);
-
-        switch (direction) {
-            case NORTH:
-                position.y++;
-                break;
-            case EAST:
-                position.x++;
-                break;
-            case WEST:
-                position.x--;
-                break;
-            case SOUTH:
-                position.y--;
-                break;
-            default:
-                break;
-        }
-        player.setPosition(position);
+        player.setBeltPushDir(null);
     }
 
     public void updateBoard() {
@@ -573,6 +539,7 @@ public class Board extends BoardLayers {
                 break;
         }
         addPlayer(player);
+        player.setBeltPushDir(null);
     }
 
     /**

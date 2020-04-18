@@ -22,7 +22,7 @@ public class Laser {
         game.getBoard().addLaser(position, direction);
         if (game.getBoard().hasPlayer(position)) {
             game.getBoard().getPlayer(position).handleDamage();
-        } else if (game.getBoard().canGo(position, this.direction)) {
+        } else if (game.getBoard().canFire(position, this.direction)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }
