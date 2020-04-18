@@ -351,49 +351,31 @@ public class RallyGame extends Game {
         if (lastPush != null) {
             switch (lastPush) {
                 case NORTH:
-                    switch (beltDirection) {
-                        case EAST:
-                            player.setDirection(player.getDirection().turnRight());
-                            break;
-                        case WEST:
-                            player.setDirection(player.getDirection().turnLeft());
-                            break;
-                    }
+                    setPlayerDirectionAfterBeltPush(player, beltDirection, Direction.EAST, Direction.WEST);
                     break;
                 case SOUTH:
-                    switch (beltDirection) {
-                        case EAST:
-                            player.setDirection(player.getDirection().turnLeft());
-                            break;
-                        case WEST:
-                            player.setDirection(player.getDirection().turnRight());
-                            break;
-                    }
+                    setPlayerDirectionAfterBeltPush(player, beltDirection, Direction.WEST, Direction.EAST);
                     break;
                 case EAST:
-                    switch (beltDirection) {
-                        case NORTH:
-                            player.setDirection(player.getDirection().turnLeft());
-                            break;
-                        case SOUTH:
-                            player.setDirection(player.getDirection().turnRight());
-                            break;
-                    }
+                    setPlayerDirectionAfterBeltPush(player, beltDirection, Direction.SOUTH, Direction.NORTH);
                     break;
                 case WEST:
-                    switch (beltDirection) {
-                        case NORTH:
-                            player.setDirection(player.getDirection().turnRight());
-                            break;
-                        case SOUTH:
-                            player.setDirection(player.getDirection().turnLeft());
-                            break;
-                    }
+                    setPlayerDirectionAfterBeltPush(player, beltDirection, Direction.NORTH, Direction.SOUTH);
+                    break;
+                default:
                     break;
             }
         }
         player.setBeltPushDir(beltDirection);
         player.setBeltPushPos(board.getNeighbourPosition(player.getPosition(), beltDirection));
+    }
+
+    public void setPlayerDirectionAfterBeltPush(Player player, Direction beltDirection, Direction turnRight, Direction leftTurn) {
+        if (beltDirection == turnRight) {
+            player.setDirection(player.getDirection().turnRight());
+        } else if (beltDirection == leftTurn) {
+            player.setDirection(player.getDirection().turnLeft());
+        }
     }
 
     public void dispose() {

@@ -48,10 +48,15 @@ public class Deck {
     public ProgramCard drawCard() {
         ProgramCard card = deck.pop();
         if (deck.isEmpty()) {
-            deck.addAll(discardPile);
-            shuffleDeck();
+            addDiscardPileToDeck();
         }
         return card;
+    }
+
+    public void addDiscardPileToDeck() {
+        deck.addAll(discardPile);
+        discardPile.clear();
+        shuffleDeck();
     }
 
     /**
