@@ -168,6 +168,20 @@ public class RallyGame extends Game {
         mainPlayer.discardAllCards(deck);
     }
 
+    /**
+     * Decrease lifetokens to each player that has collected 10 damagetokens.
+     * Reset damagetokens and respawn player.
+     */
+    public void decreaseLives() {
+        for (Player player : players) {
+            if (player.getDamageTokens() >= 10) {
+                player.decrementLifeTokens();
+                player.resetDamageTokens();
+                board.respawn(player);
+            }
+        }
+    }
+
     public void removeDeadPlayers() {
         for (Player player : players) {
             if (player.isDead()) {
