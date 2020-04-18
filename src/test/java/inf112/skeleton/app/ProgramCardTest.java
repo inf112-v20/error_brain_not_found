@@ -9,8 +9,8 @@ import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.Rotate;
-import inf112.skeleton.app.objects.Player.Player;
-import inf112.skeleton.app.objects.Player.PlayerSorter;
+import inf112.skeleton.app.objects.player.Player;
+import inf112.skeleton.app.objects.player.PlayerSorter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -99,7 +99,7 @@ public class ProgramCardTest {
     public void firstRotateThenMoveToCorrectPositionTest() {
         player.setSelectedCards(left, moveOne);
         Vector2 beforePosition = player.getPosition();
-        // Player is rotated left and therefore player will go up instead of to the right
+        // player is rotated left and therefore player will go up instead of to the right
         Vector2 afterPosition = new Vector2(beforePosition.x, beforePosition.y+1);
         game.playCard(player);
         game.playCard(player);

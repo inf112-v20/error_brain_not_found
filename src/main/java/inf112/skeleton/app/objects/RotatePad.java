@@ -2,7 +2,7 @@ package inf112.skeleton.app.objects;
 
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Rotate;
-import inf112.skeleton.app.objects.Player.Player;
+import inf112.skeleton.app.objects.player.Player;
 
 public class RotatePad {
     private final Rotate rotate;

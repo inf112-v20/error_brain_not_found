@@ -11,7 +11,7 @@ import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.TileID;
 import inf112.skeleton.app.objects.Flag;
-import inf112.skeleton.app.objects.Player.Player;
+import inf112.skeleton.app.objects.player.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;

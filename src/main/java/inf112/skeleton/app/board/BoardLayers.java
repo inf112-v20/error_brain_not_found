@@ -38,7 +38,7 @@ public abstract class BoardLayers {
     public BoardLayers(String mapPath) {
         this.tiledMap = new TmxMapLoader().load(mapPath);
 
-        this.playerLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Player");
+        this.playerLayer = (TiledMapTileLayer) tiledMap.getLayers().get("player");
         this.flagLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Flag");
         this.laserLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Laser");
         this.wallLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Wall");
@@ -56,7 +56,7 @@ public abstract class BoardLayers {
         this.expressBelts = new ArrayList<>();
 
         findFlags();
-        findPadsHolesBelts();
+        findRotatePadsAndHolesAndBelts();
         findLasers();
     }
 
@@ -68,7 +68,7 @@ public abstract class BoardLayers {
      * For better runtime the method finds the {@link RotatePad}'s, holes and {@link Belt}'s these are all on the same
      * layer. Could have been three different methods but then the run time would have been three times higher.
      */
-    public void findPadsHolesBelts() {
+    public void findRotatePadsAndHolesAndBelts() {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);

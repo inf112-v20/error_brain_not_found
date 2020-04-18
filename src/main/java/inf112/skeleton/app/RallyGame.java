@@ -12,9 +12,9 @@ import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Belt;
 import inf112.skeleton.app.objects.Laser;
-import inf112.skeleton.app.objects.Player.Player;
-import inf112.skeleton.app.objects.Player.PlayerSorter;
 import inf112.skeleton.app.objects.RotatePad;
+import inf112.skeleton.app.objects.player.Player;
+import inf112.skeleton.app.objects.player.PlayerSorter;
 import inf112.skeleton.app.screens.ButtonSkin;
 import inf112.skeleton.app.screens.gifscreen.GifScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
@@ -119,7 +119,7 @@ public class RallyGame extends Game {
                        direction of the arrows.
                     3. Pushers push if active.
                     4. Gears rotate 90° in the direction of the arrows.
-                D. Lasers Fire (Player, then board)
+                D. Lasers Fire (player, then board)
                 E. Touch Checkpoints (Flag, Repair)
         5. Clean up any end-of-turn effects
         */
