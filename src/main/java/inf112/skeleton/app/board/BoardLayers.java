@@ -38,7 +38,7 @@ public abstract class BoardLayers {
     public BoardLayers(String mapPath) {
         this.tiledMap = new TmxMapLoader().load(mapPath);
 
-        this.playerLayer = (TiledMapTileLayer) tiledMap.getLayers().get("player");
+        this.playerLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Player");
         this.flagLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Flag");
         this.laserLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Laser");
         this.wallLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Wall");
