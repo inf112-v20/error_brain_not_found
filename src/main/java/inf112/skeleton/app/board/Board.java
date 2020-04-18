@@ -185,7 +185,6 @@ public class Board extends BoardLayers {
      * @param player to check
      */
     public boolean outsideBoard(Player player) {
-        scream.play(RallyGame.volume);
         return outsideBoard(player.getPosition()) || hasHole(player.getPosition());
     }
 
@@ -461,6 +460,7 @@ public class Board extends BoardLayers {
     public void respawnPlayers() {
         for (Player player : players) {
             if (outsideBoard(player)) {
+                scream.play(RallyGame.volume);
                 player.decrementLifeTokens();
                 respawn(player);
             }

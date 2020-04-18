@@ -152,6 +152,7 @@ public class RallyGame extends Game {
                 activateRotatePads();
                 sleep(250);
 
+                // Fire lasers for 250 ms
                 firePlayerLaser();
                 sleep(250);
                 removeLasers();
@@ -196,7 +197,9 @@ public class RallyGame extends Game {
     }
 
     public void discardCards() {
-        mainPlayer.discardAllCards(deck);
+        for (Player player : players) {
+            player.discardAllCards(deck);
+        }
     }
 
     /**
