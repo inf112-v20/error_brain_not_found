@@ -67,23 +67,28 @@ public class GameScreenActors {
                 ImageButton cardButton = new ImageButton(cardStyle);
                 cardButton.setSize(programCardWidth, programCardHeight);
                 cardButton.setPosition(mapRightPx + programCardWidth * dx, screenHeight - programCardHeight * dy);
-                cardButton.addListener(new InputListener() {
-                    @Override
-                    public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                        game.mainPlayer.selectCard(card);
-                        System.out.println(game.mainPlayer.getSelectedCards());
-                    }
-
-                    @Override
-                    public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                        return true;
-                    }
-                });
+                setCardButtonInputListener(card, cardButton);
                 programCardButtons.add(cardButton);
                 stage.addActor(cardButton);
                 idx++;
             }
         }
+    }
+
+    private void setCardButtonInputListener(ProgramCard card, ImageButton cardButton) {
+        cardButton.clearListeners();
+        cardButton.addListener(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                game.mainPlayer.selectCard(card);
+                System.out.println(game.mainPlayer.getSelectedCards());
+            }
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
     }
 
     public void initializeConfirmButton() {
@@ -111,8 +116,10 @@ public class GameScreenActors {
     }
 
     public void initializeDamageTokens() {
-        for (double y = lifeTokenSize; y < lifeTokenSize + 2 * damageTokenSize; y += damageTokenSize) {
-            for (double x = mapRightPx; x < mapRightPx + 5 * damageTokenSize; x += damageTokenSize) {
+        for (int i = 0; i < 2; i++) {
+            for (int j = 0; j < 5; j++) {
+                float x = mapRightPx + j * damageTokenSize;
+                float y = lifeTokenSize + i * damageTokenSize;
                 newDamageToken(x, y);
             }
         }
@@ -127,7 +134,8 @@ public class GameScreenActors {
     }
 
     public void initializeLifeTokens() {
-        for (double x = mapRightPx; x < mapRightPx + 3 * lifeTokenSize; x += lifeTokenSize) {
+        for (int i = 0; i < 3; i++) {
+            float x = mapRightPx + i * lifeTokenSize;
             newLifeToken(x, 0);
         }
     }
@@ -168,10 +176,14 @@ public class GameScreenActors {
     }
 
     public void updateCards() {
+        if (game.mainPlayer.getAllCards().size() < 9) {
+            return;
+        }
         for (int i = 0; i < 9; i++) {
             ProgramCard card = game.mainPlayer.getAllCards().get(i);
             ImageButton cardButton = programCardButtons.get(i);
             cardButton.getStyle().up = cardSkin.getSkins().getDrawable(card.getName());
+            setCardButtonInputListener(card, cardButton);
         }
     }
 }

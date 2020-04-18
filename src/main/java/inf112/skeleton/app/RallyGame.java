@@ -43,6 +43,7 @@ public class RallyGame extends Game {
     public void create() {
         this.buttonSkins = new ButtonSkin();
         this.setScreen(new MenuScreen(this));
+        startMusic();
     }
 
     public void setupGame(String mapPath) {
@@ -142,7 +143,7 @@ public class RallyGame extends Game {
                 removeLasers();
                 sleep(1000);
             }
-            board.respawnPlayers();
+            respawnPlayers();
             removeDeadPlayers();
             discardCards();
             dealCards();
@@ -157,25 +158,6 @@ public class RallyGame extends Game {
         }
     }
 
-    /**
-     * Decrease lifetokens to each player that has collected 10 damagetokens.
-     * Reset damagetokens and respawn player.
-     */
-    public void decreaseLives() {
-        for (Player player : players) {
-            if (player.getDamageTokens() >= 10) {
-                player.decrementLifeTokens();
-                player.resetDamageTokens();
-                board.respawn(player);
-            }
-        }
-    }
-
-    public void selectCards() {
-        // for (Player player : players) { player.selectCards(); }
-
-    }
-
     public void dealCards() {
         for (Player player : players) {
             player.drawCards(deck);
@@ -187,14 +169,21 @@ public class RallyGame extends Game {
     }
 
     public void removeDeadPlayers() {
-        ArrayList<Player> deadPlayers = new ArrayList<>();
         for (Player player : players) {
             if (player.isDead()) {
                 board.removePlayerFromBoard(player);
-                deadPlayers.add(player);
             }
         }
-        players.removeAll(deadPlayers);
+    }
+
+    public void respawnPlayers() {
+        for (Player player : players) {
+            if (board.outsideBoard(player) || player.getDamageTokens() == 10) {
+                player.decrementLifeTokens();
+                player.resetDamageTokens();
+                board.respawn(player);
+            }
+        }
     }
 
     public void allPlayersPlayCard() {
@@ -205,7 +194,9 @@ public class RallyGame extends Game {
         for (Player player : playerOrder) {
             playCard(player);
             // Wait 1 second for each player
-            sleep(1000);
+            sleep(500);
+            removeDeadPlayers();
+            sleep(500);
         }
     }
 
@@ -275,9 +266,6 @@ public class RallyGame extends Game {
                             break;
                         case RIGHT:
                             player.setDirection(playerDirection.turnRight());
-                            break;
-                        case UTURN:
-                            player.setDirection(playerDirection.turnAround());
                             break;
                         default:
                             // Will never happen

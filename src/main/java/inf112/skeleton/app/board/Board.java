@@ -210,15 +210,6 @@ public class Board extends BoardLayers {
         addPlayer(player);
     }
 
-    public void respawnPlayers() {
-        for (Player player : players) {
-            if (outsideBoard(player)) {
-                player.decrementLifeTokens();
-                respawn(player);
-            }
-        }
-    }
-
     public boolean validRespawnPosition(Vector2 position, Direction direction) {
         Vector2 currPos = position;
         for (int step = 0; step < 3; step++) {
