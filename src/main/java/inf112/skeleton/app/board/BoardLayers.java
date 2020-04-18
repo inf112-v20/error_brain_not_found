@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.enums.TileID;
+import inf112.skeleton.app.objects.Belt;
 import inf112.skeleton.app.objects.Flag;
 import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
@@ -28,6 +29,8 @@ public abstract class BoardLayers {
     public final ArrayList<Flag> flags;
     public final ArrayList<RotatePad> rotatePads;
     public final ArrayList<Vector2> holes;
+    public final ArrayList<Belt> belts;
+    public final ArrayList<Belt> expressBelts;
 
     public final int boardWidth;
     public final int boardHeight;
@@ -49,22 +52,165 @@ public abstract class BoardLayers {
         this.rotatePads = new ArrayList<>();
         this.flags = new ArrayList<>();
         this.lasers = new ArrayList<>();
+        this.belts = new ArrayList<>();
+        this.expressBelts = new ArrayList<>();
 
         findFlags();
-        findRotatePadsAndHoles();
+        findBelts();
+        findRotatePads();
+        findExpressBelts();
+        findHoles();
         findLasers();
     }
 
-
-    /**
-     * Finds where there are {@link RotatePad} and Holes on the map. In the case of RotatePad adds a RotatePad object to
-     * the rotatePad list, in the case of a hole adds a {@link Vector2} to the holes list.
-     */
-    public void findRotatePadsAndHoles() {
+    public void findBelts() {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
                 int ID = cell.getTile().getId();
+
+                if (ID == TileID.EAST_TO_SOUTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, new Vector2(x, y)));
+                } else if (ID == TileID.NORTH_TO_EAST_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, new Vector2(x, y)));
+                } else if (ID == TileID.WEST_TO_NORTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, new Vector2(x, y)));
+                } else if (ID == TileID.SOUTH_TO_WEST_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, new Vector2(x, y)));
+                } else if (ID == TileID.EAST_TO_NORTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, new Vector2(x, y)));
+                } else if (ID == TileID.NORTH_TO_WEST_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, new Vector2(x, y)));
+                } else if (ID == TileID.WEST_TO_SOUTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, new Vector2(x, y)));
+                } else if (ID == TileID.SOUTH_TO_EAST_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, new Vector2(x, y)));
+                } else if (ID == TileID.EAST_TO_WEST_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, new Vector2(x, y)));
+                } else if (ID == TileID.NORTH_TO_SOUTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, new Vector2(x, y)));
+                } else if (ID == TileID.WEST_TO_EAST_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, new Vector2(x, y)));
+                } else if (ID == TileID.SOUTH_TO_NORTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, new Vector2(x, y)));
+                } else if (ID == TileID.WESTSOUTH_TO_NORTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, new Vector2(x, y)));
+                } else if (ID == TileID.EASTSOUTH_TO_NORTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, new Vector2(x, y)));
+                } else if (ID == TileID.WESTEAST_TO_NORTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, new Vector2(x, y)));
+                } else if (ID == TileID.WESTNORTH_TO_SOUTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, new Vector2(x, y)));
+                } else if (ID == TileID.EASTNORTH_TO_SOUTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, new Vector2(x, y)));
+                } else if (ID == TileID.WESTEAST_TO_SOUTH_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, new Vector2(x, y)));
+                } else if (ID == TileID.WESTSOUTH_TO_EAST_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, new Vector2(x, y)));
+                } else if (ID == TileID.WESTNORTH_TO_EAST_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, new Vector2(x, y)));
+                } else if (ID == TileID.NORTHSOUTH_TO_EAST_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, new Vector2(x, y)));
+                } else if (ID == TileID.EASTSOUTH_TO_WEST_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, new Vector2(x, y)));
+                } else if (ID == TileID.EASTNORTH_TO_WEST_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, new Vector2(x, y)));
+                } else if (ID == TileID.NORTHSOUTH_TO_WEST_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, new Vector2(x, y)));
+                }
+            }
+        }
+    }
+
+    public void findExpressBelts() {
+        for (int x = 0; x < groundLayer.getWidth(); x++) {
+            for (int y = 0; y < groundLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
+                int ID = cell.getTile().getId();
+
+                if (ID == TileID.EAST_TO_SOUTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.SOUTH, new Vector2(x, y)));
+                } else if (ID == TileID.NORTH_TO_EAST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.EAST, new Vector2(x, y)));
+                } else if (ID == TileID.WEST_TO_NORTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.NORTH, new Vector2(x, y)));
+                } else if (ID == TileID.SOUTH_TO_WEST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.WEST, new Vector2(x, y)));
+                } else if (ID == TileID.EAST_TO_NORTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.NORTH, new Vector2(x, y)));
+                } else if (ID == TileID.NORTH_TO_WEST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.WEST, new Vector2(x, y)));
+                } else if (ID == TileID.WEST_TO_SOUTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.SOUTH, new Vector2(x, y)));
+                } else if (ID == TileID.SOUTH_TO_EAST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.EAST, new Vector2(x, y)));
+                } else if (ID == TileID.EAST_TO_WEST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.WEST, new Vector2(x, y)));
+                } else if (ID == TileID.NORTH_TO_SOUTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.SOUTH, new Vector2(x, y)));
+                } else if (ID == TileID.WEST_TO_EAST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.EAST, new Vector2(x, y)));
+                } else if (ID == TileID.SOUTH_TO_NORTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.NORTH, new Vector2(x, y)));
+                } else if (ID == TileID.WESTSOUTH_TO_NORTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.NORTH, new Vector2(x, y)));
+                } else if (ID == TileID.EASTSOUTH_TO_NORTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.NORTH, new Vector2(x, y)));
+                } else if (ID == TileID.WESTEAST_TO_NORTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.NORTH, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.NORTH, new Vector2(x, y)));
+                } else if (ID == TileID.WESTNORTH_TO_SOUTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.SOUTH, new Vector2(x, y)));
+                } else if (ID == TileID.EASTNORTH_TO_SOUTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.SOUTH, new Vector2(x, y)));
+                } else if (ID == TileID.WESTEAST_TO_SOUTH_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.SOUTH, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.SOUTH, new Vector2(x, y)));
+                } else if (ID == TileID.WESTSOUTH_TO_EAST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.EAST, new Vector2(x, y)));
+                } else if (ID == TileID.WESTNORTH_TO_EAST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.EAST, new Vector2(x, y)));
+                } else if (ID == TileID.NORTHSOUTH_TO_EAST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.EAST, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.EAST, new Vector2(x, y)));
+                } else if (ID == TileID.EASTSOUTH_TO_WEST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.WEST, new Vector2(x, y)));
+                } else if (ID == TileID.EASTNORTH_TO_WEST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.WEST, new Vector2(x, y)));
+                } else if (ID == TileID.NORTHSOUTH_TO_WEST_EXPRESS_BELT.getId()) {
+                    belts.add(new Belt(Direction.WEST, new Vector2(x, y)));
+                    expressBelts.add(new Belt(Direction.WEST, new Vector2(x, y)));
+                }
+            }
+        }
+    }
+
+    public void findHoles() {
+        for (int x = 0; x < groundLayer.getWidth(); x++) {
+            for (int y = 0; y < groundLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
+                int ID = cell.getTile().getId();
+
                 if (ID == TileID.NORMAL_HOLE.getId()) {
                     holes.add(new Vector2(x, y));
                 } else if (ID == TileID.NORMAL_HOLE2.getId()) {
@@ -93,7 +239,18 @@ public abstract class BoardLayers {
                     holes.add(new Vector2(x, y));
                 } else if (ID == TileID.NORTH_WEST_EAST_HOLE.getId()) {
                     holes.add(new Vector2(x, y));
-                } else if (ID == TileID.ROTATE_PAD_LEFT.getId()) {
+                }
+            }
+        }
+    }
+
+    public void findRotatePads() {
+        for (int x = 0; x < groundLayer.getWidth(); x++) {
+            for (int y = 0; y < groundLayer.getHeight(); y++) {
+                TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
+                int ID = cell.getTile().getId();
+
+                if (ID == TileID.ROTATE_PAD_LEFT.getId()) {
                     rotatePads.add(new RotatePad(Rotate.LEFT, new Vector2(x, y)));
                 } else if (ID == TileID.ROTATE_PAD_RIGHT.getId()) {
                     rotatePads.add(new RotatePad(Rotate.RIGHT, new Vector2(x, y)));

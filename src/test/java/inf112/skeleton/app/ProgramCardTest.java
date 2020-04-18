@@ -40,7 +40,7 @@ public class ProgramCardTest {
 
         // Already 4 players on board.
         //TODO: Let setupGame take in playerNumber as arg
-        player = new Player(new Vector2(0,0), 5);
+        player = new Player(new Vector2(0, 0), 2);
         player.setDirection(Direction.EAST);
         Board board = game.getBoard();
         board.addPlayer(player);
@@ -99,7 +99,7 @@ public class ProgramCardTest {
     public void firstRotateThenMoveToCorrectPositionTest() {
         player.setSelectedCards(left, moveOne);
         Vector2 beforePosition = player.getPosition();
-        // Player is rotated left and therefore player will go up instead of to the right
+        // player is rotated left and therefore player will go up instead of to the right
         Vector2 afterPosition = new Vector2(beforePosition.x, beforePosition.y+1);
         game.playCard(player);
         game.playCard(player);

@@ -20,7 +20,10 @@ public class SettingsInput extends InputAdapter {
                 Gdx.app.exit();
                 break;
             case Input.Keys.M:
-                game.mute();
+                game.muteMusic();
+                break;
+            case Input.Keys.S:
+                game.muteSounds();
                 break;
             default:
                 // Fuck u Codacy

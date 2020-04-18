@@ -165,7 +165,7 @@ public class BoardTest {
         Vector2 startPosition = new Vector2(player.getPosition().x, player.getPosition().y);
         player.setDirection(Direction.NORTH);
         board.movePlayer(player);
-        assertEquals((int) startPosition.y+1, (int) player.getPosition().y);
+        assertEquals((int) startPosition.y + 1, (int) player.getPosition().y);
     }
 
     @Test
@@ -266,6 +266,7 @@ public class BoardTest {
         player.setPosition(playerPosition);
         player.setDirection(Direction.EAST);
         board.movePlayer(player);
+        board.pickUpFlags();
         assertTrue(isEqualFlags(flag, player.getFlagsCollected().get(0)));
     }
 

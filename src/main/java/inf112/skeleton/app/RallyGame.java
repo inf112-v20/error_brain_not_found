@@ -10,7 +10,7 @@ import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
-import inf112.skeleton.app.enums.Rotate;
+import inf112.skeleton.app.objects.Belt;
 import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.objects.player.Player;
@@ -29,6 +29,7 @@ public class RallyGame extends Game {
     public Deck deck;
 
     public ArrayList<Player> players;
+    public ArrayList<Player> respawnPlayers;
     public Semaphore waitForCards;
     public boolean playing;
     public Sound laserSound;
@@ -37,8 +38,7 @@ public class RallyGame extends Game {
 
     public ButtonSkin buttonSkins;
 
-    public float volume;
-    public boolean muted;
+    public static float volume = 0.5f;
 
     public void create() {
         this.buttonSkins = new ButtonSkin();
@@ -49,9 +49,9 @@ public class RallyGame extends Game {
     public void setupGame(String mapPath) {
         this.board = new Board(mapPath, 1);
         this.deck = new Deck();
-        this.players = new ArrayList<>();
         this.players = board.getPlayers();
         this.mainPlayer = board.getPlayer1();
+        this.respawnPlayers = new ArrayList<>();
 
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
@@ -82,15 +82,12 @@ public class RallyGame extends Game {
         return (StandardScreen) super.getScreen();
     }
 
-    public void mute() {
-        if (muted) {
-            volume = 0.5f;
-            muted = false;
-        } else {
-            volume = 0f;
-            muted = true;
-        }
-        gameMusic.setVolume(volume);
+    public void muteMusic() {
+        gameMusic.setVolume(gameMusic.getVolume() == 0 ? 0.5f : 0);
+    }
+
+    public void muteSounds() {
+        volume = volume == 0 ? 0.5f : 0;
     }
 
     public void loadMusic() {
@@ -100,6 +97,7 @@ public class RallyGame extends Game {
     public void startMusic() {
         loadMusic();
         gameMusic.setVolume(0.5f);
+        gameMusic.setLooping(true);
         gameMusic.play();
     }
 
@@ -118,7 +116,12 @@ public class RallyGame extends Game {
                 A. Reveal Program Cards
                 B. Robots Move
                 C. board Elements Move (Gears, Express belt, normal belt)
-                D. Lasers Fire (Player, then board)
+                    1. Express conveyor belts move 1 space in the direction of the arrows.
+                    2. Express conveyor belts and normal conveyor belts move 1 space in the
+                       direction of the arrows.
+                    3. Pushers push if active.
+                    4. Gears rotate 90° in the direction of the arrows.
+                D. Lasers Fire (player, then board)
                 E. Touch Checkpoints (Flag, Repair)
         5. Clean up any end-of-turn effects
         */
@@ -134,20 +137,54 @@ public class RallyGame extends Game {
             for (int i = 0; i < 5; i++) {
 
                 System.out.println("Runde " + (i + 1));
+
+                // All players play one card in the correct order
                 allPlayersPlayCard();
-                sleep(500);
+                sleep(250);
+
+                // Express belts move 1
+                activateBelts(true);
+                sleep(250);
+
+                decreaseLives();
+
+                // All belts move 1
+                activateBelts(false);
+                sleep(250);
+
+                // Rotate pads rotate
                 activateRotatePads();
-                sleep(500);
-                fireLasers();
-                sleep(300);
+                sleep(250);
+
+                // Fire lasers for 250 ms
+                firePlayerLaser();
+                sleep(250);
                 removeLasers();
+                sleep(500);
+
+                decreaseLives();
+
+                // Fire lasers for 250 ms
+                fireLasers();
+                sleep(250);
+                removeLasers();
+                sleep(500);
+
+                decreaseLives();
+
+                pickUpFlags();
+                sleep(500);
+
                 sleep(1000);
             }
             respawnPlayers();
-            removeDeadPlayers();
             discardCards();
             dealCards();
         }
+    }
+
+    private void pickUpFlags() {
+        board.pickUpFlags();
     }
 
     private void sleep(int milliseconds) {
@@ -165,39 +202,38 @@ public class RallyGame extends Game {
     }
 
     public void discardCards() {
-        mainPlayer.discardAllCards(deck);
+        for (Player player : players) {
+            player.discardAllCards(deck);
+        }
     }
 
     /**
-     * Decrease lifetokens to each player that has collected 10 damagetokens.
-     * Reset damagetokens and respawn player.
+     * Decrease life tokens to each player that has collected 10 damage tokens.
+     * Reset damage tokens, remove player from board and discard all cards
      */
     public void decreaseLives() {
+        ArrayList<Player> removedPlayers = new ArrayList<>();
         for (Player player : players) {
-            if (player.getDamageTokens() >= 10) {
+            if (player.getDamageTokens() >= 10 || board.outsideBoard(player)) {
                 player.decrementLifeTokens();
                 player.resetDamageTokens();
-                board.respawn(player);
-            }
-        }
-    }
-
-    public void removeDeadPlayers() {
-        for (Player player : players) {
-            if (player.isDead()) {
+                player.discardAllCards(deck);
                 board.removePlayerFromBoard(player);
+                removedPlayers.add(player);
             }
         }
+        players.removeAll(removedPlayers);
+        respawnPlayers.addAll(removedPlayers);
     }
 
     public void respawnPlayers() {
-        for (Player player : players) {
-            if (board.outsideBoard(player) || player.getDamageTokens() == 10) {
-                player.decrementLifeTokens();
-                player.resetDamageTokens();
+        for (Player player : respawnPlayers) {
+            if (!player.isDead()) {
+                players.add(player);
                 board.respawn(player);
             }
         }
+        respawnPlayers.clear();
     }
 
     public void allPlayersPlayCard() {
@@ -209,7 +245,7 @@ public class RallyGame extends Game {
             playCard(player);
             // Wait 1 second for each player
             sleep(500);
-            removeDeadPlayers();
+            decreaseLives();
             sleep(500);
         }
     }
@@ -220,28 +256,26 @@ public class RallyGame extends Game {
         switch (card.getRotate()) {
             case RIGHT:
                 player.setDirection(player.getDirection().turnRight());
-                board.rotatePlayer(player);
                 break;
             case LEFT:
                 player.setDirection(player.getDirection().turnLeft());
-                board.rotatePlayer(player);
                 break;
             case UTURN:
                 player.setDirection(player.getDirection().turnAround());
-                board.rotatePlayer(player);
                 break;
             case NONE:
                 for (int i = 0; i < card.getDistance(); i++) {
                     board.movePlayer(player);
-                    // Wait 500 ms for each move except last one
+                    // Wait 300 ms for each move except last one
                     if (i < card.getDistance() - 1) {
-                        sleep(500);
+                        sleep(300);
                     }
                 }
                 break;
             default:
                 break;
         }
+        board.addPlayer(player);
         deck.addCardToDiscardPile(card);
     }
 
@@ -257,35 +291,110 @@ public class RallyGame extends Game {
         }
     }
 
+    public void firePlayerLaser() {
+        for (Player player : players) {
+            player.fire(this);
+        }
+        laserSound.play(volume);
+    }
+
     public void fireLasers() {
         for (Laser laser : board.lasers) {
             laser.fire(this);
         }
-        laserSound.play(0.2f);
+        laserSound.play(volume);
     }
 
-    public void activateRotatePads(){
-        for(Player player : board.getPlayers()){
-            for(RotatePad rotatePad : board.rotatePads){
+    public void activateRotatePads() {
+        for (Player player : board.getPlayers()) {
+            for (RotatePad pad : board.rotatePads) {
                 Vector2 playerPosition = player.getPosition();
-                Vector2 rotePadPosition = rotatePad.getPosition();
+                Vector2 padPosition = pad.getPosition();
 
-                if(playerPosition.equals(rotePadPosition)){
-                    Rotate rotateDirection = rotatePad.getRotate();
-                    Direction playerDirection = player.getDirection();
-
-                    switch (rotateDirection){
-                        case LEFT:
-                            player.setDirection(playerDirection.turnLeft());
-                            break;
-                        case RIGHT:
-                            player.setDirection(playerDirection.turnRight());
-                            break;
-                        default:
-                            // Will never happen
-                    }
+                if (playerPosition.equals(padPosition)) {
+                    pad.rotate(player);
+                    board.addPlayer(player);
+                    sleep(500);
                 }
             }
+        }
+    }
+
+    /**
+     * <p>
+     *     Activate the belts on the map, so they pushes the player in the direction of the belt.
+     * </p>
+     * @param onlyExpress if true then the pool of belts should be set to expressBelts
+     */
+    public void activateBelts(boolean onlyExpress) {
+        ArrayList<Belt> belts = onlyExpress ? board.expressBelts : board.belts;
+        for (Player player : board.getPlayers()) {
+            for (Belt belt : belts) {
+                if (player.getPosition().equals(belt.getPosition())) {
+                    beltPush(player, belt);
+                }
+            }
+        }
+        validateBeltPushPos();
+        updateBoard();
+    }
+
+    private void updateBoard() {
+        board.removePlayersFromBoard();
+        updatePositionsAfterBeltPush();
+        board.updateBoard();
+    }
+
+    public void validateBeltPushPos() {
+        for (Player player : players) {
+            for (Player otherPlayer : players) {
+                if (!player.equals(otherPlayer) && player.getBeltPushPos().equals(otherPlayer.getBeltPushPos())) {
+                    player.setBeltPushPos(null);
+                    otherPlayer.setBeltPushPos(null);
+                }
+            }
+        }
+    }
+
+    public void updatePositionsAfterBeltPush() {
+        for (Player player : players) {
+            if (player.getBeltPushPos() != null) {
+                player.setPosition(player.getBeltPushPos());
+                player.setBeltPushPos(null);
+            }
+        }
+    }
+
+    public void beltPush(Player player, Belt belt) {
+        Direction lastPush = player.getBeltPushDir();
+        Direction beltDirection = belt.getDirection();
+        if (lastPush != null) {
+            switch (lastPush) {
+                case NORTH:
+                    setPlayerDirectionAfterBeltPush(player, beltDirection, Direction.EAST, Direction.WEST);
+                    break;
+                case SOUTH:
+                    setPlayerDirectionAfterBeltPush(player, beltDirection, Direction.WEST, Direction.EAST);
+                    break;
+                case EAST:
+                    setPlayerDirectionAfterBeltPush(player, beltDirection, Direction.SOUTH, Direction.NORTH);
+                    break;
+                case WEST:
+                    setPlayerDirectionAfterBeltPush(player, beltDirection, Direction.NORTH, Direction.SOUTH);
+                    break;
+                default:
+                    break;
+            }
+        }
+        player.setBeltPushDir(beltDirection);
+        player.setBeltPushPos(board.getNeighbourPosition(player.getPosition(), beltDirection));
+    }
+
+    public void setPlayerDirectionAfterBeltPush(Player player, Direction beltDirection, Direction turnRight, Direction leftTurn) {
+        if (beltDirection.equals(turnRight)) {
+            player.setDirection(player.getDirection().turnRight());
+        } else if (beltDirection.equals(leftTurn)) {
+            player.setDirection(player.getDirection().turnLeft());
         }
     }
 
