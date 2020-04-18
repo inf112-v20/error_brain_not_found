@@ -64,7 +64,7 @@ public class Player {
 
     public void selectCards() {
         while (selectedCards.size() < 5) {
-            selectedCards.add(allCards.remove(0));
+            selectedCards.add(allCards.get(0));
         }
     }
 
@@ -89,8 +89,10 @@ public class Player {
     public void setBeltPushPos(Vector2 position) {
         this.beltPushPos = position;
     }
+
     public void discardAllCards(Deck deck) {
         deck.addCardsToDiscardPile(allCards);
+        selectedCards.clear();
         allCards.clear();
     }
 

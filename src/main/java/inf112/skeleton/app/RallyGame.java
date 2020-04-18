@@ -96,6 +96,7 @@ public class RallyGame extends Game {
     public void startMusic() {
         loadMusic();
         gameMusic.setVolume(0.5f);
+        gameMusic.setLooping(true);
         gameMusic.play();
     }
 
@@ -144,6 +145,8 @@ public class RallyGame extends Game {
                 activateBelts(true);
                 sleep(250);
 
+                decreaseLives();
+
                 // All belts move 1
                 activateBelts(false);
                 sleep(250);
@@ -158,21 +161,22 @@ public class RallyGame extends Game {
                 removeLasers();
                 sleep(500);
 
+                decreaseLives();
+
                 // Fire lasers for 250 ms
                 fireLasers();
                 sleep(250);
                 removeLasers();
                 sleep(500);
 
+                decreaseLives();
+
                 pickUpFlags();
                 sleep(500);
 
-                decreaseLives();
-                removeDeadPlayers();
                 sleep(1000);
             }
             respawnPlayers();
-            removeDeadPlayers();
             discardCards();
             dealCards();
         }
@@ -203,15 +207,16 @@ public class RallyGame extends Game {
     }
 
     /**
-     * Decrease lifetokens to each player that has collected 10 damagetokens.
-     * Reset damagetokens and respawn player.
+     * Decrease life tokens to each player that has collected 10 damage tokens.
+     * Reset damage tokens, remove player from board and discard all cards
      */
     public void decreaseLives() {
         for (Player player : players) {
-            if (player.getDamageTokens() >= 10) {
+            if (player.getDamageTokens() >= 10 || board.outsideBoard(player)) {
                 player.decrementLifeTokens();
                 player.resetDamageTokens();
-                board.respawn(player);
+                player.discardAllCards(deck);
+                board.removePlayerFromBoard(player);
             }
         }
     }
@@ -226,11 +231,7 @@ public class RallyGame extends Game {
 
     public void respawnPlayers() {
         for (Player player : players) {
-            if (board.outsideBoard(player) || player.getDamageTokens() == 10) {
-                player.decrementLifeTokens();
-                player.resetDamageTokens();
-                board.respawn(player);
-            }
+            board.respawn(player);
         }
     }
 
@@ -243,7 +244,7 @@ public class RallyGame extends Game {
             playCard(player);
             // Wait 1 second for each player
             sleep(500);
-            removeDeadPlayers();
+            decreaseLives();
             sleep(500);
         }
     }
