@@ -123,6 +123,7 @@ public class RallyGame extends Game {
      * @param portNumber to establish connection with
      */
     public void setUpConnection(String hostIP, int portNumber) {
+        //TODO: check that IP and portnumber are valid
         // Try to create a client socket.
         try {
             Socket clientSocket = new Socket(hostIP, portNumber);
