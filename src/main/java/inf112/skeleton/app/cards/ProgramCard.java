@@ -36,11 +36,5 @@ public class ProgramCard {
         return name + ": " + priority;
     }
 
-<<<<<<< HEAD
-    public String getName() {
-        return name;
-    }
-=======
     public String getName(){return name;}
->>>>>>> develop
 }
