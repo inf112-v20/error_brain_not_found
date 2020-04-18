@@ -37,12 +37,12 @@ public class RallyGame extends Game {
 
     public ButtonSkin buttonSkins;
 
-    public float volume;
-    public boolean muted;
+    public static float volume = 0.5f;
 
     public void create() {
         this.buttonSkins = new ButtonSkin();
         this.setScreen(new MenuScreen(this));
+        startMusic();
     }
 
     public void setupGame(String mapPath) {
@@ -81,15 +81,12 @@ public class RallyGame extends Game {
         return (StandardScreen) super.getScreen();
     }
 
-    public void mute() {
-        if (muted) {
-            volume = 0.5f;
-            muted = false;
-        } else {
-            volume = 0f;
-            muted = true;
-        }
-        gameMusic.setVolume(volume);
+    public void muteMusic() {
+        gameMusic.setVolume(gameMusic.getVolume() == 0 ? 0.5f : 0);
+    }
+
+    public void muteSounds() {
+        volume = volume == 0 ? 0.5f : 0;
     }
 
     public void loadMusic() {
@@ -168,17 +165,21 @@ public class RallyGame extends Game {
                 removeLasers();
                 sleep(500);
 
+                pickUpFlags();
+                sleep(500);
+
+                decreaseLives();
                 removeDeadPlayers();
                 sleep(1000);
-                System.out.println("Pos: " + mainPlayer.getPosition());
-                System.out.println("Dir: " + mainPlayer.getDirection());
             }
         }
     }
 
     private void pickUpFlags() {
         for (Player player : players) {
-            board.pickUpFlag(player);
+            if (board.hasFlag(player.getPosition())) {
+                board.pickUpFlag(player);
+            }
         }
     }
 
@@ -208,7 +209,6 @@ public class RallyGame extends Game {
         for (Player player : players) {
             player.drawCards(deck);
         }
-
     }
 
     public void removeDeadPlayers() {
@@ -279,14 +279,14 @@ public class RallyGame extends Game {
         for (Player player : players) {
             player.fire(this);
         }
-        laserSound.play(0.2f);
+        laserSound.play(volume);
     }
 
     public void fireLasers() {
         for (Laser laser : board.lasers) {
             laser.fire(this);
         }
-        laserSound.play(0.2f);
+        laserSound.play(volume);
     }
 
     public void activateRotatePads() {

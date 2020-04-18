@@ -252,7 +252,9 @@ public class Player {
     }
 
     public void fire(RallyGame game) {
-        fire(game, game.board.getNeighbourPosition(position, direction));
+        if (game.getBoard().canFire(position, direction)) {
+            fire(game, game.getBoard().getNeighbourPosition(position, direction));
+        }
     }
 
     public void fire(RallyGame game, Vector2 position) {

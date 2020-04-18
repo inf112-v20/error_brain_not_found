@@ -7,6 +7,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.TileID;
 import inf112.skeleton.app.objects.Flag;
@@ -172,7 +173,6 @@ public class Board extends BoardLayers {
     public boolean hasHole(Vector2 position) {
         for (Vector2 vector : holes) {
             if (vector.equals(position)) {
-                scream.play(0.2f);
                 return true;
             }
         }
@@ -185,6 +185,7 @@ public class Board extends BoardLayers {
      * @param player to check
      */
     public boolean outsideBoard(Player player) {
+        scream.play(RallyGame.volume);
         return outsideBoard(player.getPosition()) || hasHole(player.getPosition());
     }
 
@@ -371,7 +372,7 @@ public class Board extends BoardLayers {
         }
 
         if (!canGo(position, direction)) {
-            wallImpact.play(0.2f);
+            wallImpact.play(RallyGame.volume);
             addPlayer(player);
             return;
         }
