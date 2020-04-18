@@ -90,11 +90,11 @@ public class RallyGame extends Game {
 
         this.deck = new Deck();
 
-        //Scanner scanner = new Scanner(System.in);
-        //System.out.println("What is host IP? ");
-        String hostIP = "localhost"; //scanner.nextLine();
-        //System.out.println("What is portNumber?");
-        int portNumber = 9000; //scanner.nextInt();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("What is host IP? ");
+        String hostIP = scanner.nextLine();
+        System.out.println("What is portNumber?");
+        int portNumber = scanner.nextInt();
         setUpConnection(hostIP, portNumber);
 
         this.board = new Board(mapPath, this.numberOfPlayers);
@@ -140,6 +140,7 @@ public class RallyGame extends Game {
         } catch (UnknownHostException e) {
             System.out.println("Did not find host.");
         } catch (IOException e) {
+            System.out.println("Could not connect to " +hostIP + " on port " + portNumber + " Hosting game.");
             this.isServer = true;
             this.myPlayerNumber = 1;
             System.out.println("How many players?");
