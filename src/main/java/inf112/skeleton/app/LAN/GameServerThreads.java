@@ -1,10 +1,9 @@
 package inf112.skeleton.app.LAN;
 
-
-import inf112.skeleton.app.Player;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Messages;
+import inf112.skeleton.app.objects.player.Player;
 
 import java.io.*;
 import java.net.Socket;

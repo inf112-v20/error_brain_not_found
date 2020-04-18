@@ -1,17 +1,12 @@
 package inf112.skeleton.app.LAN;
 
-import inf112.skeleton.app.Player;
 import inf112.skeleton.app.RallyGame;
-import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Messages;
-import org.lwjgl.Sys;
+import inf112.skeleton.app.objects.player.Player;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
 import java.util.concurrent.Semaphore;
 
