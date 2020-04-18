@@ -371,13 +371,10 @@ public class Board extends BoardLayers {
      * Add player to cell that corresponds to player position
      *
      * @param player that is suppose to move
-     * @param direction the {@link Direction} the player should be moved in, if set to null use the player direction.
      */
-    public void movePlayer(Player player, Direction direction) {
+    public void movePlayer(Player player) {
         Vector2 position = player.getPosition();
-        if (direction == null){
-            direction = player.getDirection();
-        }
+        Direction direction = player.getDirection();
 
         if (!canGo(position, direction)) {
             wallImpact.play(RallyGame.volume);

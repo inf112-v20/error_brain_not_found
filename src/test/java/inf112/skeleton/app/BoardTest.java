@@ -156,7 +156,7 @@ public class BoardTest {
     public void movedPlayerHasChangedCoordinatesTest() {
         Vector2 startPosition = new Vector2(player.getPosition().x, player.getPosition().y);
         player.setDirection(Direction.EAST);
-        board.movePlayer(player, null);
+        board.movePlayer(player);
         assertNotEquals(startPosition, player.getPosition());
     }
 
@@ -164,8 +164,8 @@ public class BoardTest {
     public void whenPlayerIsMovedUpItHasMovedOneStepTest() {
         Vector2 startPosition = new Vector2(player.getPosition().x, player.getPosition().y);
         player.setDirection(Direction.NORTH);
-        board.movePlayer(player, null);
-        assertEquals((int) startPosition.y+1, (int) player.getPosition().y);
+        board.movePlayer(player);
+        assertEquals((int) startPosition.y + 1, (int) player.getPosition().y);
     }
 
     @Test
@@ -265,7 +265,7 @@ public class BoardTest {
         Vector2 playerPosition = new Vector2(flagPosition.x -1, flagPosition.y);
         player.setPosition(playerPosition);
         player.setDirection(Direction.EAST);
-        board.movePlayer(player, null);
+        board.movePlayer(player);
         board.pickUpFlags();
         assertTrue(isEqualFlags(flag, player.getFlagsCollected().get(0)));
     }
@@ -301,7 +301,7 @@ public class BoardTest {
         Player player2 = new Player(playerTwoPos, 2);
         player2.setDirection(Direction.EAST);
         board.addPlayer(player);
-        board.movePlayer(player2, null);
+        board.movePlayer(player2);
         assertEquals(player2, board.getPlayer(playerToBePushedPosition));
     }
 
@@ -316,7 +316,7 @@ public class BoardTest {
         Player player2 = new Player(playerTwoPos, 2);
         player2.setDirection(Direction.EAST);
         board.addPlayer(player);
-        board.movePlayer(player2, null);
+        board.movePlayer(player2);
         assertEquals(player, board.getPlayer(playerIsPushedToPosition));
     }
 
@@ -336,7 +336,7 @@ public class BoardTest {
         player.setDirection(Direction.WEST);
         board.addPlayer(player2);
         board.addPlayer(player3);
-        board.movePlayer(player, null);
+        board.movePlayer(player);
         assertEquals(player2, board.getPlayer(positionToBePushedTo));
     }
 
@@ -351,7 +351,7 @@ public class BoardTest {
         player.setDirection(Direction.NORTH);
         board.addPlayer(player2);
         board.addPlayer(player);
-        board.movePlayer(player, null);
+        board.movePlayer(player);
         assertEquals(player2, board.getPlayer(northWallPosition));
     }
 
@@ -370,7 +370,7 @@ public class BoardTest {
         board.addPlayer(playerToBeStoppedByWall);
         board.addPlayer(playerInMiddle);
         board.addPlayer(player);
-        board.movePlayer(player, null);
+        board.movePlayer(player);
         assertEquals(playerToBeStoppedByWall, board.getPlayer(northWallPosition));
     }
 

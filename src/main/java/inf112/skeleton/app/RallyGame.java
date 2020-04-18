@@ -245,7 +245,7 @@ public class RallyGame extends Game {
                 break;
             case NONE:
                 for (int i = 0; i < card.getDistance(); i++) {
-                    board.movePlayer(player, null);
+                    board.movePlayer(player);
                     // Wait 300 ms for each move except last one
                     if (i < card.getDistance() - 1) {
                         sleep(300);
