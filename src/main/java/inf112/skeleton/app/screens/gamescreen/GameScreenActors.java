@@ -63,6 +63,7 @@ public class GameScreenActors {
             for (int dx = 0; dx <= 2; dx++) {
                 ProgramCard card = game.mainPlayer.getAllCards().get(idx);
                 ImageButton.ImageButtonStyle cardStyle = new ImageButton.ImageButtonStyle();
+               // System.out.println("CARD: "+card.getName() + " " + card);
                 cardStyle.up = cardSkin.getSkins().getDrawable(card.getName());
                 ImageButton cardButton = new ImageButton(cardStyle);
                 cardButton.setSize(programCardWidth, programCardHeight);
@@ -152,7 +153,9 @@ public class GameScreenActors {
         updateConfirm();
         updateLifeTokens();
         updateDamageTokens();
-        updateCards();
+        if (game.haveReceivedDeck()) {
+            updateCards();
+        }
     }
 
     public void updateConfirm() {

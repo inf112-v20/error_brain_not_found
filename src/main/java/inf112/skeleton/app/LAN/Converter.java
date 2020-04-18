@@ -120,23 +120,23 @@ public class Converter {
     private String getName(String string) {
         if (string.contains("U-turn")) {
             return "U-turn";
-        }
-        if (string.contains("Right rotate")) {
+        } else if (string.contains("Left turn")) {
+            return "Left turn";
+        } else if (string.contains("Right turn")) {
+            return "Right turn";
+        } else if (string.contains("Right rotate")) {
             return "Right rotate";
-        }
-        if (string.contains("Left rotate")) {
+        } else if (string.contains("Left rotate")) {
             return "Left rotate";
-        }
-        if (string.contains("Move 3")) {
+        } else if (string.contains("Move 3")) {
             return "Move 3";
-        }
-        if (string.contains("Move 1")) {
+        } else if (string.contains("Move 1")) {
             return "Move 1";
-        }
-        if (string.contains("Move 2")) {
+        } else if (string.contains("Move 2")) {
             return "Move 2";
+        } else {
+            return "Could not match name.";
         }
-        return "Could not match name.";
     }
 
 

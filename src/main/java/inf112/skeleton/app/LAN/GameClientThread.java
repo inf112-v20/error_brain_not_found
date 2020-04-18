@@ -87,8 +87,10 @@ public class GameClientThread extends Thread {
                 waitForTurnToFinish();
             } else {
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
-                Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
-                player.addSelectedCard(card);
+                if (myPlayerNumber != converter.getPlayerNumber()) {
+                    Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
+                    player.addSelectedCard(card);
+                }
             }
         }
     }

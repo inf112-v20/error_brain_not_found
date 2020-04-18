@@ -15,7 +15,9 @@ public class GameScreen extends StandardScreen {
         super(game);
 
         actors = new GameScreenActors(game, stage);
-        actors.initializeProgramCardButtons();
+        if (game.haveReceivedDeck()) {
+            actors.initializeProgramCardButtons();
+        }
         actors.initializeConfirmButton();
         actors.initializeLifeTokens();
         actors.initializeDamageTokens();
@@ -29,8 +31,15 @@ public class GameScreen extends StandardScreen {
 
     @Override
     public void render(float v) {
+        if (game.haveReceivedDeck()) {
+            actors.initializeProgramCardButtons();
+        }
         actors.updateButtons();
         super.render(v);
         mapRenderer.render();
+    }
+
+    public void initializeCardButtons() {
+        actors.initializeProgramCardButtons();
     }
 }

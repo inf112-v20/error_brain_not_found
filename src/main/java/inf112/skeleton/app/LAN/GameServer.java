@@ -71,6 +71,8 @@ public class GameServer {
             game.setDeck(deck.getDeck());
             sendDeckToAll(deck);
             System.out.println("Done dealing deck.");
+            game.waitCards.release();
+
         } catch (IOException e) {
             e.printStackTrace();
         }
