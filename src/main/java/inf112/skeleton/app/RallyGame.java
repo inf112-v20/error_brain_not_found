@@ -29,6 +29,7 @@ public class RallyGame extends Game {
     public Deck deck;
 
     public ArrayList<Player> players;
+    public ArrayList<Player> respawnPlayers;
     public Semaphore waitForCards;
     public boolean playing;
     public Sound laserSound;
@@ -48,9 +49,9 @@ public class RallyGame extends Game {
     public void setupGame(String mapPath) {
         this.board = new Board(mapPath, 1);
         this.deck = new Deck();
-        this.players = new ArrayList<>();
         this.players = board.getPlayers();
         this.mainPlayer = board.getPlayer1();
+        this.respawnPlayers = new ArrayList<>();
 
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
@@ -211,28 +212,28 @@ public class RallyGame extends Game {
      * Reset damage tokens, remove player from board and discard all cards
      */
     public void decreaseLives() {
+        ArrayList<Player> removedPlayers = new ArrayList<>();
         for (Player player : players) {
             if (player.getDamageTokens() >= 10 || board.outsideBoard(player)) {
                 player.decrementLifeTokens();
                 player.resetDamageTokens();
                 player.discardAllCards(deck);
                 board.removePlayerFromBoard(player);
+                removedPlayers.add(player);
             }
         }
-    }
-
-    public void removeDeadPlayers() {
-        for (Player player : players) {
-            if (player.isDead()) {
-                board.removePlayerFromBoard(player);
-            }
-        }
+        players.removeAll(removedPlayers);
+        respawnPlayers.addAll(removedPlayers);
     }
 
     public void respawnPlayers() {
-        for (Player player : players) {
-            board.respawn(player);
+        for (Player player : respawnPlayers) {
+            if (!player.isDead()) {
+                players.add(player);
+                board.respawn(player);
+            }
         }
+        respawnPlayers.clear();
     }
 
     public void allPlayersPlayCard() {
