@@ -443,6 +443,15 @@ public class Board extends BoardLayers {
         return neighbourPosition;
     }
 
+    public void respawnPlayers() {
+        for (Player player : players) {
+            if (outsideBoard(player)) {
+                player.decrementLifeTokens();
+                respawn(player);
+            }
+        }
+    }
+
     public boolean hasPlayer(Vector2 position) {
         for (Player enemyPlayer : players) {
             if (enemyPlayer.getPosition().equals(position)) {
