@@ -40,7 +40,7 @@ public class ProgramCardTest {
 
         // Already 4 players on board.
         //TODO: Let setupGame take in playerNumber as arg
-        player = new Player(new Vector2(0,0), 5);
+        player = new Player(new Vector2(0, 0), 2);
         player.setDirection(Direction.EAST);
         Board board = game.getBoard();
         board.addPlayer(player);

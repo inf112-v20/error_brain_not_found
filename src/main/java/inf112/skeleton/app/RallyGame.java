@@ -125,7 +125,6 @@ public class RallyGame extends Game {
         */
         while (playing) {
             // Deal the Program cards.
-            dealCards();
             try {
                 waitForCards.acquire();
             } catch (InterruptedException e) {
@@ -172,6 +171,7 @@ public class RallyGame extends Game {
                 removeDeadPlayers();
                 sleep(1000);
             }
+            dealCards();
         }
     }
 
