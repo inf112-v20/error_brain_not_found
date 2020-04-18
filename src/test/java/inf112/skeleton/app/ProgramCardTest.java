@@ -4,10 +4,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.Rotate;
+import inf112.skeleton.app.objects.player.Player;
+import inf112.skeleton.app.objects.player.PlayerSorter;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -35,9 +38,7 @@ public class ProgramCardTest {
         this.game = new RallyGame();
         this.game.setUpGameWithoutConnection("assets/maps/Risky_Exchange.tmx", 0);
 
-        // Already 4 players on board.
-        //TODO: Let setupGame take in playerNumber as arg
-        player = new Player(new Vector2(0,0), 5);
+        player = new Player(new Vector2(0, 0), 1);
         player.setDirection(Direction.EAST);
         Board board = game.getBoard();
         board.addPlayer(player);
@@ -100,7 +101,7 @@ public class ProgramCardTest {
     public void firstRotateThenMoveToCorrectPositionTest() {
         player.setSelectedCards(left, moveOne);
         Vector2 beforePosition = player.getPosition();
-        // Player is rotated left and therefore player will go up instead of to the right
+        // player is rotated left and therefore player will go up instead of to the right
         Vector2 afterPosition = new Vector2(beforePosition.x, beforePosition.y+1);
         ProgramCard card = game.nextCard(player);
         game.playCard(player, card);
