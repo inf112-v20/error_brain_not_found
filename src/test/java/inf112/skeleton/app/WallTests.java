@@ -8,7 +8,7 @@ import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.TileID;
-import inf112.skeleton.app.objects.Player.Player;
+import inf112.skeleton.app.objects.player.Player;
 import org.junit.Before;
 import org.junit.Test;
 

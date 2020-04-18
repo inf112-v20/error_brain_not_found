@@ -9,8 +9,8 @@ import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.Rotate;
-import inf112.skeleton.app.objects.Player.Player;
-import inf112.skeleton.app.objects.Player.PlayerSorter;
+import inf112.skeleton.app.objects.player.Player;
+import inf112.skeleton.app.objects.player.PlayerSorter;
 import org.junit.Before;
 import org.junit.Test;
 
