@@ -43,6 +43,7 @@ public class RallyGame extends Game {
     public void create() {
         this.buttonSkins = new ButtonSkin();
         this.setScreen(new MenuScreen(this));
+        loadAudio();
         startMusic();
     }
 
@@ -56,8 +57,6 @@ public class RallyGame extends Game {
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
         this.playing = true;
-
-        this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
 
         new Thread(this::doTurn).start();
 
@@ -90,12 +89,12 @@ public class RallyGame extends Game {
         volume = volume == 0 ? 0.5f : 0;
     }
 
-    public void loadMusic() {
+    public void loadAudio() {
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
+        laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
     }
 
     public void startMusic() {
-        loadMusic();
         gameMusic.setVolume(0.5f);
         gameMusic.setLooping(true);
         gameMusic.play();
@@ -399,10 +398,13 @@ public class RallyGame extends Game {
     }
 
     public void dispose() {
-        gameMusic.dispose();
-        laserSound.dispose();
-        board.dispose();
-        screen.dispose();
+        try {
+            gameMusic.dispose();
+            laserSound.dispose();
+            screen.dispose();
+            board.dispose();
+        } catch (Exception ignored) {
+        }
     }
 
     public Board getBoard() {
