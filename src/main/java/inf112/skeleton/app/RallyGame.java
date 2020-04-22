@@ -4,21 +4,17 @@ import com.badlogic.gdx.*;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
-import inf112.skeleton.app.LAN.ServerThread;
 import inf112.skeleton.app.LAN.Converter;
 import inf112.skeleton.app.LAN.GameClientThread;
+import inf112.skeleton.app.LAN.ServerThread;
+import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.Messages;
+import inf112.skeleton.app.objects.Belt;
 import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
-
-import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Screen;
-import inf112.skeleton.app.board.Board;
-import inf112.skeleton.app.objects.Belt;
 import inf112.skeleton.app.objects.player.Player;
 import inf112.skeleton.app.objects.player.PlayerSorter;
 import inf112.skeleton.app.screens.ButtonSkin;
@@ -26,7 +22,7 @@ import inf112.skeleton.app.screens.gifscreen.GifScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
-import java.io.*;
+import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -623,10 +619,13 @@ public class RallyGame extends Game {
             this.serverThread.getServer().disconnectAll();
             System.out.println(Messages.CLOSED.toString());
         }
-        gameMusic.dispose();
-        laserSound.dispose();
-        board.dispose();
-        screen.dispose();
+        try {
+            gameMusic.dispose();
+            laserSound.dispose();
+            screen.dispose();
+            board.dispose();
+        } catch (Exception ignored) {
+        }
     }
 
     public void updatePositionsAfterBeltPush () {
