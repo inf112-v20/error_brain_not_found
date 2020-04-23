@@ -69,7 +69,8 @@ public class Player {
     }
 
     public void drawCards(Deck deck) {
-        while (allCards.size() < 9) {
+        int programCardsDealtBasedOnDmgTokens = 9 - getDamageTokens();
+        while (allCards.size() < programCardsDealtBasedOnDmgTokens) {
             allCards.add(deck.drawCard());
         }
     }
