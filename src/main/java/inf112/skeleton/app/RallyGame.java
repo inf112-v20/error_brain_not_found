@@ -115,7 +115,7 @@ public class RallyGame extends Game {
             String hostIP = scanner.nextLine();
             System.out.println("What is portNumber?");
             int portNumber = scanner.nextInt();
-            setUpConnection(hostIP, portNumber);
+            setUpClient(hostIP, portNumber);
         }
 
         this.board = new Board(mapPath, this.numberOfPlayers);
@@ -173,7 +173,7 @@ public class RallyGame extends Game {
      * @param hostIP     IP to connect to
      * @param portNumber to establish connection with
      */
-    public void setUpConnection(String hostIP, int portNumber) {
+    public void setUpClient(String hostIP, int portNumber) {
         //TODO: check that IP and portnumber are valid
         // Try to create a client socket.
         try {
@@ -191,6 +191,7 @@ public class RallyGame extends Game {
             System.out.println("I am player " + myPlayerNumber);
         } catch (UnknownHostException e) {
             System.out.println("Did not find host.");
+            Gdx.app.exit();
         } catch (IOException e) {
             System.out.println("Could not connect to " + hostIP + " on port " + portNumber + " Quit.");
             Gdx.app.exit();
