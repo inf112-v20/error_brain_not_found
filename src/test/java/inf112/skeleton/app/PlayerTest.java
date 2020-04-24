@@ -74,13 +74,6 @@ public class PlayerTest {
     }
 
     @Test
-    public void tryingToPickUpFlagWhenNotStandingOnFlagDoesNotWorkTest() {
-        Flag flag = new Flag(1, 1,0);
-        player.pickUpFlag(flag, flag.getFlagnr());
-
-    }
-
-    @Test
     public void startWithNoDamageTokensTest() {
         assertEquals(0, player.getDamageTokens());
     }
