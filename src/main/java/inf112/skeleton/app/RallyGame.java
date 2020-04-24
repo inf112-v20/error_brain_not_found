@@ -168,11 +168,7 @@ public class RallyGame extends Game {
                 fireLasers();
 
                 decreaseLives();
-                try {
-                    Thread.sleep(600);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+
                 sleep(250);
 
                 removeLasers();

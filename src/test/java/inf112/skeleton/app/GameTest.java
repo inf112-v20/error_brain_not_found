@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.board.Board;
+import inf112.skeleton.app.objects.player.Player;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -24,7 +26,7 @@ public class GameTest {
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
         this.game = new RallyGame();
-        this.game.setupGame("assets/maps/Risky_Exchange.tmx");
+        this.game.setupGame("assets/maps/Risky Exchange.tmx");
         Board board = game.getBoard();
 
         // Already 4 players on board.
@@ -57,6 +59,7 @@ public class GameTest {
         game.getBoard().movePlayer(player);
         fillUpDamageTokens(player);
         game.decreaseLives();
+        game.respawnPlayers();
         assertTrue(player.isInBackupState());
     }
 
@@ -64,9 +67,11 @@ public class GameTest {
     public void deadPlayerAreRemovedFromGameTest() {
         // Kill player
         for (int livesTaken = 1; livesTaken <= 3; livesTaken++) {
+            fillUpDamageTokens(player);
             player.decrementLifeTokens();
+            game.decreaseLives();
         }
-        game.removeDeadPlayers();
+        game.respawnPlayers();
         assertFalse(game.players.contains(player));
     }
 }

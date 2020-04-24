@@ -34,7 +34,7 @@ public class WallTests {
         Gdx.gl = mock(GL20.class);
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
-        this.board = new Board("assets/maps/Risky_Exchange.tmx", 0);
+        this.board = new Board("assets/maps/Risky Exchange.tmx", 0);
         this.player = new Player(new Vector2(0,0), 1);
         random = new Random();
         allNorthWalls = new ArrayList<>();
