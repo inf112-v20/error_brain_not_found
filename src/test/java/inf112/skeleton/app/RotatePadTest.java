@@ -45,15 +45,6 @@ public class RotatePadTest {
     }
 
     /**
-     * @return a random rotatePad from the list given
-     */
-    private RotatePad getRandomRotatePad(ArrayList<RotatePad> rotatePads) {
-        Random random = new Random();
-        int randomIndex = random.nextInt(rotatePads.size());
-        return rotatePads.get(randomIndex);
-    }
-
-    /**
      * Get only left rotate pads.
      *
      * @param rotatePads on board
@@ -93,7 +84,7 @@ public class RotatePadTest {
     @Test
     public void onlyRotateWhenPadIsActivatedTest() {
         for (int i = 0; i < 3; i++) {
-            RotatePad pad = getRandomRotatePad(rotatePads);
+            RotatePad pad = rotatePads.get(0);
             player.setDirection(Direction.EAST);
             player.setPosition(pad.getPosition());
             assertEquals(Direction.EAST, player.getDirection());
@@ -103,7 +94,7 @@ public class RotatePadTest {
     @Test
     public void playerOnLeftPadRotatesLeftTest() {
         for (int i = 0; i < 3; i++) {
-            RotatePad pad = getRandomRotatePad(getLeftRotatePads(rotatePads));
+            RotatePad pad = getLeftRotatePads(rotatePads).get(0);
             Vector2 padPosition = pad.getPosition();
             player.setPosition(padPosition);
             player.setDirection(Direction.EAST);
@@ -115,7 +106,7 @@ public class RotatePadTest {
     @Test
     public void playerOnRightPadRotatesRightTest() {
         for (int i = 0; i < 3; i++) {
-            RotatePad pad = getRandomRotatePad(getRightRotatePads(rotatePads));
+            RotatePad pad = getRightRotatePads(rotatePads).get(0);
             Vector2 padPosition = pad.getPosition();
             player.setPosition(padPosition);
             player.setDirection(Direction.EAST);
