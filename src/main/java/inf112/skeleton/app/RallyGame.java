@@ -105,11 +105,18 @@ public class RallyGame extends Game {
         this.deck = new Deck();
 
         Scanner scanner = new Scanner(System.in);
-        System.out.println("What is host IP? ");
-        String hostIP = scanner.nextLine();
-        System.out.println("What is portNumber?");
-        int portNumber = scanner.nextInt();
-        setUpConnection(hostIP, portNumber);
+        System.out.println("Do you want to create a new game? [Y/N]");
+        if (scanner.nextLine().equals("Y")) {
+            System.out.println("What is portNumber?");
+            int portNumber = scanner.nextInt();
+            setUpHost(portNumber);
+        } else {
+            System.out.println("What is host IP? ");
+            String hostIP = scanner.nextLine();
+            System.out.println("What is portNumber?");
+            int portNumber = scanner.nextInt();
+            setUpConnection(hostIP, portNumber);
+        }
 
         this.board = new Board(mapPath, this.numberOfPlayers);
         this.players = new ArrayList<>();
@@ -145,9 +152,23 @@ public class RallyGame extends Game {
     }
 
     /**
+     * Set up a host for this game.
+     * @param portNumber on port
+     */
+    public void setUpHost(int portNumber) {
+        this.isServer = true;
+        this.myPlayerNumber = 1;
+        System.out.println("How many players?");
+        Scanner scanner = new Scanner(System.in);
+        //TODO: Create check for number
+        this.numberOfPlayers = scanner.nextInt();
+        this.serverThread = new ServerThread(this, this.numberOfPlayers, portNumber);
+        serverThread.start();
+    }
+
+    /**
      * Try to establish a connection with host IP on port portNumber. If no connection
-     * can be made because no host is found, your computer hosts on localhost so other
-     * players can connect to your computer.
+     * can be made game ends.
      *
      * @param hostIP     IP to connect to
      * @param portNumber to establish connection with
@@ -171,15 +192,8 @@ public class RallyGame extends Game {
         } catch (UnknownHostException e) {
             System.out.println("Did not find host.");
         } catch (IOException e) {
-            System.out.println("Could not connect to " + hostIP + " on port " + portNumber + " Hosting game.");
-            this.isServer = true;
-            this.myPlayerNumber = 1;
-            System.out.println("How many players?");
-            Scanner scanner = new Scanner(System.in);
-            //TODO: Create check for number
-            this.numberOfPlayers = scanner.nextInt();
-            this.serverThread = new ServerThread(this, this.numberOfPlayers, portNumber);
-            serverThread.start();
+            System.out.println("Could not connect to " + hostIP + " on port " + portNumber + " Quit.");
+            Gdx.app.exit();
         }
     }
 
@@ -352,13 +366,13 @@ public class RallyGame extends Game {
                 sleep(250);
 
                 // Express belts move 1
-                //activateBelts(true);
+                activateBelts(true);
                 sleep(250);
 
                 decreaseLives();
 
                 // All belts move 1
-                //activateBelts(false);
+                activateBelts(false);
                 sleep(250);
 
                 // Rotate pads rotate
