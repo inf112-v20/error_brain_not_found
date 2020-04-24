@@ -30,7 +30,7 @@ public class LaserTest {
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
         this.game = new RallyGame();
-        this.game.setUpGameWithoutConnection("assets/maps/Risky_Exchange.tmx", 0);
+        this.game.setUpGameWithoutConnection("assets/maps/Risky Exchange.tmx", 0);
         this.board = game.getBoard();
         this.lasers = board.lasers;
     }
