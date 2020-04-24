@@ -1,4 +1,4 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.board;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
@@ -7,9 +7,11 @@ import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.TileID;
 import inf112.skeleton.app.objects.Flag;
+import inf112.skeleton.app.objects.player.Player;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -171,7 +173,6 @@ public class Board extends BoardLayers {
     public boolean hasHole(Vector2 position) {
         for (Vector2 vector : holes) {
             if (vector.equals(position)) {
-                scream.play(RallyGame.volume);
                 return true;
             }
         }
@@ -184,11 +185,22 @@ public class Board extends BoardLayers {
      * @param player to check
      */
     public boolean outsideBoard(Player player) {
-        return player.getPosition().x < 0 ||
-                player.getPosition().x >= this.boardWidth ||
-                player.getPosition().y < 0 ||
-                player.getPosition().y >= this.boardHeight ||
-                hasHole(player.getPosition());
+        return outsideBoard(player.getPosition()) || hasHole(player.getPosition());
+    }
+
+    public boolean outsideBoard(Vector2 position) {
+        return position.x < 0 ||
+                position.x >= this.boardWidth ||
+                position.y < 0 ||
+                position.y >= this.boardHeight;
+    }
+
+    public void pickUpFlags() {
+        for (Player player : players) {
+            if (hasFlag(player.getPosition())) {
+                pickUpFlag(player);
+            }
+        }
     }
 
     /**
@@ -207,15 +219,6 @@ public class Board extends BoardLayers {
             player.setDirection(player.getBackupDirection());
         }
         addPlayer(player);
-    }
-
-    public void respawnPlayers() {
-        for (Player player : players) {
-            if (outsideBoard(player)) {
-                player.decrementLifeTokens();
-                respawn(player);
-            }
-        }
     }
 
     public boolean validRespawnPosition(Vector2 position, Direction direction) {
@@ -245,6 +248,10 @@ public class Board extends BoardLayers {
             }
         }
         return null;
+    }
+
+    public boolean canFire(Vector2 position, Direction direction) {
+        return canGo(position, direction) && !outsideBoard(getNeighbourPosition(position, direction));
     }
 
     /**
@@ -346,16 +353,6 @@ public class Board extends BoardLayers {
         return false;
     }
 
-
-    /**
-     * Add player to the board, so the direction is correct
-     * @param player that should be rotated
-     *
-     */
-    public void rotatePlayer(Player player) {
-        addPlayer(player);
-    }
-
     /**
      * Check if it is possible to move in the direction the player are facing.
      * Check if player should and can push another player, if not return
@@ -370,7 +367,7 @@ public class Board extends BoardLayers {
         Direction direction = player.getDirection();
 
         if (!canGo(position, direction)) {
-            wallImpact.play(RallyGame.volume - 0.1f);
+            wallImpact.play(RallyGame.volume);
             addPlayer(player);
             return;
         }
@@ -405,9 +402,18 @@ public class Board extends BoardLayers {
 
         player.setPosition(position);
         addPlayer(player);
+        player.setBeltPushDir(null);
+    }
 
-        if (hasFlag(player.getPosition())) {
-            pickUpFlag(player);
+    public void updateBoard() {
+        for (Player player : players) {
+            addPlayer(player);
+        }
+    }
+
+    public void removePlayersFromBoard() {
+        for (Player player : players) {
+            removePlayerFromBoard(player);
         }
     }
 
@@ -449,6 +455,16 @@ public class Board extends BoardLayers {
                 break;
         }
         return neighbourPosition;
+    }
+
+    public void respawnPlayers() {
+        for (Player player : players) {
+            if (outsideBoard(player)) {
+                scream.play(RallyGame.volume);
+                player.decrementLifeTokens();
+                respawn(player);
+            }
+        }
     }
 
     public boolean hasPlayer(Vector2 position) {
@@ -529,6 +545,7 @@ public class Board extends BoardLayers {
                 break;
         }
         addPlayer(player);
+        player.setBeltPushDir(null);
     }
 
     /**
@@ -600,5 +617,11 @@ public class Board extends BoardLayers {
     @Override
     public TiledMap getMap() {
         return tiledMap;
+    }
+
+    public void dispose() {
+        wallImpact.dispose();
+        scream.dispose();
+        tiledMap.dispose();
     }
 }

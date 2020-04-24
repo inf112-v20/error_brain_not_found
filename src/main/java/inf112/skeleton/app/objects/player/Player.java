@@ -1,7 +1,9 @@
-package inf112.skeleton.app;
+package inf112.skeleton.app.objects.player;
 
 
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.RallyGame;
+import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
@@ -23,6 +25,8 @@ public class Player {
     private final ArrayList<Flag> flagsCollected;
     private ArrayList<ProgramCard> selectedCards;
     private final ArrayList<ProgramCard> allCards;
+    private Direction beltPushDir;
+    private Vector2 beltPushPos;
 
     private int damageTokens;
     private int lifeTokens;
@@ -36,6 +40,8 @@ public class Player {
         this.allCards = new ArrayList<>();
         this.damageTokens = 0;
         this.lifeTokens = 3;
+        this.beltPushDir = null;
+        this.beltPushPos = null;
 
         setBackup(position, Direction.EAST);
     }
@@ -45,13 +51,20 @@ public class Player {
     }
 
     public ArrayList<ProgramCard> getSelectedCards() {
-        System.out.println(selectedCards);
         return selectedCards;
+    }
+
+    public void selectCard(ProgramCard card) {
+        if (!selectedCards.contains(card) && selectedCards.size() < 5) {
+            selectedCards.add(card);
+        } else {
+            selectedCards.remove(card);
+        }
     }
 
     public void selectCards() {
         while (selectedCards.size() < 5) {
-            selectedCards.add(allCards.remove(0));
+            selectedCards.add(allCards.get(0));
         }
     }
 
@@ -59,6 +72,28 @@ public class Player {
         while (allCards.size() < 9) {
             allCards.add(deck.drawCard());
         }
+    }
+
+    public Direction getBeltPushDir() {
+        return beltPushDir;
+    }
+
+    public void setBeltPushDir(Direction direction) {
+        this.beltPushDir = direction;
+    }
+
+    public Vector2 getBeltPushPos() {
+        return beltPushPos;
+    }
+
+    public void setBeltPushPos(Vector2 position) {
+        this.beltPushPos = position;
+    }
+
+    public void discardAllCards(Deck deck) {
+        deck.addCardsToDiscardPile(allCards);
+        selectedCards.clear();
+        allCards.clear();
     }
 
     /**
@@ -70,8 +105,8 @@ public class Player {
         return damageTokens;
     }
 
-    public int resetDamageTokens() {
-        return this.damageTokens = 0;
+    public void resetDamageTokens() {
+        this.damageTokens = 0;
     }
 
     public int getLifeTokens() {
@@ -219,6 +254,21 @@ public class Player {
                 break;
             default:
                 break;
+        }
+    }
+
+    public void fire(RallyGame game) {
+        if (game.getBoard().canFire(position, direction)) {
+            fire(game, game.getBoard().getNeighbourPosition(position, direction));
+        }
+    }
+
+    public void fire(RallyGame game, Vector2 position) {
+        game.getBoard().addLaser(position, direction);
+        if (game.getBoard().hasPlayer(position)) {
+            game.getBoard().getPlayer(position).handleDamage();
+        } else if (game.getBoard().canFire(position, direction)) {
+            fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }
 

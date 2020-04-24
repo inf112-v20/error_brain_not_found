@@ -2,6 +2,7 @@ package inf112.skeleton.app.cards;
 
 import inf112.skeleton.app.enums.Rotate;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Stack;
 
@@ -22,6 +23,10 @@ public class Deck {
         discardPile = new Stack<>();
         makeRotateCards();
         makeMoveCards();
+    }
+
+    public void addCardsToDiscardPile(ArrayList<ProgramCard> programCards) {
+        discardPile.addAll(programCards);
     }
 
     public void addCardToDiscardPile(ProgramCard programCard) {
@@ -48,10 +53,15 @@ public class Deck {
     public ProgramCard drawCard() {
         ProgramCard card = deck.pop();
         if (deck.isEmpty()) {
-            deck.addAll(discardPile);
-            shuffleDeck();
+            addDiscardPileToDeck();
         }
         return card;
+    }
+
+    public void addDiscardPileToDeck() {
+        deck.addAll(discardPile);
+        discardPile.clear();
+        shuffleDeck();
     }
 
     /**
@@ -65,9 +75,9 @@ public class Deck {
             if (priority % 7 == 0) {
                 deck.push(new ProgramCard(priority * 10, 0, Rotate.UTURN, "U-turn"));
             } else if (priority % 2 == 0) {
-                deck.push(new ProgramCard(priority * 10, 0, Rotate.RIGHT, "Right rotate"));
+                deck.push(new ProgramCard(priority * 10, 0, Rotate.RIGHT, "Right turn"));
             } else {
-                deck.push(new ProgramCard(priority * 10, 0, Rotate.LEFT, "Left rotate"));
+                deck.push(new ProgramCard(priority * 10, 0, Rotate.LEFT, "Left turn"));
             }
         }
     }

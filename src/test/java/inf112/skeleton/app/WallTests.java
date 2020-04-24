@@ -5,18 +5,17 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.TileID;
+import inf112.skeleton.app.objects.player.Player;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Random;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 public class WallTests {
@@ -287,7 +286,7 @@ public class WallTests {
 
     @Test
     public void playerIsOnCellWithNorthWallTest() {
-        // Found position in Risky_Exchange.tmx, North Wall has ID 31
+        // Found position in Risky Exchange.tmx, North Wall has ID 31
         player.setPosition(new Vector2(2, 0));
         TiledMapTileLayer wallLayer = board.getWallLayer();
         TiledMapTileLayer.Cell playerCell = wallLayer.getCell((int) player.getPosition().x, (int) player.getPosition().y);
@@ -296,7 +295,7 @@ public class WallTests {
 
     @Test
     public void playerIsOnCellWithWestWallTest() {
-        // Found position in Risky_Exchange.tmx, SouthWest wall has ID 32
+        // Found position in Risky Exchange.tmx, SouthWest wall has ID 32
         player.setPosition(new Vector2(11, 7));
         TiledMapTileLayer wallLayer = board.getWallLayer();
         TiledMapTileLayer.Cell playerCell = wallLayer.getCell((int) player.getPosition().x, (int) player.getPosition().y);
@@ -305,7 +304,7 @@ public class WallTests {
 
     @Test
     public void playerIsOnCellWithEastWallTestTest() {
-        // Found position in Risky_Exchange.tmx, East Wall ha ID 23
+        // Found position in Risky Exchange.tmx, East Wall ha ID 23
         player.setPosition(new Vector2(3, 2));
         TiledMapTileLayer wallLayer = board.getWallLayer();
         TiledMapTileLayer.Cell playerCell = wallLayer.getCell((int) player.getPosition().x, (int) player.getPosition().y);

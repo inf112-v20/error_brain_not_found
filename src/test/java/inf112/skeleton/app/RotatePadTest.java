@@ -4,9 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.objects.RotatePad;
+import inf112.skeleton.app.objects.player.Player;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -32,7 +34,7 @@ public class RotatePadTest {
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
         this.game = new RallyGame();
-        this.game.setupGame("assets/maps/Risky_Exchange.tmx");
+        this.game.setupGame("assets/maps/Risky Exchange.tmx");
         Board board = game.getBoard();
         this.rotatePads = board.rotatePads;
 
