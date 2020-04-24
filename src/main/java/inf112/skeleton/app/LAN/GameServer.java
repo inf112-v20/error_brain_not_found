@@ -24,7 +24,6 @@ public class GameServer {
     private RallyGame game;
     private boolean allClientsConnected;
     private Converter converter;
-    private Deck deck;
     private Semaphore haveSentPlayerNumberAndNumberOfPlayers;
 
     public GameServer(RallyGame game) {
@@ -33,8 +32,6 @@ public class GameServer {
         this.converter = new Converter();
         this.haveSentPlayerNumberAndNumberOfPlayers = new Semaphore(1);
         haveSentPlayerNumberAndNumberOfPlayers.tryAcquire();
-        this.deck = new Deck();
-        deck.shuffleDeck();
     }
 
     /**
@@ -68,14 +65,23 @@ public class GameServer {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            game.setDeck(deck.getDeck());
-            sendDeckToAll(deck);
+            createAndSendDeck();
             System.out.println("Done dealing deck.");
             game.waitCards.release();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Create a new deck, update deck in game and send this deck to the other players.
+     */
+    public void createAndSendDeck() {
+        Deck deck = new Deck();
+        deck.shuffleDeck();
+        game.setDeck(deck.getDeck());
+        sendDeckToAll(deck);
     }
 
     /**

@@ -397,9 +397,7 @@ public class RallyGame extends Game {
 
             if (deck.deckSize() < 9) {
                 if (isServer) {
-                    this.deck = new Deck();
-                    this.deck.shuffleDeck();
-                    serverThread.getServer().sendDeckToAll(this.deck);
+                    serverThread.getServer().createAndSendDeck();
                 }
             }
 
