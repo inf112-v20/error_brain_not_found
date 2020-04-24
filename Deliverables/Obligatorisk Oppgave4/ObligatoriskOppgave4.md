@@ -163,12 +163,18 @@ Game loop:
 *   Press space again after all robots have moved and the robots will do five more rounds.   
 
 Laser:  
-*   Press on of the keyboard-arrows and the lasers will be activated. 
+*   Start a turn and wait for all players to move. Then the playerLasers should fire. Then the lasers from wall should fire.
 *   Stear your player in front of a laser. The laser should be stopped by a player.   
 
 Menu-screen:  
 *   Aa screen with a roll-down menu and start and exit buttons should show.   
 *   Choose your board by choosing from the roll-down menu then click start. The board should show with players on it.
+
+Showing cards:  
+*   Nine cards should be displayed to you when you start the game.
+
+Making a program:  
+*   When you see your nine cards, click on the cards you want to select. Your program is in the order you click the cards. When you have made a program (5 cards), the checkbutton will turn green.
 
 Mute-button:
 * Press the "m" button. The sound should be muted. 
