@@ -145,14 +145,14 @@ Tasks:
 
 #### Main criteria for MVP
 - [x] The game should be able to run, show a board with starting robot and programcards to this robot.  
-- [ ] The player is able to pick programcards and place them so that the robot can move.  
-- [ ] The game should be able to do a round, and do the phases in the correct order in that round.  
+- [x] The player is able to pick programcards and place them so that the robot can move.  
+- [x] The game should be able to do a round, and do the phases in the correct order in that round.  
 - [x] The robot should be able to win by going to the flags in a specific order.   
 - [x] The robot is stopped by walls, pushed by other players and respawned when outside board/on hole.   
 - [ ] The robot should be able to do a powerdown.  
 - [x] The laser can shoot the robots and the robots take damage.   
 - [ ] The belts move so the player can be moved by belts. 
-- [ ] Create AI so player can play with other robots 
+- [ ] Create AI/LAN so player can play with other robots 
 
 
 ## Task 3 - Productdelivery and codequality
