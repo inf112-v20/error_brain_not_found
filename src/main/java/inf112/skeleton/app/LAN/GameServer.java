@@ -196,7 +196,7 @@ public class GameServer {
     }
 
     /**
-     * Tell server that all players have selected their cards
+     * Tell server that all clients have selected their cards
      */
     public void setAllClientsHaveSelectedCards() {
         this.allClientsHaveSelectedCards = true;
@@ -204,7 +204,7 @@ public class GameServer {
 
     /**
      *
-     * @return true if all players have selected cards
+     * @return true if all clients have selected cards
      */
     public boolean allClientsHaveSelectedCards() {
         return allClientsHaveSelectedCards;
