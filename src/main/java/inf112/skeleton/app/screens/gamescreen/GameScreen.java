@@ -10,6 +10,7 @@ public class GameScreen extends StandardScreen {
 
     private final TiledMapRenderer mapRenderer;
     private final GameScreenActors actors;
+    private boolean haveInitCards;
 
     public GameScreen(final RallyGame game) {
         super(game);
@@ -31,8 +32,9 @@ public class GameScreen extends StandardScreen {
 
     @Override
     public void render(float v) {
-        if (game.haveReceivedDeck()) {
+        if (game.haveReceivedDeck() && !haveInitCards) {
             actors.initializeProgramCardButtons();
+            haveInitCards = true;
         }
         actors.updateActors();
         super.render(v);
@@ -41,5 +43,9 @@ public class GameScreen extends StandardScreen {
 
     public void initializeCardButtons() {
         actors.initializeProgramCardButtons();
+    }
+
+    public void updateCards() {
+        actors.updateCards();
     }
 }

@@ -18,6 +18,7 @@ import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.objects.player.Player;
 import inf112.skeleton.app.objects.player.PlayerSorter;
 import inf112.skeleton.app.screens.ButtonSkin;
+import inf112.skeleton.app.screens.gamescreen.GameScreen;
 import inf112.skeleton.app.screens.gifscreen.GifScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
@@ -393,9 +394,19 @@ public class RallyGame extends Game {
                 respawnPlayers();
             }
             discardCards();
+
+            if (deck.deckSize() < 9) {
+                if (isServer) {
+                    this.deck = new Deck();
+                    this.deck.shuffleDeck();
+                    serverThread.getServer().sendDeckToAll(this.deck);
+                }
+            }
+
             dealCards();
-            mainPlayer.selectCards();
-            System.out.println(mainPlayer.getSelectedCards());
+            ((GameScreen) screen).updateCards();
+            //mainPlayer.selectCards();
+            //System.out.println(mainPlayer.getSelectedCards());
             System.out.println("Your program is: " + mainPlayer.getSelectedCards());
             letClientsAndServerContinue();
             sendSelectedCards();
