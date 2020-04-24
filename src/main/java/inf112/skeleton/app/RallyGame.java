@@ -53,7 +53,7 @@ public class RallyGame extends Game {
     private ProgramCard card;
     private Converter converter;
     private Semaphore waitForServerToSendPlayernumberAndNumberOfPlayers;
-    public Semaphore waitCards;
+    public Semaphore waitUntilAllHaveReceivedDeckBeforeDealingCards;
 
     public ButtonSkin buttonSkins;
 
@@ -118,8 +118,8 @@ public class RallyGame extends Game {
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
         //TODO: find better name for this semaphore
-        this.waitCards = new Semaphore(1);
-        this.waitCards.tryAcquire();
+        this.waitUntilAllHaveReceivedDeckBeforeDealingCards = new Semaphore(1);
+        this.waitUntilAllHaveReceivedDeckBeforeDealingCards.tryAcquire();
         this.playing = true;
         this.converter = new Converter();
         this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
@@ -127,26 +127,20 @@ public class RallyGame extends Game {
 
         setInputProcessor();
 
-        //TODO: Find solution for how to dealcards when all are connected but gamescreen can still
-        //be shown (without cards).
         if (!isServer) {
             dealCards();
             receivedDeck = true;
         } else {
             try {
                 System.out.println("Waiting...");
-                waitCards.acquire();
+                waitUntilAllHaveReceivedDeckBeforeDealingCards.acquire();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
             dealCards();
-            System.out.println("Have dealt cards");
             receivedDeck = true;
+            System.out.println("Have dealt cards");
         }
-        for (Player player : players) {
-            System.out.println(player.getPlayerNr() + " " + player.getAllCards());
-        }
-        // selectCards();
     }
 
     /**
@@ -394,7 +388,7 @@ public class RallyGame extends Game {
                 respawnPlayers();
             }
             discardCards();
-
+            // Dealcards draw 9 cards, so deck needs to be larger than 9
             if (deck.deckSize() < 9) {
                 if (isServer) {
                     serverThread.getServer().createAndSendDeck();
@@ -403,8 +397,6 @@ public class RallyGame extends Game {
 
             dealCards();
             ((GameScreen) screen).updateCards();
-            //mainPlayer.selectCards();
-            //System.out.println(mainPlayer.getSelectedCards());
             System.out.println("Your program is: " + mainPlayer.getSelectedCards());
             letClientsAndServerContinue();
             sendSelectedCards();

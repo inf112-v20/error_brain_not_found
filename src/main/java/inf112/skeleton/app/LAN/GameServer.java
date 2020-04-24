@@ -67,7 +67,7 @@ public class GameServer {
             }
             createAndSendDeck();
             System.out.println("Done dealing deck.");
-            game.waitCards.release();
+            game.waitUntilAllHaveReceivedDeckBeforeDealingCards.release();
 
         } catch (IOException e) {
             e.printStackTrace();
