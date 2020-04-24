@@ -84,4 +84,9 @@ public class LaserTest {
         }
     }
 
+    @Test
+    public void playerTakesDamageWhenHitByLaserTest() {
+        // test
+    }
+
 }
