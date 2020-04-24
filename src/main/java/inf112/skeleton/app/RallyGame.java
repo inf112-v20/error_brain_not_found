@@ -6,6 +6,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.LAN.Converter;
 import inf112.skeleton.app.LAN.GameClientThread;
+import inf112.skeleton.app.LAN.GameServer;
 import inf112.skeleton.app.LAN.ServerThread;
 import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
@@ -132,7 +133,7 @@ public class RallyGame extends Game {
             receivedDeck = true;
         } else {
             try {
-                System.out.println("Waiting...");
+                System.out.println("Waiting for other players to connect...");
                 waitUntilAllHaveReceivedDeckBeforeDealingCards.acquire();
             } catch (InterruptedException e) {
                 e.printStackTrace();
@@ -266,6 +267,14 @@ public class RallyGame extends Game {
         if (mainPlayer.getSelectedCards().size() == 5) {
             //cardsReady();
             sendSelectedCards();
+            if (isServer) {
+                GameServer server = serverThread.getServer();
+                if (server.allClientsHaveSelectedCards()) {
+                    server.sendSelectedCardsToAll();
+                    server.sendToAll(Messages.START_TURN.toString());
+                    cardsReady();
+                }
+            }
         }
     }
 

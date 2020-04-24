@@ -25,6 +25,7 @@ public class GameServer {
     private boolean allClientsConnected;
     private Converter converter;
     private Semaphore haveSentPlayerNumberAndNumberOfPlayers;
+    private boolean allClientsHaveSelectedCards;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
@@ -194,4 +195,18 @@ public class GameServer {
         }
     }
 
+    /**
+     * Tell server that all players have selected their cards
+     */
+    public void setAllClientsHaveSelectedCards() {
+        this.allClientsHaveSelectedCards = true;
+    }
+
+    /**
+     *
+     * @return true if all players have selected cards
+     */
+    public boolean allClientsHaveSelectedCards() {
+        return allClientsHaveSelectedCards;
+    }
 }

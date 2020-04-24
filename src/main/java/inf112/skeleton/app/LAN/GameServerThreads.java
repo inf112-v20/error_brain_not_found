@@ -74,6 +74,9 @@ public class GameServerThreads extends Thread {
                 Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
                 addSelectedCard(player, card);
                 System.out.println(card);
+                if (allClientsHaveSelectedCards()) {
+                    server.setAllClientsHaveSelectedCards();
+                }
                 if (allPlayersHaveSelectedCards()) {
                     System.out.println("Do turn");
                     server.sendSelectedCardsToAll();
@@ -90,6 +93,17 @@ public class GameServerThreads extends Thread {
                 ex.printStackTrace();
             }
         }
+    }
+
+    private boolean allClientsHaveSelectedCards() {
+        for (Player player : game.getBoard().getPlayers()) {
+            if (player.getPlayerNr() != 1) {
+                if (player.getSelectedCards().size() < 5) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 
     /**
