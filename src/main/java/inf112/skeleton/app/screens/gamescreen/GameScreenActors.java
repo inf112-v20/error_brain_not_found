@@ -82,6 +82,7 @@ public class GameScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.mainPlayer.selectCard(card);
+                updateCards();
                 System.out.println(game.mainPlayer.getSelectedCards());
             }
 
@@ -149,13 +150,10 @@ public class GameScreenActors {
         stage.addActor(token);
     }
 
-    public void updateButtons() {
+    public void updateActors() {
         updateConfirm();
         updateLifeTokens();
         updateDamageTokens();
-        if (game.haveReceivedDeck()) {
-            updateCards();
-        }
     }
 
     public void updateConfirm() {

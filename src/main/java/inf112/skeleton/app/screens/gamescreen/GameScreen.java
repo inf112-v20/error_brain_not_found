@@ -34,7 +34,7 @@ public class GameScreen extends StandardScreen {
         if (game.haveReceivedDeck()) {
             actors.initializeProgramCardButtons();
         }
-        actors.updateButtons();
+        actors.updateActors();
         super.render(v);
         mapRenderer.render();
     }
