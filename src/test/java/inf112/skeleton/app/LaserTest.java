@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Random;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -36,16 +35,6 @@ public class LaserTest {
     }
 
     /**
-     * @param lasers on board
-     * @return random laser laser from list given
-     */
-    private Laser getRandomLaser(ArrayList<Laser> lasers) {
-        Random random = new Random();
-        int randomIndex = random.nextInt(lasers.size());
-        return lasers.get(randomIndex);
-    }
-
-    /**
      * @param position to check for laser
      * @return true if cell in this position from laserLayer has a laser on this cell.
      */
@@ -64,7 +53,7 @@ public class LaserTest {
     public void lasersFiredHasLasersInStartPositionTest() {
         game.fireLasers();
         for (int i = 0; i < 3; i++) {
-            Laser laser = getRandomLaser(lasers);
+            Laser laser = lasers.get(0);
             Vector2 laserPosition = laser.getStartPosition();
             assertTrue(hasLaser(laserPosition));
         }
@@ -73,9 +62,8 @@ public class LaserTest {
     @Test
     public void playerBlockingLaserTest() {
         for (int i = 0; i < 3; i++) {
-            Laser laser = getRandomLaser(lasers);
+            Laser laser = lasers.get(0);
             Vector2 blockingPosition = board.getNeighbourPosition(laser.getStartPosition(), laser.getDirection());
-            //TODO: Let RallyGame take in number of players as arg
             Player blockingPlayer = new Player(blockingPosition, 5);
             board.addPlayer(blockingPlayer);
             game.fireLasers();
