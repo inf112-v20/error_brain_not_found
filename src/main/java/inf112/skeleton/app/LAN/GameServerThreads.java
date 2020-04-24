@@ -73,7 +73,9 @@ public class GameServerThreads extends Thread {
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                 Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
                 addSelectedCard(player, card);
+                System.out.println(card);
                 if (allPlayersHaveSelectedCards()) {
+                    System.out.println("Do turn");
                     server.sendSelectedCardsToAll();
                     server.sendToAll(Messages.START_TURN.toString());
                     startDoTurn();

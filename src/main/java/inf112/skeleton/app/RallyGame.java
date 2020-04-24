@@ -117,6 +117,7 @@ public class RallyGame extends Game {
         this.players = new ArrayList<>();
         this.players = board.getPlayers();
         this.mainPlayer = board.getPlayer(this.myPlayerNumber);
+        this.respawnPlayers = new ArrayList<>();
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
         //TODO: find better name for this semaphore
@@ -272,7 +273,8 @@ public class RallyGame extends Game {
 
     public void confirmCards () {
         if (mainPlayer.getSelectedCards().size() == 5) {
-            cardsReady();
+            //cardsReady();
+            sendSelectedCards();
         }
     }
 
@@ -350,13 +352,13 @@ public class RallyGame extends Game {
                 sleep(250);
 
                 // Express belts move 1
-                activateBelts(true);
+                //activateBelts(true);
                 sleep(250);
 
                 decreaseLives();
 
                 // All belts move 1
-                activateBelts(false);
+                //activateBelts(false);
                 sleep(250);
 
                 // Rotate pads rotate
@@ -374,7 +376,6 @@ public class RallyGame extends Game {
                 // Fire lasers for 250 ms
                 fireLasers();
 
-                board.respawnPlayers();
                 try {
                     Thread.sleep(600);
                 } catch (InterruptedException e) {
@@ -392,10 +393,12 @@ public class RallyGame extends Game {
 
                 sleep(1000);
             }
-            respawnPlayers();
+            if (!respawnPlayers.isEmpty()) {
+                respawnPlayers();
+            }
             discardCards();
             dealCards();
-
+            mainPlayer.selectCards();
             System.out.println(mainPlayer.getSelectedCards());
             System.out.println("Your program is: " + mainPlayer.getSelectedCards());
             letClientsAndServerContinue();
@@ -454,8 +457,10 @@ public class RallyGame extends Game {
                 removedPlayers.add(player);
             }
         }
-        players.removeAll(removedPlayers);
-        respawnPlayers.addAll(removedPlayers);
+        if (!removedPlayers.isEmpty()) {
+            players.removeAll(removedPlayers);
+            respawnPlayers.addAll(removedPlayers);
+        }
     }
 
     public void respawnPlayers () {
