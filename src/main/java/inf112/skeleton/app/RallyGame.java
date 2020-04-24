@@ -125,7 +125,6 @@ public class RallyGame extends Game {
         this.respawnPlayers = new ArrayList<>();
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
-        //TODO: find better name for this semaphore
         this.waitUntilAllHaveReceivedDeckBeforeDealingCards = new Semaphore(1);
         this.waitUntilAllHaveReceivedDeckBeforeDealingCards.tryAcquire();
         this.playing = true;
