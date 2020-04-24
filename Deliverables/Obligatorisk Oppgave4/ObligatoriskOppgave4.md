@@ -158,12 +158,16 @@ Tasks:
 ## Task 3 - Productdelivery and codequality
 ### Manual tests
 Game loop:  
-*   When the game has started press space once.
+*   When the game has started choose you cards and press the confirm button when it has turned green.
+*   If you are in LAN you need to wait for other players to confirm their cards. When all have confirmed, the game should 
+start the turn.
 *   Then all robots will use one programcard in turn, 5 times. (5 rounds) 
-*   Press space again after all robots have moved and the robots will do five more rounds.   
+*   Choose cards again and press comfirm, the game will start the second turn.  
 
-Laser:  
+Laser (fire):  
 *   Start a turn and wait for all players to move. Then the playerLasers should fire. Then the lasers from wall should fire.
+
+Laser (blocking):
 *   Stear your player in front of a laser. The laser should be stopped by a player.   
 
 Menu-screen:  
