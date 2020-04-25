@@ -4,7 +4,9 @@ Team: error_no_brain_found
 ## Task 1 - Team and project
 ### Meeting minutes
 
-[Meeting 8](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-8)
+[Meeting 8](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-8)  
+[Meeting 10](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-10)  
+[Meeting 11]()  
 
 
 ## Task 2 - Requirements
@@ -157,28 +159,31 @@ Tasks:
 
 ## Task 3 - Productdelivery and codequality
 ### Manual tests
-Game loop:  
+#### Game loop
 *   When the game has started choose you cards and press the confirm button when it has turned green.
+
 *   If you are in LAN you need to wait for other players to confirm their cards. When all have confirmed, the game should 
 start the turn.
+
 *   Then all robots will use one programcard in turn, 5 times. (5 rounds) 
+
 *   Choose cards again and press comfirm, the game will start the second turn.  
 
-Laser (fire):  
+#### Laser (fire)  
 *   Start a turn and wait for all players to move. Then the playerLasers should fire. Then the lasers from wall should fire.
 
-Laser (blocking):
+#### Laser (blocking)
 *   Stear your player in front of a laser. The laser should be stopped by a player.   
 
-Menu-screen:  
+#### Menu-screen  
 *   Aa screen with a roll-down menu and start and exit buttons should show.   
 *   Choose your board by choosing from the roll-down menu then click start. The board should show with players on it.
 
-Showing cards:  
+#### Showing cards
 *   Nine cards should be displayed to you when you start the game.
 
-Making a program:  
+#### Making a program  
 *   When you see your nine cards, click on the cards you want to select. Your program is in the order you click the cards. When you have made a program (5 cards), the checkbutton will turn green.
 
-Mute-button:
+#### Mute-button
 * Press the "m" button. The sound should be muted. 
