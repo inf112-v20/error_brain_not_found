@@ -17,23 +17,23 @@ import java.util.ArrayList;
 
 public abstract class BoardLayers {
 
-    public final TiledMap tiledMap;
+    protected final TiledMap tiledMap;
 
-    public final TiledMapTileLayer playerLayer;
-    public final TiledMapTileLayer flagLayer;
-    public final TiledMapTileLayer wallLayer;
-    public final TiledMapTileLayer laserLayer;
-    public final TiledMapTileLayer groundLayer;
+    protected final TiledMapTileLayer playerLayer;
+    protected final TiledMapTileLayer flagLayer;
+    protected final TiledMapTileLayer wallLayer;
+    protected final TiledMapTileLayer laserLayer;
+    protected final TiledMapTileLayer groundLayer;
 
-    public final ArrayList<Laser> lasers;
-    public final ArrayList<Flag> flags;
-    public final ArrayList<RotatePad> rotatePads;
-    public final ArrayList<Vector2> holes;
-    public final ArrayList<Belt> belts;
-    public final ArrayList<Belt> expressBelts;
+    protected final ArrayList<Laser> lasers;
+    protected final ArrayList<Flag> flags;
+    protected final ArrayList<RotatePad> rotatePads;
+    protected final ArrayList<Vector2> holes;
+    protected final ArrayList<Belt> belts;
+    protected final ArrayList<Belt> expressBelts;
 
-    public final int boardWidth;
-    public final int boardHeight;
+    protected final int boardWidth;
+    protected final int boardHeight;
 
     public BoardLayers(String mapPath) {
         this.tiledMap = new TmxMapLoader().load(mapPath);
@@ -303,7 +303,43 @@ public abstract class BoardLayers {
         }
     }
 
-    public abstract TiledMap getMap();
+    public TiledMap getTiledMap() {
+        return tiledMap;
+    }
 
-    public abstract TiledMapTileLayer getLaserLayer();
+    public TiledMapTileLayer getLaserLayer() {
+        return laserLayer;
+    }
+
+    public ArrayList<Laser> getLasers() {
+        return lasers;
+    }
+
+    public ArrayList<Flag> getFlags() {
+        return flags;
+    }
+
+    public ArrayList<RotatePad> getRotatePads() {
+        return rotatePads;
+    }
+
+    public ArrayList<Vector2> getHoles() {
+        return holes;
+    }
+
+    public ArrayList<Belt> getBelts() {
+        return belts;
+    }
+
+    public ArrayList<Belt> getExpressBelts() {
+        return expressBelts;
+    }
+
+    public int getBoardWidth() {
+        return boardWidth;
+    }
+
+    public int getBoardHeight() {
+        return boardHeight;
+    }
 }

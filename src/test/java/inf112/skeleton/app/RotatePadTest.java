@@ -36,7 +36,7 @@ public class RotatePadTest {
         this.game = new RallyGame();
         this.game.setupGame("assets/maps/Risky Exchange.tmx");
         Board board = game.getBoard();
-        this.rotatePads = board.rotatePads;
+        this.rotatePads = board.getRotatePads();
 
         // Already 4 players on board.
         //TODO: Let setupGame take in playerNumber as arg

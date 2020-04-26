@@ -2,7 +2,6 @@ package inf112.skeleton.app.board;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
@@ -35,7 +34,7 @@ public class Board extends BoardLayers {
     }
 
     private TiledMapTile getRobotTile(Player player) {
-        TiledMapTileSet tileSet = this.tiledMap.getTileSets().getTileSet("robots");
+        TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("robots");
         switch (player.getDirection()) {
             case SOUTH:
                 return tileSet.getTile(TileID.PLAYER_SOUTH.getId());
@@ -190,9 +189,9 @@ public class Board extends BoardLayers {
 
     public boolean outsideBoard(Vector2 position) {
         return position.x < 0 ||
-                position.x >= this.boardWidth ||
+                position.x >= boardWidth ||
                 position.y < 0 ||
-                position.y >= this.boardHeight;
+                position.y >= boardHeight;
     }
 
     public void pickUpFlags() {
@@ -612,11 +611,6 @@ public class Board extends BoardLayers {
      */
     public int getHeight() {
         return boardHeight;
-    }
-
-    @Override
-    public TiledMap getMap() {
-        return tiledMap;
     }
 
     public void dispose() {
