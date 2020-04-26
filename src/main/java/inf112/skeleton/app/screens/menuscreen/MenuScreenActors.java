@@ -24,7 +24,6 @@ public class MenuScreenActors {
 
     public float BUTTON_WIDTH;
     public float BUTTON_HEIGHT;
-    public float TEXT_INPUT_WIDTH;
     public float TOP_BUTTON_Y;
     public float BOTTOM_BUTTON_Y;
     public float TEXT_INPUT_Y;
