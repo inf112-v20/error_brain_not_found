@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.objects.Belt;
 import inf112.skeleton.app.objects.Flag;
 import inf112.skeleton.app.objects.player.Player;
 import org.junit.Before;

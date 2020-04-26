@@ -5,20 +5,23 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.board.Board;
+import inf112.skeleton.app.objects.Belt;
 import inf112.skeleton.app.objects.player.Player;
 import org.junit.Before;
 import org.junit.Test;
 
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+import java.util.ArrayList;
+import java.util.Vector;
+
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 public class GameTest {
 
     private RallyGame game;
     private Player player;
+    private ArrayList<Belt> belts;
 
     @Before
     public void setUp() {
@@ -33,6 +36,7 @@ public class GameTest {
         //TODO: Let setupGame take in playerNumber as arg
         player = new Player(new Vector2(0, 0), 5);
         board.addPlayer(player);
+        this.belts = board.belts;
     }
 
     /**
@@ -73,5 +77,14 @@ public class GameTest {
         }
         game.respawnPlayers();
         assertFalse(game.players.contains(player));
+    }
+
+    @Test
+    public void playerMovesOnBeltTest() {
+        Belt belt = belts.get(0);
+        Vector2 beltPosition = belt.getPosition();
+        player.setPosition(beltPosition);
+        game.activateBelts(false);
+        assertNotEquals(beltPosition, player.getPosition());
     }
 }
