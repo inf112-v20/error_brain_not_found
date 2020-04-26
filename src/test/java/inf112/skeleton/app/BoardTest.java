@@ -57,6 +57,7 @@ public class BoardTest {
         return flag1.getFlagnr() == flag2.getFlagnr() && flag1.getPosition().equals(flag2.getPosition());
     }
 
+    /*
      *
      * @return true if player is on backupPosition and has backupDirection
      */
