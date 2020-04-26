@@ -38,10 +38,10 @@ public class BoardTest {
         new HeadlessApplication(new EmptyApplication());
         this.board = new Board("assets/maps/Risky Exchange.tmx", NUMBER_OF_PLAYERS_WHEN_STARTING_GAME);
         // Random position
-        this.startPosition = new Vector2(5,5);
+        this.startPosition = new Vector2(5, 5);
         this.player = new Player(startPosition, 1);
-        this.holes = board.holes;
-        this.flags = board.flags;
+        this.holes = board.getHoles();
+        this.flags = board.getFlags();
         // Sort the flags so player can go on them in correct order
         flags.sort(Comparator.comparingInt(Flag::getFlagnr));
     }
@@ -76,7 +76,7 @@ public class BoardTest {
 
     @Test
     public void boardHasAMapTest() {
-        assertNotNull(board.getMap());
+        assertNotNull(board.getTiledMap());
     }
 
     @Test

@@ -34,7 +34,7 @@ public class LaserTest {
         this.game = new RallyGame();
         this.game.setupGame("assets/maps/Risky Exchange.tmx");
         this.board = game.getBoard();
-        this.lasers = board.lasers;
+        this.lasers = board.getLasers();
         this.player = new Player(new Vector2(0,0), 5);
         board.addPlayer(player);
     }
