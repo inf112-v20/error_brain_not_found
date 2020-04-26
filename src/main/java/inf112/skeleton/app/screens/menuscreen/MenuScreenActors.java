@@ -135,10 +135,9 @@ public class MenuScreenActors {
     }
 
     public void initializeCreateGame() {
-        // TODO: Bytt til "Create game" og "Create game over"
         ImageButton.ImageButtonStyle createGameButtonStyle = new ImageButton.ImageButtonStyle();
-        createGameButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Start");
-        createGameButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Start over");
+        createGameButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Create game");
+        createGameButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Create game over");
 
         createGameButton = new ImageButton(createGameButtonStyle);
         createGameButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -161,9 +160,8 @@ public class MenuScreenActors {
 
     public void initializeJoinGame() {
         ImageButton.ImageButtonStyle joinGameButtonStyle = new ImageButton.ImageButtonStyle();
-        // TODO: Bytt til "Join game" og "Join game over"
-        joinGameButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Exit");
-        joinGameButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Exit over");
+        joinGameButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Join game");
+        joinGameButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Join game over");
 
         joinGameButton = new ImageButton(joinGameButtonStyle);
         joinGameButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
