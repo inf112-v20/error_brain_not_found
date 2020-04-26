@@ -14,8 +14,8 @@ public class ButtonSkin {
 
         TextureRegion confirmReady = new TextureRegion(new Texture("assets/images/ConfirmButton.png"));
         TextureRegion confirmNotReady = new TextureRegion(new Texture("assets/images/ConfirmButtonNotReady.png"));
-        TextureRegion Exit = new TextureRegion(new Texture("assets/images/Exit_Button_Active.png"));
-        TextureRegion ExitOver = new TextureRegion(new Texture("assets/images/Exit_Button_Inactive.png"));
+        TextureRegion Exit = new TextureRegion(new Texture("assets/images/Exit button active.png"));
+        TextureRegion ExitOver = new TextureRegion(new Texture("assets/images/Exit button inactive.png"));
         TextureRegion Start = new TextureRegion(new Texture("assets/images/Start_Button_Active.png"));
         TextureRegion StartOver = new TextureRegion(new Texture("assets/images/Start_Button.png"));
 

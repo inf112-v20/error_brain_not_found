@@ -61,13 +61,9 @@ public class GameScreenActors {
     }
 
     public void initializeProgramCardButtons() {
-        int numberOfProgramCardsDealtCuzOfUrDmgTokens = game.mainPlayer.getDamageTokens();
         int idx = 0;
         for (int dy = 1; dy <= 3; dy++) {
             for (int dx = 0; dx <= 2; dx++) {
-
-
-
                 ProgramCard card = game.mainPlayer.getAllCards().get(idx);
                 ImageButton.ImageButtonStyle cardStyle = new ImageButton.ImageButtonStyle();
                 cardStyle.up = cardSkin.getSkins().getDrawable(card.getName());
