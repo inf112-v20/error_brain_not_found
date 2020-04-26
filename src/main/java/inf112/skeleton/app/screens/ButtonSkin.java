@@ -12,6 +12,11 @@ public class ButtonSkin {
     public ButtonSkin() {
         TextureAtlas atlas = new TextureAtlas();
 
+        // TODO: Legg til "createGame", "createGameOver", "joinGame" and "joinGameOver"
+        // TextureRegion createGame = new TextureRegion(new Texture("assets/images/CreateGame.png"));
+        // TextureRegion createGameOver= new TextureRegion(new Texture("assets/images/CreateGameOver.png"));
+        // TextureRegion joinGame = new TextureRegion(new Texture("assets/images/JoinGame.png"));
+        // TextureRegion joinGameOver = new TextureRegion(new Texture("assets/images/JoinGameOver.png"));
         TextureRegion confirmReady = new TextureRegion(new Texture("assets/images/ConfirmButton.png"));
         TextureRegion confirmNotReady = new TextureRegion(new Texture("assets/images/ConfirmButtonNotReady.png"));
         TextureRegion Exit = new TextureRegion(new Texture("assets/images/Exit_Button_Active.png"));
@@ -19,6 +24,10 @@ public class ButtonSkin {
         TextureRegion Start = new TextureRegion(new Texture("assets/images/Start_Button_Active.png"));
         TextureRegion StartOver = new TextureRegion(new Texture("assets/images/Start_Button.png"));
 
+        // atlas.addRegion("Create game", createGame);
+        // atlas.addRegion("Create game over", createGameOver);
+        // atlas.addRegion("Join game", joinGame);
+        // atlas.addRegion("Join game over", joinGameOver);
         atlas.addRegion("Confirm ready", confirmReady);
         atlas.addRegion("Confirm not ready", confirmNotReady);
         atlas.addRegion("Exit", Exit);

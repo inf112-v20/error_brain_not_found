@@ -399,10 +399,13 @@ public class RallyGame extends Game {
     }
 
     public void dispose() {
-        gameMusic.dispose();
-        laserSound.dispose();
-        board.dispose();
-        screen.dispose();
+        try {
+            gameMusic.dispose();
+            screen.dispose();
+            board.dispose();
+            laserSound.dispose();
+        } catch (Exception ignored) {
+        }
     }
 
     public Board getBoard() {
