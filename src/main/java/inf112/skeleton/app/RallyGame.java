@@ -166,7 +166,11 @@ public class RallyGame extends Game {
 
                 // Fire lasers for 250 ms
                 fireLasers();
+
+                decreaseLives();
+
                 sleep(250);
+
                 removeLasers();
                 sleep(500);
 

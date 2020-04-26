@@ -57,12 +57,13 @@ public class BoardTest {
         return flag1.getFlagnr() == flag2.getFlagnr() && flag1.getPosition().equals(flag2.getPosition());
     }
 
-    /**
+    /*
      *
      * @return true if player is on backupPosition and has backupDirection
      */
     private boolean isInBackupState(Player player) {
         return player.getPosition().equals(player.getBackupPosition()) && player.getDirection().equals(player.getBackupDirection());
+
     }
 
     @Test
@@ -129,7 +130,7 @@ public class BoardTest {
         player.setPosition(outsideOfBoardPosition);
         board.addPlayer(player);
         board.respawnPlayers();
-        assertTrue(isInBackupState(player));
+        assertTrue(player.isInBackupState());
     }
 
 
@@ -172,7 +173,7 @@ public class BoardTest {
             player.setPosition(holePosition);
             board.addPlayer(player);
             board.respawnPlayers();
-            assertTrue(isInBackupState(player));
+            assertTrue(player.isInBackupState());
         }
     }
 
