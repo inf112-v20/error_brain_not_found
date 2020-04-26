@@ -12,7 +12,6 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.Random;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
@@ -25,7 +24,6 @@ public class BoardTest {
     private final int BOARD_WIDTH = 16;
     private final int BOARD_HEIGHT = 12;
     private Player player;
-    private Random random;
     private ArrayList<Vector2> holes;
     private Vector2 startPosition;
     private ArrayList<Flag> flags;
@@ -45,7 +43,6 @@ public class BoardTest {
         this.flags = board.flags;
         // Sort the flags so player can go on them in correct order
         flags.sort(Comparator.comparingInt(Flag::getFlagnr));
-        this.random = new Random();
     }
 
     /**
@@ -58,22 +55,6 @@ public class BoardTest {
             return false;
         }
         return flag1.getFlagnr() == flag2.getFlagnr() && flag1.getPosition().equals(flag2.getPosition());
-    }
-
-    /**
-     * @return a random hole position
-     */
-    private Vector2 getRandomHolePosition() {
-        int randomIndex = random.nextInt(holes.size());
-        return holes.get(randomIndex);
-    }
-
-    /**
-     * @return Flag a random flag
-     */
-    private Flag getRandomFlag() {
-        int randomIndex = random.nextInt(flags.size());
-        return flags.get(randomIndex);
     }
 
     /**
@@ -174,20 +155,20 @@ public class BoardTest {
     }
 
     @Test
-    public void playerOnRandomHoleIsOutsideBoardTest() {
+    public void playerOnHoleIsOutsideBoardTest() {
         // Choose some random holes
         for (int i = 0; i < 5; i++) {
-            Vector2 holePosition = getRandomHolePosition();
+            Vector2 holePosition = holes.get(0);
             player.setPosition(holePosition);
             assertTrue(board.outsideBoard(player));
         }
     }
 
     @Test
-    public void playerOnRandomHoleIsRespawnedTest() {
+    public void playerOnHoleIsRespawnedTest() {
         // Choose some random holes
         for (int i = 0; i < 5; i++) {
-            Vector2 holePosition = getRandomHolePosition();
+            Vector2 holePosition = holes.get(0);
             player.setPosition(holePosition);
             board.addPlayer(player);
             board.respawnPlayers();
@@ -222,7 +203,7 @@ public class BoardTest {
     @Test
     public void flagIsOnFlagPositionOnBoardTest() {
         for (int i = 0; i < 5; i++) {
-            Flag flag = getRandomFlag();
+            Flag flag = flags.get(0);
             Vector2 flagPosition = flag.getPosition();
             assertTrue(board.hasFlag(flagPosition));
         }
