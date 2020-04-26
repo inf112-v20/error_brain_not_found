@@ -164,12 +164,14 @@ public class RallyGame extends Game {
                 decreaseLives();
 
                 // Fire lasers for 250 ms
-                fireLasers();
-                sleep(250);
-                removeLasers();
-                sleep(500);
+                if (!board.lasers.isEmpty()) {
+                    fireLasers();
+                    sleep(250);
+                    removeLasers();
+                    sleep(500);
 
-                decreaseLives();
+                    decreaseLives();
+                }
 
                 pickUpFlags();
                 sleep(500);
@@ -291,17 +293,21 @@ public class RallyGame extends Game {
     }
 
     public void firePlayerLaser() {
-        for (Player player : players) {
-            player.fire(this);
+        if (!players.isEmpty()) {
+            for (Player player : players) {
+                player.fire(this);
+            }
+            laserSound.play(volume);
         }
-        laserSound.play(volume);
     }
 
     public void fireLasers() {
-        for (Laser laser : board.lasers) {
-            laser.fire(this);
+        if (!board.lasers.isEmpty()) {
+            for (Laser laser : board.lasers) {
+                laser.fire(this);
+            }
+            laserSound.play(volume);
         }
-        laserSound.play(volume);
     }
 
     public void activateRotatePads() {
