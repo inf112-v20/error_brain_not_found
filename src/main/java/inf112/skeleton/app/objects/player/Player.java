@@ -6,6 +6,7 @@ import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.cards.Registers;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Flag;
 
@@ -16,6 +17,7 @@ import java.util.Collections;
 public class Player {
 
     private final int playerNr;
+    private final Registers registers;
     private Vector2 backupPosition;
     private Direction backupDirection;
     private Vector2 alternativeBackupPosition;
@@ -25,6 +27,7 @@ public class Player {
     private final ArrayList<Flag> flagsCollected;
     private ArrayList<ProgramCard> selectedCards;
     private final ArrayList<ProgramCard> allCards;
+    private int programCardsDealt;
     private Direction beltPushDir;
     private Vector2 beltPushPos;
 
@@ -37,11 +40,13 @@ public class Player {
         this.playerNr = playerNr;
         this.flagsCollected = new ArrayList<>();
         this.selectedCards = new ArrayList<>();
+        this.registers = new Registers();
         this.allCards = new ArrayList<>();
         this.damageTokens = 0;
         this.lifeTokens = 3;
         this.beltPushDir = null;
         this.beltPushPos = null;
+        this.programCardsDealt = 9;
 
         setBackup(position, Direction.EAST);
     }
@@ -54,8 +59,21 @@ public class Player {
         return selectedCards;
     }
 
+    public Registers getRegisters() {
+        return registers;
+    }
+
+    public void updateProgramCardsDealt() {
+        this.programCardsDealt = 9 - damageTokens;
+    }
+
     public void selectCard(ProgramCard card) {
-        if (!selectedCards.contains(card) && selectedCards.size() < 5) {
+        if (!registers.contains(card) && registers.hasRegistersWithoutCard()) {
+            registers.addCard(card);
+        } else {
+            registers.remove(card);
+        }
+        if (!selectedCards.contains(card) && registers.hasRegistersWithoutCard()) {
             selectedCards.add(card);
         } else {
             selectedCards.remove(card);
@@ -63,14 +81,17 @@ public class Player {
     }
 
     public void selectCards() {
-        while (selectedCards.size() < 5) {
+        for (int i = 0; i < registers.getOpenRegisters(); i++) {
+            registers.addCard(allCards.get(0));
+        }
+        for (int i = 0; i < registers.getOpenRegisters(); i++) {
             selectedCards.add(allCards.get(0));
         }
     }
 
     public void drawCards(Deck deck) {
-        int programCardsDealtBasedOnDmgTokens = 9 - getDamageTokens();
-        while (allCards.size() < programCardsDealtBasedOnDmgTokens) {
+        updateProgramCardsDealt();
+        while (allCards.size() < programCardsDealt) {
             allCards.add(deck.drawCard());
         }
     }
@@ -95,6 +116,7 @@ public class Player {
         deck.addCardsToDiscardPile(allCards);
         selectedCards.clear();
         allCards.clear();
+        registers.clear();
     }
 
     /**
@@ -108,6 +130,8 @@ public class Player {
 
     public void resetDamageTokens() {
         this.damageTokens = 0;
+        updateProgramCardsDealt();
+        registers.updateRegisters(damageTokens);
     }
 
     public int getLifeTokens() {
@@ -124,6 +148,8 @@ public class Player {
 
     public void handleDamage() {
         this.damageTokens++;
+        updateProgramCardsDealt();
+        registers.updateRegisters(damageTokens);
     }
 
     /**
