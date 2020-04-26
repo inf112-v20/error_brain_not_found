@@ -165,16 +165,14 @@ public class RallyGame extends Game {
                 decreaseLives();
 
                 // Fire lasers for 250 ms
-                fireLasers();
+                if (!board.getLasers().isEmpty()) {
+                    fireLasers();
+                    sleep(250);
+                    removeLasers();
+                    sleep(500);
 
-                decreaseLives();
-
-                sleep(250);
-
-                removeLasers();
-                sleep(500);
-
-                decreaseLives();
+                    decreaseLives();
+                }
 
                 pickUpFlags();
                 sleep(500);
@@ -290,28 +288,32 @@ public class RallyGame extends Game {
     public void removeLasers() {
         for (int y = 0; y < board.getHeight(); y++) {
             for (int x = 0; x < board.getWidth(); x++) {
-                board.laserLayer.setCell(x, y, null);
+                board.getLaserLayer().setCell(x, y, null);
             }
         }
     }
 
     public void firePlayerLaser() {
-        for (Player player : players) {
-            player.fire(this);
+        if (!players.isEmpty()) {
+            for (Player player : players) {
+                player.fire(this);
+            }
+            laserSound.play(volume);
         }
-        laserSound.play(volume);
     }
 
     public void fireLasers() {
-        for (Laser laser : board.lasers) {
-            laser.fire(this);
+        if (!board.getLasers().isEmpty()) {
+            for (Laser laser : board.getLasers()) {
+                laser.fire(this);
+            }
+            laserSound.play(volume);
         }
-        laserSound.play(volume);
     }
 
     public void activateRotatePads() {
         for (Player player : board.getPlayers()) {
-            for (RotatePad pad : board.rotatePads) {
+            for (RotatePad pad : board.getRotatePads()) {
                 Vector2 playerPosition = player.getPosition();
                 Vector2 padPosition = pad.getPosition();
 
@@ -331,7 +333,7 @@ public class RallyGame extends Game {
      * @param onlyExpress if true then the pool of belts should be set to expressBelts
      */
     public void activateBelts(boolean onlyExpress) {
-        ArrayList<Belt> belts = onlyExpress ? board.expressBelts : board.belts;
+        ArrayList<Belt> belts = onlyExpress ? board.getExpressBelts() : board.getBelts();
         for (Player player : board.getPlayers()) {
             for (Belt belt : belts) {
                 if (player.getPosition().equals(belt.getPosition())) {
@@ -403,10 +405,13 @@ public class RallyGame extends Game {
     }
 
     public void dispose() {
-        gameMusic.dispose();
-        laserSound.dispose();
-        board.dispose();
-        screen.dispose();
+        try {
+            gameMusic.dispose();
+            laserSound.dispose();
+            screen.dispose();
+            board.dispose();
+        } catch (Exception ignored) {
+        }
     }
 
     public Board getBoard() {
