@@ -137,11 +137,11 @@ public class MenuScreenActors {
 
     public void initializeCreateGame() {
         // TODO: Bytt til "Create game" og "Create game over"
-        ImageButton.ImageButtonStyle startButtonStyle = new ImageButton.ImageButtonStyle();
-        startButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Start");
-        startButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Start over");
+        ImageButton.ImageButtonStyle createGameButtonStyle = new ImageButton.ImageButtonStyle();
+        createGameButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Start");
+        createGameButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Start over");
 
-        createGameButton = new ImageButton(startButtonStyle);
+        createGameButton = new ImageButton(createGameButtonStyle);
         createGameButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         createGameButton.setPosition(LEFT_BUTTON_X, TOP_BUTTON_Y);
         createGameButton.addListener(new InputListener() {
@@ -161,12 +161,12 @@ public class MenuScreenActors {
     }
 
     public void initializeJoinGame() {
-        ImageButton.ImageButtonStyle exitButtonStyle = new ImageButton.ImageButtonStyle();
+        ImageButton.ImageButtonStyle joinGameButtonStyle = new ImageButton.ImageButtonStyle();
         // TODO: Bytt til "Join game" og "Join game over"
-        exitButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Exit");
-        exitButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Exit over");
+        joinGameButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Exit");
+        joinGameButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Exit over");
 
-        joinGameButton = new ImageButton(exitButtonStyle);
+        joinGameButton = new ImageButton(joinGameButtonStyle);
         joinGameButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         joinGameButton.setPosition(RIGHT_BUTTON_X, TOP_BUTTON_Y);
         joinGameButton.addListener(new InputListener() {
