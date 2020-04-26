@@ -146,6 +146,10 @@ public class MenuScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 // Create game
+                game.setHost();
+                game.setIPaddress(IPInput.getText());
+                game.setPortNumber(Integer.parseInt(portInput.getText()));
+                game.setNumberOfPlayers(Integer.parseInt(numOfPlayers.getText()));
                 System.out.println("Created game for " + numOfPlayers.getText() + " players with IP " + IPInput.getText() + " on port " + portInput.getText());
                 changeButtonVisibility();
             }
@@ -170,6 +174,8 @@ public class MenuScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 // Join game
+                game.setIPaddress(IPInput.getText());
+                game.setPortNumber(Integer.parseInt(portInput.getText()));
                 System.out.println("Joined game for " + numOfPlayers.getText() + " players with IP " + IPInput.getText() + " on port " + portInput.getText());
                 changeButtonVisibility();
             }

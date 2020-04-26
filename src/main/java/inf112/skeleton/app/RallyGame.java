@@ -60,6 +60,8 @@ public class RallyGame extends Game {
 
     public static float volume = 0.5f;
     private boolean receivedDeck;
+    private String hostAddress;
+    private int portNumber;
 
     public void create() {
         this.buttonSkins = new ButtonSkin();
@@ -104,18 +106,10 @@ public class RallyGame extends Game {
 
         this.deck = new Deck();
 
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Do you want to create a new game? [Y/N]");
-        if (scanner.nextLine().equals("Y")) {
-            System.out.println("What is portNumber?");
-            int portNumber = scanner.nextInt();
-            setUpHost(portNumber);
+        if (isServer) {
+            setUpHost(this.portNumber);
         } else {
-            System.out.println("What is host IP? ");
-            String hostIP = scanner.nextLine();
-            System.out.println("What is portNumber?");
-            int portNumber = scanner.nextInt();
-            setUpClient(hostIP, portNumber);
+            setUpClient(this.hostAddress, this.portNumber);
         }
 
         this.board = new Board(mapPath, this.numberOfPlayers);
@@ -157,10 +151,6 @@ public class RallyGame extends Game {
     public void setUpHost(int portNumber) {
         this.isServer = true;
         this.myPlayerNumber = 1;
-        System.out.println("How many players?");
-        Scanner scanner = new Scanner(System.in);
-        //TODO: Create check for number
-        this.numberOfPlayers = scanner.nextInt();
         this.serverThread = new ServerThread(this, this.numberOfPlayers, portNumber);
         serverThread.start();
     }
@@ -720,9 +710,27 @@ public class RallyGame extends Game {
         this.numberOfPlayers = numberOfPlayers;
     }
 
+    /**
+     * Set the IP address for the host of this game
+     * @param IPAddress
+     */
+    public void setIPaddress(String IPAddress) {
+        this.hostAddress = IPAddress;
+    }
 
-    public void receivedDeck() {
-        this.receivedDeck = true;
+    /**
+     * Let game know it hosts the game
+     */
+    public void setHost() {
+        this.isServer = true;
+    }
+
+    /**
+     * The portnumber for the socket to create a connection
+     * @param portNumber
+     */
+    public void setPortNumber(int portNumber) {
+        this.portNumber = portNumber;
     }
 
     /**
