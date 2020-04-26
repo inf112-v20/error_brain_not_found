@@ -100,4 +100,20 @@ public class Deck {
             }
         }
     }
+
+    /**
+     *
+     * @return the stack of cards in the deck
+     */
+    public Stack<ProgramCard> getDeck() {
+        return deck;
+    }
+
+    /**
+     *
+     * @param stack new stack for this deck
+     */
+    public void setDeck(Stack<ProgramCard> stack) {
+        this.deck = stack;
+    }
 }

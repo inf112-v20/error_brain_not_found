@@ -36,11 +36,9 @@ public class ProgramCardTest {
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
         this.game = new RallyGame();
-        this.game.setupGame("assets/maps/Risky Exchange.tmx");
+        this.game.setUpGameWithoutConnection("assets/maps/Risky Exchange.tmx", 0);
 
-        // Already 4 players on board.
-        //TODO: Let setupGame take in playerNumber as arg
-        player = new Player(new Vector2(0, 0), 2);
+        player = new Player(new Vector2(0, 0), 1);
         player.setDirection(Direction.EAST);
         Board board = game.getBoard();
         board.addPlayer(player);
@@ -68,21 +66,24 @@ public class ProgramCardTest {
     @Test
     public void playingUturnCardTest() {
         player.setSelectedCards(uturn);
-        game.playCard(player);
+        ProgramCard card = game.nextCard(player);
+        game.playCard(player, card);
         assertEquals(Direction.WEST, player.getDirection());
     }
 
     @Test
     public void playingRightRotateCardTest() {
         player.setSelectedCards(right);
-        game.playCard(player);
+        ProgramCard card = game.nextCard(player);
+        game.playCard(player, card);
         assertEquals(Direction.SOUTH, player.getDirection());
     }
 
     @Test
     public void playingLeftRotateCardTest() {
         player.setSelectedCards(left);
-        game.playCard(player);
+        ProgramCard card = game.nextCard(player);
+        game.playCard(player, card);
         assertEquals(Direction.NORTH, player.getDirection());
     }
 
@@ -91,7 +92,8 @@ public class ProgramCardTest {
         player.setSelectedCards(moveOne);
         Vector2 beforePosition = player.getPosition();
         Vector2 afterPosition = new Vector2(beforePosition.x + 1, beforePosition.y);
-        game.playCard(player);
+        ProgramCard card = game.nextCard(player);
+        game.playCard(player, card);
         assertEquals(afterPosition, player.getPosition());
     }
 
@@ -101,16 +103,20 @@ public class ProgramCardTest {
         Vector2 beforePosition = player.getPosition();
         // player is rotated left and therefore player will go up instead of to the right
         Vector2 afterPosition = new Vector2(beforePosition.x, beforePosition.y+1);
-        game.playCard(player);
-        game.playCard(player);
+        ProgramCard card = game.nextCard(player);
+        game.playCard(player, card);
+        ProgramCard card2 = game.nextCard(player);
+        game.playCard(player, card2);
         assertEquals(afterPosition, player.getPosition());
     }
 
     @Test
     public void firstMoveThenRotateToCorrectRotationTest() {
         player.setSelectedCards(moveTwo, right);
-        game.playCard(player);
-        game.playCard(player);
+        ProgramCard card = game.nextCard(player);
+        game.playCard(player, card);
+        ProgramCard card2 = game.nextCard(player);
+        game.playCard(player, card2);
         assertEquals(Direction.SOUTH, player.getDirection());
     }
 
@@ -128,17 +134,23 @@ public class ProgramCardTest {
         assertEquals(player2, players.get(0));
     }
 
+
+
     /**
      * Starting at east, a sequence of right, left, left, uturn, right, uturn, right should give south.
      */
+
     @Test
     public void sequenceOfRotateCardsTest() {
         player.setSelectedCards(right, left, left, uturn, right, uturn, right);
         for (int playedCards = 0; playedCards <= 6; playedCards++) {
-            game.playCard(player);
+            ProgramCard card = game.nextCard(player);
+            game.playCard(player, card);
         }
         assertEquals(Direction.SOUTH, player.getDirection());
     }
+
+
 
     /**
      * Starting at (0,0) east, move one, rotate left, move two, rotate right, move one, turn around, move two should give
@@ -149,9 +161,13 @@ public class ProgramCardTest {
         player.setSelectedCards(moveOne, left, moveTwo, right, moveOne, uturn, moveTwo);
         Vector2 afterPosition = new Vector2(0,2);
         for (int playedCards = 0; playedCards <= 6; playedCards++) {
-            game.playCard(player);
+            ProgramCard card = game.nextCard(player);
+            game.playCard(player, card);
         }
         assertEquals(afterPosition, player.getPosition());
     }
+
+
+
 
 }

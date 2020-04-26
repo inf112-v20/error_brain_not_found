@@ -12,6 +12,7 @@ public class Main {
         cfg.height = 540;
         //cfg.fullscreen = true;
 
+
         new LwjglApplication(new RallyGame(), cfg);
     }
 }

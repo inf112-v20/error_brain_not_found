@@ -66,6 +66,7 @@ public class GameScreenActors {
             for (int dx = 0; dx <= 2; dx++) {
                 ProgramCard card = game.mainPlayer.getAllCards().get(idx);
                 ImageButton.ImageButtonStyle cardStyle = new ImageButton.ImageButtonStyle();
+               // System.out.println("CARD: "+card.getName() + " " + card);
                 cardStyle.up = cardSkin.getSkins().getDrawable(card.getName());
                 ImageButton cardButton = new ImageButton(cardStyle);
                 cardButton.setSize(programCardWidth, programCardHeight);
@@ -84,7 +85,7 @@ public class GameScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.mainPlayer.selectCard(card);
-
+                updateCards();
                 System.out.println(game.mainPlayer.getSelectedCards());
                 System.out.println(cardButton.getStyle());
             }
@@ -153,11 +154,10 @@ public class GameScreenActors {
         stage.addActor(token);
     }
 
-    public void updateButtons() {
+    public void updateActors() {
         updateConfirm();
         updateLifeTokens();
         updateDamageTokens();
-        updateCards();
     }
 
     public void updateConfirm() {

@@ -255,6 +255,18 @@ public class Board extends BoardLayers {
     }
 
     /**
+     * @return Player with this playernumber
+     */
+    public Player getPlayer(int playerNumber) {
+        for (Player player : players) {
+            if (player.getPlayerNr() == playerNumber) {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    /**
      * @param position  to go from
      * @param direction to go in
      * @return true if there is no wall blocking the way

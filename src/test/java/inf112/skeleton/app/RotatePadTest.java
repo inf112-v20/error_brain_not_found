@@ -34,7 +34,7 @@ public class RotatePadTest {
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
         this.game = new RallyGame();
-        this.game.setupGame("assets/maps/Risky Exchange.tmx");
+        this.game.setUpGameWithoutConnection("assets/maps/Risky Exchange.tmx", 0);
         Board board = game.getBoard();
         this.rotatePads = board.rotatePads;
 

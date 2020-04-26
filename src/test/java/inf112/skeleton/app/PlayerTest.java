@@ -24,7 +24,7 @@ public class PlayerTest {
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
         this.game = new RallyGame();
-        this.game.setupGame("assets/maps/Risky Exchange.tmx");
+        this.game.setUpGameWithoutConnection("assets/maps/Risky Exchange.tmx", 0);
         Vector2 pos = new Vector2(0,0);
         player = new Player(pos, 1);
     }

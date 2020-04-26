@@ -8,10 +8,12 @@ import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Flag;
+import org.lwjgl.Sys;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class Player {
 
@@ -54,6 +56,9 @@ public class Player {
         return selectedCards;
     }
 
+    /**
+     * Select cards from all cards.
+     */
     public void selectCard(ProgramCard card) {
         if (!selectedCards.contains(card) && selectedCards.size() < 5) {
             selectedCards.add(card);
@@ -65,6 +70,16 @@ public class Player {
     public void selectCards() {
         while (selectedCards.size() < 5) {
             selectedCards.add(allCards.get(0));
+        }
+    }
+
+    /**
+     * Add a card to your program if program is not full.
+     * @param card to add.
+     */
+    public void addSelectedCard(ProgramCard card) {
+        if (selectedCards.size() < 5) {
+            selectedCards.add(card);
         }
     }
 
