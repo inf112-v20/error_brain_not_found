@@ -37,7 +37,7 @@ public class GameTest {
         //TODO: Let setupGame take in playerNumber as arg
         player = new Player(new Vector2(0, 0), 5);
         board.addPlayer(player);
-        this.belts = board.belts;
+        this.belts = board.getBelts();
     }
 
     /**
