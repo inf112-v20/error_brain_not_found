@@ -8,12 +8,11 @@ import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.TileID;
 import inf112.skeleton.app.objects.player.Player;
 
-import java.util.function.Function;
-
 public class BoardLogic {
 
     /**
      * Checks if a position is outside the map
+     *
      * @param position the position to check
      * @param board the board that is checked
      * @return true if the position is outside of the board
@@ -31,6 +30,7 @@ public class BoardLogic {
 
     /**
      * Checks if player moves on to a hole
+     *
      * @param board the board that are supposed to be checked with
      * @param position that is checked
      * @return true if the position contains a hole
@@ -46,6 +46,7 @@ public class BoardLogic {
 
     /**
      * Tells if there is possible to move in the intended {@link Direction} direction
+     *
      * @param board the board that are supposed to be checked with
      * @param position  to go from
      * @param direction to go in
@@ -86,6 +87,8 @@ public class BoardLogic {
     }
 
     /**
+     * Checks is there is a wall to the west of a given {@link TiledMapTileLayer.Cell} cell.
+     *
      * @param cell to check for wall
      * @return true if cell has a wall on west side
      */
@@ -100,6 +103,8 @@ public class BoardLogic {
         return false;
     }
     /**
+     * Checks is there is a wall to the east of a given {@link TiledMapTileLayer.Cell} cell.
+     *
      * @param cell to check for wall
      * @return true if cell has a wall on east side
      */
@@ -115,6 +120,8 @@ public class BoardLogic {
     }
 
     /**
+     * Checks is there is a wall to the south of a given {@link TiledMapTileLayer.Cell} cell.
+     *
      * @param cell to check for wall
      * @return true if cell has a wall on south side
      */
@@ -130,7 +137,7 @@ public class BoardLogic {
     }
 
     /**
-     * Checks is there
+     * Checks is there is a wall to the north of a given {@link TiledMapTileLayer.Cell} cell.
      *
      * @param cell to check for wall
      * @return true if cell has a wall on north side
@@ -193,7 +200,7 @@ public class BoardLogic {
     }
 
     /**
-     * Checks if there is possible to push a player
+     * Checks if there is possible to push a player.
      *
      * @param board the board that are supposed to be checked with
      * @param player    that should be pushed
