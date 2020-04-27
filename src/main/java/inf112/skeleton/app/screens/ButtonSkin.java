@@ -20,8 +20,8 @@ public class ButtonSkin {
         TextureRegion confirmNotReady = new TextureRegion(new Texture("assets/images/ConfirmButtonNotReady.png"));
         TextureRegion Exit = new TextureRegion(new Texture("assets/images/Exit button active.png"));
         TextureRegion ExitOver = new TextureRegion(new Texture("assets/images/Exit button inactive.png"));
-        TextureRegion Start = new TextureRegion(new Texture("assets/images/Start_Button_Active.png"));
-        TextureRegion StartOver = new TextureRegion(new Texture("assets/images/Start_Button.png"));
+        TextureRegion Start = new TextureRegion(new Texture("assets/images/Start button active.png"));
+        TextureRegion StartOver = new TextureRegion(new Texture("assets/images/Start button inactive.png"));
 
         atlas.addRegion("Create game", createGame);
         atlas.addRegion("Create game over", createGameOver);
