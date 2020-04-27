@@ -54,9 +54,16 @@ public class Player {
     public ArrayList<ProgramCard> getAllCards() {
         return allCards;
     }
-
+/*
     public ArrayList<ProgramCard> getSelectedCards() {
         return selectedCards;
+    }
+
+ */
+
+    public int getProgramCardsDealt() {
+        updateProgramCardsDealt();
+        return programCardsDealt;
     }
 
     public Registers getRegisters() {
@@ -73,19 +80,11 @@ public class Player {
         } else {
             registers.remove(card);
         }
-        if (!selectedCards.contains(card) && registers.hasRegistersWithoutCard()) {
-            selectedCards.add(card);
-        } else {
-            selectedCards.remove(card);
-        }
     }
 
     public void selectCards() {
         for (int i = 0; i < registers.getOpenRegisters(); i++) {
             registers.addCard(allCards.get(0));
-        }
-        for (int i = 0; i < registers.getOpenRegisters(); i++) {
-            selectedCards.add(allCards.get(0));
         }
     }
 
@@ -114,9 +113,8 @@ public class Player {
 
     public void discardAllCards(Deck deck) {
         deck.addCardsToDiscardPile(allCards);
-        selectedCards.clear();
         allCards.clear();
-        registers.clear();
+        registers.clear(true);
     }
 
     /**
@@ -308,6 +306,7 @@ public class Player {
      */
     public void setSelectedCards(ProgramCard... cards) {
         this.selectedCards = new ArrayList<>(Arrays.asList(cards));
+        registers.setSelectedCards(cards);
     }
 
     public ArrayList<Flag> getFlagsCollected() {

@@ -1,15 +1,14 @@
 package inf112.skeleton.app.cards;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Registers {
 
     private final ArrayList<Register> registers;
-    private int nextReg;
 
     public Registers() {
         this.registers = new ArrayList<>();
-        this.nextReg = 0;
         for (int i = 0; i < 5; i++) {
             registers.add(new Register());
         }
@@ -33,15 +32,18 @@ public class Registers {
     }
 
     public void addCard(ProgramCard card) {
-        registers.get(nextReg).setProgramCard(card);
-        nextReg++;
+        for (Register reg : registers) {
+            if (!reg.hasCard()) {
+                reg.setProgramCard(card);
+                return;
+            }
+        }
     }
 
     public void remove(ProgramCard card) {
         for (Register register : registers) {
             if (card.equals(register.getProgramCard())) {
                 register.setProgramCard(null);
-                nextReg--;
                 return;
             }
         }
@@ -53,7 +55,7 @@ public class Registers {
 
     public boolean contains(ProgramCard card) {
         for (Register register : registers) {
-            if (register.getProgramCard().equals(card)) {
+            if (register.hasCard() && register.getProgramCard().equals(card)) {
                 return true;
             }
         }
@@ -61,7 +63,12 @@ public class Registers {
     }
 
     public boolean hasRegistersWithoutCard() {
-        return registers.get(nextReg).isOpen() && registers.get(nextReg).hasCard();
+        for (Register register : registers) {
+            if (!register.hasCard()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public int getOpenRegisters() {
@@ -74,22 +81,31 @@ public class Registers {
         return open;
     }
 
-    public void clear() {
+    public int getCardsSelected() {
+        int cards = 0;
         for (Register register : registers) {
-            register.setProgramCard(null);
+            if (!register.hasCard()) {
+                cards++;
+            }
+        }
+        return cards;
+    }
+
+    public void setSelectedCards(ProgramCard... cards) {
+        for (ProgramCard card : new ArrayList<>(Arrays.asList(cards))) {
+            this.addCard(card);
         }
     }
 
-    public void lockRegister() {
-        for (int i = 4; i >= 0; i--) {
-            if (registers.get(i).isOpen()) {
-                registers.get(i).setOpen(false);
-                return;
+    public void clear(boolean clearOnlyOpen) {
+        for (Register register : registers) {
+            if (!clearOnlyOpen || register.isOpen()) {
+                register.setProgramCard(null);
             }
         }
     }
 
-    public void openRegister() {
+    public void openOneRegister() {
         for (Register register : registers) {
             if (!register.isOpen()) {
                 register.setOpen(true);
@@ -104,20 +120,19 @@ public class Registers {
         }
     }
 
-    public void lockRegisters(int num) {
-        for (int i = 4; i > num; i--) {
-            registers.get(i).setOpen(false);
-        }
-    }
-
     public void updateRegisters(int damageToken) {
         int lockedRegisters = Math.max(damageToken - 4, 0);
         for (int i = 0; i < 5; i++) {
-            registers.get(i).setOpen(4 - i >= lockedRegisters);
+            registers.get(4 - i).setOpen(i < lockedRegisters);
         }
     }
 
-    static class Register {
+    @Override
+    public String toString() {
+        return registers.toString();
+    }
+
+    class Register {
         private ProgramCard programCard = null;
         private boolean isOpen = true;
 
@@ -139,6 +154,11 @@ public class Registers {
 
         public boolean hasCard() {
             return programCard != null;
+        }
+
+        @Override
+        public String toString() {
+            return hasCard() ? programCard.toString() : "no card";
         }
     }
 }

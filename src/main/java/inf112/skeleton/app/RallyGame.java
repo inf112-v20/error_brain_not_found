@@ -65,7 +65,7 @@ public class RallyGame extends Game {
     }
 
     public void confirmCards() {
-        if (mainPlayer.getSelectedCards().size() == 5) {
+        if (!mainPlayer.getRegisters().hasRegistersWithoutCard()) {
             cardsReady();
         }
     }
@@ -139,7 +139,7 @@ public class RallyGame extends Game {
                 System.out.println("Runde " + (i + 1));
 
                 // All players play one card in the correct order
-                allPlayersPlayCard();
+                allPlayersPlayCard(i);
                 sleep(250);
 
                 // Express belts move 1
@@ -236,13 +236,13 @@ public class RallyGame extends Game {
         respawnPlayers.clear();
     }
 
-    public void allPlayersPlayCard() {
+    public void allPlayersPlayCard(int cardNumber) {
         ArrayList<Player> playerOrder = new ArrayList<>(players);
         // Add all players to order list, and remove players with no cards left
-        playerOrder.removeIf(p -> p.getSelectedCards().isEmpty());
+        // playerOrder.removeIf(p -> p.getSelectedCards().isEmpty());
         playerOrder.sort(new PlayerSorter());
         for (Player player : playerOrder) {
-            playCard(player);
+            playCard(player, cardNumber);
             // Wait 1 second for each player
             sleep(500);
             decreaseLives();
@@ -250,8 +250,8 @@ public class RallyGame extends Game {
         }
     }
 
-    public void playCard(Player player) {
-        ProgramCard card = player.getSelectedCards().remove(0);
+    public void playCard(Player player, int cardNumber) {
+        ProgramCard card = player.getRegisters().getCard(cardNumber);
         System.out.println(player.toString() + " played " + card.toString());
         switch (card.getRotate()) {
             case RIGHT:
