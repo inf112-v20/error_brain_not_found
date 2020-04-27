@@ -165,16 +165,6 @@ public class Board extends BoardLayers {
         laserLayer.setCell((int) position.x, (int) position.y, cell);
     }
 
-    /**
-     * Check if player is outside of board
-     *
-     * @param player to check
-
-    public boolean outsideBoard(Player player) {
-        return boardLogic.outsideBoard(player.getPosition(), this) || boardLogic.hasHole(player.getPosition(), this);
-    }
-    */
-
     public void pickUpFlags() {
         for (Player player : players) {
             if (hasFlag(player.getPosition())) {
@@ -217,10 +207,6 @@ public class Board extends BoardLayers {
             }
         }
         return null;
-    }
-
-    public boolean canFire(Vector2 position, Direction direction) {
-        return boardLogic.canGo(position, direction, this) && !boardLogic.outsideBoard(getNeighbourPosition(position, direction), this);
     }
 
     /**

@@ -105,7 +105,7 @@ public class BoardLogic {
     }
 
     /**
-     * Checks is there is a wall to the west of a given {@link TiledMapTileLayer.Cell} cell.
+     * Checks is there is a wall to the west of a given {@link TiledMapTileLayer.Cell} cell}.
      *
      * @param cell to check for wall
      * @return true if cell has a wall on west side
@@ -121,7 +121,7 @@ public class BoardLogic {
         return false;
     }
     /**
-     * Checks is there is a wall to the east of a given {@link TiledMapTileLayer.Cell} cell.
+     * Checks is there is a wall to the east of a given {@link TiledMapTileLayer.Cell cell}.
      *
      * @param cell to check for wall
      * @return true if cell has a wall on east side
@@ -138,7 +138,7 @@ public class BoardLogic {
     }
 
     /**
-     * Checks is there is a wall to the south of a given {@link TiledMapTileLayer.Cell} cell.
+     * Checks is there is a wall to the south of a given {@link TiledMapTileLayer.Cell cell}.
      *
      * @param cell to check for wall
      * @return true if cell has a wall on south side
@@ -155,7 +155,7 @@ public class BoardLogic {
     }
 
     /**
-     * Checks is there is a wall to the north of a given {@link TiledMapTileLayer.Cell} cell.
+     * Checks is there is a wall to the north of a given {@link TiledMapTileLayer.Cell cell}.
      *
      * @param cell to check for wall
      * @return true if cell has a wall on north side
@@ -223,7 +223,7 @@ public class BoardLogic {
      * @param board the board that are supposed to be checked with
      * @param player    that should be pushed
      * @param direction to push in
-     * @return true if it is possible to push all enemies in a row
+     * @return true if it is possible to push all enemies in a row.
      */
     public boolean canPush(Player player, Direction direction, Board board) {
         if (board.hasPlayer(board.getNeighbourPosition(player.getPosition(), direction))) {
@@ -233,4 +233,15 @@ public class BoardLogic {
         return canGo(player.getPosition(), direction, board);
     }
 
+    /**
+     * Checks if there is possible to fire in the direction and position
+     *
+     * @param position the tile in question.
+     * @param direction the way the fire is happening
+     * @param board the board that are supposed to be checked with
+     * @return true if {@link #canGo(Vector2, Direction, Board) canGo} is true and if not {@link #outsideBoard(Vector2, Board) outsideBoard} is true.
+     */
+    public boolean canFire(Vector2 position, Direction direction, Board board) {
+        return canGo(position, direction, board) && !outsideBoard(board.getNeighbourPosition(position, direction), board);
+    }
 }

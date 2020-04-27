@@ -259,7 +259,7 @@ public class Player {
     }
 
     public void fire(RallyGame game) {
-        if (game.getBoard().canFire(position, direction)) {
+        if (game.getBoard().getBoardLogic().canFire(position, direction, game.board)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }
@@ -268,7 +268,7 @@ public class Player {
         game.getBoard().addLaser(position, direction);
         if (game.getBoard().hasPlayer(position)) {
             game.getBoard().getPlayer(position).handleDamage();
-        } else if (game.getBoard().canFire(position, direction)) {
+        } else if (game.getBoard().getBoardLogic().canFire(position, direction, game.board)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }
