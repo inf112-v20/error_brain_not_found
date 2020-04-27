@@ -8,6 +8,8 @@ import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.TileID;
 import inf112.skeleton.app.objects.player.Player;
 
+import java.util.ArrayList;
+
 public class BoardLogic {
 
     public boolean validRespawnPosition(Vector2 position, Direction direction, Board board) {
@@ -245,4 +247,20 @@ public class BoardLogic {
     public boolean canFire(Vector2 position, Direction direction, Board board) {
         return canGo(position, direction, board) && !outsideBoard(board.getNeighbourPosition(position, direction), board);
     }
+
+    /**
+     * Checks for valid player number
+     *
+     * @param number number of player
+     * @return true if player number is valid
+     */
+    public boolean validPlayerNumber(int number, ArrayList<Player> playersList) {
+        for (Player player : playersList) {
+            if (number == player.getPlayerNr()) {
+                return false;
+            }
+        }
+        return 0 < number && number < 9;
+    }
+
 }

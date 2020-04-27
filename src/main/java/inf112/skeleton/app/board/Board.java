@@ -54,7 +54,7 @@ public class Board extends BoardLayers {
     /**
      * @param number number of player
      * @return true if player number is valid
-     */
+
     public boolean validPlayerNumber(int number) {
         for (Player player : players) {
             if (number == player.getPlayerNr()) {
@@ -72,7 +72,7 @@ public class Board extends BoardLayers {
      * @param playerNumber of player
      */
     public void addPlayer(int x, int y, int playerNumber) {
-        if (!validPlayerNumber(playerNumber)) {
+        if (!boardLogic.validPlayerNumber(playerNumber, players)) {
             return;
         }
         Player player = new Player(new Vector2(x, y), playerNumber);
@@ -93,7 +93,7 @@ public class Board extends BoardLayers {
             players.add(player);
         }
     }
-
+    //TODO: might move to boardLayer
     public Vector2 getStartPosition(int number) {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
