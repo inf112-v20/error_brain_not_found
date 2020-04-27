@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
@@ -39,6 +40,7 @@ public class MenuScreenActors {
     private TextField IPInput;
     private TextField portInput;
     private TextField numOfPlayers;
+    private Label waitForHost;
 
     public MenuScreenActors(RallyGame game, Stage stage) {
         this.game = game;
@@ -145,9 +147,11 @@ public class MenuScreenActors {
         createGameButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                // Create game
-                System.out.println("Created game for " + numOfPlayers.getText() + " players with IP " + IPInput.getText() + " on port " + portInput.getText());
-                changeButtonVisibility();
+                if (joinGameButton.isVisible()) {
+                    toggleVisibilityCreateFirstClick();
+                } else {
+                    toggleVisibilityCreateSecondClick();
+                }
             }
 
             @Override
@@ -170,8 +174,11 @@ public class MenuScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 // Join game
-                System.out.println("Joined game for " + numOfPlayers.getText() + " players with IP " + IPInput.getText() + " on port " + portInput.getText());
-                changeButtonVisibility();
+                if (createGameButton.isVisible()) {
+                    toggleVisibilityJoinFirstClick();
+                } else {
+                    toggleVisibilityJoinSecondClick();
+                }
             }
 
             @Override
@@ -186,7 +193,8 @@ public class MenuScreenActors {
         IPInput = new TextField("", skin);
         IPInput.setMessageText("IP address");
         IPInput.setWidth(BUTTON_WIDTH * .87f);
-        IPInput.setPosition(screenWidth / 2f - BUTTON_WIDTH / 2f - IPInput.getWidth(), TEXT_INPUT_Y);
+        IPInput.setPosition(screenWidth / 2f + BUTTON_WIDTH * .13f, TEXT_INPUT_Y);
+        IPInput.setVisible(false);
         stage.addActor(IPInput);
     }
 
@@ -194,26 +202,56 @@ public class MenuScreenActors {
         portInput = new TextField("", skin);
         portInput.setMessageText("Port number");
         portInput.setWidth(BUTTON_WIDTH * .87f);
-        portInput.setPosition(screenWidth / 2f - portInput.getWidth() / 2f, TEXT_INPUT_Y);
+        portInput.setPosition(screenWidth / 2f - BUTTON_WIDTH, TEXT_INPUT_Y);
+        portInput.setVisible(false);
         stage.addActor(portInput);
     }
 
-    public void initializeNumOfPlayersIput() {
+    public void initializeNumOfPlayersInput() {
         numOfPlayers = new TextField("", skin);
         numOfPlayers.setMessageText("Number of players");
         numOfPlayers.setWidth(BUTTON_WIDTH * .87f);
-        numOfPlayers.setPosition(screenWidth / 2f + BUTTON_WIDTH / 2f, TEXT_INPUT_Y);
+        numOfPlayers.setPosition(screenWidth / 2f + BUTTON_WIDTH * .13f, TEXT_INPUT_Y);
+        numOfPlayers.setVisible(false);
         stage.addActor(numOfPlayers);
     }
 
-    public void changeButtonVisibility() {
+    public void initializeWaitForHostLabel() {
+        waitForHost = new Label("Wait for host to start game", skin);
+        waitForHost.setPosition(CENTERED_BUTTON_X, TOP_BUTTON_Y);
+        waitForHost.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        waitForHost.setAlignment(Align.center);
+        waitForHost.setFontScale(2);
+        waitForHost.setVisible(false);
+        stage.addActor(waitForHost);
+    }
+
+    public void toggleVisibilityCreateFirstClick() {
+        joinGameButton.setVisible(false);
+        createGameButton.setPosition(CENTERED_BUTTON_X, TOP_BUTTON_Y);
+        portInput.setVisible(true);
+        numOfPlayers.setVisible(true);
+    }
+
+    public void toggleVisibilityCreateSecondClick() {
         createGameButton.setVisible(false);
+        portInput.setVisible(false);
+        numOfPlayers.setVisible(false);
+        startButton.setVisible(true);
+        selectMap.setVisible(true);
+    }
+
+    public void toggleVisibilityJoinFirstClick() {
+        createGameButton.setVisible(false);
+        joinGameButton.setPosition(CENTERED_BUTTON_X, TOP_BUTTON_Y);
+        portInput.setVisible(true);
+        IPInput.setVisible(true);
+    }
+
+    public void toggleVisibilityJoinSecondClick() {
         joinGameButton.setVisible(false);
         portInput.setVisible(false);
         IPInput.setVisible(false);
-        numOfPlayers.setVisible(false);
-        startButton.setVisible(true);
-        exitButton.setVisible(true);
-        selectMap.setVisible(true);
+        waitForHost.setVisible(true);
     }
 }
