@@ -10,6 +10,17 @@ import inf112.skeleton.app.objects.player.Player;
 
 public class BoardLogic {
 
+    public boolean validRespawnPosition(Vector2 position, Direction direction, Board board) {
+        Vector2 currPos = position;
+        for (int step = 0; step < 3; step++) {
+            if (board.hasPlayer(currPos)) {
+                return false;
+            }
+            currPos = board.getNeighbourPosition(currPos, direction);
+        }
+        return !hasHole(position, board);
+    }
+
     /**
      * Checks if a position is outside the map
      *

@@ -190,7 +190,7 @@ public class Board extends BoardLayers {
     public void respawn(Player player) {
         removePlayerFromBoard(player);
         if (hasPlayer(player.getBackupPosition())) {
-            player.chooseAlternativeBackupPosition(this, player.getBackupPosition());
+            player.chooseAlternativeBackupPosition(this, player.getBackupPosition(), boardLogic);
             player.setPosition(new Vector2(player.getAlternativeBackupPosition().x, player.getAlternativeBackupPosition().y));
             player.setDirection(player.getAlternativeBackupDirection());
         } else {
@@ -199,7 +199,7 @@ public class Board extends BoardLayers {
         }
         addPlayer(player);
     }
-
+/*
     public boolean validRespawnPosition(Vector2 position, Direction direction) {
         Vector2 currPos = position;
         for (int step = 0; step < 3; step++) {
@@ -210,6 +210,8 @@ public class Board extends BoardLayers {
         }
         return !boardLogic.hasHole(position, this);
     }
+
+ */
 
     public List<Direction> getDirectionRandomOrder() {
         List<Direction> directions = Arrays.asList(Direction.values());

@@ -2,6 +2,7 @@ package inf112.skeleton.app.objects.player;
 
 
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.BoardLogic;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
@@ -178,12 +179,12 @@ public class Player {
     }
 
 
-    public void chooseAlternativeBackupPosition(Board board, Vector2 position) {
+    public void chooseAlternativeBackupPosition(Board board, Vector2 position, BoardLogic boardLogic) {
         ArrayList<Vector2> possiblePositions = board.getNeighbourhood(position);
         Collections.shuffle(possiblePositions);
         for (Vector2 pos : possiblePositions) {
             for (Direction dir : board.getDirectionRandomOrder()) {
-                if (board.validRespawnPosition(pos, dir)) {
+                if (boardLogic.validRespawnPosition(pos, dir, board)) {
                     setAlternativeBackup(pos, dir);
                     return;
                 }
@@ -191,7 +192,7 @@ public class Player {
         }
         setAlternativeBackup(board.getStartPosition(getPlayerNr()), Direction.EAST);
         if (board.hasPlayer(board.getStartPosition(getPlayerNr()))) {
-            chooseAlternativeBackupPosition(board, alternativeBackupPosition);
+            chooseAlternativeBackupPosition(board, alternativeBackupPosition, boardLogic);
         }
     }
 
