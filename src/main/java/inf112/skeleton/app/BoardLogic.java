@@ -25,10 +25,10 @@ public class BoardLogic {
      * Checks if a position is outside the map
      *
      * @param position the position to check
-     * @param board the board that is checked
+     * @param board    the board that is checked
      * @return true if the position is outside of the board
      */
-    public boolean outsideBoard(Vector2 position, Board board){
+    public boolean outsideBoard(Vector2 position, Board board) {
         int boardWidth = board.getBoardWidth();
         int boardHeight = board.getBoardHeight();
         return position.x < 0 ||
@@ -41,15 +41,15 @@ public class BoardLogic {
      * Check if player is outside of board
      *
      * @param player to check
-    */
+     */
     public boolean outsideBoard(Player player, Board board) {
-    return outsideBoard(player.getPosition(), board) || hasHole(player.getPosition(), board);
+        return outsideBoard(player.getPosition(), board) || hasHole(player.getPosition(), board);
     }
 
     /**
      * Checks if player moves on to a hole
      *
-     * @param board the board that are supposed to be checked with
+     * @param board    the board that are supposed to be checked with
      * @param position that is checked
      * @return true if the position contains a hole
      */
@@ -65,7 +65,7 @@ public class BoardLogic {
     /**
      * Tells if there is possible to move in the intended {@link Direction} direction
      *
-     * @param board the board that are supposed to be checked with
+     * @param board     the board that are supposed to be checked with
      * @param position  to go from
      * @param direction to go in
      * @return true if there is no wall blocking the way
@@ -120,6 +120,7 @@ public class BoardLogic {
         }
         return false;
     }
+
     /**
      * Checks is there is a wall to the east of a given {@link TiledMapTileLayer.Cell cell}.
      *
@@ -174,7 +175,7 @@ public class BoardLogic {
     /**
      * Check if the moving player should try to push another player
      *
-     * @param board the board that are supposed to be checked with
+     * @param board  the board that are supposed to be checked with
      * @param player trying to move
      * @return true if player should push another player to move
      */
@@ -188,7 +189,7 @@ public class BoardLogic {
      * Update player position according to direction
      * Add player to cell that corresponds to player position
      *
-     * @param board the board that are supposed to be checked with
+     * @param board     the board that are supposed to be checked with
      * @param player    that should be pushed
      * @param direction to push player in
      */
@@ -220,7 +221,7 @@ public class BoardLogic {
     /**
      * Checks if there is possible to push a player.
      *
-     * @param board the board that are supposed to be checked with
+     * @param board     the board that are supposed to be checked with
      * @param player    that should be pushed
      * @param direction to push in
      * @return true if it is possible to push all enemies in a row.
@@ -236,9 +237,9 @@ public class BoardLogic {
     /**
      * Checks if there is possible to fire in the direction and position
      *
-     * @param position the tile in question.
+     * @param position  the tile in question.
      * @param direction the way the fire is happening
-     * @param board the board that are supposed to be checked with
+     * @param board     the board that are supposed to be checked with
      * @return true if {@link #canGo(Vector2, Direction, Board) canGo} is true and if not {@link #outsideBoard(Vector2, Board) outsideBoard} is true.
      */
     public boolean canFire(Vector2 position, Direction direction, Board board) {
