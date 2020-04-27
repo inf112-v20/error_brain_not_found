@@ -105,25 +105,25 @@ public class BoardTest {
     @Test
     public void playerIsOutsideOfUpperBorderTest() {
         player.setPosition(new Vector2(0, BOARD_HEIGHT));
-        assertTrue(board.outsideBoard(player));
+        assertTrue(board.getBoardLogic().outsideBoard(player, board));
     }
 
     @Test
     public void playerIsOutsideOfRightBorderTest() {
         player.setPosition(new Vector2(BOARD_WIDTH, 0));
-        assertTrue(board.outsideBoard(player));
+        assertTrue(board.getBoardLogic().outsideBoard(player, board));
     }
 
     @Test
     public void playerIsOutsideOfLeftBorderTest() {
         player.setPosition(new Vector2(-1, 0));
-        assertTrue(board.outsideBoard(player));
+        assertTrue(board.getBoardLogic().outsideBoard(player, board));
     }
 
     @Test
     public void playerIsUnderBorderTest() {
         player.setPosition(new Vector2(0, -1));
-        assertTrue(board.outsideBoard(player));
+        assertTrue(board.getBoardLogic().outsideBoard(player, board));
     }
 
     @Test
@@ -163,7 +163,7 @@ public class BoardTest {
         for (int i = 0; i < 5; i++) {
             Vector2 holePosition = holes.get(0);
             player.setPosition(holePosition);
-            assertTrue(board.outsideBoard(player));
+            assertTrue(board.getBoardLogic().outsideBoard(player, board));
         }
     }
 

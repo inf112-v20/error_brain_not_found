@@ -169,10 +169,11 @@ public class Board extends BoardLayers {
      * Check if player is outside of board
      *
      * @param player to check
-     */
+
     public boolean outsideBoard(Player player) {
         return boardLogic.outsideBoard(player.getPosition(), this) || boardLogic.hasHole(player.getPosition(), this);
     }
+    */
 
     public void pickUpFlags() {
         for (Player player : players) {
@@ -199,19 +200,6 @@ public class Board extends BoardLayers {
         }
         addPlayer(player);
     }
-/*
-    public boolean validRespawnPosition(Vector2 position, Direction direction) {
-        Vector2 currPos = position;
-        for (int step = 0; step < 3; step++) {
-            if (hasPlayer(currPos)) {
-                return false;
-            }
-            currPos = getNeighbourPosition(currPos, direction);
-        }
-        return !boardLogic.hasHole(position, this);
-    }
-
- */
 
     public List<Direction> getDirectionRandomOrder() {
         List<Direction> directions = Arrays.asList(Direction.values());
@@ -341,7 +329,7 @@ public class Board extends BoardLayers {
 
     public void respawnPlayers() {
         for (Player player : players) {
-            if (outsideBoard(player)) {
+            if (boardLogic.outsideBoard(player, this)) {
                 scream.play(RallyGame.volume);
                 player.decrementLifeTokens();
                 respawn(player);
@@ -398,6 +386,10 @@ public class Board extends BoardLayers {
     public void pickUpFlag(Player player) {
         Flag flag = getFlag(player.getPosition());
         player.pickUpFlag(getFlag(player.getPosition()), flag.getFlagnr());
+    }
+
+    public BoardLogic getBoardLogic() {
+        return boardLogic;
     }
 
     public ArrayList<Flag> getFlags(){

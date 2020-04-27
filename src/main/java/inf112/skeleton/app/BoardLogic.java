@@ -35,8 +35,15 @@ public class BoardLogic {
                 position.x >= boardWidth ||
                 position.y < 0 ||
                 position.y >= boardHeight;
+    }
 
-
+    /**
+     * Check if player is outside of board
+     *
+     * @param player to check
+    */
+    public boolean outsideBoard(Player player, Board board) {
+    return outsideBoard(player.getPosition(), board) || hasHole(player.getPosition(), board);
     }
 
     /**

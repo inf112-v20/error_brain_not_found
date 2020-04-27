@@ -216,7 +216,7 @@ public class RallyGame extends Game {
     public void decreaseLives() {
         ArrayList<Player> removedPlayers = new ArrayList<>();
         for (Player player : players) {
-            if (player.getDamageTokens() >= 10 || board.outsideBoard(player)) {
+            if (player.getDamageTokens() >= 10 || board.getBoardLogic().outsideBoard(player, board)) {
                 player.decrementLifeTokens();
                 player.resetDamageTokens();
                 player.discardAllCards(deck);
