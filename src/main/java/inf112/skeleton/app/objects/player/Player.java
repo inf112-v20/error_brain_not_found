@@ -11,7 +11,6 @@ import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Flag;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 
 public class Player {
@@ -25,7 +24,6 @@ public class Player {
     private final Vector2 position;
     private Direction direction;
     private final ArrayList<Flag> flagsCollected;
-    private ArrayList<ProgramCard> selectedCards;
     private final ArrayList<ProgramCard> allCards;
     private int programCardsDealt;
     private Direction beltPushDir;
@@ -39,7 +37,6 @@ public class Player {
         this.direction = Direction.EAST;
         this.playerNr = playerNr;
         this.flagsCollected = new ArrayList<>();
-        this.selectedCards = new ArrayList<>();
         this.registers = new Registers();
         this.allCards = new ArrayList<>();
         this.damageTokens = 0;
@@ -54,12 +51,6 @@ public class Player {
     public ArrayList<ProgramCard> getAllCards() {
         return allCards;
     }
-/*
-    public ArrayList<ProgramCard> getSelectedCards() {
-        return selectedCards;
-    }
-
- */
 
     public int getProgramCardsDealt() {
         updateProgramCardsDealt();
@@ -305,7 +296,6 @@ public class Player {
      * @param cards one or more cards (separated by comma) or a list of cards.
      */
     public void setSelectedCards(ProgramCard... cards) {
-        this.selectedCards = new ArrayList<>(Arrays.asList(cards));
         registers.setSelectedCards(cards);
     }
 
