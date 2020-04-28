@@ -58,6 +58,7 @@ public class GameServer {
                 connected++;
             }
             allClientsConnected = true;
+            game.waitForAllClientsToConnect.release();
             System.out.println("Connected! :D");
             serverSocket.close();
             // Give all connected players deck
@@ -66,9 +67,9 @@ public class GameServer {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            createAndSendDeck();
-            System.out.println("Done dealing deck.");
-            game.waitUntilAllHaveReceivedDeckBeforeDealingCards.release();
+            //createAndSendDeck();
+            //System.out.println("Done dealing deck.");
+            //game.waitUntilAllHaveReceivedDeckBeforeDealingCards.release();
 
         } catch (IOException e) {
             e.printStackTrace();

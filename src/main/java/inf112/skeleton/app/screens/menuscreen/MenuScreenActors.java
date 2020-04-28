@@ -76,10 +76,6 @@ public class MenuScreenActors {
         startButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if (isServer) {
-                    game.setPortNumber(Integer.parseInt(portInput.getText()));
-                    game.setNumberOfPlayers(Integer.parseInt(numOfPlayers.getText()));
-                }
                 game.setupGame("assets/maps/" + selectMap.getSelected() + ".tmx");
                 game.setScreen(new GameScreen(game));
             }
@@ -251,8 +247,13 @@ public class MenuScreenActors {
         createGameButton.setVisible(false);
         portInput.setVisible(false);
         numOfPlayers.setVisible(false);
-        startButton.setVisible(true);
         selectMap.setVisible(true);
+        startButton.setVisible(true);
+        if (isServer) {
+            game.setPortNumber(Integer.parseInt(portInput.getText()));
+            game.setNumberOfPlayers(Integer.parseInt(numOfPlayers.getText()));
+            game.setUpHost(Integer.parseInt(portInput.getText()));
+        }
     }
 
     public void toggleVisibilityJoinFirstClick() {

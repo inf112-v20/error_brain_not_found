@@ -54,7 +54,9 @@ public class RallyGame extends Game {
     private ProgramCard card;
     private Converter converter;
     private Semaphore waitForServerToSendPlayernumberAndNumberOfPlayers;
+    //TODO: make private
     public Semaphore waitUntilAllHaveReceivedDeckBeforeDealingCards;
+    public Semaphore waitForAllClientsToConnect;
 
     public ButtonSkin buttonSkins;
 
@@ -63,12 +65,15 @@ public class RallyGame extends Game {
     private String hostAddress;
     private int portNumber;
 
+
     public void create() {
         this.buttonSkins = new ButtonSkin();
         this.setScreen(new MenuScreen(this));
         startMusic();
         this.waitForServerToSendPlayernumberAndNumberOfPlayers = new Semaphore(1);
         this.waitForServerToSendPlayernumberAndNumberOfPlayers.tryAcquire();
+        this.waitForAllClientsToConnect = new Semaphore(1);
+        this.waitForAllClientsToConnect.tryAcquire();
     }
 
 
@@ -107,10 +112,17 @@ public class RallyGame extends Game {
         this.deck = new Deck();
 
         if (isServer) {
-            setUpHost(this.portNumber);
+            try {
+                waitForAllClientsToConnect.acquire();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            serverThread.getServer().createAndSendDeck();
+            //    setUpHost(this.portNumber);
         } else {
             setUpClient(this.hostAddress, this.portNumber);
         }
+       // }
 
         this.board = new Board(mapPath, this.numberOfPlayers);
         this.players = new ArrayList<>();
@@ -132,12 +144,11 @@ public class RallyGame extends Game {
             dealCards();
             receivedDeck = true;
         } else {
-            try {
-                System.out.println("Waiting for other players to connect...");
-                waitUntilAllHaveReceivedDeckBeforeDealingCards.acquire();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            //try {
+                //waitUntilAllHaveReceivedDeckBeforeDealingCards.acquire();
+           // } catch (InterruptedException e) {
+           //     e.printStackTrace();
+           // }
             dealCards();
             receivedDeck = true;
             System.out.println("Have dealt cards");
@@ -698,8 +709,13 @@ public class RallyGame extends Game {
      * Is used when server has sent the stack to all players.
      * @param stack of cards for this game.
      */
-    public void setDeck (Stack < ProgramCard > stack) {
-        this.deck.setDeck(stack);
+    public void setDeck (Stack <ProgramCard> stack) {
+        if (deck != null) {
+            this.deck.setDeck(stack);
+        } else {
+            deck = new Deck();
+            deck.setDeck(stack);
+        }
     }
 
     public void setPlayerNumber ( int playerNumber){
