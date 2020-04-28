@@ -10,10 +10,7 @@ import inf112.skeleton.app.objects.player.Player;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Stack;
+import java.util.*;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -27,10 +24,13 @@ public class GameServer {
     private Converter converter;
     private boolean allClientsHaveSelectedCards;
     private Deck deck;
+    private boolean allClientsHaveConnected;
+    private HashMap<GameServerThreads, Boolean> haveSentMapPath;
 
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
+        this.haveSentMapPath = new HashMap<>();
         this.game = game;
         this.converter = new Converter();
         this.deck = new Deck();
@@ -59,8 +59,10 @@ public class GameServer {
                 client.start();
                 sendStartValues(client, numberOfClients+1, playerNumber, this.deck);
                 clients.add(client);
+                haveSentMapPath.put(client, false);
                 connected++;
             }
+            allClientsHaveConnected = true;
             System.out.println("Connected! :D");
             serverSocket.close();
 
@@ -80,9 +82,17 @@ public class GameServer {
         sendDeck(client, deck);
     }
 
-    public void sendMapPathToAll(String mapPath) {
-        sendToAll(Messages.HERE_IS_MAP.toString());
-        sendToAll(mapPath);
+    public void sendMapPathToNewlyConnectedClients(String mapPath) {
+        for (Map.Entry<GameServerThreads, Boolean> entry : haveSentMapPath.entrySet()) {
+            Boolean haveSentMap = entry.getValue();
+            if (!haveSentMap) {
+                GameServerThreads client = entry.getKey();
+                System.out.println("Have sendt map to client");
+                client.sendMessage(Messages.HERE_IS_MAP.toString());
+                client.sendMessage(mapPath);
+                entry.setValue(true);
+            }
+        }
     }
 
     /**
@@ -212,5 +222,19 @@ public class GameServer {
      */
     public boolean allClientsHaveSelectedCards() {
         return allClientsHaveSelectedCards;
+    }
+
+    public boolean allClientsHaveConnected() {
+        return allClientsHaveConnected;
+    }
+
+    public boolean allClientsHaveReceivedMap() {
+        for (Map.Entry<GameServerThreads, Boolean> entry : haveSentMapPath.entrySet()) {
+            Boolean haveSentMap = entry.getValue();
+            if (!haveSentMap) {
+                return false;
+            }
+        }
+        return true;
     }
 }

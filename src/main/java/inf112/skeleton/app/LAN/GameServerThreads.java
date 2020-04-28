@@ -55,7 +55,7 @@ public class GameServerThreads extends Thread {
                 }
                 if (message.equals(Messages.ASKING_FOR_MAP.toString())) {
                     System.out.println("Client asked for map, map is" + game.getMapPath());
-                    if (!game.getMapPath().equals("")) {
+                    if (game.getMapPath() != null) {
                         sendMessage(Messages.HERE_IS_MAP.toString());
                         sendMessage(game.getMapPath());
                         System.out.println("Sent map to client");

@@ -267,21 +267,12 @@ public class MenuScreenActors {
         joinGameButton.setVisible(false);
         portInput.setVisible(false);
         IPInput.setVisible(false);
-        //TODO: Get map from server
-        //while (game.getMapPath() == null) {
-        //    Thread requestMap = new Thread(() -> game.getClient().askForMap());
-        //    System.out.println("Asking for map");
-        //    try {
-        //        Thread.sleep(500);
-        //    } catch (InterruptedException e) {
-        //        e.printStackTrace();
-        //    }
-        //}
         try {
             waitForServerToSendStartValues.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+        // If host starts game without you, ask for the map.
         game.getClient().askForMap();
         try {
             waitForServerToSendMapPath.acquire();

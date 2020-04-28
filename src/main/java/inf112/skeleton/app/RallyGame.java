@@ -85,9 +85,15 @@ public class RallyGame extends Game {
         this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
         new Thread(this::doTurn).start();
 
-        //if (isServer) {
-        //    serverThread.getServer().sendMapPathToAll(mapPath);
-       // }
+        // If clients connect after you start game, give them the map
+        if (isServer) {
+            Thread sendMap = new Thread(() -> {
+                while (!serverThread.getServer().allClientsHaveReceivedMap()) {
+                    serverThread.getServer().sendMapPathToNewlyConnectedClients(mapPath);
+                }
+            });
+            sendMap.start();
+        }
 
         setInputProcessor();
 
