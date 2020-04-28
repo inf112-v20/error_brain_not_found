@@ -329,6 +329,9 @@ public abstract class BoardLayers {
         return tiledMap;
     }
 
+    /**
+     * @return {@link TiledMapTileLayer} of laser layer
+     */
     public TiledMapTileLayer getLaserLayer() {
         return laserLayer;
     }
@@ -357,6 +360,10 @@ public abstract class BoardLayers {
         return expressBelts;
     }
 
+    /**
+     * Get the {@link ArrayList repairTiles} arraylist.
+     * @return the arraylist that contains the location of the repair tiles.
+     */
     public ArrayList<Vector2> getRepairTiles() {
         return repairTiles;
     }
