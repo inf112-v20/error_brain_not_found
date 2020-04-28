@@ -214,7 +214,7 @@ public class GameScreenActors {
             float y = button.getY();
             Label numberLabel = new Label("", skin);
             numberLabel.setPosition(x, y);
-            numberLabel.setFontScale(3);
+            numberLabel.setFontScale(2);
             numberLabel.setVisible(false);
             stage.addActor(numberLabel);
             numberLabels.add(numberLabel);
