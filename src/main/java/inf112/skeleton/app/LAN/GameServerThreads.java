@@ -44,15 +44,12 @@ public class GameServerThreads extends Thread {
 
     }
 
-    /**
-     * What the thread is doing when it is started.
-     */
     public void run() {
         try {
             // Let the player know what the playernumber is
-            sendMessage(this.playerNumber+"");
-            sendMessage(this.numberOfPlayers+"");
-            server.haveSentPlayerNumberAndNumberOfPlayers();
+            //sendMessage(this.playerNumber+"");
+            //sendMessage(this.numberOfPlayers+"");
+            //server.haveSentPlayerNumberAndNumberOfPlayers();
 
             while (true) {
                 String message = reader.readLine();
@@ -63,7 +60,7 @@ public class GameServerThreads extends Thread {
                 if (message.contains(Messages.QUIT.toString())) {
                     int playerNumber = Character.getNumericValue(message.charAt(0));
                     Player player = game.getBoard().getPlayer(playerNumber);
-                    server.sendToAllExcept(player, "Player " + playerNumber + " is leaving...");
+                    server.sendToAllExcept(player, playerNumber + Messages.QUIT.toString());
                     System.out.println("Player " + playerNumber + " is leaving...");
                     server.disconnect(playerNumber);
                     server.remove(playerNumber);

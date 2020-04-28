@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Stack;
 import java.util.concurrent.Semaphore;
@@ -22,10 +23,10 @@ public class GameServer {
 
     private ArrayList<GameServerThreads> clients;
     private RallyGame game;
-    private boolean allClientsConnected;
     private Converter converter;
     private Semaphore haveSentPlayerNumberAndNumberOfPlayers;
     private boolean allClientsHaveSelectedCards;
+    private Deck deck;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
@@ -33,6 +34,8 @@ public class GameServer {
         this.converter = new Converter();
         this.haveSentPlayerNumberAndNumberOfPlayers = new Semaphore(1);
         haveSentPlayerNumberAndNumberOfPlayers.tryAcquire();
+        this.deck = new Deck();
+        deck.shuffleDeck();
     }
 
     /**
@@ -51,25 +54,21 @@ public class GameServer {
                 Socket socket = serverSocket.accept();
                 // Server is player 1
                 int playerNumber = connected+2;
-                GameServerThreads client = new GameServerThreads(this, game , socket, playerNumber, numberOfClients+1);
+                GameServerThreads client = new GameServerThreads(this, game, socket, playerNumber, numberOfClients+1);
                 System.out.println("I have connected to player" + playerNumber);
                 client.start();
+                sendStartValues(client, numberOfClients+1, playerNumber, this.deck);
                 clients.add(client);
                 connected++;
             }
-            allClientsConnected = true;
             game.waitForAllClientsToConnect.release();
             System.out.println("Connected! :D");
             serverSocket.close();
-            // Give all connected players deck
-            try {
-                haveSentPlayerNumberAndNumberOfPlayers.acquire();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            //createAndSendDeck();
-            //System.out.println("Done dealing deck.");
-            //game.waitUntilAllHaveReceivedDeckBeforeDealingCards.release();
+            //try {
+            //    haveSentPlayerNumberAndNumberOfPlayers.acquire();
+            //} catch (InterruptedException e) {
+            //    e.printStackTrace();
+            //}
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -77,10 +76,21 @@ public class GameServer {
     }
 
     /**
+     * Send values so client can start game:
+     * Playernumber, number of players and a deck.
+     * @param client
+     */
+    public void sendStartValues(GameServerThreads client, int numberOfPlayers, int playerNumber, Deck deck) {
+        client.sendMessage(playerNumber+"");
+        client.sendMessage(numberOfPlayers+"");
+        sendDeck(client, deck);
+    }
+
+    /**
      * Create a new deck, update deck in game and send this deck to the other players.
      */
-    public void createAndSendDeck() {
-        Deck deck = new Deck();
+    public void createAndSendDeckToAll() {
+        this.deck = new Deck();
         deck.shuffleDeck();
         game.setDeck(deck.getDeck());
         sendDeckToAll(deck);
@@ -92,13 +102,6 @@ public class GameServer {
      */
     public void haveSentPlayerNumberAndNumberOfPlayers() {
         haveSentPlayerNumberAndNumberOfPlayers.release();
-    }
-
-    /**
-     * @return true if all clients have connected to server
-     */
-    public boolean allClientsAreConnected() {
-        return allClientsConnected;
     }
 
     /**
@@ -180,19 +183,28 @@ public class GameServer {
     }
 
     /**
+     * Send deck to client
+     * @param client to send to
+     * @param deck to send
+     */
+    public void sendDeck(GameServerThreads client, Deck deck) {
+        Stack<ProgramCard> stack = deck.getDeck();
+        Iterator iter = stack.iterator();
+        client.sendMessage(Messages.DECK_BEGIN.toString());
+        while (iter.hasNext()) {
+            ProgramCard card = (ProgramCard) iter.next();
+            client.sendMessage(converter.convertToString(card));
+        }
+        client.sendMessage(Messages.DECK_END.toString());
+    }
+
+    /**
      * Send deck to all players.
      * @param deck to send
      */
     public void sendDeckToAll(Deck deck) {
         for (GameServerThreads client : clients) {
-            Stack<ProgramCard> stack = deck.getDeck();
-            Iterator iter = stack.iterator();
-            client.sendMessage(Messages.DECK_BEGIN.toString());
-            while (iter.hasNext()) {
-                ProgramCard card = (ProgramCard) iter.next();
-                client.sendMessage(converter.convertToString(card));
-            }
-            client.sendMessage(Messages.DECK_END.toString());
+            sendDeck(client, deck);
         }
     }
 

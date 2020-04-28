@@ -250,9 +250,7 @@ public class MenuScreenActors {
         selectMap.setVisible(true);
         startButton.setVisible(true);
         if (isServer) {
-            game.setPortNumber(Integer.parseInt(portInput.getText()));
-            game.setNumberOfPlayers(Integer.parseInt(numOfPlayers.getText()));
-            game.setUpHost(Integer.parseInt(portInput.getText()));
+            game.setUpHost(Integer.parseInt(portInput.getText()), Integer.parseInt(numOfPlayers.getText()));
         }
     }
 

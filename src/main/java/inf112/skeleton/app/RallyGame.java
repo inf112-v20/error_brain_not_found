@@ -28,7 +28,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Scanner;
 import java.util.Stack;
 import java.util.concurrent.Semaphore;
 
@@ -49,6 +48,7 @@ public class RallyGame extends Game {
     private int numberOfPlayers;
     private int myPlayerNumber;
     private ServerThread serverThread;
+    private GameServer server;
     private boolean isServer;
     private GameClientThread client;
     private ProgramCard card;
@@ -117,7 +117,7 @@ public class RallyGame extends Game {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            serverThread.getServer().createAndSendDeck();
+            serverThread.getServer().createAndSendDeckToAll();
             //    setUpHost(this.portNumber);
         } else {
             setUpClient(this.hostAddress, this.portNumber);
@@ -140,29 +140,21 @@ public class RallyGame extends Game {
 
         setInputProcessor();
 
-        if (!isServer) {
-            dealCards();
-            receivedDeck = true;
-        } else {
-            //try {
-                //waitUntilAllHaveReceivedDeckBeforeDealingCards.acquire();
-           // } catch (InterruptedException e) {
-           //     e.printStackTrace();
-           // }
-            dealCards();
-            receivedDeck = true;
-            System.out.println("Have dealt cards");
-        }
+        dealCards();
+        receivedDeck = true;
     }
 
     /**
      * Set up a host for this game.
      * @param portNumber on port
+     * @param number of players in this game (including host)
      */
-    public void setUpHost(int portNumber) {
+    public void setUpHost(int portNumber, int numberOfPlayers) {
         this.isServer = true;
         this.myPlayerNumber = 1;
-        this.serverThread = new ServerThread(this, this.numberOfPlayers, portNumber);
+        this.numberOfPlayers = numberOfPlayers;
+        this.portNumber = portNumber;
+        this.serverThread = new ServerThread(this, numberOfPlayers, portNumber);
         serverThread.start();
     }
 
@@ -415,7 +407,7 @@ public class RallyGame extends Game {
             // Dealcards draw 9 cards, so deck needs to be larger than 9
             if (deck.deckSize() < 9) {
                 if (isServer) {
-                    serverThread.getServer().createAndSendDeck();
+                    serverThread.getServer().createAndSendDeckToAll();
                 }
             }
 
