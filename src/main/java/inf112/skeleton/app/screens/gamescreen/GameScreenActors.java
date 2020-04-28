@@ -275,4 +275,23 @@ public class GameScreenActors {
             }
         }
     }
+
+    public void moveLockedCards() {
+        for (int i = 4; i >= 0; i--) {
+            Register register = game.mainPlayer.getRegisters().getRegister(i);
+            if (!register.isOpen()) {
+                ProgramCard card = register.getProgramCard();
+                addCardToButton(card, i + 4);
+            }
+        }
+    }
+
+    public void hideDisabledCardButtons() {
+        int dmgTok = game.mainPlayer.getDamageTokens();
+        for (int i = 0; i < 9; i++) {
+            if (i > dmgTok) {
+                programCardButtons.get(i).setVisible(false);
+            }
+        }
+    }
 }
