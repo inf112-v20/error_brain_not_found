@@ -55,7 +55,6 @@ public class GameClientThread extends Thread {
         this.numberOfPlayers = Integer.parseInt(getMessage());
         game.setPlayerNumber(myPlayerNumber);
         game.setNumberOfPlayers(numberOfPlayers);
-        game.gotPlayerNumberAndNumberOfPlayers();
 
         while (true) {
             String message = getMessage();

@@ -33,6 +33,7 @@ public class GameServer {
         this.converter = new Converter();
         this.deck = new Deck();
         deck.shuffleDeck();
+        game.setDeck(deck.getDeck());
     }
 
     /**
@@ -58,7 +59,6 @@ public class GameServer {
                 clients.add(client);
                 connected++;
             }
-            //game.waitForAllClientsToConnect.release();
             System.out.println("Connected! :D");
             serverSocket.close();
 

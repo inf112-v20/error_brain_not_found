@@ -53,15 +53,10 @@ public class RallyGame extends Game {
     private GameClientThread client;
     private ProgramCard card;
     private Converter converter;
-    private Semaphore waitForServerToSendPlayernumberAndNumberOfPlayers;
-    //TODO: make private
-    public Semaphore waitUntilAllHaveReceivedDeckBeforeDealingCards;
-    public Semaphore waitForAllClientsToConnect;
 
     public ButtonSkin buttonSkins;
 
     public static float volume = 0.5f;
-    private boolean receivedDeck;
     private String hostAddress;
     private int portNumber;
 
@@ -70,10 +65,6 @@ public class RallyGame extends Game {
         this.buttonSkins = new ButtonSkin();
         this.setScreen(new MenuScreen(this));
         startMusic();
-        this.waitForServerToSendPlayernumberAndNumberOfPlayers = new Semaphore(1);
-        this.waitForServerToSendPlayernumberAndNumberOfPlayers.tryAcquire();
-        this.waitForAllClientsToConnect = new Semaphore(1);
-        this.waitForAllClientsToConnect.tryAcquire();
     }
 
 
@@ -109,8 +100,6 @@ public class RallyGame extends Game {
      */
     public void setupGame(String mapPath) {
 
-        this.deck = new Deck();
-
         if (!isServer) {
             setUpClient(this.hostAddress, this.portNumber);
         }
@@ -122,8 +111,6 @@ public class RallyGame extends Game {
         this.respawnPlayers = new ArrayList<>();
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
-        this.waitUntilAllHaveReceivedDeckBeforeDealingCards = new Semaphore(1);
-        this.waitUntilAllHaveReceivedDeckBeforeDealingCards.tryAcquire();
         this.playing = true;
         this.converter = new Converter();
         this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
@@ -204,10 +191,8 @@ public class RallyGame extends Game {
                 else if (keycode == Input.Keys.D) {
 
                     System.out.println("Pressed d");
-
-                    if (haveReceivedDeck()) {
                         dealCards();
-                    }
+
                 } else if (keycode == Input.Keys.S) {
                     dealCards();
                     System.out.println("Dealt cards");
@@ -232,13 +217,6 @@ public class RallyGame extends Game {
                 return super.keyDown(keycode);
             }
         });
-    }
-
-    /**
-     * Tell game that client have received init values to start game.
-     */
-    public void gotPlayerNumberAndNumberOfPlayers() {
-        waitForServerToSendPlayernumberAndNumberOfPlayers.release();
     }
 
     /**
@@ -723,11 +701,4 @@ public class RallyGame extends Game {
         this.portNumber = portNumber;
     }
 
-    /**
-     *
-     * @return true if deck has been received.
-     */
-    public boolean haveReceivedDeck() {
-        return this.receivedDeck;
-    }
 }
