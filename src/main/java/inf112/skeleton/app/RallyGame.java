@@ -174,6 +174,9 @@ public class RallyGame extends Game {
                     decreaseLives();
                 }
 
+                activateRepairTiles();
+                sleep(250);
+
                 pickUpFlags();
                 sleep(500);
 
@@ -328,8 +331,9 @@ public class RallyGame extends Game {
 
     /**
      * <p>
-     *     Activate the belts on the map, so they pushes the player in the direction of the belt.
+     * Activate the belts on the map, so they pushes the player in the direction of the belt.
      * </p>
+     *
      * @param onlyExpress if true then the pool of belts should be set to expressBelts
      */
     public void activateBelts(boolean onlyExpress) {
@@ -401,6 +405,16 @@ public class RallyGame extends Game {
             player.setDirection(player.getDirection().turnRight());
         } else if (beltDirection.equals(leftTurn)) {
             player.setDirection(player.getDirection().turnLeft());
+        }
+    }
+
+    public void activateRepairTiles() {
+        for (Player player : players){
+            for (Vector2 repairTilePos : board.getRepairTiles()){
+                if (player.getPosition().equals(repairTilePos)){
+                    player.resetDamageTokens();
+                }
+            }
         }
     }
 
