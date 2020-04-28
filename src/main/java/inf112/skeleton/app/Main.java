@@ -10,7 +10,7 @@ public class Main {
         cfg.title = "Robo Rally by error_brain_not_found";
         cfg.width = 960;
         cfg.height = 540;
-        cfg.fullscreen = true;
+        //cfg.fullscreen = true;
 
         new LwjglApplication(new RallyGame(), cfg);
     }

@@ -11,6 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Align;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.cards.Register;
@@ -22,6 +23,7 @@ public class GameScreenActors {
     public final float mapHeight = 12;
     public final float mapWidth = 16;
     public final float programCardRatio = 0.72f;
+    private float labelFontScale;
     public float screenWidth;
     public float screenHeight;
     public float mapRightPx;
@@ -32,7 +34,6 @@ public class GameScreenActors {
     public float confirmButtonSize;
     public float damageTokenSize;
     public float lifeTokenSize;
-    public float mapTopPx;
 
     private ImageButton confirmButton;
 
@@ -85,7 +86,7 @@ public class GameScreenActors {
                 cardStyle.up = cardSkin.getSkins().getDrawable(card.getName());
                 ImageButton cardButton = new ImageButton(cardStyle);
                 cardButton.setSize(programCardWidth, programCardHeight);
-                cardButton.setPosition(mapRightPx + programCardWidth * dx, (float) (screenHeight - programCardHeight * dy* 1.17));
+                cardButton.setPosition(mapRightPx + programCardWidth * dx, screenHeight - programCardHeight * dy * 1.18f);
                 setCardButtonInputListener(card, cardButton);
                 programCardButtons.add(cardButton);
                 stage.addActor(cardButton);
@@ -116,15 +117,7 @@ public class GameScreenActors {
             if (buttonIndex < game.mainPlayer.getCardsOnHand().size()) {
                 ProgramCard card = game.mainPlayer.getCardsOnHand().get(buttonIndex);
                 addCardToButton(card, buttonIndex);
-            }
-        }
-    }
-
-    public void hideDisabledCardButtons() {
-        int dmgTok = game.mainPlayer.getDamageTokens();
-        for (int i = 0; i < 9; i++) {
-            if (i > dmgTok) {
-                programCardButtons.get(i).setVisible(false);
+                drawPriority(card);
             }
         }
     }
@@ -134,16 +127,6 @@ public class GameScreenActors {
         cardButton.getStyle().up = cardSkin.getSkins().getDrawable(card.getName());
         setCardButtonInputListener(card, cardButton);
         cardButton.setVisible(true);
-    }
-
-    public void moveLockedCards() {
-        for (int i = 4; i >= 0; i--) {
-            Register register = game.mainPlayer.getRegisters().getRegister(i);
-            if (!register.isOpen()) {
-                ProgramCard card = register.getProgramCard();
-                addCardToButton(card, i + 4);
-            }
-        }
     }
 
     // CONFIRM BUTTON
@@ -233,15 +216,16 @@ public class GameScreenActors {
 
     public void initializePriorityLabels() {
         for (ImageButton button : programCardButtons) {
-            float x = button.getX();
-            float y = button.getY();
             Label cardPriority = new Label("", skin);
+            float height = programCardHeight * .18f;
+            float x = button.getX();
+            float y = button.getY() + programCardHeight + height / 2;
+            cardPriority.setWidth(programCardWidth);
             cardPriority.setPosition(x, y);
-            cardPriority.setFontScale(3);
-            cardPriority.setVisible(true);
+            cardPriority.setFontScale(labelFontScale);
+            cardPriority.setAlignment(Align.center);
             stage.addActor(cardPriority);
             cardPriorities.add(cardPriority);
-
         }
     }
 
@@ -255,11 +239,11 @@ public class GameScreenActors {
 
     public void initializeNumberLabels() {
         for (ImageButton button : programCardButtons) {
-            float x = button.getX();
-            float y = button.getY();
             Label numberLabel = new Label("", skin);
+            float x = button.getX() + programCardWidth * .1f;
+            float y = button.getY() + programCardHeight * .2f;
             numberLabel.setPosition(x, y);
-            numberLabel.setFontScale(2);
+            numberLabel.setFontScale(labelFontScale * 1.8f);
             numberLabel.setVisible(false);
             stage.addActor(numberLabel);
             numberLabels.add(numberLabel);
@@ -270,7 +254,7 @@ public class GameScreenActors {
         ProgramCard card = register.getProgramCard();
         int index = game.mainPlayer.getCardsOnHand().indexOf(card);
         Label label = numberLabels.get(index);
-        label.setText((register.getRegisterNumber() + 1));
+        label.setText(register.getRegisterNumber() + 1);
         label.setVisible(true);
     }
 
