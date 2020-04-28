@@ -7,7 +7,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.cards.Register;
@@ -77,7 +80,7 @@ public class GameScreenActors {
         int idx = 0;
         for (int dy = 1; dy <= 3; dy++) {
             for (int dx = 0; dx <= 2; dx++) {
-                ProgramCard card = game.mainPlayer.getAllCards().get(idx);
+                ProgramCard card = game.mainPlayer.getCardsOnHand().get(idx);
                 ImageButton.ImageButtonStyle cardStyle = new ImageButton.ImageButtonStyle();
                 cardStyle.up = cardSkin.getSkins().getDrawable(card.getName());
                 ImageButton cardButton = new ImageButton(cardStyle);
@@ -109,17 +112,36 @@ public class GameScreenActors {
     }
 
     public void updateCards() {
-        for (int i = 0; i < 9; i++) {
-            ImageButton cardButton = programCardButtons.get(i);
-            if (i < game.mainPlayer.getProgramCardsDealt()) {
+        for (int buttonIndex = 0; buttonIndex < 9; buttonIndex++) {
+            if (buttonIndex < game.mainPlayer.getCardsOnHand().size()) {
+                ProgramCard card = game.mainPlayer.getCardsOnHand().get(buttonIndex);
+                addCardToButton(card, buttonIndex);
+            }
+        }
+    }
 
-                ProgramCard card = game.mainPlayer.getAllCards().get(i);
-                drawPriority(card);
-                cardButton.getStyle().up = cardSkin.getSkins().getDrawable(card.getName());
-                setCardButtonInputListener(card, cardButton);
-                stage.addActor(cardButton);
-            } else {
-                stage.getActors().removeValue(cardButton, true);
+    public void hideDisabledCardButtons() {
+        int dmgTok = game.mainPlayer.getDamageTokens();
+        for (int i = 0; i < 9; i++) {
+            if (i > dmgTok) {
+                programCardButtons.get(i).setVisible(false);
+            }
+        }
+    }
+
+    public void addCardToButton(ProgramCard card, int buttonIndex) {
+        ImageButton cardButton = programCardButtons.get(buttonIndex);
+        cardButton.getStyle().up = cardSkin.getSkins().getDrawable(card.getName());
+        setCardButtonInputListener(card, cardButton);
+        cardButton.setVisible(true);
+    }
+
+    public void moveLockedCards() {
+        for (int i = 4; i >= 0; i--) {
+            Register register = game.mainPlayer.getRegisters().getRegister(i);
+            if (!register.isOpen()) {
+                ProgramCard card = register.getProgramCard();
+                addCardToButton(card, i + 4);
             }
         }
     }
@@ -207,12 +229,14 @@ public class GameScreenActors {
         }
     }
 
-    public void initializePriorityLabels(){
-        for (ImageButton button :programCardButtons){
-            float x =   button.getX();
+    // PRIORITY LABEL
+
+    public void initializePriorityLabels() {
+        for (ImageButton button : programCardButtons) {
+            float x = button.getX();
             float y = button.getY();
-            Label cardPriority = new Label("",skin);
-            cardPriority.setPosition(x,y);
+            Label cardPriority = new Label("", skin);
+            cardPriority.setPosition(x, y);
             cardPriority.setFontScale(3);
             cardPriority.setVisible(true);
             stage.addActor(cardPriority);
@@ -220,8 +244,9 @@ public class GameScreenActors {
 
         }
     }
+
     public void drawPriority(ProgramCard card) {
-        int index = game.mainPlayer.getAllCards().indexOf(card);
+        int index = game.mainPlayer.getCardsOnHand().indexOf(card);
         Label label = cardPriorities.get(index);
         label.setText((card.getPriority()));
     }
@@ -243,7 +268,7 @@ public class GameScreenActors {
 
     public void drawNumberOnCard(Register register) {
         ProgramCard card = register.getProgramCard();
-        int index = game.mainPlayer.getAllCards().indexOf(card);
+        int index = game.mainPlayer.getCardsOnHand().indexOf(card);
         Label label = numberLabels.get(index);
         label.setText((register.getRegisterNumber() + 1));
         label.setVisible(true);

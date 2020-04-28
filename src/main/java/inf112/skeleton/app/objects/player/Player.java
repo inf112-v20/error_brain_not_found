@@ -25,7 +25,7 @@ public class Player {
     private final Vector2 position;
     private Direction direction;
     private final ArrayList<Flag> flagsCollected;
-    private final ArrayList<ProgramCard> allCards;
+    private final ArrayList<ProgramCard> cardsOnHand;
     private int programCardsDealt;
     private Direction beltPushDir;
     private Vector2 beltPushPos;
@@ -39,7 +39,7 @@ public class Player {
         this.playerNr = playerNr;
         this.flagsCollected = new ArrayList<>();
         this.registers = new Registers();
-        this.allCards = new ArrayList<>();
+        this.cardsOnHand = new ArrayList<>();
         this.damageTokens = 0;
         this.lifeTokens = 3;
         this.beltPushDir = null;
@@ -49,8 +49,8 @@ public class Player {
         setBackup(position, Direction.EAST);
     }
 
-    public ArrayList<ProgramCard> getAllCards() {
-        return allCards;
+    public ArrayList<ProgramCard> getCardsOnHand() {
+        return cardsOnHand;
     }
 
     public int getProgramCardsDealt() {
@@ -60,6 +60,10 @@ public class Player {
 
     public Registers getRegisters() {
         return registers;
+    }
+
+    public void updateRegisters() {
+        registers.updateRegisters(damageTokens);
     }
 
     public void updateProgramCardsDealt() {
@@ -76,14 +80,14 @@ public class Player {
 
     public void selectCards() {
         for (int i = 0; i < registers.getOpenRegisters(); i++) {
-            registers.addCard(allCards.get(0));
+            registers.addCard(cardsOnHand.get(0));
         }
     }
 
     public void drawCards(Deck deck) {
         updateProgramCardsDealt();
-        while (allCards.size() < programCardsDealt) {
-            allCards.add(deck.drawCard());
+        while (cardsOnHand.size() < programCardsDealt) {
+            cardsOnHand.add(deck.drawCard());
         }
     }
 
@@ -103,10 +107,23 @@ public class Player {
         this.beltPushPos = position;
     }
 
-    public void discardAllCards(Deck deck) {
-        deck.addCardsToDiscardPile(allCards);
-        allCards.clear();
+    public void discardCards(Deck deck) {
+        for (ProgramCard card : cardsOnHand) {
+            if (registers.contains(card)) {
+                if (registers.getRegister(card).isOpen()) {
+                    deck.addCardToDiscardPile(card);
+                }
+            } else {
+                deck.addCardToDiscardPile(card);
+            }
+        }
+        cardsOnHand.clear();
         registers.clear(true);
+    }
+
+    public void discardAllCards(Deck deck) {
+        deck.addCardsToDiscardPile(cardsOnHand);
+
     }
 
     /**
@@ -120,8 +137,6 @@ public class Player {
 
     public void resetDamageTokens() {
         this.damageTokens = 0;
-        updateProgramCardsDealt();
-        registers.updateRegisters(damageTokens);
     }
 
     public int getLifeTokens() {

@@ -180,8 +180,15 @@ public class RallyGame extends Game {
                 sleep(1000);
             }
             respawnPlayers();
+            updateRegisters();
             discardCards();
             dealCards();
+        }
+    }
+
+    private void updateRegisters() {
+        for (Player player : players) {
+            player.updateRegisters();
         }
     }
 
