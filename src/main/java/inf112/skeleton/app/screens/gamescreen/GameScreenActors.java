@@ -208,8 +208,10 @@ public class GameScreenActors {
     }
 
     public void initializePriorityLabels(){
+
+      //  Skin john =new Skin(Gdx.files.internal("skins/number-cruncher-ui.atlas"));
         for (ImageButton button :programCardButtons){
-            float x =   button.getX();
+            float x = button.getX();
             float y = button.getY();
             Label cardPriority = new Label("",skin);
             cardPriority.setPosition(x,y);
