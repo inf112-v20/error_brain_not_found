@@ -82,7 +82,7 @@ public class GameScreenActors {
                 cardStyle.up = cardSkin.getSkins().getDrawable(card.getName());
                 ImageButton cardButton = new ImageButton(cardStyle);
                 cardButton.setSize(programCardWidth, programCardHeight);
-                cardButton.setPosition(mapRightPx + programCardWidth * dx, screenHeight - programCardHeight * dy);
+                cardButton.setPosition(mapRightPx + programCardWidth * dx, (float) (screenHeight - programCardHeight * dy* 1.17));
                 setCardButtonInputListener(card, cardButton);
                 programCardButtons.add(cardButton);
                 stage.addActor(cardButton);
@@ -209,8 +209,8 @@ public class GameScreenActors {
 
     public void initializePriorityLabels(){
         for (ImageButton button :programCardButtons){
-            float x = button.getX();
-            float y = button.getY() ;
+            float x =   button.getX();
+            float y = button.getY();
             Label cardPriority = new Label("",skin);
             cardPriority.setPosition(x,y);
             cardPriority.setFontScale(3);
