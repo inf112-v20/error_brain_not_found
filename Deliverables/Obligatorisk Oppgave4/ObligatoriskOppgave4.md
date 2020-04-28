@@ -6,8 +6,8 @@ Team: error_no_brain_found
 
 [Meeting 8](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-8)  
 [Meeting 10](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-10)  
-[Meeting 11]()  
-
+[Meeting 11](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-11)  
+[Meeting 11](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-12)
 
 ## Task 2 - Requirements
 ### User-stories 
