@@ -1,5 +1,6 @@
 package inf112.skeleton.app.screens.gamescreen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -8,9 +9,11 @@ import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.cards.Register;
 
 import java.util.ArrayList;
 
@@ -22,11 +25,13 @@ public class GameScreenActors {
     public float screenWidth;
     public float screenHeight;
     public float mapRightPx;
+    private final ArrayList<Label> numberLabels;
     public float programCardWidth;
     public float programCardHeight;
     public float confirmButtonSize;
     public float damageTokenSize;
     public float lifeTokenSize;
+    public float mapTopPx;
 
     private ImageButton confirmButton;
 
@@ -36,28 +41,89 @@ public class GameScreenActors {
     private final ArrayList<ImageButton> programCardButtons;
     private final ArrayList<Image> damageTokens;
     private final ArrayList<Image> lifeTokens;
+    public Skin skin;
 
     public GameScreenActors(RallyGame game, Stage stage) {
         this.game = game;
         this.stage = stage;
-
+        this.skin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
         programCardButtons = new ArrayList<>();
         damageTokens = new ArrayList<>();
         lifeTokens = new ArrayList<>();
+        numberLabels = new ArrayList<>();
 
         cardSkin = new ProgramCardSkin();
 
         screenWidth = game.getScreen().viewport.getScreenWidth();
         screenHeight = game.getScreen().viewport.getScreenHeight();
+        //mapTopPx = (screenHeight * 0.9f);
+        //mapRightPx = (mapTopPx / 12f) * 16f;
         mapRightPx = (screenHeight / mapHeight) * mapWidth;
+
+        // Alle kort på høyre side
+        // programCardHeight = screenHeight / 9f;
+        // programCardWidth = programCardHeight * programCardRatio;
+
+        // Alle kort øverst
+        // programCardHeight = screenHeight - mapTopPx;
+        // programCardWidth = programCardHeight * programCardRatio;
+
+        // 3x3 øverst høyre
         programCardWidth = (screenWidth - mapRightPx) / 3f;
         programCardHeight = programCardWidth / programCardRatio;
         lifeTokenSize = (screenWidth - mapRightPx) / 4f;
         confirmButtonSize = lifeTokenSize;
         damageTokenSize = (screenWidth - mapRightPx) / 5f;
+
+        //lifeTokenSize = (screenHeight - mapTopPx);
+        //damageTokenSize = (screenHeight - mapTopPx);
+        //confirmButtonSize = lifeTokenSize;
     }
 
+    public void updateButtons() {
+        updateConfirm();
+        updateLifeTokens();
+        updateDamageTokens();
+        updateCards();
+    }
+
+    // PROGRAM CARD BUTTONS
+
     public void initializeProgramCardButtons() {
+        /*
+        // Alle øverst
+        int idx = 0;
+        for (int x = 0; x < 9; x++) {
+            ProgramCard card = game.mainPlayer.getAllCards().get(idx);
+            ImageButton.ImageButtonStyle cardStyle = new ImageButton.ImageButtonStyle();
+            cardStyle.up = cardSkin.getSkins().getDrawable(card.getName());
+            ImageButton cardButton = new ImageButton(cardStyle);
+            cardButton.setSize(programCardWidth, programCardHeight);
+            cardButton.setPosition(programCardWidth * x, mapTopPx);
+            setCardButtonInputListener(card, cardButton);
+            programCardButtons.add(cardButton);
+            stage.addActor(cardButton);
+            idx++;
+        }
+        */
+        /*
+        // Alle på høyre side
+        int idx = 0;
+        for (int y = 1; y <= 9; y++) {
+            ProgramCard card = game.mainPlayer.getAllCards().get(idx);
+            ImageButton.ImageButtonStyle cardStyle = new ImageButton.ImageButtonStyle();
+            cardStyle.up = cardSkin.getSkins().getDrawable(card.getName());
+            ImageButton cardButton = new ImageButton(cardStyle);
+            cardButton.setSize(programCardWidth, programCardHeight);
+            cardButton.setPosition(screenWidth - programCardWidth, screenHeight - programCardHeight * y);
+            setCardButtonInputListener(card, cardButton);
+            programCardButtons.add(cardButton);
+            stage.addActor(cardButton);
+            idx++;
+        }
+        */
+
+        // 3x3 øverst høyre
         int idx = 0;
         for (int dy = 1; dy <= 3; dy++) {
             for (int dx = 0; dx <= 2; dx++) {
@@ -81,7 +147,7 @@ public class GameScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.mainPlayer.selectCard(card);
-
+                updateCardNumbers();
                 System.out.println(game.mainPlayer.getRegisters());
             }
 
@@ -91,6 +157,22 @@ public class GameScreenActors {
             }
         });
     }
+
+    public void updateCards() {
+        for (int i = 0; i < 9; i++) {
+            ImageButton cardButton = programCardButtons.get(i);
+            if (i < game.mainPlayer.getProgramCardsDealt()) {
+                ProgramCard card = game.mainPlayer.getAllCards().get(i);
+                cardButton.getStyle().up = cardSkin.getSkins().getDrawable(card.getName());
+                setCardButtonInputListener(card, cardButton);
+                stage.addActor(cardButton);
+            } else {
+                stage.getActors().removeValue(cardButton, true);
+            }
+        }
+    }
+
+    // CONFIRM BUTTON
 
     public void initializeConfirmButton() {
         TextureAtlas atlas = new TextureAtlas();
@@ -116,6 +198,16 @@ public class GameScreenActors {
         stage.addActor(confirmButton);
     }
 
+    public void updateConfirm() {
+        if (!game.mainPlayer.getRegisters().hasRegistersWithoutCard()) {
+            confirmButton.getStyle().up = game.buttonSkins.getSkins().getDrawable("Confirm ready");
+        } else {
+            confirmButton.getStyle().up = game.buttonSkins.getSkins().getDrawable("Confirm not ready");
+        }
+    }
+
+    // DAMAGE TOKEN IMAGE
+
     public void initializeDamageTokens() {
         for (int i = 0; i < 2; i++) {
             for (int j = 0; j < 5; j++) {
@@ -134,6 +226,14 @@ public class GameScreenActors {
         stage.addActor(token);
     }
 
+    public void updateDamageTokens() {
+        for (int i = 0; i < 10; i++) {
+            damageTokens.get(i).setVisible(i < game.mainPlayer.getDamageTokens());
+        }
+    }
+
+    // LIFE TOKEN IMAGE
+
     public void initializeLifeTokens() {
         for (int i = 0; i < 3; i++) {
             float x = mapRightPx + i * lifeTokenSize;
@@ -149,43 +249,47 @@ public class GameScreenActors {
         stage.addActor(token);
     }
 
-    public void updateButtons() {
-        updateConfirm();
-        updateLifeTokens();
-        updateDamageTokens();
-        updateCards();
-    }
-
-    public void updateConfirm() {
-        if (!game.mainPlayer.getRegisters().hasRegistersWithoutCard()) {
-            confirmButton.getStyle().up = game.buttonSkins.getSkins().getDrawable("Confirm ready");
-        } else {
-            confirmButton.getStyle().up = game.buttonSkins.getSkins().getDrawable("Confirm not ready");
-        }
-    }
-
     public void updateLifeTokens() {
         for (int i = 0; i < 3; i++) {
             lifeTokens.get(i).setVisible(i < game.mainPlayer.getLifeTokens());
         }
     }
 
-    public void updateDamageTokens() {
-        for (int i = 0; i < 10; i++) {
-            damageTokens.get(i).setVisible(i < game.mainPlayer.getDamageTokens());
+    // NUMBER LABELS
+
+    public void initializeNumberLabels() {
+        for (ImageButton button : programCardButtons) {
+            float x = button.getX();
+            float y = button.getY();
+            Label numberLabel = new Label("", skin);
+            numberLabel.setPosition(x, y);
+            numberLabel.setFontScale(3);
+            numberLabel.setVisible(false);
+            stage.addActor(numberLabel);
+            numberLabels.add(numberLabel);
         }
     }
 
-    public void updateCards() {
-        for (int i = 0; i < 9; i++) {
-            ImageButton cardButton = programCardButtons.get(i);
-            if (i < game.mainPlayer.getProgramCardsDealt()) {
-                ProgramCard card = game.mainPlayer.getAllCards().get(i);
-                cardButton.getStyle().up = cardSkin.getSkins().getDrawable(card.getName());
-                setCardButtonInputListener(card, cardButton);
-                stage.addActor(cardButton);
-            } else {
-                stage.getActors().removeValue(cardButton, true);
+    public void drawNumberOnCard(Register register) {
+        ProgramCard card = register.getProgramCard();
+        int index = game.mainPlayer.getAllCards().indexOf(card);
+        Label label = numberLabels.get(index);
+        label.setText((register.getRegisterNumber() + 1));
+        label.setVisible(true);
+    }
+
+    public void removeNumberFromCard() {
+        for (Label label : numberLabels) {
+            label.setText("");
+            label.setVisible(false);
+        }
+    }
+
+    public void updateCardNumbers() {
+        removeNumberFromCard();
+        for (Register register : game.mainPlayer.getRegisters().getRegisters()) {
+            if (register.hasCard()) {
+                drawNumberOnCard(register);
             }
         }
     }

@@ -10,8 +10,17 @@ public class Registers {
     public Registers() {
         this.registers = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
-            registers.add(new Register());
+            registers.add(new Register(i));
         }
+    }
+
+    public Register getRegister(ProgramCard card) {
+        for (Register reg : registers) {
+            if (reg.hasCard() && reg.getProgramCard().equals(card)) {
+                return reg;
+            }
+        }
+        return null;
     }
 
     public Register getRegister(int i) {
@@ -41,10 +50,14 @@ public class Registers {
     }
 
     public void remove(ProgramCard card) {
-        for (Register register : registers) {
-            if (card.equals(register.getProgramCard())) {
-                register.setProgramCard(null);
-                return;
+        boolean foundCard = false;
+        for (int i = 0; i < 5; i++) {
+            Register register = registers.get(i);
+            if (!foundCard && register.hasCard() && card.equals(register.getProgramCard())) {
+                foundCard = true;
+            }
+            if (foundCard) {
+                register.setProgramCard(i < 4 ? registers.get(i + 1).getProgramCard() : null);
             }
         }
     }
@@ -74,7 +87,7 @@ public class Registers {
     public int getOpenRegisters() {
         int open = 0;
         for (Register register : registers) {
-            if (!register.isOpen) {
+            if (!register.isOpen()) {
                 open++;
             }
         }
@@ -130,35 +143,5 @@ public class Registers {
     @Override
     public String toString() {
         return registers.toString();
-    }
-
-    class Register {
-        private ProgramCard programCard = null;
-        private boolean isOpen = true;
-
-        public ProgramCard getProgramCard() {
-            return programCard;
-        }
-
-        public void setProgramCard(ProgramCard programCard) {
-            this.programCard = programCard;
-        }
-
-        public boolean isOpen() {
-            return isOpen;
-        }
-
-        public void setOpen(boolean open) {
-            this.isOpen = open;
-        }
-
-        public boolean hasCard() {
-            return programCard != null;
-        }
-
-        @Override
-        public String toString() {
-            return hasCard() ? programCard.toString() : "no card";
-        }
     }
 }

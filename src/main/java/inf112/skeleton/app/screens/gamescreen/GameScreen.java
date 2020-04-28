@@ -19,6 +19,7 @@ public class GameScreen extends StandardScreen {
         actors.initializeConfirmButton();
         actors.initializeLifeTokens();
         actors.initializeDamageTokens();
+        actors.initializeNumberLabels();
 
         float tilePx = 300f;
         float unitScale = ((float) Gdx.graphics.getHeight() / game.getBoard().getHeight()) / tilePx;
@@ -32,5 +33,9 @@ public class GameScreen extends StandardScreen {
         actors.updateButtons();
         super.render(v);
         mapRenderer.render();
+    }
+
+    public void drawNumber() {
+        // Tegn tall oppå kortene
     }
 }
