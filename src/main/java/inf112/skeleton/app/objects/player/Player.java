@@ -2,7 +2,7 @@ package inf112.skeleton.app.objects.player;
 
 
 import com.badlogic.gdx.math.Vector2;
-import inf112.skeleton.app.BoardLogic;
+import inf112.skeleton.app.board.BoardLogic;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
