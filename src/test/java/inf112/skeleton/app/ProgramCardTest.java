@@ -36,8 +36,9 @@ public class ProgramCardTest {
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
         this.game = new RallyGame();
-        this.game.setUpGameWithoutConnection("assets/maps/Risky Exchange.tmx", 0);
-
+        this.game.setupGame("assets/maps/Risky Exchange.tmx");
+        Deck deck = new Deck();
+        game.setDeck(deck.getDeck());
         player = new Player(new Vector2(0, 0), 1);
         player.setDirection(Direction.EAST);
         Board board = game.getBoard();

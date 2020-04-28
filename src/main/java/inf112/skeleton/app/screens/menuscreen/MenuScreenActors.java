@@ -10,9 +10,11 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
+import org.lwjgl.Sys;
 
 import java.io.File;
 import java.util.Objects;
+import java.util.concurrent.Semaphore;
 
 public class MenuScreenActors {
 
@@ -43,6 +45,7 @@ public class MenuScreenActors {
     private Label waitForHost;
 
     protected boolean isServer;
+
 
     public MenuScreenActors(RallyGame game, Stage stage) {
         this.game = game;
@@ -78,6 +81,7 @@ public class MenuScreenActors {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.setupGame("assets/maps/" + selectMap.getSelected() + ".tmx");
                 game.setScreen(new GameScreen(game));
+                game.setHostHaveStartedGameToTrue();
             }
 
             @Override
@@ -150,9 +154,8 @@ public class MenuScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 // Create game
-                game.setHost();
+                game.setIsServerToTrue();
                 isServer = true;
-                System.out.println("Created game for " + numOfPlayers.getText() + " players with IP " + IPInput.getText() + " on port " + portInput.getText());
 
                 if (joinGameButton.isVisible()) {
                     toggleVisibilityCreateFirstClick();
@@ -180,10 +183,6 @@ public class MenuScreenActors {
         joinGameButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                // Join game
-
-                //System.out.println("Joined game for " + numOfPlayers.getText() + " players with IP " + IPInput.getText() + " on port " + portInput.getText());
-
                 if (createGameButton.isVisible()) {
                     toggleVisibilityJoinFirstClick();
                 } else {
@@ -262,12 +261,24 @@ public class MenuScreenActors {
     }
 
     public void toggleVisibilityJoinSecondClick() {
-        game.setIPaddress(IPInput.getText());
-        game.setPortNumber(Integer.parseInt(portInput.getText()));
+        game.setUpClient(IPInput.getText(), Integer.parseInt(portInput.getText()));
+        System.out.println("Made client");
         joinGameButton.setVisible(false);
         portInput.setVisible(false);
         IPInput.setVisible(false);
         //TODO: Get map from server
+        //System.out.println("False vis");
+        //while (game.getMapPath() == null) {
+        //    game.getClient().askForMap();
+        //}
+        //try {
+        //    game.waitForHostToSendStartValues.acquire();
+        //} catch (InterruptedException e) {
+        //    e.printStackTrace();
+       // }
+        //System.out.println("Setting up game");
+        //String path = game.getMapPath();
+        //System.out.println("Game path when setup: " +path);
         game.setupGame("assets/maps/Risky Exchange.tmx");
         game.setScreen(new GameScreen(game));
         //waitForHost.setVisible(true);

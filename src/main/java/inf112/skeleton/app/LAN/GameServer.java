@@ -27,6 +27,7 @@ public class GameServer {
     private boolean allClientsHaveSelectedCards;
     private Deck deck;
 
+
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
         this.game = game;

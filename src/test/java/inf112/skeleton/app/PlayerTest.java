@@ -5,6 +5,7 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.board.Board;
+import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.player.Player;
 import org.junit.Before;
@@ -24,7 +25,9 @@ public class PlayerTest {
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
         this.game = new RallyGame();
-        this.game.setUpGameWithoutConnection("assets/maps/Risky Exchange.tmx", 0);
+        this.game.setupGame("assets/maps/Risky Exchange.tmx");
+        Deck deck = new Deck();
+        game.setDeck(deck.getDeck());
         Vector2 pos = new Vector2(0,0);
         player = new Player(pos, 1);
     }

@@ -48,7 +48,6 @@ public class RallyGame extends Game {
     private int numberOfPlayers;
     private int myPlayerNumber;
     private ServerThread serverThread;
-    private GameServer server;
     private boolean isServer;
     private GameClientThread client;
     private ProgramCard card;
@@ -57,8 +56,9 @@ public class RallyGame extends Game {
     public ButtonSkin buttonSkins;
 
     public static float volume = 0.5f;
-    private String hostAddress;
-    private int portNumber;
+    private String mapPath;
+
+    private boolean hostHaveStartedGame;
 
 
     public void create() {
@@ -67,43 +67,13 @@ public class RallyGame extends Game {
         startMusic();
     }
 
-
-    /**
-     * Set up a game without connection for multiplayer. Uses player 1 as mainplayer.
-     *
-     * @param mapPath
-     * @param numberOfPlayers
-     */
-    public void setUpGameWithoutConnection(String mapPath, int numberOfPlayers) {
-        this.board = new Board(mapPath, numberOfPlayers);
-        this.deck = new Deck();
-        this.players = board.getPlayers();
-        this.mainPlayer = board.getPlayer1();
-        this.respawnPlayers = new ArrayList<>();
-        this.waitForCards = new Semaphore(1);
-        this.waitForCards.tryAcquire();
-        this.playing = true;
-        this.converter = new Converter();
-        this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
-
-        new Thread(this::doTurn).start();
-
-        dealCards();
-
-        setInputProcessor();
-    }
-
     /**
      * Set up game with a connection.
      *
      * @param mapPath
      */
     public void setupGame(String mapPath) {
-
-        if (!isServer) {
-            setUpClient(this.hostAddress, this.portNumber);
-        }
-
+        this.mapPath = mapPath;
         this.board = new Board(mapPath, this.numberOfPlayers);
         this.players = new ArrayList<>();
         this.players = board.getPlayers();
@@ -130,7 +100,6 @@ public class RallyGame extends Game {
         this.isServer = true;
         this.myPlayerNumber = 1;
         this.numberOfPlayers = numberOfPlayers;
-        this.portNumber = portNumber;
         this.serverThread = new ServerThread(this, numberOfPlayers, portNumber);
         serverThread.start();
     }
@@ -149,7 +118,6 @@ public class RallyGame extends Game {
             // Create new thread for speaking to server
             this.client = new GameClientThread(this, clientSocket);
             client.start();
-            System.out.println("I am player " + myPlayerNumber);
         } catch (UnknownHostException e) {
             System.out.println("Did not find host.");
             Gdx.app.exit();
@@ -679,26 +647,29 @@ public class RallyGame extends Game {
     }
 
     /**
-     * Set the IP address for the host of this game
-     * @param IPAddress
-     */
-    public void setIPaddress(String IPAddress) {
-        this.hostAddress = IPAddress;
-    }
-
-    /**
      * Let game know it hosts the game
      */
-    public void setHost() {
+    public void setIsServerToTrue() {
         this.isServer = true;
     }
 
-    /**
-     * The portnumber for the socket to create a connection
-     * @param portNumber
-     */
-    public void setPortNumber(int portNumber) {
-        this.portNumber = portNumber;
+    public void setMapPath(String mapPath) {
+        this.mapPath = mapPath;
     }
 
+    public String getMapPath() {
+        return this.mapPath;
+    }
+
+    public void setHostHaveStartedGameToTrue() {
+        this.hostHaveStartedGame = true;
+    }
+
+    /**
+     *
+     * @return true if host have started end setUp Game
+     */
+    public boolean hostHaveStartedGame() {
+        return hostHaveStartedGame;
+    }
 }

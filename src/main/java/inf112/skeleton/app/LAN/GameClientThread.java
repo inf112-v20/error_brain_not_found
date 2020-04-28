@@ -28,6 +28,8 @@ public class GameClientThread extends Thread {
     private Semaphore continueListening;
     private Stack<ProgramCard> stack;
     private boolean receivingDeck;
+    private boolean receivingMap;
+
 
     public GameClientThread(RallyGame game, Socket clientSocket) {
         this.clientSocket = clientSocket;
@@ -53,6 +55,10 @@ public class GameClientThread extends Thread {
         // Get playernum and numberOfPlayers from server
         this.myPlayerNumber = Integer.parseInt(getMessage());
         this.numberOfPlayers = Integer.parseInt(getMessage());
+        String mapPath = getMessage();
+        game.setMapPath(mapPath);
+        System.out.println("My path is " + mapPath);
+        System.out.println("Game path " + game.getMapPath());
         game.setPlayerNumber(myPlayerNumber);
         game.setNumberOfPlayers(numberOfPlayers);
 
@@ -66,6 +72,13 @@ public class GameClientThread extends Thread {
                 System.out.println(message);
                 close();
                 return;
+            } else if (message.equals(Messages.HERE_IS_MAP.toString())){
+                receivingMap = true;
+            }
+            else if (receivingMap) {
+                game.setMapPath(message);
+                receivingMap = false;
+                System.out.println("Got map");
             }
             // If another player leaves.
             else if (message.contains(Messages.QUIT.toString())) {
@@ -92,6 +105,14 @@ public class GameClientThread extends Thread {
                 }
             }
         }
+    }
+
+    /**
+     * Ask server to send you the map.
+     */
+    public void askForMap() {
+        sendMessage(Messages.ASKING_FOR_MAP.toString());
+        System.out.print("Asking for map....");
     }
 
     /**

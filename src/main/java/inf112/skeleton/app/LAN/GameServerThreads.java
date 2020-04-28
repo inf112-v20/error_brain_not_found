@@ -46,18 +46,27 @@ public class GameServerThreads extends Thread {
 
     public void run() {
         try {
-            // Let the player know what the playernumber is
-            //sendMessage(this.playerNumber+"");
-            //sendMessage(this.numberOfPlayers+"");
-            //server.haveSentPlayerNumberAndNumberOfPlayers();
+
+
+
+
+
 
             while (true) {
                 String message = reader.readLine();
                 if (message == null) {
                     break;
                 }
+                if (message.equals(Messages.ASKING_FOR_MAP.toString())) {
+                    System.out.println("Client asked for map, map is" + game.getMapPath());
+                   if (!game.getMapPath().equals("")) {
+                       sendMessage(Messages.HERE_IS_MAP.toString());
+                       sendMessage(game.getMapPath());
+                       System.out.println("Sent map to client");
+                   }
+                }
                 // Close client socket if client is leaving, decrease num of players..
-                if (message.contains(Messages.QUIT.toString())) {
+                else if (message.contains(Messages.QUIT.toString())) {
                     int playerNumber = Character.getNumericValue(message.charAt(0));
                     Player player = game.getBoard().getPlayer(playerNumber);
                     server.sendToAllExcept(player, playerNumber + Messages.QUIT.toString());
@@ -66,28 +75,28 @@ public class GameServerThreads extends Thread {
                     server.remove(playerNumber);
                     numberOfPlayers--;
                     return;
-                }
-                ProgramCard card = converter.convertToCardAndExtractPlayer(message);
-                Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
-                addSelectedCard(player, card);
-                System.out.println(card);
-                if (allClientsHaveSelectedCards()) {
-                    server.setAllClientsHaveSelectedCards();
-                }
-                if (allPlayersHaveSelectedCards()) {
-                    System.out.println("Do turn");
-                    server.sendSelectedCardsToAll();
-                    server.sendToAll(Messages.START_TURN.toString());
-                    startDoTurn();
-                    waitForDoTurnToFinish();
-                }
+                } else {
+                    ProgramCard card = converter.convertToCardAndExtractPlayer(message);
+                    Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
+                    addSelectedCard(player, card);
+                    System.out.println(card);
+                    if (allClientsHaveSelectedCards()) {
+                        server.setAllClientsHaveSelectedCards();
+                    }
+                    if (allPlayersHaveSelectedCards()) {
+                        System.out.println("Do turn");
+                        server.sendSelectedCardsToAll();
+                        server.sendToAll(Messages.START_TURN.toString());
+                        startDoTurn();
+                        waitForDoTurnToFinish();
+                    }
             }
+        }
         } catch (IOException e) {
-            // Close socket if exception
             try {
                 client.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
+            } catch (IOException ioException) {
+                ioException.printStackTrace();
             }
         }
     }
