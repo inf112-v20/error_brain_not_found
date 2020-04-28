@@ -56,28 +56,13 @@ public class GameScreenActors {
 
         screenWidth = game.getScreen().viewport.getScreenWidth();
         screenHeight = game.getScreen().viewport.getScreenHeight();
-        //mapTopPx = (screenHeight * 0.9f);
-        //mapRightPx = (mapTopPx / 12f) * 16f;
         mapRightPx = (screenHeight / mapHeight) * mapWidth;
 
-        // Alle kort på høyre side
-        // programCardHeight = screenHeight / 9f;
-        // programCardWidth = programCardHeight * programCardRatio;
-
-        // Alle kort øverst
-        // programCardHeight = screenHeight - mapTopPx;
-        // programCardWidth = programCardHeight * programCardRatio;
-
-        // 3x3 øverst høyre
         programCardWidth = (screenWidth - mapRightPx) / 3f;
         programCardHeight = programCardWidth / programCardRatio;
         lifeTokenSize = (screenWidth - mapRightPx) / 4f;
         confirmButtonSize = lifeTokenSize;
         damageTokenSize = (screenWidth - mapRightPx) / 5f;
-
-        //lifeTokenSize = (screenHeight - mapTopPx);
-        //damageTokenSize = (screenHeight - mapTopPx);
-        //confirmButtonSize = lifeTokenSize;
     }
 
     public void updateButtons() {
@@ -90,40 +75,6 @@ public class GameScreenActors {
     // PROGRAM CARD BUTTONS
 
     public void initializeProgramCardButtons() {
-        /*
-        // Alle øverst
-        int idx = 0;
-        for (int x = 0; x < 9; x++) {
-            ProgramCard card = game.mainPlayer.getAllCards().get(idx);
-            ImageButton.ImageButtonStyle cardStyle = new ImageButton.ImageButtonStyle();
-            cardStyle.up = cardSkin.getSkins().getDrawable(card.getName());
-            ImageButton cardButton = new ImageButton(cardStyle);
-            cardButton.setSize(programCardWidth, programCardHeight);
-            cardButton.setPosition(programCardWidth * x, mapTopPx);
-            setCardButtonInputListener(card, cardButton);
-            programCardButtons.add(cardButton);
-            stage.addActor(cardButton);
-            idx++;
-        }
-        */
-        /*
-        // Alle på høyre side
-        int idx = 0;
-        for (int y = 1; y <= 9; y++) {
-            ProgramCard card = game.mainPlayer.getAllCards().get(idx);
-            ImageButton.ImageButtonStyle cardStyle = new ImageButton.ImageButtonStyle();
-            cardStyle.up = cardSkin.getSkins().getDrawable(card.getName());
-            ImageButton cardButton = new ImageButton(cardStyle);
-            cardButton.setSize(programCardWidth, programCardHeight);
-            cardButton.setPosition(screenWidth - programCardWidth, screenHeight - programCardHeight * y);
-            setCardButtonInputListener(card, cardButton);
-            programCardButtons.add(cardButton);
-            stage.addActor(cardButton);
-            idx++;
-        }
-        */
-
-        // 3x3 øverst høyre
         int idx = 0;
         for (int dy = 1; dy <= 3; dy++) {
             for (int dx = 0; dx <= 2; dx++) {
