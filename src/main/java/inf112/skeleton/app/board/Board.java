@@ -154,7 +154,7 @@ public class Board extends BoardLayers {
     public void pickUpFlags() {
         for (Player player : players) {
             if (hasFlag(player.getPosition())) {
-                pickUpFlag(player);
+                tryToPickUpFlag(player);
             }
         }
     }
@@ -355,9 +355,11 @@ public class Board extends BoardLayers {
         return null;
     }
 
-    public void pickUpFlag(Player player) {
+    public void tryToPickUpFlag(Player player) {
         Flag flag = getFlag(player.getPosition());
-        player.pickUpFlag(getFlag(player.getPosition()), flag.getFlagnr());
+        if (player.shouldPickUpFlag(flag)) {
+            player.pickUpFlag(flag);
+        }
     }
 
     public BoardLogic getBoardLogic() {
