@@ -311,6 +311,14 @@ public class Player {
         return this.getPlayerNr() == other.getPlayerNr();
     }
 
+    /**
+     *
+     * @return true if player is in backup position and backup direction
+     */
+    public boolean isInBackupState() {
+        return getPosition().equals(getBackupPosition()) && getDirection() == getBackupDirection();
+    }
+
     public String toString() {
         return "Player " + getPlayerNr();
     }
