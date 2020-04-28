@@ -1,5 +1,6 @@
 package inf112.skeleton.app.LAN;
 
+import com.badlogic.gdx.Game;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
@@ -77,6 +78,11 @@ public class GameServer {
         client.sendMessage(playerNumber+"");
         client.sendMessage(numberOfPlayers+"");
         sendDeck(client, deck);
+    }
+
+    public void sendMapPathToAll(String mapPath) {
+        sendToAll(Messages.HERE_IS_MAP.toString());
+        sendToAll(mapPath);
     }
 
     /**

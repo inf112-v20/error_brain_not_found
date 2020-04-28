@@ -4,6 +4,7 @@ import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.objects.player.Player;
+import org.lwjgl.Sys;
 
 import java.io.*;
 import java.net.Socket;
@@ -46,24 +47,19 @@ public class GameServerThreads extends Thread {
 
     public void run() {
         try {
-
-
-
-
-
-
             while (true) {
-                String message = reader.readLine();
+                String message = getMessage();
+                System.out.println(message);
                 if (message == null) {
                     break;
                 }
                 if (message.equals(Messages.ASKING_FOR_MAP.toString())) {
                     System.out.println("Client asked for map, map is" + game.getMapPath());
-                   if (!game.getMapPath().equals("")) {
-                       sendMessage(Messages.HERE_IS_MAP.toString());
-                       sendMessage(game.getMapPath());
-                       System.out.println("Sent map to client");
-                   }
+                    if (!game.getMapPath().equals("")) {
+                        sendMessage(Messages.HERE_IS_MAP.toString());
+                        sendMessage(game.getMapPath());
+                        System.out.println("Sent map to client");
+                    }
                 }
                 // Close client socket if client is leaving, decrease num of players..
                 else if (message.contains(Messages.QUIT.toString())) {
@@ -90,15 +86,29 @@ public class GameServerThreads extends Thread {
                         startDoTurn();
                         waitForDoTurnToFinish();
                     }
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+    }
+
+    /**
+     *
+     * @return message from this socket. Close socket if error.
+     */
+    public String getMessage() {
+        try {
+            return reader.readLine();
         } catch (IOException e) {
             try {
+                // Close socket if exception
                 client.close();
-            } catch (IOException ioException) {
-                ioException.printStackTrace();
+            } catch (IOException ex) {
+                ex.printStackTrace();
             }
         }
+        return null;
     }
 
     /**

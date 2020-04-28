@@ -22,8 +22,10 @@ import inf112.skeleton.app.screens.ButtonSkin;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
 import inf112.skeleton.app.screens.gifscreen.GifScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
+import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -58,9 +60,6 @@ public class RallyGame extends Game {
     public static float volume = 0.5f;
     private String mapPath;
 
-    private boolean hostHaveStartedGame;
-
-
     public void create() {
         this.buttonSkins = new ButtonSkin();
         this.setScreen(new MenuScreen(this));
@@ -85,6 +84,10 @@ public class RallyGame extends Game {
         this.converter = new Converter();
         this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
         new Thread(this::doTurn).start();
+
+        //if (isServer) {
+        //    serverThread.getServer().sendMapPathToAll(mapPath);
+       // }
 
         setInputProcessor();
 
@@ -661,15 +664,26 @@ public class RallyGame extends Game {
         return this.mapPath;
     }
 
-    public void setHostHaveStartedGameToTrue() {
-        this.hostHaveStartedGame = true;
+    public GameClientThread getClient() {
+        return client;
     }
 
     /**
-     *
-     * @return true if host have started end setUp Game
+     * Realese actor
      */
-    public boolean hostHaveStartedGame() {
-        return hostHaveStartedGame;
+    public void setWaitForServerToSendStartValuesToRelease() {
+        StandardScreen screen = getScreen();
+        if (screen instanceof MenuScreen) {
+            MenuScreenActors actors = ((MenuScreen) screen).getActors();
+            actors.waitForServerToSendStartValues.release();
+        }
+    }
+
+    public void setWaitForServerToSendMapPathToRelease() {
+        StandardScreen screen = getScreen();
+        if (screen instanceof MenuScreen) {
+            MenuScreenActors actors = ((MenuScreen) screen).getActors();
+            actors.waitForServerToSendMapPath.release();
+        }
     }
 }

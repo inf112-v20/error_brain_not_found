@@ -55,10 +55,6 @@ public class GameClientThread extends Thread {
         // Get playernum and numberOfPlayers from server
         this.myPlayerNumber = Integer.parseInt(getMessage());
         this.numberOfPlayers = Integer.parseInt(getMessage());
-        String mapPath = getMessage();
-        game.setMapPath(mapPath);
-        System.out.println("My path is " + mapPath);
-        System.out.println("Game path " + game.getMapPath());
         game.setPlayerNumber(myPlayerNumber);
         game.setNumberOfPlayers(numberOfPlayers);
 
@@ -78,6 +74,7 @@ public class GameClientThread extends Thread {
             else if (receivingMap) {
                 game.setMapPath(message);
                 receivingMap = false;
+                game.setWaitForServerToSendMapPathToRelease();
                 System.out.println("Got map");
             }
             // If another player leaves.
@@ -91,6 +88,7 @@ public class GameClientThread extends Thread {
                 receivingDeck = false;
                 game.setDeck(stack);
                 System.out.println("Received deck.");
+                game.setWaitForServerToSendStartValuesToRelease();
             } else if (receivingDeck) {
                 ProgramCard card = converter.convertToCard(message);
                 stack.add(card);

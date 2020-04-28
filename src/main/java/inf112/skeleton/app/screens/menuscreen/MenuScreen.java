@@ -6,10 +6,12 @@ import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
 public class MenuScreen extends StandardScreen {
 
+    MenuScreenActors actors;
+
     public MenuScreen(RallyGame game) {
         super(game);
 
-        MenuScreenActors actors = new MenuScreenActors(game, stage);
+        actors = new MenuScreenActors(game, stage);
         actors.initializeBackground();
         actors.initializeSelectMap();
         actors.initializeStartButton();
@@ -20,5 +22,9 @@ public class MenuScreen extends StandardScreen {
         actors.initializePortInput();
         actors.initializeNumOfPlayersInput();
         actors.initializeWaitForHostLabel();
+    }
+
+    public MenuScreenActors getActors() {
+        return actors;
     }
 }
