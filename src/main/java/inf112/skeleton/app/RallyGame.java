@@ -111,18 +111,9 @@ public class RallyGame extends Game {
 
         this.deck = new Deck();
 
-        if (isServer) {
-            try {
-                waitForAllClientsToConnect.acquire();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            serverThread.getServer().createAndSendDeckToAll();
-            //    setUpHost(this.portNumber);
-        } else {
+        if (!isServer) {
             setUpClient(this.hostAddress, this.portNumber);
         }
-       // }
 
         this.board = new Board(mapPath, this.numberOfPlayers);
         this.players = new ArrayList<>();
@@ -141,13 +132,12 @@ public class RallyGame extends Game {
         setInputProcessor();
 
         dealCards();
-        receivedDeck = true;
     }
 
     /**
      * Set up a host for this game.
      * @param portNumber on port
-     * @param number of players in this game (including host)
+     * @param numberOfPlayers in this game (including host)
      */
     public void setUpHost(int portNumber, int numberOfPlayers) {
         this.isServer = true;
@@ -166,20 +156,12 @@ public class RallyGame extends Game {
      * @param portNumber to establish connection with
      */
     public void setUpClient(String hostIP, int portNumber) {
-        //TODO: check that IP and portnumber are valid
-        // Try to create a client socket.
         try {
             Socket clientSocket = new Socket(hostIP, portNumber);
             System.out.println("I am a client, connected to " + hostIP + " port " + portNumber);
-
             // Create new thread for speaking to server
             this.client = new GameClientThread(this, clientSocket);
             client.start();
-            try {
-                waitForServerToSendPlayernumberAndNumberOfPlayers.acquire();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             System.out.println("I am player " + myPlayerNumber);
         } catch (UnknownHostException e) {
             System.out.println("Did not find host.");
