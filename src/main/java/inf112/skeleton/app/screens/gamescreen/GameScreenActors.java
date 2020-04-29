@@ -32,7 +32,6 @@ public class GameScreenActors {
     public float confirmButtonSize;
     public float damageTokenSize;
     public float lifeTokenSize;
-    public boolean canPickCards;
 
     private ImageButton confirmButton;
 
@@ -70,8 +69,6 @@ public class GameScreenActors {
         damageTokenSize = (screenWidth - mapRightPx) / 5f;
 
         labelFontScale = screenWidth / 960f;
-
-        canPickCards = true;
     }
 
     public void updateButtons() {
