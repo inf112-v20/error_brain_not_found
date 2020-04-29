@@ -9,6 +9,21 @@ Team: error_no_brain_found
 [Meeting 11](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-11)  
 [Meeting 12](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-12)
 
+### Roles
+The roles in the team is fine. The team leader have the over all control over the team. He is making sure everyone
+contributes, and does what they are suppose to in the given time frame. For the rest of the team, people still have their
+responsibility area. Since we are in the last sprint of the project the lines between the roles are a bit wiped out and 
+people are helping where it is needed to get finished. 
+ 
+For more depth information on the roles see [ObligatoriskOppgave2](https://github.com/inf112-v20/error_brain_not_found/blob/develop/Deliverables/Obligatorisk%20Oppgave2/ObligatoriskOppgave2.md),
+under `Roles`.
+
+### Experiences with the team or project-methods
+
+### Retrospective from the project
+
+### Group dynamic and communication
+
 ## Task 2 - Requirements
 ### User-stories 
 
@@ -17,7 +32,7 @@ User-story:
 As player standing on a belt, I want to be moved as many steps as the belt is moving, so that I can get closer to my goal.
 
 Acceptance-criteria:
-*   If a player is standing on a belt and the belt is moving, then the player will move.
+*   If a player is standing on a belt, and the belt is moving, then the player will move.
 *   If a player is on a belt, it moves as many steps as the belt does (express or regular)
 
 Tasks:
@@ -40,7 +55,7 @@ User-story:
 As a player I want to be able to see the cards, so that I can plan my program. 
 
 Acceptance-citeria:
-*   When I have drawn the cards, the cards are displayed in front of me on the screen.
+*   When I have drawn the cards, cards are displayed in front of me on the screen.
 
 Tasks:
 *   Make graphics for showing cards 
@@ -54,8 +69,8 @@ Acceptance-criteria:
 *   If I rearrange the cards, the cards are played in this order.  
 
 Tasks:  
-*   Create a method that takes input from screen and update how the cards are arranged in player.  
-*   Create a function that "lock" the cards so the user can tell the game the program to be made is done.  
+*   Create a method that takes input from screen and update how the cards are arranged in the player.  
+*   Create a function that "lock" the cards, so the user can tell the game the program to be made is done.  
 *   Create a method that lets the user rearrange the cards given.  
 
 #### Game loop
