@@ -248,31 +248,12 @@ public class Player {
         this.direction = direction;
     }
 
-    public void pickUpFlag(Flag flag, int flagNr) {
-        switch (flagNr) {
-            case 1:
-                if (!flagsCollected.contains(flag)) {
-                    flagsCollected.add(flag);
-                }
-                break;
-            case 2:
-                if (!flagsCollected.contains(flag) && flagsCollected.size() == 1) {
-                    flagsCollected.add(flag);
-                }
-                break;
-            case 3:
-                if (!flagsCollected.contains(flag) && flagsCollected.size() == 2) {
-                    flagsCollected.add(flag);
-                }
-                break;
-            case 4:
-                if (!flagsCollected.contains(flag) && flagsCollected.size() == 3) {
-                    flagsCollected.add(flag);
-                }
-                break;
-            default:
-                break;
-        }
+    public boolean shouldPickUpFlag(Flag flag) {
+        return flag.getFlagnr() == flagsCollected.size() + 1;
+    }
+
+    public void pickUpFlag(Flag flag) {
+        flagsCollected.add(flag);
     }
 
     public void fire(RallyGame game) {
