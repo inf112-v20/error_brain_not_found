@@ -27,6 +27,8 @@ public class GameScreenActors {
     private final ArrayList<Label> registerNumberLabels;
     private final ArrayList<Label> cardPriorityLabels;
     private final ArrayList<Label> lockedLabels;
+    private Label damageTokenLabel;
+    private Label lifeTokenLabel;
     public float programCardWidth;
     public float programCardHeight;
     public float confirmButtonSize;
@@ -64,9 +66,9 @@ public class GameScreenActors {
 
         programCardWidth = (screenWidth - mapRightPx) / 3f;
         programCardHeight = programCardWidth / programCardRatio;
-        lifeTokenSize = (screenWidth - mapRightPx) / 4f;
+        lifeTokenSize = (screenHeight - 3 * programCardHeight * 1.18f) / 2f;
         confirmButtonSize = lifeTokenSize;
-        damageTokenSize = (screenWidth - mapRightPx) / 5f;
+        damageTokenSize = lifeTokenSize;
 
         labelFontScale = screenWidth / 960f;
     }
@@ -189,13 +191,8 @@ public class GameScreenActors {
     // DAMAGE TOKEN IMAGES
 
     public void initializeDamageTokens() {
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 5; j++) {
-                float x = mapRightPx + j * damageTokenSize;
-                float y = lifeTokenSize + i * damageTokenSize;
-                newDamageToken(x, y);
-            }
-        }
+        newDamageToken(mapRightPx, lifeTokenSize);
+        initializeDamageTokenLabel();
     }
 
     public void newDamageToken(double x, double y) {
@@ -207,18 +204,22 @@ public class GameScreenActors {
     }
 
     public void updateDamageTokens() {
-        for (int i = 0; i < 10; i++) {
-            damageTokens.get(i).setVisible(i < game.mainPlayer.getDamageTokens());
-        }
+        damageTokenLabel.setText("x" + game.mainPlayer.getDamageTokens());
+    }
+
+    public void initializeDamageTokenLabel() {
+        damageTokenLabel = new Label("", numberSkin);
+        damageTokenLabel.setHeight(damageTokenSize);
+        damageTokenLabel.setPosition(mapRightPx + damageTokenSize, lifeTokenSize);
+        damageTokenLabel.setFontScale(labelFontScale * 2f);
+        stage.addActor(damageTokenLabel);
     }
 
     // LIFE TOKEN IMAGES
 
     public void initializeLifeTokens() {
-        for (int i = 0; i < 3; i++) {
-            float x = mapRightPx + i * lifeTokenSize;
-            newLifeToken(x, 0);
-        }
+        newLifeToken(mapRightPx, 0);
+        initializeLifeTokenLabel();
     }
 
     public void newLifeToken(double x, double y) {
@@ -230,9 +231,15 @@ public class GameScreenActors {
     }
 
     public void updateLifeTokens() {
-        for (int i = 0; i < 3; i++) {
-            lifeTokens.get(i).setVisible(i < game.mainPlayer.getLifeTokens());
-        }
+        lifeTokenLabel.setText("x" + game.mainPlayer.getLifeTokens());
+    }
+
+    public void initializeLifeTokenLabel() {
+        lifeTokenLabel = new Label("", numberSkin);
+        lifeTokenLabel.setHeight(lifeTokenSize);
+        lifeTokenLabel.setPosition(mapRightPx + lifeTokenSize, 0);
+        lifeTokenLabel.setFontScale(labelFontScale * 2f);
+        stage.addActor(lifeTokenLabel);
     }
 
     // PRIORITY LABELS
