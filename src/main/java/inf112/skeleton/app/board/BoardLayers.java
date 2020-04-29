@@ -31,6 +31,7 @@ public abstract class BoardLayers {
     protected final ArrayList<Vector2> holes;
     protected final ArrayList<Belt> belts;
     protected final ArrayList<Belt> expressBelts;
+    protected final ArrayList<Vector2> repairTiles;
 
     protected final int boardWidth;
     protected final int boardHeight;
@@ -54,6 +55,7 @@ public abstract class BoardLayers {
         this.lasers = new ArrayList<>();
         this.belts = new ArrayList<>();
         this.expressBelts = new ArrayList<>();
+        this.repairTiles = new ArrayList<>();
 
         findFlags();
         findBelts();
@@ -303,10 +305,33 @@ public abstract class BoardLayers {
         }
     }
 
+    /**
+     * Finds all the boards repairs tiles.
+     */
+    public void findRepairs() {
+        for (int x = 0; x < groundLayer.getWidth(); x++) {
+            for (int y = 0; y < groundLayer.getHeight(); y++) {
+
+                TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
+                if(cell != null){
+                    int ID =  cell.getTile().getId();
+                    if (ID == TileID.WRENCH.getId()){
+                        repairTiles.add(new Vector2(x, y));
+                    } else if (ID == TileID.DOUBLE_WRENCH.getId()){
+                        repairTiles.add(new Vector2(x, y));
+                    }
+                }
+            }
+        }
+    }
+
     public TiledMap getTiledMap() {
         return tiledMap;
     }
 
+    /**
+     * @return {@link TiledMapTileLayer} of laser layer
+     */
     public TiledMapTileLayer getLaserLayer() {
         return laserLayer;
     }
@@ -333,6 +358,14 @@ public abstract class BoardLayers {
 
     public ArrayList<Belt> getExpressBelts() {
         return expressBelts;
+    }
+
+    /**
+     * Get the {@link ArrayList repairTiles} arraylist.
+     * @return the arraylist that contains the location of the repair tiles.
+     */
+    public ArrayList<Vector2> getRepairTiles() {
+        return repairTiles;
     }
 
     public int getBoardWidth() {

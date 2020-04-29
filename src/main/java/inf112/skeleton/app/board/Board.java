@@ -403,6 +403,11 @@ public class Board extends BoardLayers {
         return boardHeight;
     }
 
+    @Override
+    public ArrayList<Vector2> getRepairTiles() {
+        return super.getRepairTiles();
+    }
+
     public void dispose() {
         wallImpact.dispose();
         scream.dispose();
