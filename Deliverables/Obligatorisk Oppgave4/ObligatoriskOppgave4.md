@@ -131,6 +131,19 @@ Tasks:
 *   Connect input to back-end  
 *   Manual tests   
 
+#### Repair  
+User-story:  
+As a player I want to stand on a repair-tile, so that I can get rid of my damage tokens.  
+
+Acceptance-criteria:  
+When the round is finished, if I stand in a repair-tile, my damage tokens are removed.  
+
+Tasks:  
+*   Create a function to find repair tiles on board  
+*   Create class for repair  
+*   Create method for removing damage tokens  
+*   Create method for knowing when a robot is on repair
+
 
 User-story:  
 As a user I want to be able to write in IP-number and portnuber in a game, so that I can join a game hosted by another computer. 
