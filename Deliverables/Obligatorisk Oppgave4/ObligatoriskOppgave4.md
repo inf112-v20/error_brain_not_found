@@ -26,7 +26,19 @@ check boxes so that we can see progress in the issue. Also an own issue for test
 it should be testing, with acceptance criteria as tests to be made. This gives us a great overview of who is doing what, 
 and a great workflow because we can always see what to do next.
 
-### Retrospective from the project
+### Retrospective from the project  
+Project methods:  
+We initially started with a mix of Kanban, Scrum and Extreme Programming. We have been using a Kanban board, and most of 
+the time limited the issues in the In Progress block: In the meetings we have discussed what needs to be done until next 
+time and tried to share tasks among teammembers evenly so the progress board is limited. The visualization of tasks using 
+Kanban has been very valuable to us because we can see progress. Also it made it easier for the team to collaborate, 
+because every one knows what other team members do.   
+We have been using Scrum by defining clear roles and areas of responsibility in the team. Also we have worked with sprints 
+every one week (every meeting), and focused on the backlog of the project, not so much about what is in progress. We have not
+been using Daily Scrum, but have had generally good communitation between meetings. Initially we wanted to use XP to ensure 
+testing before every commit. We have been testing new code regularly and often, but maybe not before each and every commit. 
+However we have been using other elements from XP like pair-programming, Continous integration (using Travis CI) and 
+weekly iterations (or sprints in Scrum).    
 
 ### Project board
 ![Project board form github]()
@@ -93,6 +105,31 @@ Tasks:
 *   Make loop for the game. 
 *   Test that events happen in right order
 *   Manual tests  
+
+#### GUI for LAN   
+User-story:  
+As a user I want to be able to write in port-number and numbers of players in a game, so that I can host a game on my computer. 
+
+Acceptance-criteria:  
+When port-number and number of players is given, a server will start waiting for given players to connect. 
+
+Tasks:  
+*   Create input fields  
+*   Connect input to back-end  
+*   Manual tests   
+
+
+User-story:  
+As a user I want to be able to write in IP-number and portnuber in a game, so that I can join a game hosted by another computer. 
+
+Acceptance-criteria:  
+When IPnumber and portnumber is given, a connection will be made if the given IPnumber is accepting connection on the portnumber given. 
+
+Tasks:  
+*   Create input fields  
+*   Connect input to back-end  
+*   Manual tests   
+
 
 #### Mute button
 User-story:
@@ -210,4 +247,15 @@ start the turn.
 *   When you see your nine cards, click on the cards you want to select. Your program is in the order you click the cards. When you have made a program (5 cards), the checkbutton will turn green.
 
 #### Mute-button
-* Press the "m" button. The sound should be muted. 
+*   Press the "m" button. The sound should be muted. 
+
+#### LAN  
+*   Allow parallell processes to run in "Run/Debug Configurations". Start a new game, press Create. Then give the portnumber
+to establish the connection on, and how many players that will play the game. Open a new game-process. Press Join, and input the 
+same portnumber as before and "localhost" (because host is running on your computer). Press Join again. The screen should freeze until 
+the host has started the game. Press Start in the game thats hosting the game. Both windows should now show two players on the map.  
+If a turn is played, the players should move at the same time.  
+
+#### Choosing screen  
+*   The server chooses the screen. Start a new host and choose a map. Start a new client and join the game. The two screens 
+should bw identical. 
