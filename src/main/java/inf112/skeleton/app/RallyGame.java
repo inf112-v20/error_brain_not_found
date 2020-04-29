@@ -240,7 +240,6 @@ public class RallyGame extends Game {
             if (player.getDamageTokens() >= 10 || board.getBoardLogic().outsideBoard(player, board)) {
                 player.decrementLifeTokens();
                 player.resetDamageTokens();
-                player.discardAllCards(deck);
                 board.removePlayerFromBoard(player);
                 removedPlayers.add(player);
             }
@@ -274,6 +273,7 @@ public class RallyGame extends Game {
     }
 
     public void playCard(Player player, int cardNumber) {
+        player.setBeltPushDir(null);
         ProgramCard card = player.getRegisters().getCard(cardNumber);
         System.out.println(player.toString() + " played " + card.toString());
         switch (card.getRotate()) {
