@@ -81,8 +81,8 @@ public class GameScreenActors {
             updatePriorityLabels();
         }
         updateConfirm();
-        updateLifeTokens();
-        updateDamageTokens();
+        updateLifeTokenLabel();
+        updateDamageTokenLabel();
         updateRegisterNumberLabels();
     }
 
@@ -191,19 +191,14 @@ public class GameScreenActors {
     // DAMAGE TOKEN IMAGES
 
     public void initializeDamageTokens() {
-        newDamageToken(mapRightPx, lifeTokenSize);
-        initializeDamageTokenLabel();
-    }
-
-    public void newDamageToken(double x, double y) {
         Image token = new Image(new Texture("assets/images/damageToken.png"));
         token.setSize(damageTokenSize, damageTokenSize);
-        token.setPosition((float) x, (float) y);
+        token.setPosition(mapRightPx, lifeTokenSize);
         damageTokens.add(token);
         stage.addActor(token);
     }
 
-    public void updateDamageTokens() {
+    public void updateDamageTokenLabel() {
         damageTokenLabel.setText("x" + game.mainPlayer.getDamageTokens());
     }
 
@@ -218,19 +213,14 @@ public class GameScreenActors {
     // LIFE TOKEN IMAGES
 
     public void initializeLifeTokens() {
-        newLifeToken(mapRightPx, 0);
-        initializeLifeTokenLabel();
-    }
-
-    public void newLifeToken(double x, double y) {
         Image token = new Image(new Texture("assets/images/lifeToken.png"));
         token.setSize(lifeTokenSize, lifeTokenSize);
-        token.setPosition((float) x, (float) y);
+        token.setPosition(mapRightPx, 0);
         lifeTokens.add(token);
         stage.addActor(token);
     }
 
-    public void updateLifeTokens() {
+    public void updateLifeTokenLabel() {
         lifeTokenLabel.setText("x" + game.mainPlayer.getLifeTokens());
     }
 

@@ -18,7 +18,9 @@ public class GameScreen extends StandardScreen {
         actors.initializeProgramCardButtons();
         actors.initializeConfirmButton();
         actors.initializeLifeTokens();
+        actors.initializeLifeTokenLabel();
         actors.initializeDamageTokens();
+        actors.initializeDamageTokenLabel();
         actors.initializeNumberLabels();
         actors.initializePriorityLabels();
         actors.initializeLockedLabels();
@@ -35,9 +37,5 @@ public class GameScreen extends StandardScreen {
         actors.updateButtons();
         super.render(v);
         mapRenderer.render();
-    }
-
-    public void drawNumber() {
-        // Tegn tall oppå kortene
     }
 }
