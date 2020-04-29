@@ -109,11 +109,7 @@ public class Player {
 
     public void discardCards(Deck deck) {
         for (ProgramCard card : cardsOnHand) {
-            if (registers.contains(card)) {
-                if (registers.getRegister(card).isOpen()) {
-                    deck.addCardToDiscardPile(card);
-                }
-            } else {
+            if (!registers.contains(card) || registers.getRegister(card).isOpen()) {
                 deck.addCardToDiscardPile(card);
             }
         }
@@ -153,8 +149,6 @@ public class Player {
 
     public void handleDamage() {
         this.damageTokens++;
-        updateProgramCardsDealt();
-        registers.updateRegisters(damageTokens);
     }
 
     /**

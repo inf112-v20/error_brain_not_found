@@ -31,15 +31,6 @@ public class Registers {
         return registers;
     }
 
-    public boolean canAddCard() {
-        for (Register register : registers) {
-            if (register.isOpen() && register.getProgramCard() == null) {
-                return true;
-            }
-        }
-        return false;
-    }
-
     public void addCard(ProgramCard card) {
         for (Register reg : registers) {
             if (!reg.hasCard()) {
@@ -57,7 +48,12 @@ public class Registers {
                 foundCard = true;
             }
             if (foundCard) {
-                register.setProgramCard(i < 4 ? registers.get(i + 1).getProgramCard() : null);
+                if (i < 4 && registers.get(i + 1).isOpen()) {
+                    register.setProgramCard(registers.get(i + 1).getProgramCard());
+                } else {
+                    register.setProgramCard(null);
+                    return;
+                }
             }
         }
     }
@@ -136,7 +132,7 @@ public class Registers {
     public void updateRegisters(int damageToken) {
         int lockedRegisters = Math.max(damageToken - 4, 0);
         for (int i = 0; i < 5; i++) {
-            registers.get(4 - i).setOpen(i < lockedRegisters);
+            registers.get(4 - i).setOpen(i >= lockedRegisters);
         }
     }
 

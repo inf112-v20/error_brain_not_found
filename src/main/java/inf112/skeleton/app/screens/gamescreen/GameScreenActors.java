@@ -2,7 +2,6 @@ package inf112.skeleton.app.screens.gamescreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -48,7 +47,6 @@ public class GameScreenActors {
     private final ArrayList<Image> lifeTokens;
     public Skin skin;
     public Skin numberSkin;
-    public BitmapFont font;
 
     public GameScreenActors(RallyGame game, Stage stage) {
         this.game = game;
@@ -80,10 +78,14 @@ public class GameScreenActors {
     }
 
     public void updateButtons() {
+        if (game.shouldPickCards()) {
+            hideAllNumberLabels();
+            updateCards();
+            moveLockedCards();
+        }
         updateConfirm();
         updateLifeTokens();
         updateDamageTokens();
-        updateCards();
     }
 
     // PROGRAM CARD BUTTONS
@@ -129,20 +131,16 @@ public class GameScreenActors {
         for (int buttonIndex = 0; buttonIndex < 9; buttonIndex++) {
             if (buttonIndex < game.mainPlayer.getCardsOnHand().size()) {
                 ProgramCard card = game.mainPlayer.getCardsOnHand().get(buttonIndex);
-                addCardToButton(card, buttonIndex);
-                drawPriority(card);
+                ImageButton cardButton = programCardButtons.get(buttonIndex);
+                cardButton.getStyle().up = cardSkin.getSkins().getDrawable(card.getName());
+                setCardButtonInputListener(card, cardButton);
+                cardButton.setVisible(true);
+                drawPriority(card, buttonIndex);
             } else {
                 hideCardButton(buttonIndex);
+                hidePriority(buttonIndex);
             }
         }
-        moveLockedCards();
-    }
-
-    public void addCardToButton(ProgramCard card, int buttonIndex) {
-        ImageButton cardButton = programCardButtons.get(buttonIndex);
-        cardButton.getStyle().up = cardSkin.getSkins().getDrawable(card.getName());
-        setCardButtonInputListener(card, cardButton);
-        cardButton.setVisible(true);
     }
 
     public void moveLockedCards() {
@@ -150,7 +148,13 @@ public class GameScreenActors {
             Register register = game.mainPlayer.getRegisters().getRegister(i);
             if (!register.isOpen()) {
                 ProgramCard card = register.getProgramCard();
-                addCardToButton(card, i + 4);
+                ImageButton cardButton = programCardButtons.get(i + 4);
+                cardButton.getStyle().up = cardSkin.getSkins().getDrawable(card.getName());
+                setCardButtonInputListener(card, cardButton);
+                cardButton.setVisible(true);
+                drawPriority(card, i + 4);
+                drawNumberOnCard(register, i + 4);
+                showLockedLabel(i + 4);
             }
         }
     }
@@ -262,10 +266,19 @@ public class GameScreenActors {
         }
     }
 
-    public void drawPriority(ProgramCard card) {
-        int index = game.mainPlayer.getCardsOnHand().indexOf(card);
-        Label label = cardPriorities.get(index);
+    public void drawPriority(ProgramCard card, int buttonIndex) {
+        Label label = cardPriorities.get(buttonIndex);
         label.setText((card.getPriority()));
+    }
+
+    public void hidePriority(int buttonIndex) {
+        cardPriorities.get(buttonIndex).setVisible(false);
+    }
+
+    public void hideAllPriorityLabels() {
+        for (Label label : cardPriorities) {
+            label.setVisible(false);
+        }
     }
 
     // NUMBER LABELS
@@ -291,7 +304,13 @@ public class GameScreenActors {
         label.setVisible(true);
     }
 
-    public void removeNumberFromCard() {
+    public void drawNumberOnCard(Register register, int buttonIndex) {
+        Label label = numberLabels.get(buttonIndex);
+        label.setText(register.getRegisterNumber() + 1);
+        label.setVisible(true);
+    }
+
+    public void hideAllNumberLabels() {
         for (Label label : numberLabels) {
             label.setText("");
             label.setVisible(false);
@@ -299,9 +318,9 @@ public class GameScreenActors {
     }
 
     public void updateCardNumbers() {
-        removeNumberFromCard();
+        hideAllNumberLabels();
         for (Register register : game.mainPlayer.getRegisters().getRegisters()) {
-            if (register.hasCard()) {
+            if (register.hasCard() && register.isOpen()) {
                 drawNumberOnCard(register);
             } else {
                 return;
@@ -326,13 +345,19 @@ public class GameScreenActors {
         }
     }
 
-    public void lockCard(int buttonIndex) {
+    public void showLockedLabel(int buttonIndex) {
         lockedLabels.get(buttonIndex).setVisible(true);
     }
 
-    public void unlockAllCards() {
+    public void hideAllLockedLabels() {
         for (Label label : lockedLabels) {
             label.setVisible(false);
         }
+    }
+
+    public void hideAllLabels() {
+        hideAllNumberLabels();
+        hideAllLockedLabels();
+        hideAllPriorityLabels();
     }
 }

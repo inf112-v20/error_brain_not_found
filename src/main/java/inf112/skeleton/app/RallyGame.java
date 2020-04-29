@@ -223,7 +223,7 @@ public class RallyGame extends Game {
 
     public void discardCards() {
         for (Player player : players) {
-            player.discardAllCards(deck);
+            player.discardCards(deck);
         }
     }
 
