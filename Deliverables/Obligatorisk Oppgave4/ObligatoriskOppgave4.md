@@ -40,10 +40,23 @@ testing before every commit. We have been testing new code regularly and often, 
 However we have been using other elements from XP like pair-programming, Continous integration (using Travis CI) and 
 weekly iterations (or sprints in Scrum).    
 
+We have been working mainly with defined areas of responsibility, but we have also been helping each other across the 
+roles that we have. This have been beneficitial to us because we can easilier adopt our code to match the other ones needs,
+and often think about other members should use your code.   
+
 ### Project board
 ![Project board form github]()
 
-### Group dynamic and communication
+### Group dynamic and communication   
+We communicate much better then in the beginning of the semester, even though it is only over internet because of corona. 
+We discuss more freely about how to solve problems that arise when working on a task, and teammembers do not hesitate to 
+ask for help from the others. The dynamic is better; every one in the team is contributing to their field, and when a member is
+ assigned to a task it is trusted that he/she does it properly, or ask for help if she/he gets stuck. After corona, we 
+ have moved all communications to Slack, and this has worked very well. We have been discussing code and specific tasks 
+ through chat and helped each other. All in all we have learned a lot about how important it is to communicate and get others 
+ oppinions or solutions when you are working on a project, and not struggle with it yourself. Also we have learned a lot about 
+ the importancy of writing clear code with good names and proper documentation, so other members can easily understand what 
+ you have done.  
 
 ## Task 2 - Requirements
 ### User-stories 
