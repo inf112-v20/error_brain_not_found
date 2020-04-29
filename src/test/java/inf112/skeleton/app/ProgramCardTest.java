@@ -55,7 +55,7 @@ public class ProgramCardTest {
     @Test
     public void playerGetNineCardsWhenDrawingCardsTest() {
         player.drawCards(deck);
-        assertEquals(9, player.getAllCards().size());
+        assertEquals(9, player.getCardsOnHand().size());
     }
 
     @Test

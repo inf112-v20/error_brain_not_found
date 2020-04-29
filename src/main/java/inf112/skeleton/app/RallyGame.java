@@ -32,6 +32,7 @@ public class RallyGame extends Game {
     public ArrayList<Player> respawnPlayers;
     public Semaphore waitForCards;
     public boolean playing;
+    public boolean shouldPickCards;
     public Sound laserSound;
     public Music gameMusic;
     public Player mainPlayer;
@@ -56,12 +57,21 @@ public class RallyGame extends Game {
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
         this.playing = true;
+        this.shouldPickCards = true;
 
         this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
 
         new Thread(this::doTurn).start();
 
         dealCards();
+    }
+
+    public void setShouldPickCards(boolean shouldPickCards) {
+        this.shouldPickCards = shouldPickCards;
+    }
+
+    public boolean shouldPickCards() {
+        return shouldPickCards;
     }
 
     public void confirmCards() {
@@ -183,8 +193,16 @@ public class RallyGame extends Game {
                 sleep(1000);
             }
             respawnPlayers();
+            updateRegisters();
             discardCards();
             dealCards();
+            setShouldPickCards(true);
+        }
+    }
+
+    private void updateRegisters() {
+        for (Player player : players) {
+            player.updateRegisters();
         }
     }
 
@@ -208,7 +226,7 @@ public class RallyGame extends Game {
 
     public void discardCards() {
         for (Player player : players) {
-            player.discardAllCards(deck);
+            player.discardCards(deck);
         }
     }
 
@@ -222,7 +240,6 @@ public class RallyGame extends Game {
             if (player.getDamageTokens() >= 10 || board.getBoardLogic().outsideBoard(player, board)) {
                 player.decrementLifeTokens();
                 player.resetDamageTokens();
-                player.discardAllCards(deck);
                 board.removePlayerFromBoard(player);
                 removedPlayers.add(player);
             }
@@ -256,6 +273,7 @@ public class RallyGame extends Game {
     }
 
     public void playCard(Player player, int cardNumber) {
+        player.setBeltPushDir(null);
         ProgramCard card = player.getRegisters().getCard(cardNumber);
         System.out.println(player.toString() + " played " + card.toString());
         switch (card.getRotate()) {
