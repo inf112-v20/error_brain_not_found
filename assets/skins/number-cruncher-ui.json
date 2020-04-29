@@ -1,123 +1,123 @@
 {
-BitmapFont: {
-	button: {
-		file: font-button-export.fnt
+"BitmapFont": {
+	"button": {
+		"file": "font-button-export.fnt"
 	}
-	font: {
-		file: font-export.fnt
+	"font": {
+		"file": "font-export.fnt"
 	}
-	lcd: {
-		file: font-lcd-export.fnt
+	"lcd": {
+		"file": "font-lcd-export.fnt"
 	}
-	title: {
-		file: font-title-export.fnt
+	"title": {
+		"file": "font-title-export.fnt"
 	}
 }
-	Color: {
-		black: {
-			r: 0
-			g: 0
-			b: 0
-			a: 1
+	"Color": {
+		"black": {
+			"r": 0
+			"g": 0
+			"b": 0
+			"a": 1
 		}
-		gray: {
-			r: 0.45666668
-			g: 0.45666668
-			b: 0.45666668
-		a: 1
-	}
-	text-gray: {
-		r: 0.827451
-		g: 0.827451
-		b: 0.827451
-		a: 1
-	}
-		white: {
-			r: 1
-			g: 1
-			b: 1
-			a: 1
+		"gray": {
+			"r": 0.45666668
+			"g": 0.45666668
+			"b": 0.45666668
+			"a": 1
 		}
-	}
-	ButtonStyle: {
-		default: {
-			up: button
-			down: button-pressed
+		"text-gray": {
+			"r": 0.827451
+			"g": 0.827451
+			"b": 0.827451
+			"a": 1
 		}
-		toggle: {
-			up: button
-			down: button-pressed
-			checked: button-pressed
-		}
-		large: {
-			up: button-large
-			down: button-large-pressed
+		"white": {
+			"r": 1
+			"g": 1
+			"b": 1
+			"a": 1
 		}
 	}
-	ImageButtonStyle: {
-		default: {
-			up: button
-			down: button-pressed
+	"ButtonStyle": {
+		"default": {
+			"up": "button"
+			"down": "button-pressed"
+		}
+		"toggle": {
+			"up": "button"
+			"down": "button-pressed"
+			"checked": "button-pressed"
+		}
+		"large": {
+			"up": "button-large"
+			"down": "button-large-pressed"
 		}
 	}
-	ImageTextButtonStyle: {
-		default: {
-			font: button
-			up: button
-			down: button-pressed
+	"ImageButtonStyle": {
+		"default": {
+			"up": "button"
+			"down": "button-pressed"
 		}
 	}
-	LabelStyle: {
-		default: {
-			font: font
-			fontColor: text-gray
-		}
-		button: {
-			font: button
-		}
-		title: {
-			font: title
-			fontColor: black
-		}
-		lcd: {
-			font: lcd
-			fontColor: black
+	"ImageTextButtonStyle": {
+		"default": {
+			"font": "button"
+			"up": "button"
+			"down": "button-pressed"
 		}
 	}
-	TextButtonStyle: {
-		default: {
-			font: button
-			fontColor: white
-			downFontColor: gray
-			up: button
-			down: button-pressed
+	"LabelStyle": {
+		"default": {
+			"font": "font"
+			"fontColor": "text-gray"
 		}
-		toggle: {
-			font: button
-			fontColor: white
-		downFontColor: gray
-		checkedFontColor: gray
-		up: button
-		down: button-pressed
-			checked: button-pressed
+		"button": {
+			"font": "button"
 		}
-		large: {
-			font: button
-			fontColor: white
-			downFontColor: gray
-			up: button-large
-			down: button-large-pressed
+		"title": {
+			"font": "title"
+			"fontColor": "black"
+		}
+		"lcd": {
+			"font": "lcd"
+			"fontColor": "black"
 		}
 	}
-	TextTooltipStyle: {
-		default: {
-			label: default
+	"TextButtonStyle": {
+		"default": {
+			"font": "button"
+			"fontColor": "white"
+			"downFontColor": "gray"
+			"up": "button"
+			"down": "button-pressed"
+		}
+		"toggle": {
+			"font": "button"
+			"fontColor": "white"
+			"downFontColor": "gray"
+			"checkedFontColor": "gray"
+			"up": "button"
+			"down": "button-pressed"
+			"checked": "button-pressed"
+		}
+		"large": {
+			"font": "button"
+			"fontColor": "white"
+			"downFontColor": "gray"
+			"up": "button-large"
+			"down": "button-large-pressed"
 		}
 	}
-	WindowStyle: {
-		default: {
-			background: bg
-			titleFont: font
+	"TextTooltipStyle": {
+		"default": {
+			"label": "default"
+		}
+	}
+	"WindowStyle": {
+		"default": {
+			"background": "bg"
+			"titleFont": "font"
 		}
 	}
 }
