@@ -41,8 +41,6 @@ public class GameScreenActors {
     private final Stage stage;
     private final ProgramCardSkin cardSkin;
     private final ArrayList<ImageButton> programCardButtons;
-    private final ArrayList<Image> damageTokens;
-    private final ArrayList<Image> lifeTokens;
     public Skin skin;
     public Skin numberSkin;
 
@@ -52,8 +50,6 @@ public class GameScreenActors {
         this.skin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
         this.numberSkin = new Skin(Gdx.files.internal("assets/skins/number-cruncher-ui.json"));
         programCardButtons = new ArrayList<>();
-        damageTokens = new ArrayList<>();
-        lifeTokens = new ArrayList<>();
         registerNumberLabels = new ArrayList<>();
         cardPriorityLabels = new ArrayList<>();
         lockedLabels = new ArrayList<>();
@@ -194,7 +190,6 @@ public class GameScreenActors {
         Image token = new Image(new Texture("assets/images/damageToken.png"));
         token.setSize(damageTokenSize, damageTokenSize);
         token.setPosition(mapRightPx, lifeTokenSize);
-        damageTokens.add(token);
         stage.addActor(token);
     }
 
@@ -216,7 +211,6 @@ public class GameScreenActors {
         Image token = new Image(new Texture("assets/images/lifeToken.png"));
         token.setSize(lifeTokenSize, lifeTokenSize);
         token.setPosition(mapRightPx, 0);
-        lifeTokens.add(token);
         stage.addActor(token);
     }
 
