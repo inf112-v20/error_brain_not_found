@@ -354,7 +354,7 @@ public class RallyGame extends Game {
     public void validateBeltPushPos() {
         for (Player player : players) {
             for (Player otherPlayer : players) {
-                if (!player.equals(otherPlayer) && player.getBeltPushPos().equals(otherPlayer.getBeltPushPos())) {
+                if (player.getBeltPushPos() != null && !player.equals(otherPlayer) && player.getBeltPushPos().equals(otherPlayer.getBeltPushPos())) {
                     player.setBeltPushPos(null);
                     otherPlayer.setBeltPushPos(null);
                 }
