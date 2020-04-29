@@ -5,6 +5,7 @@ Team: error_no_brain_found
 ### Meeting minutes
 
 [Meeting 8](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-8)  
+[Meeting 9](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-9)
 [Meeting 10](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-10)  
 [Meeting 11](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-11)  
 [Meeting 12](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-12)
@@ -19,8 +20,16 @@ For more depth information on the roles see [ObligatoriskOppgave2](https://githu
 under `Roles`.
 
 ### Experiences with the team or project-methods
+We are getting better at using issues, tags in issues and the projectboard. When a task needs to be done, 
+we make user stories, acceptance criteria's and tasks. This is copied into the issue, and the tasks are made as 
+check boxes so that we can see progress in the issue. Also an own issue for tests for this task is made and is tagging the issue 
+it should be testing, with acceptance criteria as tests to be made. This gives us a great overview of who is doing what, 
+and a great workflow because we can always see what to do next.
 
 ### Retrospective from the project
+
+### Project board
+![Project board form github]()
 
 ### Group dynamic and communication
 
