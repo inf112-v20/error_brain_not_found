@@ -258,4 +258,5 @@ If a turn is played, the players should move at the same time.
 
 #### Choosing screen  
 *   The server chooses the screen. Start a new host and choose a map. Start a new client and join the game. The two screens 
-should bw identical. 
+should bw identical.   
+*   Start a new host and choose one screen. Than exit the program and choose another screen. The screens should be different. 
