@@ -9,7 +9,7 @@ public class Registers {
 
     public Registers() {
         this.registers = new ArrayList<>();
-        for (int i = 0; i < 5; i++) {
+        for (int i = 1; i < 6; i++) {
             registers.add(new Register(i));
         }
     }

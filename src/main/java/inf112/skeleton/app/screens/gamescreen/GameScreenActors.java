@@ -7,10 +7,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
@@ -27,8 +24,8 @@ public class GameScreenActors {
     public float screenWidth;
     public float screenHeight;
     public float mapRightPx;
-    private final ArrayList<Label> numberLabels;
-    private final ArrayList<Label> cardPriorities;
+    private final ArrayList<Label> registerNumberLabels;
+    private final ArrayList<Label> cardPriorityLabels;
     private final ArrayList<Label> lockedLabels;
     public float programCardWidth;
     public float programCardHeight;
@@ -56,8 +53,8 @@ public class GameScreenActors {
         programCardButtons = new ArrayList<>();
         damageTokens = new ArrayList<>();
         lifeTokens = new ArrayList<>();
-        numberLabels = new ArrayList<>();
-        cardPriorities = new ArrayList<>();
+        registerNumberLabels = new ArrayList<>();
+        cardPriorityLabels = new ArrayList<>();
         lockedLabels = new ArrayList<>();
 
         cardSkin = new ProgramCardSkin();
@@ -79,14 +76,15 @@ public class GameScreenActors {
 
     public void updateButtons() {
         if (game.shouldPickCards()) {
-            hideAllNumberLabels();
             updateCards();
             moveLockedCards();
-            updateNumberLabels();
+            updateLockedLabels();
+            updatePriorityLabels();
         }
         updateConfirm();
         updateLifeTokens();
         updateDamageTokens();
+        updateRegisterNumberLabels();
     }
 
     // PROGRAM CARD BUTTONS
@@ -116,7 +114,6 @@ public class GameScreenActors {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (game.shouldPickCards()) {
                     game.mainPlayer.selectCard(card);
-                    updateNumberLabels();
                     System.out.println(game.mainPlayer.getRegisters());
                 }
             }
@@ -129,17 +126,15 @@ public class GameScreenActors {
     }
 
     public void updateCards() {
-        for (int buttonIndex = 0; buttonIndex < 9; buttonIndex++) {
-            if (buttonIndex < game.mainPlayer.getCardsOnHand().size()) {
-                ProgramCard card = game.mainPlayer.getCardsOnHand().get(buttonIndex);
-                ImageButton cardButton = programCardButtons.get(buttonIndex);
+        for (int cardButtonIndex = 0; cardButtonIndex < 9; cardButtonIndex++) {
+            ImageButton cardButton = programCardButtons.get(cardButtonIndex);
+            if (cardButtonIndex < game.mainPlayer.getCardsOnHand().size()) {
+                ProgramCard card = game.mainPlayer.getCardsOnHand().get(cardButtonIndex);
                 cardButton.getStyle().up = cardSkin.getSkins().getDrawable(card.getName());
                 setCardButtonInputListener(card, cardButton);
                 cardButton.setVisible(true);
-                showPriorityLabel(card, buttonIndex);
             } else {
-                hideCardButton(buttonIndex);
-                hidePriorityLabel(buttonIndex);
+                cardButton.setVisible(false);
             }
         }
     }
@@ -153,15 +148,8 @@ public class GameScreenActors {
                 cardButton.getStyle().up = cardSkin.getSkins().getDrawable(card.getName());
                 setCardButtonInputListener(card, cardButton);
                 cardButton.setVisible(true);
-                showPriorityLabel(card, i + 4);
-                showRegisterNumberLabel(register, i + 4);
-                showLockedLabel(i + 4);
             }
         }
-    }
-
-    public void hideCardButton(int buttonIndex) {
-        programCardButtons.get(buttonIndex).setVisible(false);
     }
 
     // CONFIRM BUTTON
@@ -201,7 +189,7 @@ public class GameScreenActors {
         }
     }
 
-    // DAMAGE TOKEN IMAGE
+    // DAMAGE TOKEN IMAGES
 
     public void initializeDamageTokens() {
         for (int i = 0; i < 2; i++) {
@@ -227,7 +215,7 @@ public class GameScreenActors {
         }
     }
 
-    // LIFE TOKEN IMAGE
+    // LIFE TOKEN IMAGES
 
     public void initializeLifeTokens() {
         for (int i = 0; i < 3; i++) {
@@ -250,7 +238,7 @@ public class GameScreenActors {
         }
     }
 
-    // PRIORITY LABEL
+    // PRIORITY LABELS
 
     public void initializePriorityLabels() {
         for (ImageButton button : programCardButtons) {
@@ -263,26 +251,38 @@ public class GameScreenActors {
             cardPriority.setFontScale(labelFontScale);
             cardPriority.setAlignment(Align.center);
             stage.addActor(cardPriority);
-            cardPriorities.add(cardPriority);
+            cardPriorityLabels.add(cardPriority);
         }
     }
 
-    public void showPriorityLabel(ProgramCard card, int buttonIndex) {
-        Label label = cardPriorities.get(buttonIndex);
-        label.setText((card.getPriority()));
+    public void updatePriorityLabels() {
+        updateCardOnHandPriorityLabels();
+        updateLockedRegistersPriorityLabels();
     }
 
-    public void hidePriorityLabel(int buttonIndex) {
-        cardPriorities.get(buttonIndex).setVisible(false);
-    }
-
-    public void hideAllPriorityLabels() {
-        for (Label label : cardPriorities) {
-            label.setVisible(false);
+    public void updateCardOnHandPriorityLabels() {
+        for (int cardIndex = 0; cardIndex < 9; cardIndex++) {
+            ArrayList<ProgramCard> cards = game.mainPlayer.getCardsOnHand();
+            if (cardIndex < cards.size()) {
+                cardPriorityLabels.get(cardIndex).setText(cards.get(cardIndex).getPriority());
+                cardPriorityLabels.get(cardIndex).setVisible(true);
+            } else {
+                cardPriorityLabels.get(cardIndex).setVisible(false);
+            }
         }
     }
 
-    // NUMBER LABELS
+    public void updateLockedRegistersPriorityLabels() {
+        for (int registerIndex = 0; registerIndex < 5; registerIndex++) {
+            Register register = game.mainPlayer.getRegisters().getRegister(registerIndex);
+            if (!register.isOpen()) {
+                cardPriorityLabels.get(registerIndex + 4).setText(register.getProgramCard().getPriority());
+                cardPriorityLabels.get(registerIndex + 4).setVisible(true);
+            }
+        }
+    }
+
+    // REGISTER NUMBER LABELS
 
     public void initializeNumberLabels() {
         for (ImageButton button : programCardButtons) {
@@ -293,37 +293,40 @@ public class GameScreenActors {
             numberLabel.setFontScale(labelFontScale * 1.8f);
             numberLabel.setVisible(false);
             stage.addActor(numberLabel);
-            numberLabels.add(numberLabel);
+            registerNumberLabels.add(numberLabel);
         }
     }
 
-    public void showRegisterNumberLabel(Register register) {
-        ProgramCard card = register.getProgramCard();
-        int index = game.mainPlayer.getCardsOnHand().indexOf(card);
-        Label label = numberLabels.get(index);
-        label.setText(register.getRegisterNumber() + 1);
-        label.setVisible(true);
+    public void updateRegisterNumberLabels() {
+        hideAllRegisterNumberLabels();
+        updateOpenRegisterNumberLabels();
+        updateLockedRegisterNumberLabels();
     }
 
-    public void showRegisterNumberLabel(Register register, int buttonIndex) {
-        Label label = numberLabels.get(buttonIndex);
-        label.setText(register.getRegisterNumber() + 1);
-        label.setVisible(true);
-    }
-
-    public void hideAllNumberLabels() {
-        for (Label label : numberLabels) {
+    public void hideAllRegisterNumberLabels() {
+        for (Label label : registerNumberLabels) {
             label.setText("");
             label.setVisible(false);
         }
     }
 
-    public void updateNumberLabels() {
+    public void updateOpenRegisterNumberLabels() {
         for (Register register : game.mainPlayer.getRegisters().getRegisters()) {
-            if (register.hasCard() && register.isOpen()) {
-                showRegisterNumberLabel(register);
-            } else {
-                return;
+            if (register.isOpen() && register.hasCard()) {
+                ProgramCard card = register.getProgramCard();
+                int index = game.mainPlayer.getCardsOnHand().indexOf(card);
+                registerNumberLabels.get(index).setText(register.getRegisterNumber());
+                registerNumberLabels.get(index).setVisible(true);
+            }
+        }
+    }
+
+    public void updateLockedRegisterNumberLabels() {
+        for (int cardButtonIndex = 4; cardButtonIndex < 9; cardButtonIndex++) {
+            Register register = game.mainPlayer.getRegisters().getRegister(cardButtonIndex - 4);
+            if (!register.isOpen()) {
+                registerNumberLabels.get(cardButtonIndex).setText(register.getRegisterNumber());
+                registerNumberLabels.get(cardButtonIndex).setVisible(true);
             }
         }
     }
@@ -331,33 +334,25 @@ public class GameScreenActors {
     // LOCKED LABELS
 
     public void initializeLockedLabels() {
-        for (ImageButton button : programCardButtons) {
+        for (int cardButtonIndex = 4; cardButtonIndex < 9; cardButtonIndex++) {
+            ImageButton cardButton = programCardButtons.get(cardButtonIndex);
             Label lockedLabel = new Label("LOCKED", numberSkin);
-            lockedLabel.setWidth(programCardWidth);
-            float x = button.getX();
-            float y = button.getY() + programCardHeight * .1f;
-            lockedLabel.setPosition(x, y);
-            lockedLabel.setFontScale(labelFontScale);
-            lockedLabel.setAlignment(Align.center);
+            Container<Label> wrapper = new Container<>(lockedLabel);
+            wrapper.setTransform(true);
+            wrapper.setRotation(45);
+            float x = cardButton.getX() + programCardWidth / 2f;
+            float y = cardButton.getY() + programCardHeight / 2f;
+            wrapper.setPosition(x, y);
+            lockedLabel.setFontScale(labelFontScale * 1.2f);
             lockedLabel.setVisible(false);
-            stage.addActor(lockedLabel);
+            stage.addActor(wrapper);
             lockedLabels.add(lockedLabel);
         }
     }
 
-    public void showLockedLabel(int buttonIndex) {
-        lockedLabels.get(buttonIndex).setVisible(true);
-    }
-
-    public void hideAllLockedLabels() {
-        for (Label label : lockedLabels) {
-            label.setVisible(false);
+    public void updateLockedLabels() {
+        for (int registerIndex = 0; registerIndex < 5; registerIndex++) {
+            lockedLabels.get(registerIndex).setVisible(!game.mainPlayer.getRegisters().getRegister(registerIndex).isOpen());
         }
-    }
-
-    public void hideAllLabels() {
-        hideAllNumberLabels();
-        hideAllLockedLabels();
-        hideAllPriorityLabels();
     }
 }
