@@ -10,9 +10,7 @@ import inf112.skeleton.app.objects.player.Player;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 public class PlayerTest {
@@ -79,7 +77,7 @@ public class PlayerTest {
     @Test
     public void playerPickedUpOneFlagDoesNotHaveAllFlagsTest() {
         Flag flag = new Flag(1, 0,0);
-        player.pickUpFlag(flag, flag.getFlagnr());
+        player.pickUpFlag(flag);
         int numberOfFlags = 3;
         assertFalse(player.hasAllFlags(numberOfFlags));
     }
