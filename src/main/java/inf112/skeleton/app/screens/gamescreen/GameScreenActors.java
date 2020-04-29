@@ -23,7 +23,7 @@ public class GameScreenActors {
     public final float mapHeight = 12;
     public final float mapWidth = 16;
     public final float programCardRatio = 0.72f;
-    private float labelFontScale;
+    private final float labelFontScale;
     public float screenWidth;
     public float screenHeight;
     public float mapRightPx;
@@ -34,6 +34,7 @@ public class GameScreenActors {
     public float confirmButtonSize;
     public float damageTokenSize;
     public float lifeTokenSize;
+    public boolean canPickCards;
 
     private ImageButton confirmButton;
 
@@ -66,6 +67,10 @@ public class GameScreenActors {
         lifeTokenSize = (screenWidth - mapRightPx) / 4f;
         confirmButtonSize = lifeTokenSize;
         damageTokenSize = (screenWidth - mapRightPx) / 5f;
+
+        labelFontScale = screenWidth / 960f;
+
+        canPickCards = true;
     }
 
     public void updateButtons() {
@@ -100,9 +105,11 @@ public class GameScreenActors {
         cardButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.mainPlayer.selectCard(card);
-                updateCardNumbers();
-                System.out.println(game.mainPlayer.getRegisters());
+                if (game.shouldPickCards()) {
+                    game.mainPlayer.selectCard(card);
+                    updateCardNumbers();
+                    System.out.println(game.mainPlayer.getRegisters());
+                }
             }
 
             @Override
@@ -144,7 +151,10 @@ public class GameScreenActors {
         confirmButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.confirmCards();
+                if (game.shouldPickCards()) {
+                    game.setShouldPickCards(false);
+                    game.confirmCards();
+                }
             }
 
             @Override

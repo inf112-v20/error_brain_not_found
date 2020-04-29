@@ -32,6 +32,7 @@ public class RallyGame extends Game {
     public ArrayList<Player> respawnPlayers;
     public Semaphore waitForCards;
     public boolean playing;
+    public boolean shouldPickCards;
     public Sound laserSound;
     public Music gameMusic;
     public Player mainPlayer;
@@ -56,12 +57,21 @@ public class RallyGame extends Game {
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
         this.playing = true;
+        this.shouldPickCards = true;
 
         this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
 
         new Thread(this::doTurn).start();
 
         dealCards();
+    }
+
+    public void setShouldPickCards(boolean shouldPickCards) {
+        this.shouldPickCards = shouldPickCards;
+    }
+
+    public boolean shouldPickCards() {
+        return shouldPickCards;
     }
 
     public void confirmCards() {
@@ -183,6 +193,7 @@ public class RallyGame extends Game {
             updateRegisters();
             discardCards();
             dealCards();
+            setShouldPickCards(true);
         }
     }
 
