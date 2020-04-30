@@ -5,7 +5,6 @@ import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.cards.Register;
 import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.objects.player.Player;
-import org.lwjgl.Sys;
 
 import java.io.*;
 import java.net.Socket;
@@ -79,7 +78,7 @@ public class GameServerThreads extends Thread {
                     System.out.println(card);
                     if (allClientsHaveSelectedCards()) {
                         System.out.print("All clients have selected cards");
-                        server.setAllClientsHaveSelectedCards();
+                        server.setAllClientsHaveSelectedCards(true);
                     }
                     if (allPlayersHaveSelectedCards()) {
                         System.out.println("Do turn");

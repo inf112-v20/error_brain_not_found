@@ -209,8 +209,9 @@ public class GameServer {
 
     /**
      * Tell server that all clients have selected their cards
+     * @param b
      */
-    public void setAllClientsHaveSelectedCards() {
+    public void setAllClientsHaveSelectedCards(boolean b) {
         this.allClientsHaveSelectedCards = true;
     }
 

@@ -218,6 +218,7 @@ public class RallyGame extends Game {
             if (isServer) {
                 GameServer server = serverThread.getServer();
                 if (server.allClientsHaveSelectedCards()) {
+                    server.setAllClientsHaveSelectedCards(false);
                     System.out.println("All clients selected cards");
                     server.sendSelectedCardsToAll();
                     server.sendToAll(Messages.START_TURN.toString());
