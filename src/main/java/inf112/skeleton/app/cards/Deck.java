@@ -15,6 +15,10 @@ public class Deck {
         shuffleDeck();
     }
 
+    public void removeCards(ArrayList<ProgramCard> cards) {
+        deck.removeAll(cards);
+    }
+
     /**
      * Make all the programCards and put them in the stack
      */
