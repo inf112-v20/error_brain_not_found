@@ -26,7 +26,6 @@ import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -69,7 +68,7 @@ public class RallyGame extends Game {
     }
 
     /**
-     * Set up game with a connection.
+     * Set up game with given map
      *
      * @param mapPath
      */
@@ -90,15 +89,8 @@ public class RallyGame extends Game {
 
         new Thread(this::doTurn).start();
 
-        // If clients have connected before you started game, give them the map
-        if (isServer) {
-            Thread sendMap = new Thread(() -> {
-                while (!serverThread.getServer().allClientsHaveReceivedMap()) {
-                    serverThread.getServer().sendMapPathToNewlyConnectedClients(mapPath);
-                }
-            });
-            sendMap.start();
-        }
+        sendMapToClients();
+
         dealCards();
     }
 
@@ -139,9 +131,11 @@ public class RallyGame extends Game {
     }
 
     /**
-     * Give all mainplayer's selected cards to the server.
+     * Send all mainplayer's selected cards to {@link GameServer}.
+     *
+     * isServer needs to be false to send the cards.
      */
-    public void sendSelectedCards() {
+    public void sendSelectedCardsToServer() {
         if (!isServer) {
             for (Register register : mainPlayer.getRegisters().getRegisters()) {
                 client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), register.getProgramCard()));
@@ -159,7 +153,7 @@ public class RallyGame extends Game {
 
     public void confirmCards() {
         if (!mainPlayer.getRegisters().hasRegistersWithoutCard()) {
-            sendSelectedCards();
+            sendSelectedCardsToServer();
             if (isServer) {
                 GameServer server = serverThread.getServer();
                 if (server.allClientsHaveSelectedCards()) {
@@ -646,5 +640,27 @@ public class RallyGame extends Game {
      */
     public void quitPlaying() {
         this.playing = false;
+    }
+
+    /**
+     * Create a new thread to send map to clients that are connectet to server.
+     * If server have started {@link RallyGame#setupGame(String)} after client have connected,
+     * client needs to get notified that server has chosen map and get the map from server.
+     *
+     * Send the map to all clients that are connected, until every client has a map.
+     * If client joins after the server has sent maps, it will ask the server for a map.
+     *
+     * isServer needs to be true to send the map
+     */
+    private void sendMapToClients() {
+        if (isServer) {
+            // If clients have connected before you started game, give them the map
+            Thread sendMap = new Thread(() -> {
+                while (!serverThread.getServer().allClientsHaveReceivedMap()) {
+                    serverThread.getServer().sendMapPathToNewlyConnectedClients(mapPath);
+                }
+            });
+            sendMap.start();
+        }
     }
 }
