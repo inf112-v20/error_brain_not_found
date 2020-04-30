@@ -282,8 +282,8 @@ public class RallyGame extends Game {
             }
             updateRegisters();
             discardCards();
-            // Dealcards draw 9 cards, so deck needs to be larger than 9
-            if (deck.deckSize() < 9) {
+            // Dealcards draw 9 cards, so deck needs to be larger than 9 for each player
+            if (deck.deckSize() < 9*numberOfPlayers) {
                 if (isServer) {
                     serverThread.getServer().createAndSendDeckToAll();
                 }
