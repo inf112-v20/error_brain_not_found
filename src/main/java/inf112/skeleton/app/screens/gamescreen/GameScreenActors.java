@@ -25,19 +25,19 @@ public class GameScreenActors {
     public final float mapWidth = 16;
     public final float programCardRatio = 0.72f;
     private final float labelFontScale;
-    public float screenWidth;
-    public float screenHeight;
-    public float mapRightPx;
+    public final float screenWidth;
+    public final float screenHeight;
+    public final float mapRightPx;
     private final ArrayList<Label> registerNumberLabels;
     private final ArrayList<Label> cardPriorityLabels;
     private final ArrayList<Label> lockedLabels;
     private Label damageTokenLabel;
     private Label lifeTokenLabel;
-    public float programCardWidth;
-    public float programCardHeight;
-    public float confirmButtonSize;
-    public float damageTokenSize;
-    public float lifeTokenSize;
+    public final float programCardWidth;
+    public final float programCardHeight;
+    public final float confirmButtonSize;
+    public final float damageTokenSize;
+    public final float lifeTokenSize;
 
     private ImageButton confirmButton;
 
@@ -45,8 +45,8 @@ public class GameScreenActors {
     private final Stage stage;
     private final ProgramCardSkin cardSkin;
     private final ArrayList<ImageButton> programCardButtons;
-    public Skin skin;
-    public Skin numberSkin;
+    public final Skin skin;
+    public final Skin numberSkin;
 
     public GameScreenActors(RallyGame game, Stage stage) {
         this.game = game;
