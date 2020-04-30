@@ -25,11 +25,7 @@ public class SettingsInput extends InputAdapter {
                 game.muteSounds();
                 break;
             case Input.Keys.F:
-                if (Gdx.graphics.isFullscreen()) {
-                    Gdx.graphics.setWindowedMode(1280, 720);
-                } else {
-                    Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
-                }
+                game.fullscreen();
                 break;
             default:
                 // Fuck u Codacy
