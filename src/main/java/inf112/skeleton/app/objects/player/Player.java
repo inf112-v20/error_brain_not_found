@@ -2,7 +2,6 @@ package inf112.skeleton.app.objects.player;
 
 
 import com.badlogic.gdx.math.Vector2;
-import inf112.skeleton.app.board.BoardLogic;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.board.BoardLogic;
@@ -11,11 +10,9 @@ import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.cards.Registers;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Flag;
-import org.lwjgl.Sys;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Scanner;
 
 public class Player {
 
@@ -121,14 +118,18 @@ public class Player {
         this.beltPushPos = position;
     }
 
-    public void discardCards(Deck deck) {
+    public ArrayList<ProgramCard> discardCards(Deck deck) {
+        ArrayList<ProgramCard> lockedCards = new ArrayList<>();
         for (ProgramCard card : cardsOnHand) {
             if (!registers.contains(card) || registers.getRegister(card).isOpen()) {
                 deck.addCardToDiscardPile(card);
+            } else {
+                lockedCards.add(card);
             }
         }
         cardsOnHand.clear();
         registers.clear(true);
+        return lockedCards;
     }
 
     public void discardAllCards(Deck deck) {
