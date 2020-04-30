@@ -35,9 +35,6 @@ public class GameScreen extends StandardScreen {
     @Override
     public void render(float v) {
         actors.updateButtons();
-        actors.updateCards();
-        actors.updateCardOnHandPriorityLabels();
-        actors.updateConfirm();
         super.render(v);
         mapRenderer.render();
     }
