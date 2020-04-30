@@ -55,7 +55,7 @@ public class GameServerThreads extends Thread {
                     break;
                 }
                 if (message.equals(Messages.ASKING_FOR_MAP.toString())) {
-                    System.out.println("Client asked for map, map is" + game.getMapPath());
+                    System.out.println("Client asked for map, map is " + game.getMapPath());
                     if (game.getMapPath() != null) {
                         sendMessage(Messages.HERE_IS_MAP.toString());
                         sendMessage(game.getMapPath());
@@ -78,6 +78,7 @@ public class GameServerThreads extends Thread {
                     addSelectedCard(player, card);
                     System.out.println(card);
                     if (allClientsHaveSelectedCards()) {
+                        System.out.print("All clients have selected cards");
                         server.setAllClientsHaveSelectedCards();
                     }
                     if (allPlayersHaveSelectedCards()) {
@@ -119,7 +120,10 @@ public class GameServerThreads extends Thread {
     private boolean allClientsHaveSelectedCards() {
         for (Player player : game.getBoard().getPlayers()) {
             if (player.getPlayerNr() != 1) {
-                if (player.getRegisters().getCardsSelected() < 5) {
+                System.out.println(player.getRegisters().getCardsSelected());
+                System.out.println(player.getRegisters().getRegisters());
+                System.out.println(player.getRegisters().hasRegistersWithoutCard());
+                if (player.getRegisters().hasRegistersWithoutCard()) {
                     return false;
                 }
             }
@@ -168,7 +172,7 @@ public class GameServerThreads extends Thread {
      */
     public boolean allPlayersHaveSelectedCards() {
         for (Player player : game.getBoard().getPlayers()) {
-            if (player.getRegisters().getCardsSelected() < 5) {
+            if (player.getRegisters().hasRegistersWithoutCard()) {
                 return false;
             }
         }

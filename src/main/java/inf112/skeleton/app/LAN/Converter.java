@@ -22,6 +22,9 @@ public class Converter {
      * @return playernumber and info about players card in string
      */
     public String convertToString(int playerNumber, ProgramCard programCard) {
+        if (programCard.toString().equals("no card")) {
+            return programCard.toString();
+        }
         StringBuilder string = new StringBuilder();
         String player = String.valueOf(playerNumber);
         String prio = String.valueOf(programCard.getPriority());

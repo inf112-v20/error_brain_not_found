@@ -1,6 +1,5 @@
 package inf112.skeleton.app.LAN;
 
-import com.badlogic.gdx.Game;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
@@ -11,7 +10,6 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
-import java.util.concurrent.Semaphore;
 
 /**
  * A server for handling connection between players.
@@ -87,7 +85,7 @@ public class GameServer {
             Boolean haveSentMap = entry.getValue();
             if (!haveSentMap) {
                 GameServerThreads client = entry.getKey();
-                System.out.println("Have sendt map to client");
+                System.out.println("Have sent map to client");
                 client.sendMessage(Messages.HERE_IS_MAP.toString());
                 client.sendMessage(mapPath);
                 entry.setValue(true);

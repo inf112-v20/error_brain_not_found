@@ -95,9 +95,7 @@ public class Player {
      * @param card to add.
      */
     public void addSelectedCard(ProgramCard card) {
-        if (registers.getCardsSelected() < 5) {
-            registers.addCard(card);
-        }
+        registers.addCard(card);
     }
 
     public void drawCards(Deck deck) {
