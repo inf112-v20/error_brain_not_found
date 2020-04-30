@@ -166,6 +166,9 @@ public class Board extends BoardLayers {
         laserLayer.setCell((int) position.x, (int) position.y, cell);
     }
 
+    /**
+     * Method for players to pick up flags on the board
+     */
     public void pickUpFlags() {
         for (Player player : players) {
             if (hasFlag(player.getPosition())) {
