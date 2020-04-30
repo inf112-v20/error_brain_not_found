@@ -67,6 +67,7 @@ public class GameServerThreads extends Thread {
                 else if (message.contains(Messages.QUIT.toString())) {
                     int playerNumber = getPlayerNumberFromMessage(message);
                     endConnectionWithPlayerAndTellOtherPlayersThatThisPlayerLeft(game.getBoard().getPlayer(playerNumber));
+                    game.quitPlaying();
                     return;
                 } else {
                     ProgramCard card = converter.convertToCardAndExtractPlayer(message);
