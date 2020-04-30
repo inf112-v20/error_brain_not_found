@@ -26,7 +26,6 @@ import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
-import java.awt.*;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -137,7 +136,7 @@ public class RallyGame extends Game {
             Gdx.app.exit();
         } catch (IOException e) {
             System.out.println("Could not connect to " + hostIP + " on port " + portNumber + " Quit.");
-            Gdx.app.exit();
+            //Gdx.app.exit();
         }
     }
 
