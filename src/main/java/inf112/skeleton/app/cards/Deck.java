@@ -49,7 +49,7 @@ public class Deck {
     }
 
     /**
-     * Shuffles the deck
+     * Shuffle the deck
      */
     public void shuffleDeck() {
         Collections.shuffle(deck);
