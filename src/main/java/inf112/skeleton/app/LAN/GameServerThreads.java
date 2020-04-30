@@ -45,42 +45,37 @@ public class GameServerThreads extends Thread {
 
     }
 
+    /**
+     * Receive messages from client. If none of the messages match, then it is a {@link ProgramCard}.
+     * The player who sent this Programcard will have it added to its {@link inf112.skeleton.app.cards.Registers}.
+     *
+     * When all clients have sent their cards, the {@link GameServer} will be notified, and it will wait until
+     * the host confirm its cards before sending cards to the clients and start the turn. If a client is the last
+     * one to confirm its cards, then {@link #allPlayersHaveSelectedCards()} will be true and server will send all
+     * cards to players and tell them to start the turn.
+     */
     public void run() {
         try {
             while (true) {
                 String message = getMessage();
-                System.out.println("From client: "+message);
                 if (message == null) {
                     break;
                 }
                 if (message.equals(Messages.ASKING_FOR_MAP.toString())) {
-                    System.out.println("Client asked for map, map is " + game.getMapPath());
-                    if (game.getMapPath() != null) {
-                        sendMessage(Messages.HERE_IS_MAP.toString());
-                        sendMessage(game.getMapPath());
-                        System.out.println("Sent map to client");
-                    }
+                    sendMap();
                 }
-                // Close client socket if client is leaving, decrease num of players..
                 else if (message.contains(Messages.QUIT.toString())) {
-                    int playerNumber = Character.getNumericValue(message.charAt(0));
-                    Player player = game.getBoard().getPlayer(playerNumber);
-                    server.sendToAllExcept(player, playerNumber + Messages.QUIT.toString());
-                    System.out.println("Player " + playerNumber + " is leaving...");
-                    server.disconnect(playerNumber);
-                    server.remove(playerNumber);
-                    numberOfPlayers--;
+                    int playerNumber = getPlayerNumberFromMessage(message);
+                    endConnectionWithPlayerAndTellOtherPlayersThatThisPlayerLeft(game.getBoard().getPlayer(playerNumber));
                     return;
                 } else {
                     ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                     Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
                     addSelectedCard(player, card);
                     if (allClientsHaveSelectedCards()) {
-                        System.out.print("All clients have selected cards");
                         server.setAllClientsHaveSelectedCards(true);
                     }
                     if (allPlayersHaveSelectedCards()) {
-                        System.out.println("Do turn");
                         server.sendSelectedCardsToAll();
                         server.sendToAll(Messages.START_TURN.toString());
                         startDoTurn();
@@ -91,6 +86,40 @@ public class GameServerThreads extends Thread {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * When host has called on {@link RallyGame#setupGame(String)} (pressed Start), the host have
+     * picked a map and it will be sent to client. If host has not pressed Start yet, it will not send the map.
+     */
+    private void sendMap() {
+        if (game.getMapPath() != null) {
+            sendMessage(Messages.HERE_IS_MAP.toString());
+            sendMessage(game.getMapPath());
+            System.out.println("Sent map to client");
+        }
+    }
+
+    /**
+     *
+     * @param player to end connection with
+     */
+    private void endConnectionWithPlayerAndTellOtherPlayersThatThisPlayerLeft(Player player) {
+        server.sendToAllExcept(player, playerNumber + Messages.QUIT.toString());
+        System.out.println("Player " + playerNumber + " is leaving...");
+        server.disconnect(playerNumber);
+        server.remove(playerNumber);
+        numberOfPlayers--;
+    }
+
+    /**
+     * Playernumber is always first in the message.
+     *
+     * @param message
+     * @return the playerNumber for the player sending this message
+     */
+    private int getPlayerNumberFromMessage(String message) {
+        return Character.getNumericValue(message.charAt(0));
     }
 
     /**
