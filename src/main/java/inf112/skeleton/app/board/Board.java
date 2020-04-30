@@ -26,6 +26,11 @@ public class Board extends BoardLayers {
 
     private final BoardLogic boardLogic = new BoardLogic();
 
+    /**
+     * The constructor for Board.Java
+     * @param mapPath the mapPath
+     * @param numberOfPlayers the amount of players on the board
+     */
     public Board(String mapPath, int numberOfPlayers) {
         super(mapPath);
 
@@ -33,7 +38,7 @@ public class Board extends BoardLayers {
 
         addPlayersToStartPositions(numberOfPlayers);
     }
-    //Test
+
     private TiledMapTile getRobotTile(Player player) {
         TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("robots");
         switch (player.getDirection()) {
