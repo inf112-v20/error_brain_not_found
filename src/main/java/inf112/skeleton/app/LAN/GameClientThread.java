@@ -48,7 +48,9 @@ public class GameClientThread extends Thread {
     }
 
     /**
-     * Listen for incoming messages from server when thread is started.
+     * Listen for messages from server. If no messages match, it is a {@link ProgramCard} and should
+     * be added to the player is belongs to (it is discarded if it is yours, since you have selected cards)
+     *
      */
     @Override
     public void run() {
@@ -67,10 +69,8 @@ public class GameClientThread extends Thread {
                 return;
             } else if (message.equals(Messages.HERE_IS_MAP.toString())){
                 receivingMap = true;
-            }
-            // If another player leaves.
-            else if (message.contains(Messages.QUIT.toString())) {
-                int playerNumber = Character.getNumericValue(message.charAt(0));
+            } else if (message.contains(Messages.QUIT.toString())) {
+                int playerNumber = getPlayerNumberFromMessage(message);
                 System.out.println("Player " + playerNumber + " left game.");
             } else if (message.equals(Messages.DECK_BEGIN.toString())) {
                 stack = new Stack<>();
@@ -88,11 +88,12 @@ public class GameClientThread extends Thread {
                 stack.add(card);
             } else if (receivingMap) {
                 game.setMapPath(message);
-                receivingMap = false;
                 game.setWaitForServerToSendMapPathToRelease();
+                receivingMap = false;
                 System.out.println("Got map");
             } else {
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
+                // Your player have already selected cards
                 if (myPlayerNumber != converter.getPlayerNumber()) {
                     Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
                     player.addSelectedCard(card);
@@ -102,8 +103,18 @@ public class GameClientThread extends Thread {
     }
 
     /**
+     * Playernumber is always first in the message.
+     *
+     * @param message
+     * @return the playerNumber for the player sending this message
+     */
+    private int getPlayerNumberFromMessage(String message) {
+        return Character.getNumericValue(message.charAt(0));
+    }
+
+    /**
      * Wait for server to send your playernumber and how many players are in the game.
-     * Give the values to {@link com.badlogic.gdx.Game} so it can be initialized.
+     * Give the values to {@link RallyGame} so it can be initialized.
      */
     private void getStartValues() {
         this.myPlayerNumber = Integer.parseInt(getMessage());
