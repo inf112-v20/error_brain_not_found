@@ -651,17 +651,20 @@ public class RallyGame extends Game {
      * Close sockets on exit.
      */
     public void dispose () {
-        // Tell server you are leaving. Close your socket.
-        if (!isServer) {
-            this.client.sendMessage(this.client.createQuitMessage(this.myPlayerNumber));
-            this.client.close();
-            this.client.sendMessage(Messages.CLOSED.toString());
-        }
-        // Close all sockets in serverthread
-        if (isServer) {
-            this.serverThread.getServer().sendToAll(Messages.HOST_LEAVES.toString());
-            this.serverThread.getServer().disconnectAll();
-            System.out.println(Messages.CLOSED.toString());
+        try {
+            // Tell server you are leaving. Close your socket.
+            if (!isServer) {
+                this.client.sendMessage(this.client.createQuitMessage(this.myPlayerNumber));
+                this.client.close();
+                this.client.sendMessage(Messages.CLOSED.toString());
+            }
+            // Close all sockets in serverthread
+            if (isServer) {
+                this.serverThread.getServer().sendToAll(Messages.HOST_LEAVES.toString());
+                this.serverThread.getServer().disconnectAll();
+                System.out.println(Messages.CLOSED.toString());
+            }
+        } catch (Exception ignored) {
         }
         try {
             gameMusic.dispose();
