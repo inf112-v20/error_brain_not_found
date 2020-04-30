@@ -2,6 +2,7 @@ package inf112.skeleton.app.LAN;
 
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Rotate;
+import org.lwjgl.Sys;
 
 import java.util.ArrayList;
 
@@ -22,8 +23,9 @@ public class Converter {
      * @return playernumber and info about players card in string
      */
     public String convertToString(int playerNumber, ProgramCard programCard) {
-        if (programCard.toString().equals("no card")) {
-            return programCard.toString();
+        if (programCard == null) {
+            System.out.println("no card");
+            return "no card";
         }
         StringBuilder string = new StringBuilder();
         String player = String.valueOf(playerNumber);

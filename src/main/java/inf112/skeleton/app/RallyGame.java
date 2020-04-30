@@ -353,7 +353,8 @@ public class RallyGame extends Game {
 
             ((GameScreen) screen).updateCards();
             letClientsAndServerContinue();
-            sendSelectedCards();
+
+            //sendSelectedCards();
         }
     }
 
@@ -365,8 +366,8 @@ public class RallyGame extends Game {
             client.continueListening();
         } else {
             serverThread.getServer().continueAll();
-            setShouldPickCards(true);
         }
+        setShouldPickCards(true);
     }
 
     private void updateRegisters() {
