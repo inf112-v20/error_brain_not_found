@@ -1,6 +1,8 @@
 package inf112.skeleton.app;
 
-import com.badlogic.gdx.*;
+import com.badlogic.gdx.Game;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
@@ -126,7 +128,6 @@ public class RallyGame extends Game {
             Gdx.app.exit();
         } catch (IOException e) {
             System.out.println("Could not connect to " + hostIP + " on port " + portNumber + " Quit.");
-            Gdx.app.exit();
         }
     }
 
@@ -186,6 +187,7 @@ public class RallyGame extends Game {
     public void muteSounds () {
         volume = volume == 0 ? 0.5f : 0;
     }
+
     public void loadMusic() {
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
     }
@@ -280,11 +282,14 @@ public class RallyGame extends Game {
             if (!respawnPlayers.isEmpty()) {
                 respawnPlayers();
             }
+
+            removeDeadPlayers();
+
             updateRegisters();
-            discardCards();
-            // Dealcards draw 9 cards, so deck needs to be larger than 9 for each player
-            if (deck.deckSize() < 9*numberOfPlayers) {
+            ArrayList<ProgramCard> lockedCards = discardCards();
+            if (deck.deckSize() < numberOfDealtCards()) {
                 if (isServer) {
+                    //serverThread.getServer().createAndSendDeckToAll(lockedCards);
                     serverThread.getServer().createAndSendDeckToAll();
                 }
             }
@@ -303,12 +308,20 @@ public class RallyGame extends Game {
     /**
      * After playing cards, let server and clients exhange more cards.
      */
-    public void letClientsAndServerContinue () {
+    public void letClientsAndServerContinue() {
         if (!isServer) {
             client.continueListening();
         } else {
             serverThread.getServer().continueAll();
         }
+    }
+
+    private int numberOfDealtCards() {
+        int cards = 0;
+        for (Player player : players) {
+            cards += player.getProgramCardsDealt();
+        }
+        return cards;
     }
 
     private void updateRegisters() {
@@ -317,7 +330,7 @@ public class RallyGame extends Game {
         }
     }
 
-    private void pickUpFlags () {
+    private void pickUpFlags() {
         board.pickUpFlags();
     }
 
@@ -329,16 +342,18 @@ public class RallyGame extends Game {
         }
     }
 
-    public void dealCards () {
+    public void dealCards() {
         for (Player player : players) {
             player.drawCards(deck);
         }
     }
 
-    public void discardCards () {
+    public ArrayList<ProgramCard> discardCards() {
+        ArrayList<ProgramCard> lockedCards = new ArrayList<>();
         for (Player player : players) {
-            player.discardCards(deck);
+            lockedCards.addAll(player.discardCards(deck));
         }
+        return lockedCards;
     }
 
     /**
@@ -361,15 +376,23 @@ public class RallyGame extends Game {
         }
     }
 
-    public void respawnPlayers () {
-        for (Player player : respawnPlayers) {
-            if (!player.isDead()) {
-                players.add(player);
-                board.respawn(player);
+    public void removeDeadPlayers() {
+        for (Player player : players) {
+            if (player.isDead()) {
+                board.removePlayerFromBoard(player);
+                // Fjern spillere fra spillet
             }
+        }
+    }
+
+    public void respawnPlayers() {
+        for (Player player : respawnPlayers) {
+            players.add(player);
+            board.respawn(player);
         }
         respawnPlayers.clear();
     }
+
     public void allPlayersPlayCard(int cardNumber) {
         ArrayList<Player> playerOrder = new ArrayList<>(players);
         // Add all players to order list, and remove players with no cards left

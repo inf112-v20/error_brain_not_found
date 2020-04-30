@@ -10,7 +10,6 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
-import org.lwjgl.Sys;
 
 import java.io.File;
 import java.util.Objects;
@@ -45,6 +44,7 @@ public class MenuScreenActors {
     private Label waitForHost;
     public Semaphore waitForServerToSendStartValues = new Semaphore(1);
     public Semaphore waitForServerToSendMapPath = new Semaphore(1);
+    public Thread waitForGameSetupThread;
 
     public MenuScreenActors(RallyGame game, Stage stage) {
         this.game = game;
@@ -163,6 +163,7 @@ public class MenuScreenActors {
                     toggleVisibilityCreateFirstClick();
                 } else {
                     toggleVisibilityCreateSecondClick();
+                    game.setUpHost(Integer.parseInt(portInput.getText()), Integer.parseInt(numOfPlayers.getText()));
                 }
             }
 
@@ -188,7 +189,10 @@ public class MenuScreenActors {
                 if (createGameButton.isVisible()) {
                     toggleVisibilityJoinFirstClick();
                 } else {
-                    toggleVisibilityJoinSecondClick();
+                    if (setUpClient()) {
+                        toggleVisibilityJoinSecondClick();
+                        waitForGameSetUpAndStartGame();
+                    }
                 }
             }
 
@@ -250,8 +254,6 @@ public class MenuScreenActors {
         numOfPlayers.setVisible(false);
         selectMap.setVisible(true);
         startButton.setVisible(true);
-        game.setUpHost(Integer.parseInt(portInput.getText()), Integer.parseInt(numOfPlayers.getText()));
-
     }
 
     public void toggleVisibilityJoinFirstClick() {
@@ -262,11 +264,22 @@ public class MenuScreenActors {
     }
 
     public void toggleVisibilityJoinSecondClick() {
-        game.setUpClient(IPInput.getText(), Integer.parseInt(portInput.getText()));
-        System.out.println("Made client");
         joinGameButton.setVisible(false);
         portInput.setVisible(false);
         IPInput.setVisible(false);
+        waitForHost.setVisible(true);
+    }
+
+    public boolean setUpClient() {
+        game.setUpClient(IPInput.getText(), Integer.parseInt(portInput.getText()));
+        if (game.getClient() == null) {
+            return false;
+        }
+        System.out.println("Made client");
+        return true;
+    }
+
+    public void waitForGameSetup() {
         try {
             waitForServerToSendStartValues.acquire();
         } catch (InterruptedException e) {
@@ -279,9 +292,17 @@ public class MenuScreenActors {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        System.out.println("Game path when setup: " +game.getMapPath());
-        game.setupGame(game.getMapPath());
-        game.setScreen(new GameScreen(game));
-        //waitForHost.setVisible(true);
+        System.out.println("Game path when setup: " + game.getMapPath());
+    }
+
+    public void waitForGameSetUpAndStartGame() {
+        waitForGameSetupThread = new Thread(() -> {
+            waitForGameSetup();
+            Gdx.app.postRunnable(() -> {
+                game.setupGame(game.getMapPath());
+                game.setScreen(new GameScreen(game));
+            });
+        });
+        waitForGameSetupThread.start();
     }
 }
