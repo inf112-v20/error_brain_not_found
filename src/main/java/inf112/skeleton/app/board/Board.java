@@ -89,29 +89,34 @@ public class Board extends BoardLayers {
             players.add(player);
         }
     }
+
+    /**
+     * Gives you positions of players start position
+     * @param number number of players
+     * @return returns null if there is no start position
+     */
     //TODO: might move to boardLayer
     public Vector2 getStartPosition(int number) {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
                 TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
                 int ID = cell.getTile().getId();
-                if (number == 1 && ID == TileID.START_POS1.getId()) {
+                if (number == 1 && ID == TileID.START_POS1.getId())
                     return new Vector2(x, y);
-                } else if (number == 2 && ID == TileID.START_POS2.getId()) {
+                else if (number == 2 && ID == TileID.START_POS2.getId())
                     return new Vector2(x, y);
-                } else if (number == 3 && ID == TileID.START_POS3.getId()) {
+                else if (number == 3 && ID == TileID.START_POS3.getId())
                     return new Vector2(x, y);
-                } else if (number == 4 && ID == TileID.START_POS4.getId()) {
+                else if (number == 4 && ID == TileID.START_POS4.getId())
                     return new Vector2(x, y);
-                } else if (number == 5 && ID == TileID.START_POS5.getId()) {
+                else if (number == 5 && ID == TileID.START_POS5.getId())
                     return new Vector2(x, y);
-                } else if (number == 6 && ID == TileID.START_POS6.getId()) {
+                else if (number == 6 && ID == TileID.START_POS6.getId())
                     return new Vector2(x, y);
-                } else if (number == 7 && ID == TileID.START_POS7.getId()) {
+                else if (number == 7 && ID == TileID.START_POS7.getId())
                     return new Vector2(x, y);
-                } else if (number == 8 && ID == TileID.START_POS8.getId()) {
+                else if (number == 8 && ID == TileID.START_POS8.getId())
                     return new Vector2(x, y);
-                }
             }
         }
         return null;
