@@ -11,6 +11,7 @@ import inf112.skeleton.app.LAN.ServerThread;
 import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.cards.Register;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.objects.Belt;
@@ -42,6 +43,7 @@ public class RallyGame extends Game {
     public ArrayList<Player> respawnPlayers;
     public Semaphore waitForCards;
     public boolean playing;
+    public boolean shouldPickCards;
     public Sound laserSound;
 
     public static Music gameMusic;
@@ -82,7 +84,10 @@ public class RallyGame extends Game {
         this.waitForCards.tryAcquire();
         this.playing = true;
         this.converter = new Converter();
+        this.shouldPickCards = true;
+
         this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
+
         new Thread(this::doTurn).start();
 
         // If clients connect after you start game, give them the map
@@ -170,14 +175,6 @@ public class RallyGame extends Game {
                     System.out.println("Pressed d");
                         dealCards();
 
-                } else if (keycode == Input.Keys.S) {
-                    dealCards();
-                    System.out.println("Dealt cards");
-                    mainPlayer.selectCards();
-                    System.out.println("Selected cards");
-                    System.out.println("Your program is: " + mainPlayer.getSelectedCards());
-                    sendSelectedCards();
-                    System.out.println("Sendt cards");
                 } else if (keycode == Input.Keys.SPACE) {
                     cardsReady();
                     return super.keyDown(keycode);
@@ -201,15 +198,22 @@ public class RallyGame extends Game {
      */
     public void sendSelectedCards() {
         if (!isServer) {
-            for (ProgramCard card : mainPlayer.getSelectedCards()) {
-                client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), card));
+            for (Register register : mainPlayer.getRegisters().getRegisters()) {
+                client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), register.getProgramCard()));
             }
         }
     }
 
-    public void confirmCards () {
-        if (mainPlayer.getSelectedCards().size() == 5) {
-            //cardsReady();
+    public void setShouldPickCards(boolean shouldPickCards) {
+        this.shouldPickCards = shouldPickCards;
+    }
+
+    public boolean shouldPickCards() {
+        return shouldPickCards;
+    }
+
+    public void confirmCards() {
+        if (!mainPlayer.getRegisters().hasRegistersWithoutCard()) {
             sendSelectedCards();
             if (isServer) {
                 GameServer server = serverThread.getServer();
@@ -241,12 +245,11 @@ public class RallyGame extends Game {
     public void muteSounds () {
         volume = volume == 0 ? 0.5f : 0;
     }
-
-    public void loadMusic () {
+    public void loadMusic() {
         gameMusic = Gdx.audio.newMusic(Gdx.files.internal("assets/sound/menu_music.mp3"));
     }
 
-    public void startMusic () {
+    public void startMusic() {
         loadMusic();
         gameMusic.setVolume(0.5f);
         gameMusic.setLooping(true);
@@ -292,7 +295,7 @@ public class RallyGame extends Game {
                 System.out.println("Runde " + (i + 1));
 
                 // All players play one card in the correct order
-                allPlayersPlayCard();
+                allPlayersPlayCard(i);
                 sleep(250);
 
                 // Express belts move 1
@@ -316,21 +319,17 @@ public class RallyGame extends Game {
                 sleep(500);
 
                 decreaseLives();
+                if (!board.getLasers().isEmpty()) {
+                    fireLasers();
+                    sleep(250);
+                    removeLasers();
+                    sleep(500);
 
-                // Fire lasers for 250 ms
-                fireLasers();
-
-                try {
-                    Thread.sleep(600);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    decreaseLives();
                 }
+
+                activateRepairTiles();
                 sleep(250);
-
-                removeLasers();
-                sleep(500);
-
-                decreaseLives();
 
                 pickUpFlags();
                 sleep(500);
@@ -340,6 +339,7 @@ public class RallyGame extends Game {
             if (!respawnPlayers.isEmpty()) {
                 respawnPlayers();
             }
+            updateRegisters();
             discardCards();
             // Dealcards draw 9 cards, so deck needs to be larger than 9
             if (deck.deckSize() < 9) {
@@ -349,8 +349,8 @@ public class RallyGame extends Game {
             }
 
             dealCards();
+
             ((GameScreen) screen).updateCards();
-            System.out.println("Your program is: " + mainPlayer.getSelectedCards());
             letClientsAndServerContinue();
             sendSelectedCards();
         }
@@ -364,6 +364,13 @@ public class RallyGame extends Game {
             client.continueListening();
         } else {
             serverThread.getServer().continueAll();
+            setShouldPickCards(true);
+        }
+    }
+
+    private void updateRegisters() {
+        for (Player player : players) {
+            player.updateRegisters();
         }
     }
 
@@ -388,7 +395,7 @@ public class RallyGame extends Game {
 
     public void discardCards () {
         for (Player player : players) {
-            player.discardAllCards(deck);
+            player.discardCards(deck);
         }
     }
 
@@ -399,10 +406,9 @@ public class RallyGame extends Game {
     public void decreaseLives () {
         ArrayList<Player> removedPlayers = new ArrayList<>();
         for (Player player : players) {
-            if (player.getDamageTokens() >= 10 || board.outsideBoard(player)) {
+            if (player.getDamageTokens() >= 10 || board.getBoardLogic().outsideBoard(player, board)) {
                 player.decrementLifeTokens();
                 player.resetDamageTokens();
-                player.discardAllCards(deck);
                 board.removePlayerFromBoard(player);
                 removedPlayers.add(player);
             }
@@ -422,15 +428,14 @@ public class RallyGame extends Game {
         }
         respawnPlayers.clear();
     }
-
-    public void allPlayersPlayCard () {
+    public void allPlayersPlayCard(int cardNumber) {
         ArrayList<Player> playerOrder = new ArrayList<>(players);
         // Add all players to order list, and remove players with no cards left
-        playerOrder.removeIf(p -> p.getSelectedCards().isEmpty());
+        // playerOrder.removeIf(p -> p.getSelectedCards().isEmpty());
         playerOrder.sort(new PlayerSorter());
 
         for (Player player : playerOrder) {
-            playCard(player, nextCard(player));
+            playCard(player, cardNumber);
             // Wait 1 second for each player
             sleep(500);
             //decreaseLives();
@@ -438,27 +443,10 @@ public class RallyGame extends Game {
         }
     }
 
-    /**
-     * Get new card for player. When hand is empty new cards are given.
-     * @param player
-     * @return the next card player is going to play
-     */
-    public ProgramCard nextCard (Player player){
-        if (player.getSelectedCards().isEmpty()) {
-            System.out.println("Getting new cards...");
-            mainPlayer.drawCards(deck);
-            mainPlayer.selectCards();
-        }
-        this.card = player.getSelectedCards().remove(0);
-        return card;
-    }
-
-    /**
-     * Move player according to its playerCard.
-     * @param player
-     * @param card
-     */
-    public void playCard (Player player, ProgramCard card){
+    public void playCard(Player player, int cardNumber) {
+        player.setBeltPushDir(null);
+        ProgramCard card = player.getRegisters().getCard(cardNumber);
+        System.out.println(player.toString() + " played " + card.toString());
         switch (card.getRotate()) {
             case RIGHT:
                 player.setDirection(player.getDirection().turnRight());
@@ -492,28 +480,32 @@ public class RallyGame extends Game {
     public void removeLasers () {
         for (int y = 0; y < board.getHeight(); y++) {
             for (int x = 0; x < board.getWidth(); x++) {
-                board.laserLayer.setCell(x, y, null);
+                board.getLaserLayer().setCell(x, y, null);
             }
         }
     }
 
-    public void firePlayerLaser () {
-        for (Player player : players) {
-            player.fire(this);
+    public void firePlayerLaser() {
+        if (!players.isEmpty()) {
+            for (Player player : players) {
+                player.fire(this);
+            }
+            laserSound.play(volume);
         }
-        laserSound.play(volume);
     }
 
-    public void fireLasers () {
-        for (Laser laser : board.lasers) {
-            laser.fire(this);
+    public void fireLasers() {
+        if (!board.getLasers().isEmpty()) {
+            for (Laser laser : board.getLasers()) {
+                laser.fire(this);
+            }
+            laserSound.play(volume);
         }
-        laserSound.play(volume);
     }
 
     public void activateRotatePads () {
         for (Player player : board.getPlayers()) {
-            for (RotatePad pad : board.rotatePads) {
+            for (RotatePad pad : board.getRotatePads()) {
                 Vector2 playerPosition = player.getPosition();
                 Vector2 padPosition = pad.getPosition();
 
@@ -528,12 +520,13 @@ public class RallyGame extends Game {
 
     /**
      * <p>
-     *     Activate the belts on the map, so they pushes the player in the direction of the belt.
+     * Activate the belts on the map, so they pushes the player in the direction of the belt.
      * </p>
+     *
      * @param onlyExpress if true then the pool of belts should be set to expressBelts
      */
-    public void activateBelts ( boolean onlyExpress){
-        ArrayList<Belt> belts = onlyExpress ? board.expressBelts : board.belts;
+    public void activateBelts(boolean onlyExpress) {
+        ArrayList<Belt> belts = onlyExpress ? board.getExpressBelts() : board.getBelts();
         for (Player player : board.getPlayers()) {
             for (Belt belt : belts) {
                 if (player.getPosition().equals(belt.getPosition())) {
@@ -559,31 +552,6 @@ public class RallyGame extends Game {
                     otherPlayer.setBeltPushPos(null);
                 }
             }
-        }
-    }
-
-    /**
-     * Close sockets on exit.
-     */
-    public void dispose () {
-        // Tell server you are leaving. Close your socket.
-        if (!isServer) {
-            this.client.sendMessage(this.client.createQuitMessage(this.myPlayerNumber));
-            this.client.close();
-            this.client.sendMessage(Messages.CLOSED.toString());
-        }
-        // Close all sockets in serverthread
-        if (isServer) {
-            this.serverThread.getServer().sendToAll(Messages.HOST_LEAVES.toString());
-            this.serverThread.getServer().disconnectAll();
-            System.out.println(Messages.CLOSED.toString());
-        }
-        try {
-            gameMusic.dispose();
-            laserSound.dispose();
-            screen.dispose();
-            board.dispose();
-        } catch (Exception ignored) {
         }
     }
 
@@ -647,6 +615,16 @@ public class RallyGame extends Game {
         }
     }
 
+    public void activateRepairTiles() {
+        for (Player player : players){
+            for (Vector2 repairTilePos : board.getRepairTiles()){
+                if (player.getPosition().equals(repairTilePos)){
+                    player.resetDamageTokens();
+                }
+            }
+        }
+    }
+
     public void setPlayerNumber ( int playerNumber){
         this.myPlayerNumber = playerNumber;
     }
@@ -690,6 +668,31 @@ public class RallyGame extends Game {
         if (screen instanceof MenuScreen) {
             MenuScreenActors actors = ((MenuScreen) screen).getActors();
             actors.waitForServerToSendMapPath.release();
+        }
+    }
+
+    /**
+     * Close sockets on exit.
+     */
+    public void dispose () {
+        // Tell server you are leaving. Close your socket.
+        if (!isServer) {
+            this.client.sendMessage(this.client.createQuitMessage(this.myPlayerNumber));
+            this.client.close();
+            this.client.sendMessage(Messages.CLOSED.toString());
+        }
+        // Close all sockets in serverthread
+        if (isServer) {
+            this.serverThread.getServer().sendToAll(Messages.HOST_LEAVES.toString());
+            this.serverThread.getServer().disconnectAll();
+            System.out.println(Messages.CLOSED.toString());
+        }
+        try {
+            gameMusic.dispose();
+            laserSound.dispose();
+            screen.dispose();
+            board.dispose();
+        } catch (Exception ignored) {
         }
     }
 }

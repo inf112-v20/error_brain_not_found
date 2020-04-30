@@ -19,18 +19,23 @@ public class GameScreen extends StandardScreen {
         actors.initializeProgramCardButtons();
         actors.initializeConfirmButton();
         actors.initializeLifeTokens();
+        actors.initializeLifeTokenLabel();
         actors.initializeDamageTokens();
+        actors.initializeDamageTokenLabel();
+        actors.initializeNumberLabels();
+        actors.initializePriorityLabels();
+        actors.initializeLockedLabels();
 
         float tilePx = 300f;
         float unitScale = ((float) Gdx.graphics.getHeight() / game.getBoard().getHeight()) / tilePx;
 
-        this.mapRenderer = new OrthogonalTiledMapRenderer(game.getBoard().getMap(), unitScale, batch);
+        this.mapRenderer = new OrthogonalTiledMapRenderer(game.getBoard().getTiledMap(), unitScale, batch);
         this.mapRenderer.setView(camera);
     }
 
     @Override
     public void render(float v) {
-        actors.updateActors();
+        //actors.updateActors();
         super.render(v);
         mapRenderer.render();
     }

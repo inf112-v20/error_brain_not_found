@@ -4,14 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
-import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.objects.Flag;
 import inf112.skeleton.app.objects.player.Player;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 
 public class PlayerTest {
@@ -51,7 +51,7 @@ public class PlayerTest {
     }
 
     @Test
-    public void whenNewPlayerIsMadeDirectionIsSetToEastTest() {
+    public void backupDirectionIsEastTest() {
         assertEquals(Direction.EAST, player.getDirection());
     }
 
@@ -63,6 +63,26 @@ public class PlayerTest {
     @Test
     public void whenPlayersStartDirectionIsTurnedRightItGivesSouthDirectionTest() {
         assertEquals(Direction.SOUTH, player.getDirection().turnRight());
+    }
+
+    @Test
+    public void changingPositionDoesNotChangeBackupTest() {
+        Vector2 backupPosition = player.getBackupPosition();
+        player.setPosition(new Vector2(1, 0));
+        assertEquals(backupPosition, player.getBackupPosition());
+    }
+
+    @Test
+    public void backupPositionSameAsStartPositionTest() {
+        assertEquals(player.getBackupPosition(), player.getPosition());
+    }
+
+    @Test
+    public void playerPickedUpOneFlagDoesNotHaveAllFlagsTest() {
+        Flag flag = new Flag(1, 0,0);
+        player.pickUpFlag(flag);
+        int numberOfFlags = 3;
+        assertFalse(player.hasAllFlags(numberOfFlags));
     }
 
     @Test
@@ -83,15 +103,11 @@ public class PlayerTest {
     }
 
     @Test
-    public void lifeDecreasedWhenCollectedTenDamageTokensTest() {
-        Board board = game.getBoard();
-        board.addPlayer(player);
-        int livesBefore = player.getLifeTokens();
-        for (int takeDamage = 1; takeDamage <= 10; takeDamage++) {
-            player.handleDamage();
+    public void noLivesLeftPlayerIsDeadTest() {
+        for (int livesTaken = 1; livesTaken <=3; livesTaken++) {
+            player.decrementLifeTokens();
         }
-        game.decreaseLives();
-        assertEquals(livesBefore-1, player.getLifeTokens());
+        assertTrue(player.isDead());
     }
 
 }

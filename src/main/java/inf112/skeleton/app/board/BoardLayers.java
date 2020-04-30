@@ -17,23 +17,24 @@ import java.util.ArrayList;
 
 public abstract class BoardLayers {
 
-    public final TiledMap tiledMap;
+    protected final TiledMap tiledMap;
 
-    public final TiledMapTileLayer playerLayer;
-    public final TiledMapTileLayer flagLayer;
-    public final TiledMapTileLayer wallLayer;
-    public final TiledMapTileLayer laserLayer;
-    public final TiledMapTileLayer groundLayer;
+    protected final TiledMapTileLayer playerLayer;
+    protected final TiledMapTileLayer flagLayer;
+    protected final TiledMapTileLayer wallLayer;
+    protected final TiledMapTileLayer laserLayer;
+    protected final TiledMapTileLayer groundLayer;
 
-    public final ArrayList<Laser> lasers;
-    public final ArrayList<Flag> flags;
-    public final ArrayList<RotatePad> rotatePads;
-    public final ArrayList<Vector2> holes;
-    public final ArrayList<Belt> belts;
-    public final ArrayList<Belt> expressBelts;
+    protected final ArrayList<Laser> lasers;
+    protected final ArrayList<Flag> flags;
+    protected final ArrayList<RotatePad> rotatePads;
+    protected final ArrayList<Vector2> holes;
+    protected final ArrayList<Belt> belts;
+    protected final ArrayList<Belt> expressBelts;
+    protected final ArrayList<Vector2> repairTiles;
 
-    public final int boardWidth;
-    public final int boardHeight;
+    protected final int boardWidth;
+    protected final int boardHeight;
 
     public BoardLayers(String mapPath) {
         this.tiledMap = new TmxMapLoader().load(mapPath);
@@ -54,6 +55,7 @@ public abstract class BoardLayers {
         this.lasers = new ArrayList<>();
         this.belts = new ArrayList<>();
         this.expressBelts = new ArrayList<>();
+        this.repairTiles = new ArrayList<>();
 
         findFlags();
         findBelts();
@@ -303,7 +305,74 @@ public abstract class BoardLayers {
         }
     }
 
-    public abstract TiledMap getMap();
+    /**
+     * Finds all the boards repairs tiles.
+     */
+    public void findRepairs() {
+        for (int x = 0; x < groundLayer.getWidth(); x++) {
+            for (int y = 0; y < groundLayer.getHeight(); y++) {
 
-    public abstract TiledMapTileLayer getLaserLayer();
+                TiledMapTileLayer.Cell cell = groundLayer.getCell(x, y);
+                if(cell != null){
+                    int ID =  cell.getTile().getId();
+                    if (ID == TileID.WRENCH.getId()){
+                        repairTiles.add(new Vector2(x, y));
+                    } else if (ID == TileID.DOUBLE_WRENCH.getId()){
+                        repairTiles.add(new Vector2(x, y));
+                    }
+                }
+            }
+        }
+    }
+
+    public TiledMap getTiledMap() {
+        return tiledMap;
+    }
+
+    /**
+     * @return {@link TiledMapTileLayer} of laser layer
+     */
+    public TiledMapTileLayer getLaserLayer() {
+        return laserLayer;
+    }
+
+    public ArrayList<Laser> getLasers() {
+        return lasers;
+    }
+
+    public ArrayList<Flag> getFlags() {
+        return flags;
+    }
+
+    public ArrayList<RotatePad> getRotatePads() {
+        return rotatePads;
+    }
+
+    public ArrayList<Vector2> getHoles() {
+        return holes;
+    }
+
+    public ArrayList<Belt> getBelts() {
+        return belts;
+    }
+
+    public ArrayList<Belt> getExpressBelts() {
+        return expressBelts;
+    }
+
+    /**
+     * Get the {@link ArrayList repairTiles} arraylist.
+     * @return the arraylist that contains the location of the repair tiles.
+     */
+    public ArrayList<Vector2> getRepairTiles() {
+        return repairTiles;
+    }
+
+    public int getBoardWidth() {
+        return boardWidth;
+    }
+
+    public int getBoardHeight() {
+        return boardHeight;
+    }
 }

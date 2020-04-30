@@ -1,19 +1,21 @@
 package inf112.skeleton.app.screens.gamescreen;
 
-import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Align;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.cards.Register;
 
 import java.util.ArrayList;
 
@@ -22,9 +24,15 @@ public class GameScreenActors {
     public final float mapHeight = 12;
     public final float mapWidth = 16;
     public final float programCardRatio = 0.72f;
+    private final float labelFontScale;
     public float screenWidth;
     public float screenHeight;
     public float mapRightPx;
+    private final ArrayList<Label> registerNumberLabels;
+    private final ArrayList<Label> cardPriorityLabels;
+    private final ArrayList<Label> lockedLabels;
+    private Label damageTokenLabel;
+    private Label lifeTokenLabel;
     public float programCardWidth;
     public float programCardHeight;
     public float confirmButtonSize;
@@ -37,40 +45,60 @@ public class GameScreenActors {
     private final Stage stage;
     private final ProgramCardSkin cardSkin;
     private final ArrayList<ImageButton> programCardButtons;
-    private final ArrayList<Image> damageTokens;
-    private final ArrayList<Image> lifeTokens;
+    public Skin skin;
+    public Skin numberSkin;
 
     public GameScreenActors(RallyGame game, Stage stage) {
         this.game = game;
         this.stage = stage;
-
+        this.skin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
+        this.numberSkin = new Skin(Gdx.files.internal("assets/skins/number-cruncher-ui.json"));
         programCardButtons = new ArrayList<>();
-        damageTokens = new ArrayList<>();
-        lifeTokens = new ArrayList<>();
+        registerNumberLabels = new ArrayList<>();
+        cardPriorityLabels = new ArrayList<>();
+        lockedLabels = new ArrayList<>();
 
         cardSkin = new ProgramCardSkin();
 
         screenWidth = game.getScreen().viewport.getScreenWidth();
         screenHeight = game.getScreen().viewport.getScreenHeight();
         mapRightPx = (screenHeight / mapHeight) * mapWidth;
-        programCardWidth = (screenWidth - mapRightPx) / 3;
+
+        programCardWidth = (screenWidth - mapRightPx) / 3f;
         programCardHeight = programCardWidth / programCardRatio;
-        lifeTokenSize = (screenWidth - mapRightPx) / 4;
+        lifeTokenSize = (screenHeight - 3 * programCardHeight * 1.18f) / 2f;
         confirmButtonSize = lifeTokenSize;
-        damageTokenSize = (screenWidth - mapRightPx) / 5;
+        damageTokenSize = lifeTokenSize;
+
+        labelFontScale = screenWidth / 960f;
     }
+
+    public void updateButtons() {
+        if (game.shouldPickCards()) {
+            updateCards();
+            moveLockedCards();
+            updateLockedLabels();
+            updatePriorityLabels();
+        }
+        updateConfirm();
+        updateLifeTokenLabel();
+        updateDamageTokenLabel();
+        updateRegisterNumberLabels();
+    }
+
+    // PROGRAM CARD BUTTONS
 
     public void initializeProgramCardButtons() {
         int idx = 0;
         for (int dy = 1; dy <= 3; dy++) {
             for (int dx = 0; dx <= 2; dx++) {
-                ProgramCard card = game.mainPlayer.getAllCards().get(idx);
+                ProgramCard card = game.mainPlayer.getCardsOnHand().get(idx);
                 ImageButton.ImageButtonStyle cardStyle = new ImageButton.ImageButtonStyle();
                // System.out.println("CARD: "+card.getName() + " " + card);
                 cardStyle.up = cardSkin.getSkins().getDrawable(card.getName());
                 ImageButton cardButton = new ImageButton(cardStyle);
                 cardButton.setSize(programCardWidth, programCardHeight);
-                cardButton.setPosition(mapRightPx + programCardWidth * dx, screenHeight - programCardHeight * dy);
+                cardButton.setPosition(mapRightPx + programCardWidth * dx, screenHeight - programCardHeight * dy * 1.18f);
                 setCardButtonInputListener(card, cardButton);
                 programCardButtons.add(cardButton);
                 stage.addActor(cardButton);
@@ -84,10 +112,10 @@ public class GameScreenActors {
         cardButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.mainPlayer.selectCard(card);
-                updateCards();
-                System.out.println(game.mainPlayer.getSelectedCards());
-                System.out.println(cardButton.getStyle());
+                if (game.shouldPickCards()) {
+                    game.mainPlayer.selectCard(card);
+                    System.out.println(game.mainPlayer.getRegisters());
+                }
             }
 
             @Override
@@ -96,6 +124,35 @@ public class GameScreenActors {
             }
         });
     }
+
+    public void updateCards() {
+        for (int cardButtonIndex = 0; cardButtonIndex < 9; cardButtonIndex++) {
+            ImageButton cardButton = programCardButtons.get(cardButtonIndex);
+            if (cardButtonIndex < game.mainPlayer.getCardsOnHand().size()) {
+                ProgramCard card = game.mainPlayer.getCardsOnHand().get(cardButtonIndex);
+                cardButton.getStyle().up = cardSkin.getSkins().getDrawable(card.getName());
+                setCardButtonInputListener(card, cardButton);
+                cardButton.setVisible(true);
+            } else {
+                cardButton.setVisible(false);
+            }
+        }
+    }
+
+    public void moveLockedCards() {
+        for (int i = 4; i >= 0; i--) {
+            Register register = game.mainPlayer.getRegisters().getRegister(i);
+            if (!register.isOpen()) {
+                ProgramCard card = register.getProgramCard();
+                ImageButton cardButton = programCardButtons.get(i + 4);
+                cardButton.getStyle().up = cardSkin.getSkins().getDrawable(card.getName());
+                setCardButtonInputListener(card, cardButton);
+                cardButton.setVisible(true);
+            }
+        }
+    }
+
+    // CONFIRM BUTTON
 
     public void initializeConfirmButton() {
         TextureAtlas atlas = new TextureAtlas();
@@ -110,7 +167,10 @@ public class GameScreenActors {
         confirmButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.confirmCards();
+                if (game.shouldPickCards()) {
+                    game.setShouldPickCards(false);
+                    game.confirmCards();
+                }
             }
 
             @Override
@@ -121,74 +181,170 @@ public class GameScreenActors {
         stage.addActor(confirmButton);
     }
 
-    public void initializeDamageTokens() {
-        for (int i = 0; i < 2; i++) {
-            for (int j = 0; j < 5; j++) {
-                float x = mapRightPx + j * damageTokenSize;
-                float y = lifeTokenSize + i * damageTokenSize;
-                newDamageToken(x, y);
-            }
-        }
-    }
-
-    public void newDamageToken(double x, double y) {
-        Image token = new Image(new Texture("assets/images/damageToken.png"));
-        token.setSize(damageTokenSize, damageTokenSize);
-        token.setPosition((float) x, (float) y);
-        damageTokens.add(token);
-        stage.addActor(token);
-    }
-
-    public void initializeLifeTokens() {
-        for (int i = 0; i < 3; i++) {
-            float x = mapRightPx + i * lifeTokenSize;
-            newLifeToken(x, 0);
-        }
-    }
-
-    public void newLifeToken(double x, double y) {
-        Image token = new Image(new Texture("assets/images/lifeToken.png"));
-        token.setSize(lifeTokenSize, lifeTokenSize);
-        token.setPosition((float) x, (float) y);
-        lifeTokens.add(token);
-        stage.addActor(token);
-    }
-
-    public void updateActors() {
-        updateConfirm();
-        updateLifeTokens();
-        updateDamageTokens();
-    }
-
     public void updateConfirm() {
-        if (game.mainPlayer.getSelectedCards().size() == 5) {
+        if (!game.mainPlayer.getRegisters().hasRegistersWithoutCard()) {
             confirmButton.getStyle().up = game.buttonSkins.getSkins().getDrawable("Confirm ready");
         } else {
             confirmButton.getStyle().up = game.buttonSkins.getSkins().getDrawable("Confirm not ready");
         }
     }
 
-    public void updateLifeTokens() {
-        for (int i = 0; i < 3; i++) {
-            lifeTokens.get(i).setVisible(i < game.mainPlayer.getLifeTokens());
+    // DAMAGE TOKEN IMAGES
+
+    public void initializeDamageTokens() {
+        Image token = new Image(new Texture("assets/images/damageToken.png"));
+        token.setSize(damageTokenSize, damageTokenSize);
+        token.setPosition(mapRightPx, lifeTokenSize);
+        stage.addActor(token);
+    }
+
+    public void updateDamageTokenLabel() {
+        damageTokenLabel.setText("x" + game.mainPlayer.getDamageTokens());
+    }
+
+    public void initializeDamageTokenLabel() {
+        damageTokenLabel = new Label("", numberSkin);
+        damageTokenLabel.setHeight(damageTokenSize);
+        damageTokenLabel.setPosition(mapRightPx + damageTokenSize, lifeTokenSize);
+        damageTokenLabel.setFontScale(labelFontScale * 2f);
+        stage.addActor(damageTokenLabel);
+    }
+
+    // LIFE TOKEN IMAGES
+
+    public void initializeLifeTokens() {
+        Image token = new Image(new Texture("assets/images/lifeToken.png"));
+        token.setSize(lifeTokenSize, lifeTokenSize);
+        token.setPosition(mapRightPx, 0);
+        stage.addActor(token);
+    }
+    public void updateLifeTokenLabel() {
+        lifeTokenLabel.setText("x" + game.mainPlayer.getLifeTokens());
+    }
+
+    public void initializeLifeTokenLabel() {
+        lifeTokenLabel = new Label("", numberSkin);
+        lifeTokenLabel.setHeight(lifeTokenSize);
+        lifeTokenLabel.setPosition(mapRightPx + lifeTokenSize, 0);
+        lifeTokenLabel.setFontScale(labelFontScale * 2f);
+        stage.addActor(lifeTokenLabel);
+    }
+
+    // PRIORITY LABELS
+
+    public void initializePriorityLabels() {
+        for (ImageButton button : programCardButtons) {
+            Label cardPriority = new Label("", numberSkin);
+            float height = programCardHeight * .18f;
+            float x = button.getX();
+            float y = button.getY() + programCardHeight + height / 2;
+            cardPriority.setWidth(programCardWidth);
+            cardPriority.setPosition(x, y);
+            cardPriority.setFontScale(labelFontScale);
+            cardPriority.setAlignment(Align.center);
+            stage.addActor(cardPriority);
+            cardPriorityLabels.add(cardPriority);
         }
     }
 
-    public void updateDamageTokens() {
-        for (int i = 0; i < 10; i++) {
-            damageTokens.get(i).setVisible(i < game.mainPlayer.getDamageTokens());
+    public void updatePriorityLabels() {
+        updateCardOnHandPriorityLabels();
+        updateLockedRegistersPriorityLabels();
+    }
+
+    public void updateCardOnHandPriorityLabels() {
+        for (int cardIndex = 0; cardIndex < 9; cardIndex++) {
+            ArrayList<ProgramCard> cards = game.mainPlayer.getCardsOnHand();
+            if (cardIndex < cards.size()) {
+                cardPriorityLabels.get(cardIndex).setText(cards.get(cardIndex).getPriority());
+                cardPriorityLabels.get(cardIndex).setVisible(true);
+            } else {
+                cardPriorityLabels.get(cardIndex).setVisible(false);
+            }
         }
     }
 
-    public void updateCards() {
-        if (game.mainPlayer.getAllCards().size() < 9) {
-            return;
+    public void updateLockedRegistersPriorityLabels() {
+        for (int registerIndex = 0; registerIndex < 5; registerIndex++) {
+            Register register = game.mainPlayer.getRegisters().getRegister(registerIndex);
+            if (!register.isOpen()) {
+                cardPriorityLabels.get(registerIndex + 4).setText(register.getProgramCard().getPriority());
+                cardPriorityLabels.get(registerIndex + 4).setVisible(true);
+            }
         }
-        for (int i = 0; i < 9; i++) {
-            ProgramCard card = game.mainPlayer.getAllCards().get(i);
-            ImageButton cardButton = programCardButtons.get(i);
-            cardButton.getStyle().up = cardSkin.getSkins().getDrawable(card.getName());
-            setCardButtonInputListener(card, cardButton);
+    }
+
+    // REGISTER NUMBER LABELS
+
+    public void initializeNumberLabels() {
+        for (ImageButton button : programCardButtons) {
+            Label numberLabel = new Label("", numberSkin);
+            float x = button.getX() + programCardWidth * .1f;
+            float y = button.getY() + programCardHeight * .2f;
+            numberLabel.setPosition(x, y);
+            numberLabel.setFontScale(labelFontScale * 1.8f);
+            numberLabel.setVisible(false);
+            stage.addActor(numberLabel);
+            registerNumberLabels.add(numberLabel);
+        }
+    }
+
+    public void updateRegisterNumberLabels() {
+        hideAllRegisterNumberLabels();
+        updateOpenRegisterNumberLabels();
+        updateLockedRegisterNumberLabels();
+    }
+
+    public void hideAllRegisterNumberLabels() {
+        for (Label label : registerNumberLabels) {
+            label.setText("");
+            label.setVisible(false);
+        }
+    }
+
+    public void updateOpenRegisterNumberLabels() {
+        for (Register register : game.mainPlayer.getRegisters().getRegisters()) {
+            if (register.isOpen() && register.hasCard()) {
+                ProgramCard card = register.getProgramCard();
+                int index = game.mainPlayer.getCardsOnHand().indexOf(card);
+                registerNumberLabels.get(index).setText(register.getRegisterNumber());
+                registerNumberLabels.get(index).setVisible(true);
+            }
+        }
+    }
+
+    public void updateLockedRegisterNumberLabels() {
+        for (int cardButtonIndex = 4; cardButtonIndex < 9; cardButtonIndex++) {
+            Register register = game.mainPlayer.getRegisters().getRegister(cardButtonIndex - 4);
+            if (!register.isOpen()) {
+                registerNumberLabels.get(cardButtonIndex).setText(register.getRegisterNumber());
+                registerNumberLabels.get(cardButtonIndex).setVisible(true);
+            }
+        }
+    }
+
+    // LOCKED LABELS
+
+    public void initializeLockedLabels() {
+        for (int cardButtonIndex = 4; cardButtonIndex < 9; cardButtonIndex++) {
+            ImageButton cardButton = programCardButtons.get(cardButtonIndex);
+            Label lockedLabel = new Label("LOCKED", numberSkin);
+            Container<Label> wrapper = new Container<>(lockedLabel);
+            wrapper.setTransform(true);
+            wrapper.setRotation(45);
+            float x = cardButton.getX() + programCardWidth / 2f;
+            float y = cardButton.getY() + programCardHeight / 2f;
+            wrapper.setPosition(x, y);
+            lockedLabel.setFontScale(labelFontScale * 1.2f);
+            lockedLabel.setVisible(false);
+            stage.addActor(wrapper);
+            lockedLabels.add(lockedLabel);
+        }
+    }
+
+    public void updateLockedLabels() {
+        for (int registerIndex = 0; registerIndex < 5; registerIndex++) {
+            lockedLabels.get(registerIndex).setVisible(!game.mainPlayer.getRegisters().getRegister(registerIndex).isOpen());
         }
     }
 }

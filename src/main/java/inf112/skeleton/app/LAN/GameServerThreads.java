@@ -2,6 +2,7 @@ package inf112.skeleton.app.LAN;
 
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.cards.Register;
 import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.objects.player.Player;
 import org.lwjgl.Sys;
@@ -118,7 +119,7 @@ public class GameServerThreads extends Thread {
     private boolean allClientsHaveSelectedCards() {
         for (Player player : game.getBoard().getPlayers()) {
             if (player.getPlayerNr() != 1) {
-                if (player.getSelectedCards().size() < 5) {
+                if (player.getRegisters().getCardsSelected() < 5) {
                     return false;
                 }
             }
@@ -167,7 +168,7 @@ public class GameServerThreads extends Thread {
      */
     public boolean allPlayersHaveSelectedCards() {
         for (Player player : game.getBoard().getPlayers()) {
-            if (player.getSelectedCards().size() < 5) {
+            if (player.getRegisters().getCardsSelected() < 5) {
                 return false;
             }
         }
@@ -175,13 +176,12 @@ public class GameServerThreads extends Thread {
     }
 
     /**
-     * Send given players selected cards to this client
+     * Send given player's selected cards to this client
      * @param player
      */
     public void sendSelectedCards(Player player) {
-        for (ProgramCard card : player.getSelectedCards()) {
-            sendMessage(converter.convertToString(player.getPlayerNr(), card));
-            System.out.println("Server sent " + card + " to " + player.getPlayerNr());
+        for (Register register : player.getRegisters().getRegisters()) {
+            sendMessage(converter.convertToString(player.getPlayerNr(), register.getProgramCard()));
         }
     }
 

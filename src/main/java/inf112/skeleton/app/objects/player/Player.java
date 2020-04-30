@@ -2,22 +2,25 @@ package inf112.skeleton.app.objects.player;
 
 
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.board.BoardLogic;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.board.Board;
+import inf112.skeleton.app.board.BoardLogic;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.cards.Registers;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Flag;
 import org.lwjgl.Sys;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Scanner;
 
 public class Player {
 
     private final int playerNr;
+    private final Registers registers;
     private Vector2 backupPosition;
     private Direction backupDirection;
     private Vector2 alternativeBackupPosition;
@@ -25,8 +28,8 @@ public class Player {
     private final Vector2 position;
     private Direction direction;
     private final ArrayList<Flag> flagsCollected;
-    private ArrayList<ProgramCard> selectedCards;
-    private final ArrayList<ProgramCard> allCards;
+    private final ArrayList<ProgramCard> cardsOnHand;
+    private int programCardsDealt;
     private Direction beltPushDir;
     private Vector2 beltPushPos;
 
@@ -38,38 +41,52 @@ public class Player {
         this.direction = Direction.EAST;
         this.playerNr = playerNr;
         this.flagsCollected = new ArrayList<>();
-        this.selectedCards = new ArrayList<>();
-        this.allCards = new ArrayList<>();
+        this.registers = new Registers();
+        this.cardsOnHand = new ArrayList<>();
         this.damageTokens = 0;
         this.lifeTokens = 3;
         this.beltPushDir = null;
         this.beltPushPos = null;
+        this.programCardsDealt = 9;
 
         setBackup(position, Direction.EAST);
     }
 
-    public ArrayList<ProgramCard> getAllCards() {
-        return allCards;
+    public ArrayList<ProgramCard> getCardsOnHand() {
+        return cardsOnHand;
     }
 
-    public ArrayList<ProgramCard> getSelectedCards() {
-        return selectedCards;
+    public int getProgramCardsDealt() {
+        updateProgramCardsDealt();
+        return programCardsDealt;
+    }
+
+    public Registers getRegisters() {
+        return registers;
+    }
+
+    public void updateRegisters() {
+        registers.updateRegisters(damageTokens);
+    }
+
+    public void updateProgramCardsDealt() {
+        this.programCardsDealt = 9 - damageTokens;
     }
 
     /**
      * Select cards from all cards.
      */
     public void selectCard(ProgramCard card) {
-        if (!selectedCards.contains(card) && selectedCards.size() < 5) {
-            selectedCards.add(card);
+        if (!registers.contains(card) && registers.hasRegistersWithoutCard()) {
+            registers.addCard(card);
         } else {
-            selectedCards.remove(card);
+            registers.remove(card);
         }
     }
 
     public void selectCards() {
-        while (selectedCards.size() < 5) {
-            selectedCards.add(allCards.get(0));
+        for (int i = 0; i < registers.getOpenRegisters(); i++) {
+            registers.addCard(cardsOnHand.get(0));
         }
     }
 
@@ -78,15 +95,15 @@ public class Player {
      * @param card to add.
      */
     public void addSelectedCard(ProgramCard card) {
-        if (selectedCards.size() < 5) {
-            selectedCards.add(card);
+        if (registers.getCardsSelected() < 5) {
+            registers.addCard(card);
         }
     }
 
     public void drawCards(Deck deck) {
-        int programCardsDealtBasedOnDmgTokens = 9 - getDamageTokens();
-        while (allCards.size() < programCardsDealtBasedOnDmgTokens) {
-            allCards.add(deck.drawCard());
+        updateProgramCardsDealt();
+        while (cardsOnHand.size() < programCardsDealt) {
+            cardsOnHand.add(deck.drawCard());
         }
     }
 
@@ -106,10 +123,19 @@ public class Player {
         this.beltPushPos = position;
     }
 
+    public void discardCards(Deck deck) {
+        for (ProgramCard card : cardsOnHand) {
+            if (!registers.contains(card) || registers.getRegister(card).isOpen()) {
+                deck.addCardToDiscardPile(card);
+            }
+        }
+        cardsOnHand.clear();
+        registers.clear(true);
+    }
+
     public void discardAllCards(Deck deck) {
-        deck.addCardsToDiscardPile(allCards);
-        selectedCards.clear();
-        allCards.clear();
+        deck.addCardsToDiscardPile(cardsOnHand);
+
     }
 
     /**
@@ -194,12 +220,12 @@ public class Player {
     }
 
 
-    public void chooseAlternativeBackupPosition(Board board, Vector2 position) {
+    public void chooseAlternativeBackupPosition(Board board, Vector2 position, BoardLogic boardLogic) {
         ArrayList<Vector2> possiblePositions = board.getNeighbourhood(position);
         Collections.shuffle(possiblePositions);
         for (Vector2 pos : possiblePositions) {
             for (Direction dir : board.getDirectionRandomOrder()) {
-                if (board.validRespawnPosition(pos, dir)) {
+                if (boardLogic.validRespawnPosition(pos, dir, board)) {
                     setAlternativeBackup(pos, dir);
                     return;
                 }
@@ -207,7 +233,7 @@ public class Player {
         }
         setAlternativeBackup(board.getStartPosition(getPlayerNr()), Direction.EAST);
         if (board.hasPlayer(board.getStartPosition(getPlayerNr()))) {
-            chooseAlternativeBackupPosition(board, alternativeBackupPosition);
+            chooseAlternativeBackupPosition(board, alternativeBackupPosition, boardLogic);
         }
     }
 
@@ -246,35 +272,16 @@ public class Player {
         this.direction = direction;
     }
 
-    public void pickUpFlag(Flag flag, int flagNr) {
-        switch (flagNr) {
-            case 1:
-                if (!flagsCollected.contains(flag)) {
-                    flagsCollected.add(flag);
-                }
-                break;
-            case 2:
-                if (!flagsCollected.contains(flag) && flagsCollected.size() == 1) {
-                    flagsCollected.add(flag);
-                }
-                break;
-            case 3:
-                if (!flagsCollected.contains(flag) && flagsCollected.size() == 2) {
-                    flagsCollected.add(flag);
-                }
-                break;
-            case 4:
-                if (!flagsCollected.contains(flag) && flagsCollected.size() == 3) {
-                    flagsCollected.add(flag);
-                }
-                break;
-            default:
-                break;
-        }
+    public boolean shouldPickUpFlag(Flag flag) {
+        return flag.getFlagnr() == flagsCollected.size() + 1;
+    }
+
+    public void pickUpFlag(Flag flag) {
+        flagsCollected.add(flag);
     }
 
     public void fire(RallyGame game) {
-        if (game.getBoard().canFire(position, direction)) {
+        if (game.getBoard().getBoardLogic().canFire(position, direction, game.board)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }
@@ -283,7 +290,7 @@ public class Player {
         game.getBoard().addLaser(position, direction);
         if (game.getBoard().hasPlayer(position)) {
             game.getBoard().getPlayer(position).handleDamage();
-        } else if (game.getBoard().canFire(position, direction)) {
+        } else if (game.getBoard().getBoardLogic().canFire(position, direction, game.board)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }
@@ -296,7 +303,7 @@ public class Player {
      * @param cards one or more cards (separated by comma) or a list of cards.
      */
     public void setSelectedCards(ProgramCard... cards) {
-        this.selectedCards = new ArrayList<>(Arrays.asList(cards));
+        registers.setSelectedCards(cards);
     }
 
     public ArrayList<Flag> getFlagsCollected() {
@@ -309,6 +316,14 @@ public class Player {
 
     public boolean equals(Player other) {
         return this.getPlayerNr() == other.getPlayerNr();
+    }
+
+    /**
+     *
+     * @return true if player is in backup position and backup direction
+     */
+    public boolean isInBackupState() {
+        return getPosition().equals(getBackupPosition()) && getDirection() == getBackupDirection();
     }
 
     public String toString() {
