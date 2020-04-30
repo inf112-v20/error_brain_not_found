@@ -81,7 +81,8 @@ public class GameServer {
     }
 
     /**
-     * When a client have connected to the server, send the map to this client.
+     * When the host calls on {@link RallyGame#setupGame(String)} (starts the game) after a client has connected,
+     * it needs to let the client know it has chosen a map.
      * @param mapPath
      */
     public void sendMapPathToNewlyConnectedClients(String mapPath) {

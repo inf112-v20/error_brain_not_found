@@ -89,7 +89,7 @@ public class RallyGame extends Game {
 
         new Thread(this::doTurn).start();
 
-        // If clients connect before you start game, give them the map
+        // If clients have connected before you started game, give them the map
         if (isServer) {
             Thread sendMap = new Thread(() -> {
                 while (!serverThread.getServer().allClientsHaveReceivedMap()) {
@@ -98,9 +98,6 @@ public class RallyGame extends Game {
             });
             sendMap.start();
         }
-
-        setInputProcessor();
-
         dealCards();
     }
 
@@ -138,58 +135,6 @@ public class RallyGame extends Game {
             System.out.println("Could not connect to " + hostIP + " on port " + portNumber + " Quit.");
             //Gdx.app.exit();
         }
-    }
-
-    public void setInputProcessor() {
-        Gdx.input.setInputProcessor(new InputAdapter() {
-            @Override
-            public boolean keyUp(int keycode) {
-                if (mainPlayer.isDead()) {
-                    return false;
-                }
-
-                removeLasers();
-
-                if (keycode == Input.Keys.RIGHT) {
-                    mainPlayer.setDirection(Direction.EAST);
-                    board.movePlayer(mainPlayer);
-                } else if (keycode == Input.Keys.LEFT) {
-                    mainPlayer.setDirection(Direction.WEST);
-                    board.movePlayer(mainPlayer);
-                } else if (keycode == Input.Keys.UP) {
-                    mainPlayer.setDirection(Direction.NORTH);
-                    board.movePlayer(mainPlayer);
-                } else if (keycode == Input.Keys.DOWN) {
-                    mainPlayer.setDirection(Direction.SOUTH);
-                    board.movePlayer(mainPlayer);
-                } else if (keycode == Input.Keys.ESCAPE) {
-                    Gdx.app.exit();
-                } else if (keycode == Input.Keys.M) {
-                    muteMusic();
-                    muteSounds();
-                }
-
-                else if (keycode == Input.Keys.D) {
-
-                    System.out.println("Pressed d");
-                        dealCards();
-
-                } else if (keycode == Input.Keys.SPACE) {
-                    cardsReady();
-                    return super.keyDown(keycode);
-                } else {
-                    return super.keyDown(keycode);
-                }
-
-                if (mainPlayer.hasAllFlags(board.getFlags().size())) {
-                    setWinScreen();
-                }
-                board.respawnPlayers();
-                fireLasers();
-                decreaseLives();
-                return super.keyDown(keycode);
-            }
-        });
     }
 
     /**
@@ -605,7 +550,7 @@ public class RallyGame extends Game {
     }
 
     /**
-     * Is used when server has sent the stack to all players.
+     * Is used when {@link GameServer} has sent the stack to all players.
      * @param stack of cards for this game.
      */
     public void setDeck (Stack <ProgramCard> stack) {
@@ -654,9 +599,6 @@ public class RallyGame extends Game {
         return client;
     }
 
-    /**
-     * Realese actor
-     */
     public void setWaitForServerToSendStartValuesToRelease() {
         StandardScreen screen = getScreen();
         if (screen instanceof MenuScreen) {
@@ -696,5 +638,12 @@ public class RallyGame extends Game {
             board.dispose();
         } catch (Exception ignored) {
         }
+    }
+
+    /**
+     * Finish the round in doTurn and then stop the thread.
+     */
+    public void quitPlaying() {
+        this.playing = false;
     }
 }

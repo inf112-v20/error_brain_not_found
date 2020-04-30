@@ -59,12 +59,12 @@ public class GameClientThread extends Thread {
 
         while (true) {
             String message = getMessage();
-            System.out.println(message);
             if (message == null) {
                 break;
             }
             if (message.equals(Messages.HOST_LEAVES.toString())) {
                 System.out.println("Host left game.");
+                game.quitPlaying();
                 close();
                 return;
             } else if (message.equals(Messages.HERE_IS_MAP.toString())){
