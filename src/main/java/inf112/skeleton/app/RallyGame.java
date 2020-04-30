@@ -99,9 +99,6 @@ public class RallyGame extends Game {
             });
             sendMap.start();
         }
-
-        setInputProcessor();
-
         dealCards();
     }
 
