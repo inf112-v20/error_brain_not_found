@@ -39,6 +39,11 @@ public class Board extends BoardLayers {
         addPlayersToStartPositions(numberOfPlayers);
     }
 
+    /**
+     * Gives the player information if there is any robots neighbouring
+     * @param player The player in question
+     * @return return null if there is no robot tiles
+     */
     private TiledMapTile getRobotTile(Player player) {
         TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("robots");
         switch (player.getDirection()) {
