@@ -33,7 +33,7 @@ public class Board extends BoardLayers {
 
         addPlayersToStartPositions(numberOfPlayers);
     }
-
+    //Test
     private TiledMapTile getRobotTile(Player player) {
         TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("robots");
         switch (player.getDirection()) {
