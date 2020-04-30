@@ -90,7 +90,7 @@ public class RallyGame extends Game {
 
         new Thread(this::doTurn).start();
 
-        // If clients connect after you start game, give them the map
+        // If clients connect before you start game, give them the map
         if (isServer) {
             Thread sendMap = new Thread(() -> {
                 while (!serverThread.getServer().allClientsHaveReceivedMap()) {

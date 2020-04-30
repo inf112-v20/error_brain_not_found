@@ -52,11 +52,8 @@ public class GameClientThread extends Thread {
      */
     @Override
     public void run() {
-        // Get playernum and numberOfPlayers from server
-        this.myPlayerNumber = Integer.parseInt(getMessage());
-        this.numberOfPlayers = Integer.parseInt(getMessage());
-        game.setPlayerNumber(myPlayerNumber);
-        game.setNumberOfPlayers(numberOfPlayers);
+
+        getStartValues();
 
         while (true) {
             String message = getMessage();
@@ -65,17 +62,11 @@ public class GameClientThread extends Thread {
                 break;
             }
             if (message.equals(Messages.HOST_LEAVES.toString())) {
-                System.out.println(message);
+                System.out.println("Host left game.");
                 close();
                 return;
             } else if (message.equals(Messages.HERE_IS_MAP.toString())){
                 receivingMap = true;
-            }
-            else if (receivingMap) {
-                game.setMapPath(message);
-                receivingMap = false;
-                game.setWaitForServerToSendMapPathToRelease();
-                System.out.println("Got map");
             }
             // If another player leaves.
             else if (message.contains(Messages.QUIT.toString())) {
@@ -89,12 +80,17 @@ public class GameClientThread extends Thread {
                 game.setDeck(stack);
                 System.out.println("Received deck.");
                 game.setWaitForServerToSendStartValuesToRelease();
-            } else if (receivingDeck) {
-                ProgramCard card = converter.convertToCard(message);
-                stack.add(card);
             } else if (message.equals(Messages.START_TURN.toString())) {
                 startDoTurn();
                 waitForTurnToFinish();
+            } else if (receivingDeck) {
+                ProgramCard card = converter.convertToCard(message);
+                stack.add(card);
+            } else if (receivingMap) {
+                game.setMapPath(message);
+                receivingMap = false;
+                game.setWaitForServerToSendMapPathToRelease();
+                System.out.println("Got map");
             } else {
                 ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                 if (myPlayerNumber != converter.getPlayerNumber()) {
@@ -103,6 +99,17 @@ public class GameClientThread extends Thread {
                 }
             }
         }
+    }
+
+    /**
+     * Wait for server to send your playernumber and how many players are in the game.
+     * Give the values to {@link com.badlogic.gdx.Game} so it can be initialized.
+     */
+    private void getStartValues() {
+        this.myPlayerNumber = Integer.parseInt(getMessage());
+        this.numberOfPlayers = Integer.parseInt(getMessage());
+        game.setPlayerNumber(myPlayerNumber);
+        game.setNumberOfPlayers(numberOfPlayers);
     }
 
     /**
