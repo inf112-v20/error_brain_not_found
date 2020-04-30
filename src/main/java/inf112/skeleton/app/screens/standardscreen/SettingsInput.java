@@ -1,7 +1,6 @@
 package inf112.skeleton.app.screens.standardscreen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Graphics;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import inf112.skeleton.app.RallyGame;
