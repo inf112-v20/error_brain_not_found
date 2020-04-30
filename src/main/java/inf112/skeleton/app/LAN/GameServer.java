@@ -1,5 +1,6 @@
 package inf112.skeleton.app.LAN;
 
+import com.badlogic.gdx.utils.ByteArray;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
@@ -24,6 +25,7 @@ public class GameServer {
     private Deck deck;
     private boolean allClientsHaveConnected;
     private HashMap<GameServerThreads, Boolean> haveSentMapPath;
+    private ArrayList<ProgramCard> lockedCards;
 
 
     public GameServer(RallyGame game) {
@@ -99,13 +101,22 @@ public class GameServer {
     }
 
     /**
-     * Create a new deck, update deck in game and send this deck to the other players.
+     * Create a new deck, but remove the locked cards.
+     * Update deck in {@link RallyGame} and send this deck to the other players.
+     *
+     * The player hosting the game sends its locked card, add them to the locked cards collected by
+     * the server from the other players before.
+     *
+     * Reset the locked cards.
      */
-    public void createAndSendDeckToAll() {
+    public void createAndSendDeckToAll(ArrayList<ProgramCard> lockedCards) {
+        this.lockedCards.addAll(lockedCards);
         this.deck = new Deck();
+        deck.removeCards(this.lockedCards);
         deck.shuffleDeck();
         game.setDeck(deck.getDeck());
         sendDeckToAll(deck);
+        this.lockedCards.clear();
     }
 
     /**
@@ -241,5 +252,13 @@ public class GameServer {
             }
         }
         return true;
+    }
+
+    /**
+     *
+     * @param lockedCards locked cards to add
+     */
+    public void addLockedCards(ArrayList<ProgramCard> lockedCards) {
+        this.lockedCards.addAll(lockedCards);
     }
 }

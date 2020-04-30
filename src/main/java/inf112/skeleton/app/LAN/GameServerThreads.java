@@ -8,6 +8,7 @@ import inf112.skeleton.app.objects.player.Player;
 
 import java.io.*;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -25,6 +26,8 @@ public class GameServerThreads extends Thread {
     private RallyGame game;
     private Converter converter;
     private Semaphore continueListening;
+    private boolean receivingLockedCards;
+    private ArrayList<ProgramCard> lockedCards;
 
     public GameServerThreads(GameServer server, RallyGame game, Socket client, int playerNumber, int numberOfPlayers) {
         this.client = client;
@@ -69,6 +72,14 @@ public class GameServerThreads extends Thread {
                     endConnectionWithPlayerAndTellOtherPlayersThatThisPlayerLeft(game.getBoard().getPlayer(playerNumber));
                     game.quitPlaying();
                     return;
+                } else if (message.equals(Messages.LOCKED_CARDS_BEGIN.toString())) {
+                    receivingLockedCards = true;
+                    this.lockedCards = new ArrayList<>();
+                } else if (receivingLockedCards) {
+                    this.lockedCards.add(converter.convertToCard(message));
+                } else if (message.equals(Messages.LOCKED_CARDS_END.toString())) {
+                    server.addLockedCards(lockedCards);
+                    this.lockedCards.clear();
                 } else {
                     ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                     Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
