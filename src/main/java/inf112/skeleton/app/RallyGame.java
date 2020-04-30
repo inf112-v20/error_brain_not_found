@@ -291,10 +291,11 @@ public class RallyGame extends Game {
             removeDeadPlayers();
 
             updateRegisters();
-            discardCards();
+            ArrayList<ProgramCard> lockedCards = discardCards();
             // Dealcards draw 9 cards, so deck needs to be larger than 9
-            if (deck.deckSize() < 9) {
+            if (deck.deckSize() < numberOfDealtCards()) {
                 if (isServer) {
+                    //serverThread.getServer().createAndSendDeckToAll(lockedCards);
                     serverThread.getServer().createAndSendDeckToAll();
                 }
             }
@@ -313,12 +314,20 @@ public class RallyGame extends Game {
     /**
      * After playing cards, let server and clients exhange more cards.
      */
-    public void letClientsAndServerContinue () {
+    public void letClientsAndServerContinue() {
         if (!isServer) {
             client.continueListening();
         } else {
             serverThread.getServer().continueAll();
         }
+    }
+
+    private int numberOfDealtCards() {
+        int cards = 0;
+        for (Player player : players) {
+            cards += player.getProgramCardsDealt();
+        }
+        return cards;
     }
 
     private void updateRegisters() {
@@ -327,7 +336,7 @@ public class RallyGame extends Game {
         }
     }
 
-    private void pickUpFlags () {
+    private void pickUpFlags() {
         board.pickUpFlags();
     }
 
@@ -339,16 +348,18 @@ public class RallyGame extends Game {
         }
     }
 
-    public void dealCards () {
+    public void dealCards() {
         for (Player player : players) {
             player.drawCards(deck);
         }
     }
 
-    public void discardCards () {
+    public ArrayList<ProgramCard> discardCards() {
+        ArrayList<ProgramCard> lockedCards = new ArrayList<>();
         for (Player player : players) {
-            player.discardCards(deck);
+            lockedCards.addAll(player.discardCards(deck));
         }
+        return lockedCards;
     }
 
     /**
