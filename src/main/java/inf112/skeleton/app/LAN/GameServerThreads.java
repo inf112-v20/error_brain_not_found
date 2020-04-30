@@ -49,7 +49,7 @@ public class GameServerThreads extends Thread {
         try {
             while (true) {
                 String message = getMessage();
-                System.out.println(message);
+                System.out.println("From client: "+message);
                 if (message == null) {
                     break;
                 }
@@ -75,7 +75,6 @@ public class GameServerThreads extends Thread {
                     ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                     Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
                     addSelectedCard(player, card);
-                    System.out.println(card);
                     if (allClientsHaveSelectedCards()) {
                         System.out.print("All clients have selected cards");
                         server.setAllClientsHaveSelectedCards(true);
@@ -119,9 +118,6 @@ public class GameServerThreads extends Thread {
     private boolean allClientsHaveSelectedCards() {
         for (Player player : game.getBoard().getPlayers()) {
             if (player.getPlayerNr() != 1) {
-                System.out.println(player.getRegisters().getCardsSelected());
-                System.out.println(player.getRegisters().getRegisters());
-                System.out.println(player.getRegisters().hasRegistersWithoutCard());
                 if (player.getRegisters().hasRegistersWithoutCard()) {
                     return false;
                 }

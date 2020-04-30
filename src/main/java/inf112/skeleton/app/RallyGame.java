@@ -353,9 +353,11 @@ public class RallyGame extends Game {
             dealCards();
 
             ((GameScreen) screen).updateCards();
+            if (isServer) {
+                serverThread.getServer().setAllClientsHaveSelectedCards(false);
+            }
+            setShouldPickCards(true);
             letClientsAndServerContinue();
-
-            //sendSelectedCards();
         }
     }
 
@@ -368,7 +370,6 @@ public class RallyGame extends Game {
         } else {
             serverThread.getServer().continueAll();
         }
-        setShouldPickCards(true);
     }
 
     private void updateRegisters() {
@@ -391,7 +392,6 @@ public class RallyGame extends Game {
 
     public void dealCards () {
         for (Player player : players) {
-            System.out.print("Player  " + player.getPlayerNr() + " draw cards");
             player.drawCards(deck);
         }
     }

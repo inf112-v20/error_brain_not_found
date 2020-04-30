@@ -80,6 +80,10 @@ public class GameServer {
         sendDeck(client, deck);
     }
 
+    /**
+     * When a client have connected to the server, send the map to this client.
+     * @param mapPath
+     */
     public void sendMapPathToNewlyConnectedClients(String mapPath) {
         for (Map.Entry<GameServerThreads, Boolean> entry : haveSentMapPath.entrySet()) {
             Boolean haveSentMap = entry.getValue();
@@ -208,11 +212,12 @@ public class GameServer {
     }
 
     /**
-     * Tell server that all clients have selected their cards
-     * @param b
+     * Tell if all clients have selected their cards or not.
+     * @param allClientsHaveSelectedCards true if all have selected cards
      */
-    public void setAllClientsHaveSelectedCards(boolean b) {
-        this.allClientsHaveSelectedCards = true;
+    public void setAllClientsHaveSelectedCards(boolean allClientsHaveSelectedCards) {
+        System.out.println("Setting all client have sel to" +allClientsHaveSelectedCards);
+        this.allClientsHaveSelectedCards = allClientsHaveSelectedCards;
     }
 
     /**
