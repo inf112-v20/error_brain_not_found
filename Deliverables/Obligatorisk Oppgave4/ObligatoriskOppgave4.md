@@ -176,8 +176,8 @@ Tasks:
 - [x] The robot should be able to win by going to the flags in a specific order.   
 - [x] The robot is stopped by walls, pushed by other players and respawned when outside board/on hole.   
 - [ ] The robot should be able to do a powerdown.  
-- [x] The laser can shoot the robots and the robots take damage.   
-- [x] The belts move so the player can be moved by belts. 
+- [x] The laser can shoot the robots, and the robots take damage.   
+- [x] The belts move, so the player can be moved by belts. 
 - [ ] Create AI/LAN so player can play with other robots 
 
 
