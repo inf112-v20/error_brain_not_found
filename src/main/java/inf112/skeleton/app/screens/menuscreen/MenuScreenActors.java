@@ -12,6 +12,8 @@ import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
 
 import java.io.File;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Objects;
 import java.util.concurrent.Semaphore;
 
@@ -42,6 +44,7 @@ public class MenuScreenActors {
     private TextField portInput;
     private TextField numOfPlayers;
     private Label waitForHost;
+    private Label IPLabel;
     public Semaphore waitForServerToSendStartValues = new Semaphore(1);
     public Semaphore waitForServerToSendMapPath = new Semaphore(1);
     public Thread waitForGameSetupThread;
@@ -254,6 +257,7 @@ public class MenuScreenActors {
         numOfPlayers.setVisible(false);
         selectMap.setVisible(true);
         startButton.setVisible(true);
+        IPLabel.setVisible(true);
     }
 
     public void toggleVisibilityJoinFirstClick() {
@@ -268,6 +272,22 @@ public class MenuScreenActors {
         portInput.setVisible(false);
         IPInput.setVisible(false);
         waitForHost.setVisible(true);
+    }
+
+    public void initializeIPLabel() {
+        String IP = "Unknown";
+        try {
+            IP = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        IPLabel = new Label("Your IP: " + IP, skin);
+        IPLabel.setPosition(CENTERED_BUTTON_X, TEXT_INPUT_Y + selectMap.getHeight());
+        IPLabel.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        IPLabel.setAlignment(Align.center);
+        IPLabel.setFontScale(2);
+        IPLabel.setVisible(false);
+        stage.addActor(IPLabel);
     }
 
     public boolean setUpClient() {

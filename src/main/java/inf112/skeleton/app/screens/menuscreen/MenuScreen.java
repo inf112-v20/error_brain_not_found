@@ -22,6 +22,7 @@ public class MenuScreen extends StandardScreen {
         actors.initializePortInput();
         actors.initializeNumOfPlayersInput();
         actors.initializeWaitForHostLabel();
+        actors.initializeIPLabel();
     }
 
     public MenuScreenActors getActors() {
