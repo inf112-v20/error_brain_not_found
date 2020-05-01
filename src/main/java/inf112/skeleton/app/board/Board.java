@@ -204,9 +204,9 @@ public class Board extends BoardLayers {
      *
      * @param player that is suppose to move
      */
-    public void movePlayer(Player player) {
+    public void movePlayer(Player player, boolean backUp) {
         Vector2 position = player.getPosition();
-        Direction direction = player.getDirection();
+        Direction direction = backUp ? player.getDirection().turnAround() : player.getDirection();
 
         if (!boardLogic.canGo(position, direction, this)) {
             wallImpact.play(RallyGame.volume);
