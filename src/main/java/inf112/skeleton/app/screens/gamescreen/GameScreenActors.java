@@ -1,17 +1,14 @@
 package inf112.skeleton.app.screens.gamescreen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
@@ -328,14 +325,14 @@ public class GameScreenActors {
     public void initializeLockedLabels() {
         for (int cardButtonIndex = 4; cardButtonIndex < 9; cardButtonIndex++) {
             ImageButton cardButton = programCardButtons.get(cardButtonIndex);
-            Label lockedLabel = new Label("LOCKED", numberSkin);
+            Label lockedLabel = new Label("LOCKED", numberSkin, "font", Color.RED);
             Container<Label> wrapper = new Container<>(lockedLabel);
             wrapper.setTransform(true);
             wrapper.setRotation(45);
             float x = cardButton.getX() + programCardWidth / 2f;
             float y = cardButton.getY() + programCardHeight / 2f;
             wrapper.setPosition(x, y);
-            lockedLabel.setFontScale(labelFontScale * 1.2f);
+            lockedLabel.setFontScale(labelFontScale * 1.15f);
             lockedLabel.setVisible(false);
             stage.addActor(wrapper);
             lockedLabels.add(lockedLabel);
