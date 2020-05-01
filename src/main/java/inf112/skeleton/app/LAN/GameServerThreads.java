@@ -72,14 +72,6 @@ public class GameServerThreads extends Thread {
                     endConnectionWithPlayerAndTellOtherPlayersThatThisPlayerLeft(game.getBoard().getPlayer(playerNumber));
                     game.quitPlaying();
                     return;
-                } else if (message.equals(Messages.LOCKED_CARDS_BEGIN.toString())) {
-                    receivingLockedCards = true;
-                    this.lockedCards = new ArrayList<>();
-                } else if (receivingLockedCards) {
-                    this.lockedCards.add(converter.convertToCard(message));
-                } else if (message.equals(Messages.LOCKED_CARDS_END.toString())) {
-                    server.addLockedCards(lockedCards);
-                    this.lockedCards.clear();
                 } else {
                     ProgramCard card = converter.convertToCardAndExtractPlayer(message);
                     Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
