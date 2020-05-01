@@ -295,11 +295,15 @@ public class RallyGame extends Game {
                 player.setDirection(player.getDirection().turnAround());
                 break;
             case NONE:
-                for (int i = 0; i < card.getDistance(); i++) {
-                    board.movePlayer(player);
-                    // Wait 300 ms for each move except last one
-                    if (i < card.getDistance() - 1) {
-                        sleep(300);
+                if (card.getDistance() == -1) {
+                    board.movePlayer(player, true);
+                } else {
+                    for (int distance = 0; distance < card.getDistance(); distance++) {
+                        board.movePlayer(player, false);
+                        // Wait 250 ms for each move except last one
+                        if (distance < card.getDistance() - 1) {
+                            sleep(250);
+                        }
                     }
                 }
                 break;

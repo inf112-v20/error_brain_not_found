@@ -330,7 +330,7 @@ public class WallTests {
         player.setPosition(allNorthWalls.get(0));
         player.setDirection(Direction.NORTH);
         Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
-        board.movePlayer(player);
+        board.movePlayer(player, false);
         assertEquals(posBefore, player.getPosition());
     }
 
@@ -339,7 +339,7 @@ public class WallTests {
         player.setPosition(allSouthWalls.get(0));
         player.setDirection(Direction.SOUTH);
         Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
-        board.movePlayer(player);
+        board.movePlayer(player, false);
         assertEquals(posBefore, player.getPosition());
     }
 
@@ -348,7 +348,7 @@ public class WallTests {
         player.setPosition(allEastWalls.get(0));
         player.setDirection(Direction.EAST);
         Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
-        board.movePlayer(player);
+        board.movePlayer(player, false);
         assertEquals(posBefore, player.getPosition());
     }
 
@@ -357,7 +357,7 @@ public class WallTests {
         player.setPosition(allWestWalls.get(0));
         player.setDirection(Direction.WEST);
         Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
-        board.movePlayer(player);
+        board.movePlayer(player, false);
         assertEquals(posBefore, player.getPosition());
     }
 
@@ -366,7 +366,7 @@ public class WallTests {
         player.setPosition(getOnlyNorthWalls(allNorthWalls).get(0));
         player.setDirection(Direction.WEST);
         Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
-        board.movePlayer(player);
+        board.movePlayer(player, false);
         assertNotEquals(posBefore, player.getPosition());
     }
 
@@ -375,7 +375,7 @@ public class WallTests {
         player.setPosition(getOnlyWestWalls(allWestWalls).get(0));
         player.setDirection(Direction.EAST);
         Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
-        board.movePlayer(player);
+        board.movePlayer(player, false);
         assertNotEquals(posBefore, player.getPosition());
     }
 
@@ -384,7 +384,7 @@ public class WallTests {
         player.setPosition(getOnlyEastWalls(allEastWalls).get(0));
         player.setDirection(Direction.SOUTH);
         Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
-        board.movePlayer(player);
+        board.movePlayer(player, false);
         assertNotEquals(posBefore, player.getPosition());
     }
 
@@ -393,7 +393,7 @@ public class WallTests {
             player.setPosition(getOnlySouthWalls(allSouthWalls).get(0));
             player.setDirection(Direction.NORTH);
             Vector2 posBefore = new Vector2((int) player.getPosition().x, (int) player.getPosition().y);
-            board.movePlayer(player);
+            board.movePlayer(player, false);
             assertNotEquals(posBefore, player.getPosition());
     }
 
@@ -414,7 +414,7 @@ public class WallTests {
             Vector2 playerPosition = new Vector2(neighbourX + 1, neighbourY);
             player.setPosition(playerPosition);
             player.setDirection(Direction.WEST);
-            board.movePlayer(player);
+            board.movePlayer(player, false);
             assertEquals(playerPosition, player.getPosition());
         }
     }
@@ -430,7 +430,7 @@ public class WallTests {
         Vector2 playerPosition = new Vector2(neighbourX - 1, neighbourY);
         player.setPosition(playerPosition);
         player.setDirection(Direction.EAST);
-        board.movePlayer(player);
+        board.movePlayer(player, false);
         assertEquals(playerPosition, player.getPosition());
     }
 
@@ -445,7 +445,7 @@ public class WallTests {
         Vector2 playerPosition = new Vector2(neighbourX, neighbourY+1);
         player.setPosition(playerPosition);
         player.setDirection(Direction.SOUTH);
-        board.movePlayer(player);
+        board.movePlayer(player, false);
         assertEquals(playerPosition, player.getPosition());
     }
 
@@ -460,7 +460,7 @@ public class WallTests {
         Vector2 playerPosition = new Vector2(neighbourX, neighbourY-1);
         player.setPosition(playerPosition);
         player.setDirection(Direction.NORTH);
-        board.movePlayer(player);
+        board.movePlayer(player, false);
         assertEquals(playerPosition, player.getPosition());
     }
 }
