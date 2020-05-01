@@ -13,9 +13,11 @@ import org.junit.Test;
 
 
 import java.util.ArrayList;
-import java.util.Vector;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+
 import static org.mockito.Mockito.mock;
 
 public class GameTest {
@@ -23,7 +25,6 @@ public class GameTest {
     private RallyGame game;
     private Player player;
     private ArrayList<Belt> belts;
-    private ArrayList<Belt> expressbelts;
 
     @Before
     public void setUp() {
@@ -36,7 +37,6 @@ public class GameTest {
         player = new Player(new Vector2(0, 0), 5);
         board.addPlayer(player);
         this.belts = board.getBelts();
-        this.expressbelts = board.getExpressBelts();
     }
 
     /**
