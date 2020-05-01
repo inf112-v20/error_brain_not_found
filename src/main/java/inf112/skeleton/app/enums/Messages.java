@@ -11,7 +11,5 @@ public enum Messages {
     CLOSED,
     START_TURN,
     ASKING_FOR_MAP,
-    HERE_IS_MAP,
-    LOCKED_CARDS_BEGIN,
-    LOCKED_CARDS_END;
+    HERE_IS_MAP;
 }
