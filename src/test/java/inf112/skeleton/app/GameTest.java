@@ -60,7 +60,7 @@ public class GameTest {
     @Test
     public void respawnIfTenCollectedDamageTokensTest() {
         // Move player out of backupposition
-        game.getBoard().movePlayer(player);
+        game.getBoard().movePlayer(player, false);
         fillUpDamageTokens(player);
         game.decreaseLives();
         game.respawnPlayers();
