@@ -232,12 +232,12 @@ public class GameScreenActors {
         for (ImageButton button : programCardButtons) {
             Label cardPriority = new Label("", numberSkin, "lcd", Color.WHITE);
             float height = programCardHeight * .18f;
-            float x = button.getX();
+            float x = button.getX() + programCardWidth * 0.1f;
             float y = button.getY() + programCardHeight + height * 0.5f;
-            cardPriority.setWidth(programCardWidth);
+            cardPriority.setWidth(programCardWidth * 0.8f);
             cardPriority.setPosition(x, y);
             cardPriority.setFontScale(labelFontScale * 0.4f);
-            cardPriority.setAlignment(Align.center);
+            cardPriority.setAlignment(Align.right);
             stage.addActor(cardPriority);
             cardPriorityLabels.add(cardPriority);
         }
@@ -276,11 +276,10 @@ public class GameScreenActors {
         for (ImageButton button : programCardButtons) {
             Label numberLabel = new Label("", numberSkin, "button", Color.RED);
             float height = programCardHeight * .18f;
-            float x = button.getX() + programCardWidth * 0.05f;
-            float y = button.getY() + programCardHeight + height / 1.85f;
+            float x = button.getX() + programCardWidth * 0.1f;
+            float y = button.getY() + programCardHeight + height / 1.65f;
             numberLabel.setPosition(x, y);
             numberLabel.setFontScale(labelFontScale * 0.6f);
-            numberLabel.setAlignment(Align.left);
             numberLabel.setVisible(false);
             stage.addActor(numberLabel);
             registerNumberLabels.add(numberLabel);
