@@ -32,6 +32,7 @@ public class RallyGame extends Game {
     public ArrayList<Player> respawnPlayers;
     public Semaphore waitForCards;
     public boolean playing;
+    public boolean shouldPickCards;
     public Sound laserSound;
     public Music gameMusic;
     public Player mainPlayer;
@@ -56,6 +57,7 @@ public class RallyGame extends Game {
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
         this.playing = true;
+        this.shouldPickCards = true;
 
         this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
 
@@ -64,8 +66,24 @@ public class RallyGame extends Game {
         dealCards();
     }
 
+    public void fullscreen() {
+        if (Gdx.graphics.isFullscreen()) {
+            Gdx.graphics.setWindowedMode(1280, 720);
+        } else {
+            Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+        }
+    }
+
+    public void setShouldPickCards(boolean shouldPickCards) {
+        this.shouldPickCards = shouldPickCards;
+    }
+
+    public boolean shouldPickCards() {
+        return shouldPickCards;
+    }
+
     public void confirmCards() {
-        if (mainPlayer.getSelectedCards().size() == 5) {
+        if (!mainPlayer.getRegisters().hasRegistersWithoutCard()) {
             cardsReady();
         }
     }
@@ -139,7 +157,7 @@ public class RallyGame extends Game {
                 System.out.println("Runde " + (i + 1));
 
                 // All players play one card in the correct order
-                allPlayersPlayCard();
+                allPlayersPlayCard(i);
                 sleep(250);
 
                 // Express belts move 1
@@ -174,14 +192,25 @@ public class RallyGame extends Game {
                     decreaseLives();
                 }
 
+                activateRepairTiles();
+                sleep(250);
+
                 pickUpFlags();
                 sleep(500);
 
                 sleep(1000);
             }
             respawnPlayers();
+            updateRegisters();
             discardCards();
             dealCards();
+            setShouldPickCards(true);
+        }
+    }
+
+    private void updateRegisters() {
+        for (Player player : players) {
+            player.updateRegisters();
         }
     }
 
@@ -205,7 +234,7 @@ public class RallyGame extends Game {
 
     public void discardCards() {
         for (Player player : players) {
-            player.discardAllCards(deck);
+            player.discardCards(deck);
         }
     }
 
@@ -216,10 +245,9 @@ public class RallyGame extends Game {
     public void decreaseLives() {
         ArrayList<Player> removedPlayers = new ArrayList<>();
         for (Player player : players) {
-            if (player.getDamageTokens() >= 10 || board.outsideBoard(player)) {
+            if (player.getDamageTokens() >= 10 || board.getBoardLogic().outsideBoard(player, board)) {
                 player.decrementLifeTokens();
                 player.resetDamageTokens();
-                player.discardAllCards(deck);
                 board.removePlayerFromBoard(player);
                 removedPlayers.add(player);
             }
@@ -238,13 +266,13 @@ public class RallyGame extends Game {
         respawnPlayers.clear();
     }
 
-    public void allPlayersPlayCard() {
+    public void allPlayersPlayCard(int cardNumber) {
         ArrayList<Player> playerOrder = new ArrayList<>(players);
         // Add all players to order list, and remove players with no cards left
-        playerOrder.removeIf(p -> p.getSelectedCards().isEmpty());
+        // playerOrder.removeIf(p -> p.getSelectedCards().isEmpty());
         playerOrder.sort(new PlayerSorter());
         for (Player player : playerOrder) {
-            playCard(player);
+            playCard(player, cardNumber);
             // Wait 1 second for each player
             sleep(500);
             decreaseLives();
@@ -252,8 +280,9 @@ public class RallyGame extends Game {
         }
     }
 
-    public void playCard(Player player) {
-        ProgramCard card = player.getSelectedCards().remove(0);
+    public void playCard(Player player, int cardNumber) {
+        player.setBeltPushDir(null);
+        ProgramCard card = player.getRegisters().getCard(cardNumber);
         System.out.println(player.toString() + " played " + card.toString());
         switch (card.getRotate()) {
             case RIGHT:
@@ -328,8 +357,9 @@ public class RallyGame extends Game {
 
     /**
      * <p>
-     *     Activate the belts on the map, so they pushes the player in the direction of the belt.
+     * Activate the belts on the map, so they pushes the player in the direction of the belt.
      * </p>
+     *
      * @param onlyExpress if true then the pool of belts should be set to expressBelts
      */
     public void activateBelts(boolean onlyExpress) {
@@ -354,11 +384,9 @@ public class RallyGame extends Game {
     public void validateBeltPushPos() {
         for (Player player : players) {
             for (Player otherPlayer : players) {
-                if (!(player.getBeltPushPos() == null) && !(otherPlayer.getBeltPushPos() == null)) {
-                    if (!player.equals(otherPlayer) && player.getBeltPushPos().equals(otherPlayer.getBeltPushPos())) {
-                        player.setBeltPushPos(null);
-                        otherPlayer.setBeltPushPos(null);
-                    }
+                if (player.getBeltPushPos() != null && !player.equals(otherPlayer) && player.getBeltPushPos().equals(otherPlayer.getBeltPushPos())) {
+                    player.setBeltPushPos(null);
+                    otherPlayer.setBeltPushPos(null);
                 }
             }
         }
@@ -403,6 +431,16 @@ public class RallyGame extends Game {
             player.setDirection(player.getDirection().turnRight());
         } else if (beltDirection.equals(leftTurn)) {
             player.setDirection(player.getDirection().turnLeft());
+        }
+    }
+
+    public void activateRepairTiles() {
+        for (Player player : players){
+            for (Vector2 repairTilePos : board.getRepairTiles()){
+                if (player.getPosition().equals(repairTilePos)){
+                    player.resetDamageTokens();
+                }
+            }
         }
     }
 
