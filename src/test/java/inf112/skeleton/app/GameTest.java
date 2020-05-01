@@ -5,20 +5,26 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.board.Board;
+import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.objects.Belt;
 import inf112.skeleton.app.objects.player.Player;
 import org.junit.Before;
 import org.junit.Test;
 
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.mock;
 
 public class GameTest {
 
     private RallyGame game;
     private Player player;
+    private ArrayList<Belt> belts;
 
     @Before
     public void setUp() {
@@ -28,11 +34,9 @@ public class GameTest {
         this.game = new RallyGame();
         this.game.setupGame("assets/maps/Risky Exchange.tmx");
         Board board = game.getBoard();
-
-        // Already 4 players on board.
-        //TODO: Let setupGame take in playerNumber as arg
         player = new Player(new Vector2(0, 0), 5);
         board.addPlayer(player);
+        this.belts = board.getBelts();
     }
 
     /**
@@ -74,4 +78,84 @@ public class GameTest {
         game.respawnPlayers();
         assertFalse(game.players.contains(player));
     }
+
+    @Test
+    public void playerMovesOnBeltTest() {
+        Belt belt = belts.get(0);
+        Vector2 beltPosition = belt.getPosition();
+        player.setPosition(beltPosition);
+        game.activateBelts(false);
+        assertNotEquals(beltPosition, player.getPosition());
+    }
+
+    @Test
+    public void playerMovesInSameDirectionAsBeltTest() {
+        Belt belt = belts.get(0);
+        Vector2 beltPosition = belt.getPosition();
+        Direction beltDirection = belt.getDirection();
+        Vector2 newPosition = game.getBoard().getNeighbourPosition(beltPosition, beltDirection);
+        player.setPosition(beltPosition);
+        game.activateBelts(false);
+        assertEquals(newPosition, player.getPosition());
+    }
+
+    /**
+     * Place player at belt below the corner belt, move belts so player is at the corner belt.
+     * The corner belt should rotate player from NORTH to WEST.
+     */
+    @Test
+    public void playerChangesDirectionWhenInACornerOfTheBeltTest() {
+        // Found postition in Risky Exhange
+        Vector2 fromSouthToNorthBeltPosition = new Vector2(1, 1);
+        player.setPosition(fromSouthToNorthBeltPosition);
+        player.setDirection(Direction.NORTH);
+        // Move player onto corner belt
+        game.activateBelts(false);
+        // Turn player with corner belt
+        game.activateBelts(false);
+        assertEquals(Direction.WEST, player.getDirection());
+    }
+
+    @Test
+    public void moveOneStepWhenOnBeltTest() {
+        // Found postition in Risky Exhange. Belt goes east.
+        Vector2 startBeltPosition = new Vector2(5, 5);
+        player.setPosition(startBeltPosition);
+        game.activateBelts(false);
+        game.activateBelts(true);
+        Vector2 beltMovedToPosition = new Vector2(6, 5);
+        assertEquals(beltMovedToPosition, player.getPosition());
+    }
+
+    @Test
+    public void moveTwoStepOnExpressBeltTest() {
+        // Found position in Risky Exhange. Belt goes west
+        Vector2 startBeltPosition = new Vector2(8, 6);
+        player.setPosition(startBeltPosition);
+        game.activateBelts(false);
+        game.activateBelts(true);
+        Vector2 beltMovedToPosition = new Vector2(6, 6);
+        assertEquals(beltMovedToPosition, player.getPosition());
+    }
+
+    @Test
+    public void repairTileResetsDamageTokensToZeroWhenOneDamageToken() {
+        Vector2 repairTilePosition = game.getBoard().getRepairTiles().get(0);
+        player.handleDamage();
+        player.setPosition(repairTilePosition);
+        game.activateRepairTiles();
+        assertEquals(0, player.getDamageTokens());
+    }
+
+    @Test
+    public void repairTileResetsDamageTokenToZeroWhenTenDamageTokens() {
+        Vector2 repairTilePosition = game.getBoard().getRepairTiles().get(0);
+        for (int i = 0; i < 10; i++) {
+            player.handleDamage();
+        }
+        player.setPosition(repairTilePosition);
+        game.activateRepairTiles();
+        assertEquals(0, player.getDamageTokens());
+    }
+
 }
