@@ -71,7 +71,7 @@ public class GameTest {
             player.decrementLifeTokens();
             game.decreaseLives();
         }
-        game.respawnPlayers();
+        game.removeDeadPlayers();
         assertFalse(game.players.contains(player));
     }
 }

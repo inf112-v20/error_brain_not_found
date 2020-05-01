@@ -123,7 +123,7 @@ public class ProgramCardTest {
         player2.setSelectedCards(highPrioCard);
         players.add(player);
         players.add(player2);
-        players.sort(new PlayerSorter());
+        players.sort(new PlayerSorter(0));
         assertEquals(player2, players.get(0));
     }
 
