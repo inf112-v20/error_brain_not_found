@@ -76,6 +76,7 @@ public class RallyGame extends Game {
 
     public void confirmCards() {
         if (!mainPlayer.getRegisters().hasRegistersWithoutCard()) {
+            setShouldPickCards(false);
             cardsReady();
         }
     }

@@ -164,7 +164,6 @@ public class GameScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (game.shouldPickCards()) {
-                    game.setShouldPickCards(false);
                     game.confirmCards();
                 }
             }
@@ -276,10 +275,10 @@ public class GameScreenActors {
     public void initializeNumberLabels() {
         for (ImageButton button : programCardButtons) {
             Label numberLabel = new Label("", numberSkin, "button", Color.RED);
-            float x = button.getX() + programCardWidth * 0.6f;
-            float y = button.getY() + programCardHeight * 0.25f;
+            float x = button.getX() + programCardWidth * 0.65f;
+            float y = button.getY() + programCardHeight * 0.22f;
             numberLabel.setPosition(x, y);
-            numberLabel.setFontScale(labelFontScale * 1f);
+            numberLabel.setFontScale(labelFontScale * 0.8f);
             numberLabel.setVisible(false);
             stage.addActor(numberLabel);
             registerNumberLabels.add(numberLabel);
