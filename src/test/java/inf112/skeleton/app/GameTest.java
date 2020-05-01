@@ -139,13 +139,23 @@ public class GameTest {
     }
 
     @Test
-    public void repairTileResetsDamageTokens() {
+    public void repairTileResetsDamageTokensToZeroWhenOneDamageToken() {
         Vector2 repairTilePosition = game.getBoard().getRepairTiles().get(0);
         player.handleDamage();
-        int numberOfPlayerTokensBefore = player.getDamageTokens();
         player.setPosition(repairTilePosition);
         game.activateRepairTiles();
-        assertEquals(numberOfPlayerTokensBefore +1, player.getDamageTokens());
+        assertEquals(0, player.getDamageTokens());
+    }
+
+    @Test
+    public void repairTileResetsDamageTokenToZeroWhenTenDamageTokens() {
+        Vector2 repairTilePosition = game.getBoard().getRepairTiles().get(0);
+        for (int i = 0; i < 10; i++) {
+            player.handleDamage();
+        }
+        player.setPosition(repairTilePosition);
+        game.activateRepairTiles();
+        assertEquals(0, player.getDamageTokens());
     }
 
 }
