@@ -278,6 +278,10 @@ public class GameScreenActors {
             float height = programCardHeight * .18f;
             float x = button.getX() + programCardWidth * 0.1f;
             float y = button.getY() + programCardHeight + height / 1.65f;
+            /*
+            float x = button.getX() + programCardWidth * 0.7f;
+            float y = button.getY() + programCardHeight*0.2f;
+            */
             numberLabel.setPosition(x, y);
             numberLabel.setFontScale(labelFontScale * 0.6f);
             numberLabel.setVisible(false);
