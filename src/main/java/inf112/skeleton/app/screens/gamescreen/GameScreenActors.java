@@ -63,7 +63,7 @@ public class GameScreenActors {
 
         programCardWidth = (screenWidth - mapRightPx) / 3f;
         programCardHeight = programCardWidth / programCardRatio;
-        lifeTokenSize = (screenHeight - 3 * programCardHeight * 1.18f) / 2f;
+        lifeTokenSize = (screenHeight - 3 * programCardHeight * 1.18f) * 0.5f;
         confirmButtonSize = lifeTokenSize;
         damageTokenSize = lifeTokenSize;
 
@@ -233,7 +233,7 @@ public class GameScreenActors {
             Label cardPriority = new Label("", numberSkin, "lcd", Color.WHITE);
             float height = programCardHeight * .18f;
             float x = button.getX();
-            float y = button.getY() + programCardHeight + height / 2;
+            float y = button.getY() + programCardHeight + height * 0.5f;
             cardPriority.setWidth(programCardWidth);
             cardPriority.setPosition(x, y);
             cardPriority.setFontScale(labelFontScale * 0.4f);
@@ -275,10 +275,12 @@ public class GameScreenActors {
     public void initializeNumberLabels() {
         for (ImageButton button : programCardButtons) {
             Label numberLabel = new Label("", numberSkin, "button", Color.RED);
-            float x = button.getX() + programCardWidth * 0.65f;
-            float y = button.getY() + programCardHeight * 0.22f;
+            float height = programCardHeight * .18f;
+            float x = button.getX() + programCardWidth * 0.05f;
+            float y = button.getY() + programCardHeight + height / 1.85f;
             numberLabel.setPosition(x, y);
-            numberLabel.setFontScale(labelFontScale * 0.8f);
+            numberLabel.setFontScale(labelFontScale * 0.6f);
+            numberLabel.setAlignment(Align.left);
             numberLabel.setVisible(false);
             stage.addActor(numberLabel);
             registerNumberLabels.add(numberLabel);
@@ -328,8 +330,8 @@ public class GameScreenActors {
             Container<Label> wrapper = new Container<>(lockedLabel);
             wrapper.setTransform(true);
             wrapper.setRotation(45);
-            float x = cardButton.getX() + programCardWidth / 2f;
-            float y = cardButton.getY() + programCardHeight / 2f;
+            float x = cardButton.getX() + programCardWidth * 0.5f;
+            float y = cardButton.getY() + programCardHeight * 0.5f;
             wrapper.setPosition(x, y);
             lockedLabel.setFontScale(labelFontScale * 0.8f);
             lockedLabel.setVisible(false);
