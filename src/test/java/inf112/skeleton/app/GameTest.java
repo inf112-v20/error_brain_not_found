@@ -138,4 +138,14 @@ public class GameTest {
         assertEquals(beltMovedToPosition, player.getPosition());
     }
 
+    @Test
+    public void repairTileResetsDamageTokens() {
+        Vector2 repairTilePosition = game.getBoard().getRepairTiles().get(0);
+        player.handleDamage();
+        int numberOfPlayerTokensBefore = player.getDamageTokens();
+        player.setPosition(repairTilePosition);
+        game.activateRepairTiles();
+        assertEquals(numberOfPlayerTokensBefore +1, player.getDamageTokens());
+    }
+
 }
