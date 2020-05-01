@@ -381,6 +381,7 @@ public class RallyGame extends Game {
         for (Player player : players) {
             if (player.isDead()) {
                 board.removePlayerFromBoard(player);
+                players.remove(player);
                 // Fjern spillere fra spillet
             }
         }
