@@ -284,8 +284,7 @@ public class MenuScreenActors {
         IPLabel = new Label("Your IP: " + IP, skin);
         IPLabel.setPosition(CENTERED_BUTTON_X, TEXT_INPUT_Y + selectMap.getHeight());
         IPLabel.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-        IPLabel.setAlignment(Align.center);
-        IPLabel.setFontScale(2);
+        IPLabel.setFontScale(1.5f);
         IPLabel.setVisible(false);
         stage.addActor(IPLabel);
     }
