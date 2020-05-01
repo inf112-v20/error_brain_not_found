@@ -440,6 +440,7 @@ public class RallyGame extends Game {
             for (Vector2 repairTilePos : board.getRepairTiles()){
                 if (player.getPosition().equals(repairTilePos)){
                     player.resetDamageTokens();
+                    player.setBackup(repairTilePos, player.getDirection());
                 }
             }
         }
