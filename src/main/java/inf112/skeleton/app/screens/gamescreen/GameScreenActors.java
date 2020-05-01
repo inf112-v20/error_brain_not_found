@@ -231,13 +231,13 @@ public class GameScreenActors {
 
     public void initializePriorityLabels() {
         for (ImageButton button : programCardButtons) {
-            Label cardPriority = new Label("", numberSkin);
+            Label cardPriority = new Label("", numberSkin, "lcd", Color.WHITE);
             float height = programCardHeight * .18f;
             float x = button.getX();
             float y = button.getY() + programCardHeight + height / 2;
             cardPriority.setWidth(programCardWidth);
             cardPriority.setPosition(x, y);
-            cardPriority.setFontScale(labelFontScale);
+            cardPriority.setFontScale(labelFontScale * 0.4f);
             cardPriority.setAlignment(Align.center);
             stage.addActor(cardPriority);
             cardPriorityLabels.add(cardPriority);
@@ -275,11 +275,11 @@ public class GameScreenActors {
 
     public void initializeNumberLabels() {
         for (ImageButton button : programCardButtons) {
-            Label numberLabel = new Label("", numberSkin);
-            float x = button.getX() + programCardWidth * .1f;
-            float y = button.getY() + programCardHeight * .2f;
+            Label numberLabel = new Label("", numberSkin, "button", Color.RED);
+            float x = button.getX() + programCardWidth * 0.6f;
+            float y = button.getY() + programCardHeight * 0.25f;
             numberLabel.setPosition(x, y);
-            numberLabel.setFontScale(labelFontScale * 1.8f);
+            numberLabel.setFontScale(labelFontScale * 1f);
             numberLabel.setVisible(false);
             stage.addActor(numberLabel);
             registerNumberLabels.add(numberLabel);
@@ -325,14 +325,14 @@ public class GameScreenActors {
     public void initializeLockedLabels() {
         for (int cardButtonIndex = 4; cardButtonIndex < 9; cardButtonIndex++) {
             ImageButton cardButton = programCardButtons.get(cardButtonIndex);
-            Label lockedLabel = new Label("LOCKED", numberSkin, "font", Color.RED);
+            Label lockedLabel = new Label("LOCKED", numberSkin, "title", Color.RED);
             Container<Label> wrapper = new Container<>(lockedLabel);
             wrapper.setTransform(true);
             wrapper.setRotation(45);
             float x = cardButton.getX() + programCardWidth / 2f;
             float y = cardButton.getY() + programCardHeight / 2f;
             wrapper.setPosition(x, y);
-            lockedLabel.setFontScale(labelFontScale * 1.15f);
+            lockedLabel.setFontScale(labelFontScale * 0.8f);
             lockedLabel.setVisible(false);
             stage.addActor(wrapper);
             lockedLabels.add(lockedLabel);
