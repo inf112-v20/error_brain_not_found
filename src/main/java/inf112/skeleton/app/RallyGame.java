@@ -66,6 +66,14 @@ public class RallyGame extends Game {
         dealCards();
     }
 
+    public void fullscreen() {
+        if (Gdx.graphics.isFullscreen()) {
+            Gdx.graphics.setWindowedMode(1280, 720);
+        } else {
+            Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+        }
+    }
+
     public void setShouldPickCards(boolean shouldPickCards) {
         this.shouldPickCards = shouldPickCards;
     }
