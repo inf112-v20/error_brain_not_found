@@ -26,12 +26,37 @@ check boxes so that we can see progress in the issue. Also an own issue for test
 it should be testing, with acceptance criteria as tests to be made. This gives us a great overview of who is doing what, 
 and a great workflow because we can always see what to do next.
 
-### Retrospective from the project
+### Retrospective from the project  
+Project methods:  
+We initially started with a mix of Kanban, Scrum and Extreme Programming. We have been using a Kanban board, and most of 
+the time limited the issues in the In Progress block: In the meetings we have discussed what needs to be done until next 
+time and tried to share tasks among teammembers evenly so the progress board is limited. The visualization of tasks using 
+Kanban has been very valuable to us because we can see progress. Also it made it easier for the team to collaborate, 
+because every one knows what other team members do.   
+We have been using Scrum by defining clear roles and areas of responsibility in the team. Also we have worked with sprints 
+every one week (every meeting), and focused on the backlog of the project, not so much about what is in progress. We have not
+been using Daily Scrum, but have had generally good communitation between meetings. Initially we wanted to use XP to ensure 
+testing before every commit. We have been testing new code regularly and often, but maybe not before each and every commit. 
+However we have been using other elements from XP like pair-programming, Continous integration (using Travis CI) and 
+weekly iterations (or sprints in Scrum).    
+
+We have been working mainly with defined areas of responsibility, but we have also been helping each other across the 
+roles that we have. This have been beneficitial to us because we can easilier adopt our code to match the other ones needs,
+and often think about other members should use your code.   
 
 ### Project board
 ![Project board form github]()
 
-### Group dynamic and communication
+### Group dynamic and communication   
+We communicate much better then in the beginning of the semester, even though it is only over internet because of corona. 
+We discuss more freely about how to solve problems that arise when working on a task, and teammembers do not hesitate to 
+ask for help from the others. The dynamic is better; every one in the team is contributing to their field, and when a member is
+ assigned to a task it is trusted that he/she does it properly, or ask for help if she/he gets stuck. After corona, we 
+ have moved all communications to Slack, and this has worked very well. We have been discussing code and specific tasks 
+ through chat and helped each other. All in all we have learned a lot about how important it is to communicate and get others 
+ oppinions or solutions when you are working on a project, and not struggle with it yourself. Also we have learned a lot about 
+ the importancy of writing clear code with good names and proper documentation, so other members can easily understand what 
+ you have done.  
 
 ## Task 2 - Requirements
 ### User-stories 
@@ -93,6 +118,44 @@ Tasks:
 *   Make loop for the game. 
 *   Test that events happen in right order
 *   Manual tests  
+
+#### GUI for LAN   
+User-story:  
+As a user I want to be able to write in port-number and numbers of players in a game, so that I can host a game on my computer. 
+
+Acceptance-criteria:  
+When port-number and number of players is given, a server will start waiting for given players to connect. 
+
+Tasks:  
+*   Create input fields  
+*   Connect input to back-end  
+*   Manual tests   
+
+#### Repair  
+User-story:  
+As a player I want to stand on a repair-tile, so that I can get rid of my damage tokens.  
+
+Acceptance-criteria:  
+When the round is finished, if I stand in a repair-tile, my damage tokens are removed.  
+
+Tasks:  
+*   Create a function to find repair tiles on board  
+*   Create class for repair  
+*   Create method for removing damage tokens  
+*   Create method for knowing when a robot is on repair
+
+
+User-story:  
+As a user I want to be able to write in IP-number and portnuber in a game, so that I can join a game hosted by another computer. 
+
+Acceptance-criteria:  
+When IPnumber and portnumber is given, a connection will be made if the given IPnumber is accepting connection on the portnumber given. 
+
+Tasks:  
+*   Create input fields  
+*   Connect input to back-end  
+*   Manual tests   
+
 
 #### Mute button
 User-story:
@@ -210,4 +273,16 @@ start the turn.
 *   When you see your nine cards, click on the cards you want to select. Your program is in the order you click the cards. When you have made a program (5 cards), the checkbutton will turn green.
 
 #### Mute-button
-* Press the "m" button. The sound should be muted. 
+*   Press the "m" button. The sound should be muted. 
+
+#### LAN  
+*   Allow parallell processes to run in "Run/Debug Configurations". Start a new game, press Create. Then give the portnumber
+to establish the connection on, and how many players that will play the game. Open a new game-process. Press Join, and input the 
+same portnumber as before and "localhost" (because host is running on your computer). Press Join again. The screen should freeze until 
+the host has started the game. Press Start in the game thats hosting the game. Both windows should now show two players on the map.  
+If a turn is played, the players should move at the same time.  
+
+#### Choosing screen  
+*   The server chooses the screen. Start a new host and choose a map. Start a new client and join the game. The two screens 
+should bw identical.   
+*   Start a new host and choose one screen. Than exit the program and choose another screen. The screens should be different. 
