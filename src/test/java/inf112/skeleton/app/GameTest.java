@@ -23,6 +23,7 @@ public class GameTest {
     private RallyGame game;
     private Player player;
     private ArrayList<Belt> belts;
+    private ArrayList<Belt> expressbelts;
 
     @Before
     public void setUp() {
@@ -32,12 +33,10 @@ public class GameTest {
         this.game = new RallyGame();
         this.game.setupGame("assets/maps/Risky Exchange.tmx");
         Board board = game.getBoard();
-
-        // Already 4 players on board.
-        //TODO: Let setupGame take in playerNumber as arg
         player = new Player(new Vector2(0, 0), 5);
         board.addPlayer(player);
         this.belts = board.getBelts();
+        this.expressbelts = board.getExpressBelts();
     }
 
     /**
@@ -99,4 +98,44 @@ public class GameTest {
         game.activateBelts(false);
         assertEquals(newPosition, player.getPosition());
     }
+
+    /**
+     * Place player at belt below the corner belt, move belts so player is at the corner belt.
+     * The corner belt should rotate player from NORTH to WEST.
+     */
+    @Test
+    public void playerChangesDirectionWhenInACornerOfTheBeltTest() {
+        // Found postition in Risky Exhange
+        Vector2 fromSouthToNorthBeltPosition = new Vector2(1, 1);
+        player.setPosition(fromSouthToNorthBeltPosition);
+        player.setDirection(Direction.NORTH);
+        // Move player onto corner belt
+        game.activateBelts(false);
+        // Turn player with corner belt
+        game.activateBelts(false);
+        assertEquals(Direction.WEST, player.getDirection());
+    }
+
+    @Test
+    public void moveOneStepWhenOnBeltTest() {
+        // Found postition in Risky Exhange. Belt goes east.
+        Vector2 startBeltPosition = new Vector2(5, 5);
+        player.setPosition(startBeltPosition);
+        game.activateBelts(false);
+        game.activateBelts(true);
+        Vector2 beltMovedToPosition = new Vector2(6, 5);
+        assertEquals(beltMovedToPosition, player.getPosition());
+    }
+
+    @Test
+    public void moveTwoStepOnExpressBeltTest() {
+        // Found position in Risky Exhange. Belt goes west
+        Vector2 startBeltPosition = new Vector2(8, 6);
+        player.setPosition(startBeltPosition);
+        game.activateBelts(false);
+        game.activateBelts(true);
+        Vector2 beltMovedToPosition = new Vector2(6, 6);
+        assertEquals(beltMovedToPosition, player.getPosition());
+    }
+
 }
