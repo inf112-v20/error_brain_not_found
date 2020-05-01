@@ -23,12 +23,8 @@ public class SettingsInput extends InputAdapter {
                 game.muteMusic();
                 game.muteSounds();
                 break;
-            case Input.Keys.D:
-                System.out.println("Pressed d");
-                game.dealCards();
-                break;
-            case Input.Keys.SPACE:
-                game.cardsReady();
+            case Input.Keys.F:
+                game.fullscreen();
                 break;
             default:
                 // Fuck u Codacy

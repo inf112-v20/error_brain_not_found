@@ -8,8 +8,10 @@ public class Main {
 
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
         cfg.title = "Robo Rally by error_brain_not_found";
-        cfg.width = 960;
-        cfg.height = 540;
+        cfg.width = 1280;
+        cfg.height = 720;
+        cfg.resizable = false;
+        cfg.vSyncEnabled = true;
         //cfg.fullscreen = true;
 
 

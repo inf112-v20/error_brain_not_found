@@ -1,6 +1,7 @@
 package inf112.skeleton.app.screens.gamescreen;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -8,9 +9,9 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 import inf112.skeleton.app.RallyGame;
@@ -66,7 +67,7 @@ public class GameScreenActors {
 
         programCardWidth = (screenWidth - mapRightPx) / 3f;
         programCardHeight = programCardWidth / programCardRatio;
-        lifeTokenSize = (screenHeight - 3 * programCardHeight * 1.18f) / 2f;
+        lifeTokenSize = (screenHeight - 3 * programCardHeight * 1.18f) * 0.5f;
         confirmButtonSize = lifeTokenSize;
         damageTokenSize = lifeTokenSize;
 
@@ -168,7 +169,6 @@ public class GameScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (game.shouldPickCards()) {
-                    game.setShouldPickCards(false);
                     game.confirmCards();
                 }
             }
@@ -234,14 +234,14 @@ public class GameScreenActors {
 
     public void initializePriorityLabels() {
         for (ImageButton button : programCardButtons) {
-            Label cardPriority = new Label("", numberSkin);
+            Label cardPriority = new Label("", numberSkin, "lcd", Color.WHITE);
             float height = programCardHeight * .18f;
-            float x = button.getX();
-            float y = button.getY() + programCardHeight + height / 2;
-            cardPriority.setWidth(programCardWidth);
+            float x = button.getX() + programCardWidth * 0.1f;
+            float y = button.getY() + programCardHeight + height * 0.5f;
+            cardPriority.setWidth(programCardWidth * 0.8f);
             cardPriority.setPosition(x, y);
-            cardPriority.setFontScale(labelFontScale);
-            cardPriority.setAlignment(Align.center);
+            cardPriority.setFontScale(labelFontScale * 0.4f);
+            cardPriority.setAlignment(Align.right);
             stage.addActor(cardPriority);
             cardPriorityLabels.add(cardPriority);
         }
@@ -278,11 +278,16 @@ public class GameScreenActors {
 
     public void initializeNumberLabels() {
         for (ImageButton button : programCardButtons) {
-            Label numberLabel = new Label("", numberSkin);
-            float x = button.getX() + programCardWidth * .1f;
-            float y = button.getY() + programCardHeight * .2f;
+            Label numberLabel = new Label("", numberSkin, "button", Color.RED);
+            float height = programCardHeight * .18f;
+            float x = button.getX() + programCardWidth * 0.1f;
+            float y = button.getY() + programCardHeight + height / 1.65f;
+            /*
+            float x = button.getX() + programCardWidth * 0.7f;
+            float y = button.getY() + programCardHeight*0.2f;
+            */
             numberLabel.setPosition(x, y);
-            numberLabel.setFontScale(labelFontScale * 1.8f);
+            numberLabel.setFontScale(labelFontScale * 0.6f);
             numberLabel.setVisible(false);
             stage.addActor(numberLabel);
             registerNumberLabels.add(numberLabel);
@@ -328,14 +333,14 @@ public class GameScreenActors {
     public void initializeLockedLabels() {
         for (int cardButtonIndex = 4; cardButtonIndex < 9; cardButtonIndex++) {
             ImageButton cardButton = programCardButtons.get(cardButtonIndex);
-            Label lockedLabel = new Label("LOCKED", numberSkin);
+            Label lockedLabel = new Label("LOCKED", numberSkin, "title", Color.RED);
             Container<Label> wrapper = new Container<>(lockedLabel);
             wrapper.setTransform(true);
             wrapper.setRotation(45);
-            float x = cardButton.getX() + programCardWidth / 2f;
-            float y = cardButton.getY() + programCardHeight / 2f;
+            float x = cardButton.getX() + programCardWidth * 0.5f;
+            float y = cardButton.getY() + programCardHeight * 0.5f;
             wrapper.setPosition(x, y);
-            lockedLabel.setFontScale(labelFontScale * 1.2f);
+            lockedLabel.setFontScale(labelFontScale * 0.8f);
             lockedLabel.setVisible(false);
             stage.addActor(wrapper);
             lockedLabels.add(lockedLabel);
