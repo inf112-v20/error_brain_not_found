@@ -159,6 +159,7 @@ public class RallyGame extends Game {
                 GameServer server = serverThread.getServer();
                 if (server.allClientsHaveSelectedCards()) {
                     server.setAllClientsHaveSelectedCards(false);
+                    server.setServerHasConfirmed(true);
                     System.out.println("All clients selected cards");
                     server.sendSelectedCardsToAll();
                     server.sendToAll(Messages.START_TURN.toString());
@@ -302,17 +303,6 @@ public class RallyGame extends Game {
             }
             setShouldPickCards(true);
             letClientsAndServerContinue();
-        }
-    }
-
-    /**
-     * Send you locked card to {@link GameServer} so the server can take this out from the new deck.
-     *
-     * @param lockedCards
-     */
-    public void sendLockedCardsToServer(ArrayList<ProgramCard> lockedCards) {
-        for (ProgramCard card : lockedCards) {
-            client.sendMessage(converter.convertToString(card));
         }
     }
 

@@ -25,6 +25,7 @@ public class GameServer {
     private Deck deck;
     private boolean allClientsHaveConnected;
     private HashMap<GameServerThreads, Boolean> haveSentMapPath;
+    private boolean serverHasConfirmed;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
@@ -241,5 +242,13 @@ public class GameServer {
             }
         }
         return true;
+    }
+
+    public void setServerHasConfirmed(boolean serverHasConfirmed) {
+        this.serverHasConfirmed = serverHasConfirmed;
+    }
+
+    public boolean serverHasConfirmed() {
+        return serverHasConfirmed;
     }
 }

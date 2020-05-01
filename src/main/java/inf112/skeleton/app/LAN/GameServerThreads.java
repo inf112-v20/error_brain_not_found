@@ -79,9 +79,10 @@ public class GameServerThreads extends Thread {
                     if (allClientsHaveSelectedCards()) {
                         server.setAllClientsHaveSelectedCards(true);
                     }
-                    if (allPlayersHaveSelectedCards()) {
+                    if (allPlayersHaveSelectedCards() && server.serverHasConfirmed()) {
                         server.sendSelectedCardsToAll();
                         server.sendToAll(Messages.START_TURN.toString());
+                        server.setServerHasConfirmed(false);
                         startDoTurn();
                         waitForDoTurnToFinish();
                     }
