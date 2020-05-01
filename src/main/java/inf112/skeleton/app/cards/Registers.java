@@ -90,7 +90,7 @@ public class Registers {
         return open;
     }
 
-    public int getCardsSelected() {
+    public int getNumberOfCardsSelected() {
         int cards = 0;
         for (Register register : registers) {
             if (!register.hasCard()) {
@@ -112,6 +112,16 @@ public class Registers {
                 register.setProgramCard(null);
             }
         }
+    }
+
+    public ArrayList<ProgramCard> getCards() {
+        ArrayList<ProgramCard> cards = new ArrayList<>();
+        for (Register register : registers) {
+            if (register.hasCard()) {
+                cards.add(register.getProgramCard());
+            }
+        }
+        return cards;
     }
 
     public void openOneRegister() {

@@ -61,7 +61,7 @@ public class ProgramCardTest {
     public void canChooseFiveCardsFromDrawnCardsTest() {
         player.drawCards(deck);
         player.selectCards();
-        assertEquals(5, player.getRegisters().getCardsSelected());
+        assertEquals(5, player.getRegisters().getNumberOfCardsSelected());
     }
 
     @Test

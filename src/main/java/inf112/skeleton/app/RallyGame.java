@@ -287,6 +287,7 @@ public class RallyGame extends Game {
 
             updateRegisters();
             ArrayList<ProgramCard> lockedCards = discardCards();
+            System.out.println("Locked cards for player " + mainPlayer.getPlayerNr() + ": " + lockedCards);
             if (deck.deckSize() < numberOfDealtCards()) {
                 if (!isServer) {
                     sendLockedCardsToServer(lockedCards);

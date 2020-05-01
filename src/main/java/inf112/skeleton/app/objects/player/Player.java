@@ -119,17 +119,14 @@ public class Player {
     }
 
     public ArrayList<ProgramCard> discardCards(Deck deck) {
-        ArrayList<ProgramCard> lockedCards = new ArrayList<>();
         for (ProgramCard card : cardsOnHand) {
             if (!registers.contains(card) || registers.getRegister(card).isOpen()) {
                 deck.addCardToDiscardPile(card);
-            } else {
-                lockedCards.add(card);
             }
         }
         cardsOnHand.clear();
         registers.clear(true);
-        return lockedCards;
+        return registers.getCards();
     }
 
     public void discardAllCards(Deck deck) {
@@ -276,6 +273,7 @@ public class Player {
     }
 
     public void pickUpFlag(Flag flag) {
+        System.out.println("Player " + playerNr + " picked up flag " + flag.getFlagnr());
         flagsCollected.add(flag);
     }
 
