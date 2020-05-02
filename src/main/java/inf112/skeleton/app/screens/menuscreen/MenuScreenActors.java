@@ -159,6 +159,11 @@ public class MenuScreenActors {
         createGameButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         createGameButton.setPosition(LEFT_BUTTON_X, TOP_BUTTON_Y);
         createGameButton.addListener(new InputListener() {
+
+            /**
+             * If {@link #touchDown(InputEvent, float, float, int, int)} is true and player have chosen
+             * to create game, a host is started.
+             */
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.setIsServerToTrue();
@@ -170,8 +175,24 @@ public class MenuScreenActors {
                 }
             }
 
+            /**
+             *
+             * @return False if input is required and no input is given. True otherwise.
+             */
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (joinGameButton.isVisible()) {
+                    return true;
+                }
+                String port = portInput.getText();
+                String numberOfPlayer = numOfPlayers.getText();
+                if (port.equals("")) {
+                    portInput.setMessageText("Need to give a portnumber. :) ");
+                    return false;
+                } else if (numberOfPlayer.equals("")) {
+                    numOfPlayers.setMessageText("Need to give number of players.");
+                    return false;
+                }
                 return true;
             }
         });
