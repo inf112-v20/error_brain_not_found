@@ -1,7 +1,6 @@
 package inf112.skeleton.app.LAN;
 
 import inf112.skeleton.app.RallyGame;
-import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.objects.player.Player;
@@ -17,7 +16,7 @@ import java.util.concurrent.Semaphore;
  */
 public class GameClientThread extends Thread {
 
-    private Socket clientSocket;
+    private Socket clientSideSocket;
     private int myPlayerNumber;
     private int numberOfPlayers;
     private PrintWriter writer;
@@ -31,17 +30,15 @@ public class GameClientThread extends Thread {
     private String mapPath;
 
 
-    public GameClientThread(RallyGame game, Socket clientSocket) {
-        this.clientSocket = clientSocket;
+    public GameClientThread(RallyGame game, Socket clientSideSocket) {
+        this.clientSideSocket = clientSideSocket;
         this.game = game;
         this.converter = new Converter();
         this.continueListening = new Semaphore(1);
         continueListening.tryAcquire();
         try {
-            this.writer = new PrintWriter(clientSocket.getOutputStream(), true);
-            this.reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-            //System.out.println(reader.readLine());
-            //System.out.println(reader.readLine());
+            this.writer = new PrintWriter(clientSideSocket.getOutputStream(), true);
+            this.reader = new BufferedReader(new InputStreamReader(clientSideSocket.getInputStream()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -180,7 +177,7 @@ public class GameClientThread extends Thread {
         } catch (IOException e) {
             try {
                 // Close socket if exception
-                clientSocket.close();
+                clientSideSocket.close();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -205,7 +202,7 @@ public class GameClientThread extends Thread {
      */
     public void close() {
         try {
-            this.clientSocket.close();
+            this.clientSideSocket.close();
             System.out.println(Messages.CLOSED.toString());
         } catch (IOException e) {
             e.printStackTrace();

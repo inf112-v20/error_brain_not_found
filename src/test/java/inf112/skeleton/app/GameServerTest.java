@@ -1,7 +1,9 @@
 package inf112.skeleton.app;
 
+import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.LAN.GameServer;
 import inf112.skeleton.app.enums.Messages;
+import inf112.skeleton.app.objects.player.Player;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -75,7 +77,26 @@ public class GameServerTest {
         assertEquals(Messages.DECK_END.toString(), gameServer.getClients().get(0).getLastSentMessage());
     }
 
+    @Test
+    public void hostHasPickedMapConnectingClientGetsMapTest() {
+        when(game.getMapPath()).thenReturn("My special map path");
+        gameServer.connect(9000, 1);
+        assertEquals("My special map path", gameServer.getClients().get(0).getLastSentMessage());
+    }
 
+    @Test
+    public void sendToAllExceptPlayerNumberTwoTest() {
+        gameServer.connect(9000, 3);
+        gameServer.sendToAll("Hello");
+        gameServer.sendToAllExcept(new Player(new Vector2(0,0), 2), "Hello again");
+        assertEquals("Hello", gameServer.getClients().get(0).getLastSentMessage());
+    }
 
+    @Test
+    public void removePlayerFromServerTest() {
+        gameServer.connect(9000, 2);
+        gameServer.remove(2);
+        assertEquals(1, gameServer.getClients().size());
+    }
 
 }

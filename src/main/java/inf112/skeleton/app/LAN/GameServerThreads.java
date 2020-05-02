@@ -8,7 +8,6 @@ import inf112.skeleton.app.objects.player.Player;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.ArrayList;
 import java.util.concurrent.Semaphore;
 
 /**
@@ -17,7 +16,7 @@ import java.util.concurrent.Semaphore;
  */
 public class GameServerThreads extends Thread {
 
-    private Socket client;
+    private Socket serverSideSocket;
     private int playerNumber;
     private GameServer server;
     private PrintWriter writer;
@@ -27,8 +26,8 @@ public class GameServerThreads extends Thread {
     private Semaphore continueListening;
     private String sentMessage;
 
-    public GameServerThreads(GameServer server, RallyGame game, Socket client, int playerNumber) {
-        this.client = client;
+    public GameServerThreads(GameServer server, RallyGame game, Socket serverSideSocket, int playerNumber) {
+        this.serverSideSocket = serverSideSocket;
         this.playerNumber = playerNumber;
         this.server = server;
         this.game = game;
@@ -36,8 +35,8 @@ public class GameServerThreads extends Thread {
         this.continueListening = new Semaphore(1);
         continueListening.tryAcquire();
         try {
-            reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            writer = new PrintWriter(client.getOutputStream(), true);
+            reader = new BufferedReader(new InputStreamReader(serverSideSocket.getInputStream()));
+            writer = new PrintWriter(serverSideSocket.getOutputStream(), true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -118,7 +117,7 @@ public class GameServerThreads extends Thread {
         } catch (IOException e) {
             try {
                 // Close socket if exception
-                client.close();
+                serverSideSocket.close();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -215,7 +214,7 @@ public class GameServerThreads extends Thread {
 
     public void close() {
         try {
-            this.client.close();
+            this.serverSideSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

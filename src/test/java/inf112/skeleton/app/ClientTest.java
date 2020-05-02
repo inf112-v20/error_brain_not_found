@@ -1,9 +1,5 @@
 package inf112.skeleton.app;
 
-
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.backends.headless.HeadlessApplication;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.LAN.Converter;
 import inf112.skeleton.app.LAN.GameClientThread;
@@ -16,7 +12,6 @@ import inf112.skeleton.app.objects.player.Player;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
@@ -24,7 +19,6 @@ import java.io.*;
 import java.net.Socket;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ClientTest {

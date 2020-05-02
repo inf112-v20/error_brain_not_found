@@ -20,7 +20,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -112,7 +111,6 @@ public class ServerTest {
         }
         server.start();
         waitForThread(server);
-        // Fails assertEquals(1, player2.getRegisters().getNumberOfCardsSelected());
         assertEquals(1, player2.getRegisters().getCards().size());
     }
 
