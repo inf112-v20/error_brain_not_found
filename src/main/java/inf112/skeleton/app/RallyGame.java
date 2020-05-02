@@ -292,21 +292,18 @@ public class RallyGame extends Game {
             if (!respawnPlayers.isEmpty()) {
                 respawnPlayers();
             }
-
             removeDeadPlayers();
-
             updateRegisters();
             ArrayList<ProgramCard> lockedCards = discardCards();
-            System.out.println("Locked cards for player " + mainPlayer.getPlayerNr() + ": " + lockedCards);
+
             if (deck.deckSize() < numberOfDealtCards()) {
                 if (isServer) {
                     serverThread.getServer().createAndSendDeckToAll(lockedCards);
                 }
             }
-
             dealCards();
-
             ((GameScreen) screen).updateCards();
+
             if (isServer) {
                 serverThread.getServer().setAllClientsHaveSelectedCards(false);
             }
@@ -587,12 +584,10 @@ public class RallyGame extends Game {
      * @param stack of cards for this game.
      */
     public void setDeck (Stack <ProgramCard> stack) {
-        if (deck != null) {
-            this.deck.setDeck(stack);
-        } else {
+        if (deck == null) {
             deck = new Deck();
-            deck.setDeck(stack);
         }
+        this.deck.setDeck(stack);
     }
 
     public void activateRepairTiles() {
