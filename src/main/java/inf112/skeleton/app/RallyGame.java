@@ -407,7 +407,7 @@ public class RallyGame extends Game {
     public void allPlayersPlayCard(int cardNumber) {
         ArrayList<Player> playerOrder = new ArrayList<>(players);
         // Add all players to order list, and remove players with no cards left
-        // playerOrder.removeIf(p -> p.getSelectedCards().isEmpty());
+        playerOrder.removeIf(p -> !p.getRegisters().getRegister(cardNumber).hasCard());
         playerOrder.sort(new PlayerSorter(cardNumber));
 
         for (Player player : playerOrder) {
