@@ -388,7 +388,9 @@ public class RallyGame extends Game {
             if (player.isDead()) {
                 board.removePlayerFromBoard(player);
                 players.remove(player);
-                // Fjern spillere fra spillet
+                if (isServer) {
+                    serverThread.getServer().remove(player.getPlayerNr());
+                }
             }
         }
     }

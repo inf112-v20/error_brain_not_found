@@ -139,6 +139,4 @@ public class ServerTest {
         waitForThread(server);
         assertTrue(server.allClientsHaveSelectedCards());
     }
-
-
 }
