@@ -19,7 +19,6 @@ import inf112.skeleton.app.objects.player.PlayerSorter;
 import inf112.skeleton.app.screens.ActorImages;
 import inf112.skeleton.app.screens.LoadingScreen;
 import inf112.skeleton.app.screens.gifscreen.GifScreen;
-import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
 import java.util.ArrayList;
@@ -40,6 +39,7 @@ public class RallyGame extends Game {
     public Player mainPlayer;
 
     public Skin textSkin;
+    public Skin defaultSkin;
     public ActorImages actorImages;
 
     public static float volume = 0.5f;
@@ -47,6 +47,7 @@ public class RallyGame extends Game {
     public void create() {
         this.actorImages = new ActorImages();
         this.textSkin = new Skin(Gdx.files.internal("assets/skins/number-cruncher-ui.json"));
+        this.defaultSkin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
         this.setScreen(new LoadingScreen(this));
         startMusic();
     }
@@ -84,6 +85,10 @@ public class RallyGame extends Game {
 
     public Skin getTextSkin() {
         return textSkin;
+    }
+
+    public Skin getDefaultSkin() {
+        return defaultSkin;
     }
 
     public void setShouldPickCards(boolean shouldPickCards) {

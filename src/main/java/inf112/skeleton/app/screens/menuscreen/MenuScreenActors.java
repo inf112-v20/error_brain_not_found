@@ -1,14 +1,12 @@
 package inf112.skeleton.app.screens.menuscreen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
@@ -20,7 +18,6 @@ public class MenuScreenActors {
 
     private final Stage stage;
     private final RallyGame game;
-    public Skin skin;
 
     public float screenWidth;
     public float screenHeight;
@@ -45,8 +42,6 @@ public class MenuScreenActors {
         START_BUTTON_Y = (float) (screenHeight * 0.5);
         EXIT_BUTTON_Y = (float) (screenHeight * 0.5 - BUTTON_HEIGHT);
         BUTTON_X = (float) (screenWidth * 0.5 - BUTTON_WIDTH * 0.5);
-
-        skin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
     }
 
     public void initializeStartButton() {
@@ -95,7 +90,7 @@ public class MenuScreenActors {
     }
 
     public void initializeSelectMap() {
-        selectMap = new SelectBox<>(skin);
+        selectMap = new SelectBox<>(game.getDefaultSkin());
         selectMap.setItems(getMaps());
         selectMap.setSelected("assets/maps/Risky Exchange.tmx");
         selectMap.setWidth(BUTTON_WIDTH * .87f);
@@ -115,7 +110,7 @@ public class MenuScreenActors {
     }
 
     public void initializeBackground() {
-        Image background = new Image(new Texture("assets/images/GUI_Edited.jpg"));
+        Image background = new Image(game.getActorImages().getDrawable("Menu screen background"));
         background.setSize(screenWidth, screenHeight);
         stage.addActor(background);
     }
