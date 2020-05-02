@@ -25,6 +25,7 @@ public class GameServer {
     private Deck deck;
     private HashMap<GameServerThreads, Boolean> haveSentMapPath;
     private boolean serverHasConfirmed;
+    private ServerSocket serverSocket;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
@@ -36,6 +37,10 @@ public class GameServer {
         game.setDeck(deck.getDeck());
     }
 
+    public void setServerSocket(ServerSocket serverSocket) {
+        this.serverSocket = serverSocket;
+    }
+
     /**
      * Establish a connection at given portnumber, waiting for
      * number of clients to connect. Create a new thread for each client.
@@ -45,7 +50,9 @@ public class GameServer {
      */
     public void connect(int port, int numberOfClients) {
         try {
-            ServerSocket serverSocket = new ServerSocket(port);
+            if (this.serverSocket == null) {
+                this.serverSocket = new ServerSocket(port);
+            }
             // Connect to several clients
             int connected = 0;
             while (connected < numberOfClients) {
@@ -56,8 +63,13 @@ public class GameServer {
                 System.out.println("I have connected to player" + playerNumber);
                 client.start();
                 sendStartValues(client, numberOfClients+1, playerNumber, this.deck);
+                if (game.getMapPath() == null) {
+                    haveSentMapPath.put(client, false);
+                } else {
+                    sendMapPath(client, game.getMapPath());
+                    haveSentMapPath.put(client, true);
+                }
                 clients.add(client);
-                haveSentMapPath.put(client, false);
                 connected++;
             }
             System.out.println("Connected! :D");
@@ -90,11 +102,18 @@ public class GameServer {
             if (!haveSentMap) {
                 GameServerThreads client = entry.getKey();
                 System.out.println("Have sent map to client");
-                client.sendMessage(Messages.HERE_IS_MAP.toString());
-                client.sendMessage(mapPath);
+                sendMapPath(client, mapPath);
                 entry.setValue(true);
             }
         }
+    }
+
+    /**
+     * Send the map to a client.
+     */
+    public void sendMapPath(GameServerThreads client, String map) {
+        client.sendMessage(Messages.HERE_IS_MAP.toString());
+        client.sendMessage(map);
     }
 
     /**
@@ -220,7 +239,6 @@ public class GameServer {
      * @param allClientsHaveSelectedCards true if all have selected cards
      */
     public void setAllClientsHaveSelectedCards(boolean allClientsHaveSelectedCards) {
-        System.out.println("Setting all client have sel to" +allClientsHaveSelectedCards);
         this.allClientsHaveSelectedCards = allClientsHaveSelectedCards;
     }
 
@@ -252,5 +270,9 @@ public class GameServer {
 
     public ArrayList<GameServerThreads> getClients() {
         return clients;
+    }
+
+    public Deck getDeck() {
+        return deck;
     }
 }

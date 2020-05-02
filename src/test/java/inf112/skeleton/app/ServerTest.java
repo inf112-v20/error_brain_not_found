@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,10 +45,10 @@ public class ServerTest {
     Socket socket;
 
     @Mock
-    RallyGame game;
+    GameServer gameServer;
 
     @Mock
-    GameServer gameServer;
+    RallyGame game;
 
     @Mock
     InputStream input;
@@ -73,7 +74,6 @@ public class ServerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.gameServer = new GameServer(game);
         this.server = new GameServerThreads(gameServer, game, socket, 2);
         this.converter = new Converter();
         this.player1 = new Player(new Vector2(0,0), 1);
@@ -117,6 +117,7 @@ public class ServerTest {
 
     @Test
     public void sentCardByPlayerTwoGoesToPlayerTwoRegisterTest() {
+        // Send card from player 2
         try {
             when(reader.readLine()).thenReturn(cardString).thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
@@ -130,6 +131,7 @@ public class ServerTest {
 
     @Test
     public void allClientsHaveSentCardsTest() {
+        // Send 5 cards from player 2
         try {
             when(reader.readLine()).thenReturn(cardString, cardString, cardString, cardString, cardString).thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
@@ -139,4 +141,5 @@ public class ServerTest {
         waitForThread(server);
         assertTrue(server.allClientsHaveSelectedCards());
     }
+
 }
