@@ -110,5 +110,16 @@ public class ConverterTest {
         }
     }
 
+    @Test
+    public void backWardCardStringToCardTest() {
+        String cardString = "200 -1 NONE Back up";
+        ProgramCard card = new ProgramCard(200, -1, Rotate.NONE, "Back up");
+        try {
+            assertTrue("\n Expected: " + cardInfo(card) + "\n" + "Actual: " + cardInfo(converter.convertToCard(cardString)), isEqualCards(card, converter.convertToCard(cardString)));
+        } catch (NotProgramCardException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
 

@@ -146,14 +146,6 @@ public class GameClientThread extends Thread {
     }
 
     /**
-     * Ask server to send you the map.
-     */
-    public void askForMap() {
-        sendMessage(Messages.ASKING_FOR_MAP.toString());
-        System.out.print("Asking for map....");
-    }
-
-    /**
      * Wait for doTurn to realease in game.
      */
     private void waitForTurnToFinish() {

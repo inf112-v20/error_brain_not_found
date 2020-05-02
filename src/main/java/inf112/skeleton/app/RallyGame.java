@@ -688,9 +688,10 @@ public class RallyGame extends Game {
      * Create a new thread to send map to clients that are connectet to server.
      * If server have started {@link RallyGame#setupGame(String)} after client have connected,
      * client needs to get notified that server has chosen map and get the map from server.
+     * If client joins after the host has picked a map, it will get the map right away.
      *
      * Send the map to all clients that are connected, until every client has a map.
-     * If client joins after the server has sent maps, it will ask the server for a map.
+     *
      *
      * isServer needs to be true to send the map
      */

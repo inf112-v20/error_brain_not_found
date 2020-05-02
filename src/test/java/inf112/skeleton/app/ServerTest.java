@@ -103,19 +103,6 @@ public class ServerTest {
     }
 
     @Test
-    public void clientAsksForMapThenServerSendsMap() {
-        when(game.getMapPath()).thenReturn("My special map path");
-        try {
-            when(reader.readLine()).thenReturn(Messages.ASKING_FOR_MAP.toString()).thenReturn(Messages.STOP_THREAD.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        server.start();
-        waitForThread(server);
-        assertEquals("My special map path", server.getLastSentMessage());
-    }
-
-    @Test
     public void sentCardByPlayerTwoGoesToPlayerTwoRegisterTest() {
         // Send card from player 2
         try {

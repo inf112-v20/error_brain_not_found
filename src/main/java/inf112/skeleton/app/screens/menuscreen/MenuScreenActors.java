@@ -400,14 +400,6 @@ public class MenuScreenActors {
     public void waitForGameSetup() {
         try {
             waitForServerToSendStartValues.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        // If host starts game without you, ask for the map.
-        if (game.getMapPath() == null) {
-            game.getClient().askForMap();
-        }
-        try {
             waitForServerToSendMapPath.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();

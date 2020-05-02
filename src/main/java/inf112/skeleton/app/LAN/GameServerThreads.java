@@ -61,11 +61,7 @@ public class GameServerThreads extends Thread {
                 }
                 if (message.equals(Messages.STOP_THREAD.toString())) {
                     return;
-                }
-                if (message.equals(Messages.ASKING_FOR_MAP.toString())) {
-                    sendMap();
-                }
-                else if (message.contains(Messages.QUIT.toString())) {
+                } else if (message.contains(Messages.QUIT.toString())) {
                     int playerNumber = getPlayerNumberFromMessage(message);
                     endConnectionWithPlayerAndTellOtherPlayersThatThisPlayerLeft(game.getBoard().getPlayer(playerNumber));
                     game.quitPlaying();
@@ -88,18 +84,6 @@ public class GameServerThreads extends Thread {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    /**
-     * When host has called on {@link RallyGame#setupGame(String)} (pressed Start), the host have
-     * picked a map and it will be sent to client. If host has not pressed Start yet, it will not send the map.
-     */
-    private void sendMap() {
-        if (game.getMapPath() != null) {
-            sendMessage(Messages.HERE_IS_MAP.toString());
-            sendMessage(game.getMapPath());
-            System.out.println("Sent map to client");
         }
     }
 
