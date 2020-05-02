@@ -384,15 +384,18 @@ public class RallyGame extends Game {
     }
 
     public void removeDeadPlayers() {
+        Player playerToRemove = null;
         for (Player player : players) {
             if (player.isDead()) {
                 board.removePlayerFromBoard(player);
-                players.remove(player);
+                playerToRemove = player;
                 if (isServer) {
                     serverThread.getServer().remove(player.getPlayerNr());
+                    serverThread.getServer().disconnect(player.getPlayerNr());
                 }
             }
         }
+        players.remove(playerToRemove);
     }
 
     public void respawnPlayers() {

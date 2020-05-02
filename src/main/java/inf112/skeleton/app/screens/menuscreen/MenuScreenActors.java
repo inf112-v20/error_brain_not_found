@@ -394,6 +394,9 @@ public class MenuScreenActors {
         return true;
     }
 
+    /**
+     * Wait for server to sent initial values so you can create game.
+     */
     public void waitForGameSetup() {
         try {
             waitForServerToSendStartValues.acquire();
@@ -410,6 +413,10 @@ public class MenuScreenActors {
         System.out.println("Game path when setup: " + game.getMapPath());
     }
 
+    /**
+     * Create own thread to wait for {@link #waitForGameSetup()} to get startValues
+     * from server, so that "waiting for server to start" picture can render.
+     */
     public void waitForGameSetUpAndStartGame() {
         waitForGameSetupThread = new Thread(() -> {
             waitForGameSetup();
