@@ -23,9 +23,9 @@ public class SettingsInput extends InputAdapter {
                 game.muteMusic();
                 game.muteSounds();
                 break;
-            /*case Input.Keys.S:
-
-                break;*/
+            case Input.Keys.F:
+                game.fullscreen();
+                break;
             default:
                 // Fuck u Codacy
         }

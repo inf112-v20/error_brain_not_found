@@ -9,7 +9,7 @@ import static org.junit.Assert.assertEquals;
 public class DeckTest {
 
     private Deck deck;
-    private final int NUMBER_OF_CARDS = 78;
+    private final int NUMBER_OF_CARDS = 84;
 
     @Before
     public void setUp() {
@@ -22,9 +22,9 @@ public class DeckTest {
     }
 
     @Test
-    public void whenNewDeckIsMadeButNotShuffledFirstCardIsAMove1CardTest() {
+    public void whenNewDeckIsMadeButNotShuffledFirstCardIsABackUpCardTest() {
         deck.makeNewDeck();
-        assertEquals(3, deck.drawCard().getDistance());
+        assertEquals(-1, deck.drawCard().getDistance());
     }
 
     @Test

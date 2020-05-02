@@ -66,6 +66,14 @@ public class RallyGame extends Game {
         dealCards();
     }
 
+    public void fullscreen() {
+        if (Gdx.graphics.isFullscreen()) {
+            Gdx.graphics.setWindowedMode(1280, 720);
+        } else {
+            Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+        }
+    }
+
     public void setShouldPickCards(boolean shouldPickCards) {
         this.shouldPickCards = shouldPickCards;
     }
@@ -76,6 +84,7 @@ public class RallyGame extends Game {
 
     public void confirmCards() {
         if (!mainPlayer.getRegisters().hasRegistersWithoutCard()) {
+            setShouldPickCards(false);
             cardsReady();
         }
     }
@@ -287,11 +296,15 @@ public class RallyGame extends Game {
                 player.setDirection(player.getDirection().turnAround());
                 break;
             case NONE:
-                for (int i = 0; i < card.getDistance(); i++) {
-                    board.movePlayer(player);
-                    // Wait 300 ms for each move except last one
-                    if (i < card.getDistance() - 1) {
-                        sleep(300);
+                if (card.getDistance() == -1) {
+                    board.movePlayer(player, true);
+                } else {
+                    for (int distance = 0; distance < card.getDistance(); distance++) {
+                        board.movePlayer(player, false);
+                        // Wait 250 ms for each move except last one
+                        if (distance < card.getDistance() - 1) {
+                            sleep(250);
+                        }
                     }
                 }
                 break;
@@ -431,6 +444,7 @@ public class RallyGame extends Game {
             for (Vector2 repairTilePos : board.getRepairTiles()){
                 if (player.getPosition().equals(repairTilePos)){
                     player.resetDamageTokens();
+                    player.setBackup(repairTilePos, player.getDirection());
                 }
             }
         }
