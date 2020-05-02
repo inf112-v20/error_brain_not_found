@@ -4,7 +4,9 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.objects.Flag;
 import inf112.skeleton.app.objects.player.Player;
 import org.junit.Before;
@@ -27,6 +29,7 @@ public class PlayerTest {
         this.game.setupGame("assets/maps/Risky Exchange.tmx");
         Vector2 pos = new Vector2(0,0);
         player = new Player(pos, 1);
+        game.dealCards();
     }
 
     @Test
@@ -105,6 +108,39 @@ public class PlayerTest {
             player.decrementLifeTokens();
         }
         assertTrue(player.isDead());
+    }
+
+    @Test
+    public void fiveDamagePointsLockLastCardTest() {
+        for (int damage = 0; damage < 5; damage++) {
+            player.handleDamage();
+        }
+        player.updateRegisters();
+        assertFalse(player.getRegisters().getRegisters().get(4).isOpen());
+    }
+
+    @Test
+    public void sixDamagePointsLockSecondLastCardTest() {
+        for (int damage = 0; damage < 6; damage++) {
+            player.handleDamage();
+        }
+        player.updateRegisters();
+        assertFalse(player.getRegisters().getRegisters().get(3).isOpen());
+    }
+
+    @Test
+    public void oneDamageTokensGivePlayerOneLessDealtCardTest() {
+        player.handleDamage();
+        game.dealCards();
+        assertEquals(8, player.getProgramCardsDealt());
+    }
+
+    @Test
+    public void twoDamageTokensGivePlayerTwoLessCardsTest() {
+        player.handleDamage();
+        player.handleDamage();
+        game.dealCards();
+        assertEquals(7, player.getProgramCardsDealt());
     }
 
 }
