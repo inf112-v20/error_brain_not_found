@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Stack;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -36,6 +37,8 @@ public class ServerTest {
     private ArrayList<Player> players;
     private Player player1;
     private Player player2;
+    private ProgramCard card;
+    private String cardString;
 
     @Mock
     Socket socket;
@@ -63,22 +66,26 @@ public class ServerTest {
 
     @Before
     public void setUp() {
-
         when(deck.getDeck()).thenReturn(new Stack<>());
         try {
-            when(game.getBoard()).thenReturn(board);
             when(socket.getInputStream()).thenReturn(input);
             when(socket.getOutputStream()).thenReturn(output);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         this.gameServer = new GameServer(game);
         this.server = new GameServerThreads(gameServer, game, socket, 2);
         this.converter = new Converter();
         this.player1 = new Player(new Vector2(0,0), 1);
         this.player2 = new Player(new Vector2(0, 1), 2);
         this.players = new ArrayList<>(Arrays.asList(player1, player2));
+        this.card = new ProgramCard(10, 2, Rotate.NONE, "Move 2");
+        this.cardString = converter.convertToString(2, card);
+
+        when(game.getBoard()).thenReturn(board);
+        when(board.getPlayers()).thenReturn(players);
+        when(board.getPlayer(2)).thenReturn(player2);
+
         // Reader decided for each test
         server.setReader(reader);
     }
@@ -110,11 +117,7 @@ public class ServerTest {
 
     @Test
     public void sentCardByPlayerTwoGoesToPlayerTwoRegisterTest() {
-        ProgramCard card = new ProgramCard(10, 2, Rotate.NONE, "Move 2");
-        String cardString = converter.convertToString(2, card);
         try {
-            when(board.getPlayers()).thenReturn(players);
-            when(board.getPlayer(2)).thenReturn(player2);
             when(reader.readLine()).thenReturn(cardString).thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
@@ -123,6 +126,18 @@ public class ServerTest {
         waitForThread(server);
         // Fails assertEquals(1, player2.getRegisters().getNumberOfCardsSelected());
         assertEquals(1, player2.getRegisters().getCards().size());
+    }
+
+    @Test
+    public void allClientsHaveSentCardsTest() {
+        try {
+            when(reader.readLine()).thenReturn(cardString, cardString, cardString, cardString, cardString).thenReturn(Messages.STOP_THREAD.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        server.start();
+        waitForThread(server);
+        assertTrue(server.allClientsHaveSelectedCards());
     }
 
 
