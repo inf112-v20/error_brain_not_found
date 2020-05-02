@@ -10,7 +10,7 @@ public class YouWinScreen extends StandardScreen {
     public YouWinScreen(final RallyGame game) {
         super(game);
 
-        Image background = new Image(new Texture("assets/images/YouWin.png"));
+        Image background = new Image(new Texture("assets/actorImages/YouWin.png"));
         background.setSize(camera.viewportWidth, camera.viewportHeight);
         stage.addActor(background);
     }

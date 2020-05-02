@@ -15,7 +15,7 @@ public class LoadingScreen extends StandardScreen {
     public LoadingScreen(final RallyGame game) {
         super(game);
 
-        Image background = new Image(new Texture("assets/images/RoboRallyMenuScreen.png"));
+        Image background = new Image(game.getActorImages().getDrawable("Loading screen background"));
         background.setSize(camera.viewportWidth, camera.viewportHeight);
         background.addListener(new InputListener() {
             @Override

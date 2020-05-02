@@ -13,7 +13,7 @@ public class GifScreen extends StandardScreen {
 
     public GifScreen(final RallyGame game) {
         super(game);
-        this.animation = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("assets/images/optimusBoi.gif").read());
+        this.animation = GifDecoder.loadGIFAnimation(Animation.PlayMode.LOOP, Gdx.files.internal("assets/actorImages/optimusBoi.gif").read());
     }
 
     @Override

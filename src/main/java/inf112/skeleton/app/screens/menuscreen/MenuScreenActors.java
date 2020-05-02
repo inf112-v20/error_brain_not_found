@@ -51,8 +51,8 @@ public class MenuScreenActors {
 
     public void initializeStartButton() {
         ImageButton.ImageButtonStyle startButtonStyle = new ImageButton.ImageButtonStyle();
-        startButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Start");
-        startButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Start over");
+        startButtonStyle.up = game.actorImages.getSkin().getDrawable("Start");
+        startButtonStyle.over = game.actorImages.getSkin().getDrawable("Start over");
 
         ImageButton startButton = new ImageButton(startButtonStyle);
         startButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -74,8 +74,8 @@ public class MenuScreenActors {
 
     public void initializeExitButton() {
         ImageButton.ImageButtonStyle exitButtonStyle = new ImageButton.ImageButtonStyle();
-        exitButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Exit");
-        exitButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Exit over");
+        exitButtonStyle.up = game.actorImages.getSkin().getDrawable("Exit");
+        exitButtonStyle.over = game.actorImages.getSkin().getDrawable("Exit over");
 
         ImageButton exitButton = new ImageButton(exitButtonStyle);
         exitButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);

@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
@@ -15,7 +16,8 @@ import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.objects.player.Player;
 import inf112.skeleton.app.objects.player.PlayerSorter;
-import inf112.skeleton.app.screens.ButtonSkin;
+import inf112.skeleton.app.screens.ActorImages;
+import inf112.skeleton.app.screens.LoadingScreen;
 import inf112.skeleton.app.screens.gifscreen.GifScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
@@ -37,13 +39,15 @@ public class RallyGame extends Game {
     public Music gameMusic;
     public Player mainPlayer;
 
-    public ButtonSkin buttonSkins;
+    public Skin textSkin;
+    public ActorImages actorImages;
 
     public static float volume = 0.5f;
 
     public void create() {
-        this.buttonSkins = new ButtonSkin();
-        this.setScreen(new MenuScreen(this));
+        this.actorImages = new ActorImages();
+        this.textSkin = new Skin(Gdx.files.internal("assets/skins/number-cruncher-ui.json"));
+        this.setScreen(new LoadingScreen(this));
         startMusic();
     }
 
@@ -72,6 +76,14 @@ public class RallyGame extends Game {
         } else {
             Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
         }
+    }
+
+    public Skin getActorImages() {
+        return actorImages.getSkin();
+    }
+
+    public Skin getTextSkin() {
+        return textSkin;
     }
 
     public void setShouldPickCards(boolean shouldPickCards) {

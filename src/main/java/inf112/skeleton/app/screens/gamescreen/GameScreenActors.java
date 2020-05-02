@@ -3,8 +3,6 @@ package inf112.skeleton.app.screens.gamescreen;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -41,18 +39,17 @@ public class GameScreenActors {
     public float lifeTokenSize;
 
     private ImageButton confirmButton;
+    private ImageButton powerDownButton;
 
     private final RallyGame game;
     private final Stage stage;
     private final ProgramCardSkin cardSkin;
     private final ArrayList<ImageButton> programCardButtons;
-    public Skin skin;
     public Skin numberSkin;
 
     public GameScreenActors(RallyGame game, Stage stage) {
         this.game = game;
         this.stage = stage;
-        this.skin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
         this.numberSkin = new Skin(Gdx.files.internal("assets/skins/number-cruncher-ui.json"));
         programCardButtons = new ArrayList<>();
         registerNumberLabels = new ArrayList<>();
@@ -155,12 +152,8 @@ public class GameScreenActors {
     // CONFIRM BUTTON
 
     public void initializeConfirmButton() {
-        TextureAtlas atlas = new TextureAtlas();
-        TextureRegion confirmTexture = new TextureRegion(new Texture("assets/images/ConfirmButton.png"));
         ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
-        atlas.addRegion("Confirm button", confirmTexture);
-        Skin skin = new Skin(atlas);
-        style.up = skin.getDrawable("Confirm button");
+        style.up = game.getActorImages().getDrawable("Confirm ready");
         confirmButton = new ImageButton(style);
         confirmButton.setSize(confirmButtonSize, confirmButtonSize);
         confirmButton.setPosition(screenWidth - confirmButtonSize, 0);
@@ -182,10 +175,32 @@ public class GameScreenActors {
 
     public void updateConfirm() {
         if (!game.mainPlayer.getRegisters().hasRegistersWithoutCard()) {
-            confirmButton.getStyle().up = game.buttonSkins.getSkins().getDrawable("Confirm ready");
+            confirmButton.getStyle().up = game.actorImages.getSkin().getDrawable("Confirm ready");
         } else {
-            confirmButton.getStyle().up = game.buttonSkins.getSkins().getDrawable("Confirm not ready");
+            confirmButton.getStyle().up = game.actorImages.getSkin().getDrawable("Confirm not ready");
         }
+    }
+
+    // POWER DOWN BUTTON
+
+    public void initializePowerDownButton() {
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+        style.up = game.getActorImages().getDrawable("Power down active");
+        powerDownButton = new ImageButton(style);
+        powerDownButton.setSize(confirmButtonSize, confirmButtonSize);
+        powerDownButton.setPosition(screenWidth - confirmButtonSize, confirmButtonSize);
+        powerDownButton.addListener(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                System.out.println("Power down");
+            }
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+        stage.addActor(powerDownButton);
     }
 
     // DAMAGE TOKEN IMAGES
