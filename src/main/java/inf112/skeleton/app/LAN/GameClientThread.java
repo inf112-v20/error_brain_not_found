@@ -143,7 +143,6 @@ public class GameClientThread extends Thread {
         this.numberOfPlayers = Integer.parseInt(getMessage());
         game.setPlayerNumber(myPlayerNumber);
         game.setNumberOfPlayers(numberOfPlayers);
-        System.out.println("Received Start Values..");
     }
 
     /**

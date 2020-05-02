@@ -25,6 +25,7 @@ public class GameServerThreads extends Thread {
     private RallyGame game;
     private Converter converter;
     private Semaphore continueListening;
+    private String sentMessage;
 
     public GameServerThreads(GameServer server, RallyGame game, Socket client, int playerNumber) {
         this.client = client;
@@ -57,6 +58,9 @@ public class GameServerThreads extends Thread {
                 String message = getMessage();
                 if (message == null) {
                     break;
+                }
+                if (message.equals(Messages.STOP_THREAD.toString())) {
+                    return;
                 }
                 if (message.equals(Messages.ASKING_FOR_MAP.toString())) {
                     sendMap();
@@ -216,6 +220,7 @@ public class GameServerThreads extends Thread {
      * @param message
      */
     public void sendMessage(String message) {
+        this.sentMessage = message;
         writer.println(message);
 
     }
@@ -230,5 +235,17 @@ public class GameServerThreads extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setReader(BufferedReader reader) {
+        this.reader = reader;
+    }
+
+    /**
+     *
+     * @return the last sent message to the client
+     */
+    public String getLastSentMessage() {
+        return sentMessage;
     }
 }

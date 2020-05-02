@@ -249,4 +249,8 @@ public class GameServer {
     public boolean serverHasConfirmed() {
         return serverHasConfirmed;
     }
+
+    public ArrayList<GameServerThreads> getClients() {
+        return clients;
+    }
 }

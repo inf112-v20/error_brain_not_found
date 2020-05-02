@@ -27,7 +27,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 @RunWith(MockitoJUnitRunner.class)
-public class LANTest {
+public class ClientTest {
 
     private GameClientThread client;
     private Converter converter;
@@ -53,7 +53,6 @@ public class LANTest {
 
     @Before
     public void setUp() {
-        initMocks(this);
         try {
             when(socket.getInputStream()).thenReturn(inputStream);
             when(socket.getOutputStream()).thenReturn(outputStream);
@@ -69,12 +68,15 @@ public class LANTest {
     }
 
     /**
-     *
-     * @param s string
-     * @return ByteArrayInputStream to send to InputStream
+     * Wait for thread to finish
+     * @param thread
      */
-    private ByteArrayInputStream setInputStream(String s) {
-        return new ByteArrayInputStream(s.getBytes());
+    private void waitForThread(Thread thread) {
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -138,11 +140,7 @@ public class LANTest {
             e.printStackTrace();
         }
         client.start();
-        try {
-            client.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        waitForThread(client);
         assertEquals(1, client.getStackOfDeck().size());
     }
 
@@ -158,13 +156,8 @@ public class LANTest {
             e.printStackTrace();
         }
         client.start();
-        try {
-            client.join();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        String mapPath = client.getMap();
-        assertEquals("assets/maps/Risky Exchange.tmx", mapPath);
+        waitForThread(client);
+        assertEquals("assets/maps/Risky Exchange.tmx", client.getMap());
     }
 
 }
