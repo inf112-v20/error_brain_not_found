@@ -1,6 +1,7 @@
 package inf112.skeleton.app.LAN;
 
 import inf112.skeleton.app.RallyGame;
+import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.objects.player.Player;
@@ -19,16 +20,15 @@ public class GameClientThread extends Thread {
     private Socket clientSocket;
     private int myPlayerNumber;
     private int numberOfPlayers;
-    private InputStream input;
-    private OutputStream output;
-    private BufferedReader reader;
     private PrintWriter writer;
+    private BufferedReader reader;
     private RallyGame game;
     private Converter converter;
     private Semaphore continueListening;
     private Stack<ProgramCard> stack;
     private boolean receivingDeck;
     private boolean receivingMap;
+    private String mapPath;
 
 
     public GameClientThread(RallyGame game, Socket clientSocket) {
@@ -38,10 +38,10 @@ public class GameClientThread extends Thread {
         this.continueListening = new Semaphore(1);
         continueListening.tryAcquire();
         try {
-            this.input = this.clientSocket.getInputStream();
-            this.reader = new BufferedReader(new InputStreamReader(input));
-            this.output = this.clientSocket.getOutputStream();
-            this.writer = new PrintWriter(output, true);
+            this.writer = new PrintWriter(clientSocket.getOutputStream(), true);
+            this.reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+            //System.out.println(reader.readLine());
+            //System.out.println(reader.readLine());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -59,25 +59,30 @@ public class GameClientThread extends Thread {
 
         while (true) {
             String message = getMessage();
+            System.out.println(message);
             if (message == null) {
                 break;
             }
+            if (message.equals(Messages.STOP_THREAD.toString())) {
+                return;
+            }
             if (message.equals(Messages.HOST_LEAVES.toString())) {
                 System.out.println("Host left game.");
-                game.quitPlaying();
-                close();
+                finishTurnAndCloseSocket();
                 return;
             } else if (message.equals(Messages.HERE_IS_MAP.toString())){
                 receivingMap = true;
             } else if (message.contains(Messages.QUIT.toString())) {
                 int playerNumber = getPlayerNumberFromMessage(message);
                 System.out.println("Player " + playerNumber + " left game.");
+                finishTurnAndCloseSocket();
+                return;
             } else if (message.equals(Messages.DECK_BEGIN.toString())) {
-                stack = new Stack<>();
-                receivingDeck = true;
+                this.stack = new Stack<>();
+                this.receivingDeck = true;
             } else if (message.equals(Messages.DECK_END.toString())){
-                receivingDeck = false;
-                game.setDeck(stack);
+                this.receivingDeck = false;
+                game.setDeck(this.stack);
                 System.out.println("Received deck.");
                 game.setWaitForServerToSendStartValuesToRelease();
             } else if (message.equals(Messages.START_TURN.toString())) {
@@ -85,9 +90,10 @@ public class GameClientThread extends Thread {
                 waitForTurnToFinish();
             } else if (receivingDeck) {
                 ProgramCard card = converter.convertToCard(message);
-                stack.add(card);
+                this.stack.add(card);
             } else if (receivingMap) {
-                game.setMapPath(message);
+                this.mapPath = message;
+                game.setMapPath(mapPath);
                 game.setWaitForServerToSendMapPathToRelease();
                 receivingMap = false;
                 System.out.println("Got map");
@@ -103,12 +109,20 @@ public class GameClientThread extends Thread {
     }
 
     /**
+     * Finishes the ongoing round and then stops the turn. Closes socket.
+     */
+    public void finishTurnAndCloseSocket() {
+        game.quitPlaying();
+        close();
+    }
+
+    /**
      * Playernumber is always first in the message.
      *
      * @param message
      * @return the playerNumber for the player sending this message
      */
-    private int getPlayerNumberFromMessage(String message) {
+    public int getPlayerNumberFromMessage(String message) {
         return Character.getNumericValue(message.charAt(0));
     }
 
@@ -116,11 +130,12 @@ public class GameClientThread extends Thread {
      * Wait for server to send your playernumber and how many players are in the game.
      * Give the values to {@link RallyGame} so it can be initialized.
      */
-    private void getStartValues() {
+    public void getStartValues() {
         this.myPlayerNumber = Integer.parseInt(getMessage());
         this.numberOfPlayers = Integer.parseInt(getMessage());
         game.setPlayerNumber(myPlayerNumber);
         game.setNumberOfPlayers(numberOfPlayers);
+        System.out.println("Received Start Values..");
     }
 
     /**
@@ -174,6 +189,10 @@ public class GameClientThread extends Thread {
         return null;
     }
 
+    public void setReader(BufferedReader reader) {
+        this.reader = reader;
+    }
+
     /**
      * Send a message to server.
      * @param message message to be sent
@@ -201,5 +220,37 @@ public class GameClientThread extends Thread {
      */
     public String createQuitMessage(int playerNumber) {
         return playerNumber + Messages.QUIT.toString();
+    }
+
+    /**
+     *
+     * @return playerNumber given from server
+     */
+    public int getMyPlayerNumber() {
+        return this.myPlayerNumber;
+    }
+
+    /**
+     *
+     * @return number of players server says is in game
+     */
+    public int getNumberOfPlayers() {
+        return this.numberOfPlayers;
+    }
+
+    /**
+     *
+     * @return the deck received from server
+     */
+    public Stack<ProgramCard> getStackOfDeck() {
+        return stack;
+    }
+
+    /**
+     * 
+     * @return the map received from server
+     */
+    public String getMap() {
+        return mapPath;
     }
 }

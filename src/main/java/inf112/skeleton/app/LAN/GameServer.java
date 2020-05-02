@@ -23,7 +23,6 @@ public class GameServer {
     private Converter converter;
     private boolean allClientsHaveSelectedCards;
     private Deck deck;
-    private boolean allClientsHaveConnected;
     private HashMap<GameServerThreads, Boolean> haveSentMapPath;
     private boolean serverHasConfirmed;
 
@@ -53,7 +52,7 @@ public class GameServer {
                 Socket socket = serverSocket.accept();
                 // Server is player 1
                 int playerNumber = connected+2;
-                GameServerThreads client = new GameServerThreads(this, game, socket, playerNumber, numberOfClients+1);
+                GameServerThreads client = new GameServerThreads(this, game, socket, playerNumber);
                 System.out.println("I have connected to player" + playerNumber);
                 client.start();
                 sendStartValues(client, numberOfClients+1, playerNumber, this.deck);
@@ -61,7 +60,6 @@ public class GameServer {
                 haveSentMapPath.put(client, false);
                 connected++;
             }
-            allClientsHaveConnected = true;
             System.out.println("Connected! :D");
             serverSocket.close();
 

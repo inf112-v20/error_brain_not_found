@@ -19,33 +19,27 @@ public class GameServerThreads extends Thread {
 
     private Socket client;
     private int playerNumber;
-    private int numberOfPlayers;
     private GameServer server;
-    private InputStream input;
+    private PrintWriter writer;
     private BufferedReader reader;
     private RallyGame game;
     private Converter converter;
     private Semaphore continueListening;
-    private boolean receivingLockedCards;
-    private ArrayList<ProgramCard> lockedCards;
 
-    public GameServerThreads(GameServer server, RallyGame game, Socket client, int playerNumber, int numberOfPlayers) {
+    public GameServerThreads(GameServer server, RallyGame game, Socket client, int playerNumber) {
         this.client = client;
         this.playerNumber = playerNumber;
-        this.numberOfPlayers = numberOfPlayers;
         this.server = server;
         this.game = game;
         this.converter = new Converter();
         this.continueListening = new Semaphore(1);
         continueListening.tryAcquire();
-
         try {
-            input = client.getInputStream();
+            reader = new BufferedReader(new InputStreamReader(client.getInputStream()));
+            writer = new PrintWriter(client.getOutputStream(), true);
         } catch (IOException e) {
             e.printStackTrace();
         }
-        reader = new BufferedReader(new InputStreamReader(input));
-
     }
 
     /**
@@ -114,7 +108,6 @@ public class GameServerThreads extends Thread {
         System.out.println("Player " + playerNumber + " is leaving...");
         server.disconnect(playerNumber);
         server.remove(playerNumber);
-        numberOfPlayers--;
     }
 
     /**
@@ -223,18 +216,7 @@ public class GameServerThreads extends Thread {
      * @param message
      */
     public void sendMessage(String message) {
-        try {
-            OutputStream output = client.getOutputStream();
-            PrintWriter writer = new PrintWriter(output, true);
-            writer.println(message);
-        } catch (IOException e) {
-            System.out.println("Closing socket from sendmsg");
-            try {
-                client.close();
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
+        writer.println(message);
 
     }
 
