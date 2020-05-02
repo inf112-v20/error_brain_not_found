@@ -89,8 +89,12 @@ public class GameClientThread extends Thread {
                 startDoTurn();
                 waitForTurnToFinish();
             } else if (receivingDeck) {
-                ProgramCard card = converter.convertToCard(message);
-                this.stack.add(card);
+                try {
+                    ProgramCard card = converter.convertToCard(message);
+                    this.stack.add(card);
+                } catch (NotProgramCardException e) {
+                    e.printStackTrace();
+                }
             } else if (receivingMap) {
                 this.mapPath = message;
                 game.setMapPath(mapPath);
@@ -98,11 +102,15 @@ public class GameClientThread extends Thread {
                 receivingMap = false;
                 System.out.println("Got map");
             } else {
-                ProgramCard card = converter.convertToCardAndExtractPlayer(message);
-                // Your player have already selected cards
-                if (myPlayerNumber != converter.getPlayerNumber()) {
-                    Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
-                    player.addSelectedCard(card);
+                try {
+                    ProgramCard card = converter.convertToCardAndExtractPlayer(message);
+                    // Your player have already selected cards
+                    if (myPlayerNumber != converter.getPlayerNumber()) {
+                        Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
+                        player.addSelectedCard(card);
+                    }
+                } catch (NotProgramCardException e) {
+                    e.printStackTrace();
                 }
             }
         }

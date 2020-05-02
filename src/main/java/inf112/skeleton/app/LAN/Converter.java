@@ -2,7 +2,6 @@ package inf112.skeleton.app.LAN;
 
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Rotate;
-import org.lwjgl.Sys;
 
 import java.util.ArrayList;
 
@@ -63,30 +62,39 @@ public class Converter {
      * Convert a string to a corresponding programcard.
      * @param string
      * @return programcard
+     * @throws NotProgramCardException
      */
-    public ProgramCard convertToCard(String string) {
+    public ProgramCard convertToCard(String string) throws NotProgramCardException {
         ArrayList<String> strings = splitBySpace(string);
-        int prio = Integer.parseInt(strings.get(0));
-        int steps = Integer.parseInt(strings.get(1));
-        Rotate rotation = getRotation(string);
-        String name = getName(string);
-        return new ProgramCard(prio, steps, rotation, name);
+        try {
+            int prio = Integer.parseInt(strings.get(0));
+            int steps = Integer.parseInt(strings.get(1));
+            Rotate rotation = getRotation(string);
+            String name = getName(string);
+            if (!string.equals(prio + " " + steps + " " + rotation.toString() + " " + name)) {
+                throw new NotProgramCardException("This is not a programcard: " +string);
+            }
+            return new ProgramCard(prio, steps, rotation, name);
+        } catch (NumberFormatException error) {
+            throw new NotProgramCardException("This is not a programcard: "+string);
+        }
     }
 
     /**
      * Convert a string to a corresponding programcard. Playernumber to player
      * owning this card is stored in {@link #getPlayerNumber()}
      * @param string
-     * @return
+     * @return ProgramCard
+     * @throws NotProgramCardException
      */
-    public ProgramCard convertToCardAndExtractPlayer(String string) {
-        ArrayList<String> strings = splitBySpace(string);
-        this.playerNumber = Integer.parseInt(strings.get(0));
-        int prio = Integer.parseInt(strings.get(1));
-        int steps = Integer.parseInt(strings.get(2));
-        Rotate rotation = getRotation(string);
-        String name = getName(string);
-        return new ProgramCard(prio, steps, rotation, name);
+    public ProgramCard convertToCardAndExtractPlayer(String string) throws NotProgramCardException {
+        try {
+            this.playerNumber = Character.getNumericValue(string.charAt(0));
+            String card = string.substring(2);
+            return convertToCard(card);
+        } catch (NumberFormatException error) {
+            throw new NotProgramCardException("This is not a programcard with a player: " + string);
+        }
     }
 
     /**

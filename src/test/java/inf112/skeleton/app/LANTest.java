@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.LAN.Converter;
 import inf112.skeleton.app.LAN.GameClientThread;
+import inf112.skeleton.app.LAN.NotProgramCardException;
 import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Messages;
@@ -111,7 +112,11 @@ public class LANTest {
         }
         client.getStartValues();
         String programCardAndPlayer = client.getMessage();
-        ProgramCard card = converter.convertToCardAndExtractPlayer(programCardAndPlayer);
+        try {
+            ProgramCard card = converter.convertToCardAndExtractPlayer(programCardAndPlayer);
+        } catch (NotProgramCardException e) {
+            e.printStackTrace();
+        }
         assertEquals(1, converter.getPlayerNumber());
     }
 
@@ -161,10 +166,5 @@ public class LANTest {
         String mapPath = client.getMap();
         assertEquals("assets/maps/Risky Exchange.tmx", mapPath);
     }
-
-
-
-
-
 
 }
