@@ -186,12 +186,23 @@ public class MenuScreenActors {
                 }
                 String port = portInput.getText();
                 String numberOfPlayer = numOfPlayers.getText();
+                if (port.equals("") && numberOfPlayer.equals("")) {
+                    portInput.setMessageText("Need to give a portnumber. :) ");
+                    numOfPlayers.setMessageText("Need to give number of players.");
+                    return false;
+                }
                 if (port.equals("")) {
                     portInput.setMessageText("Need to give a portnumber. :) ");
                     return false;
                 } else if (numberOfPlayer.equals("")) {
                     numOfPlayers.setMessageText("Need to give number of players.");
                     return false;
+                }
+                if (!isNumber(port)) {
+                    portInput.setMessageText("Port can only have digits.");
+                }
+                if (!portInValidRange(Integer.parseInt(port))) {
+                    portInput.setMessageText("Give number between 1024 and 49151");
                 }
                 return true;
             }
@@ -208,6 +219,11 @@ public class MenuScreenActors {
         joinGameButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         joinGameButton.setPosition(RIGHT_BUTTON_X, TOP_BUTTON_Y);
         joinGameButton.addListener(new InputListener() {
+
+            /**
+             * If {@link #touchDown(InputEvent, float, float, int, int)} is true, player have chosen
+             * to join a game that is being hosted, then a client will connect to the host.
+             */
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (createGameButton.isVisible()) {
@@ -220,12 +236,65 @@ public class MenuScreenActors {
                 }
             }
 
+            /**
+             *
+             * @return False if input is required and no input is given. True otherwise.
+             */
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                if (createGameButton.isVisible()) {
+                    return true;
+                }
+                String ip = IPInput.getText();
+                String port = portInput.getText();
+                if (ip.equals("") && port.equals("")) {
+                    portInput.setMessageText("Need to give portnumber.");
+                    IPInput.setMessageText("Need to give IP address to host.");
+                    return false;
+                }
+                if (ip.equals("")) {
+                    IPInput.setMessageText("Need to give IP address to host. :)");
+                    return false;
+                }
+                if (port.equals("")) {
+                    portInput.setMessageText("Need to give portnumber..");
+                    return false;
+                }
+                if (!isNumber(port)) {
+                    portInput.setMessageText("Port can only have digits.");
+                    return false;
+                }
+                if (!portInValidRange(Integer.parseInt(port))) {
+                    portInput.setMessageText("Give number between 1024 and 49151");
+                    return false;
+                }
                 return true;
             }
         });
         stage.addActor(joinGameButton);
+    }
+
+    /**
+     *
+     * @param string
+     * @return True if string is an int
+     */
+    public boolean isNumber(String string) {
+        try {
+            Integer.parseInt(string);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     *
+     * @param port to check
+     * @return True if portnumber is registered but not well-known
+     */
+    public boolean portInValidRange(int port) {
+        return port >= 1024 &&port <= 49151;
     }
 
     public void initializeIPInput() {
@@ -310,6 +379,12 @@ public class MenuScreenActors {
         stage.addActor(IPLabel);
     }
 
+    /**
+     *
+     * Setting up new client.
+     *
+     * @return true if a client has been made
+     */
     public boolean setUpClient() {
         game.setUpClient(IPInput.getText(), Integer.parseInt(portInput.getText()));
         if (game.getClient() == null) {
