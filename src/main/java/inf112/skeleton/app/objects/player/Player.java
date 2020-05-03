@@ -36,6 +36,7 @@ public class Player {
 
     private int damageTokens;
     private int lifeTokens;
+    private boolean havePressedPowerDownButton;
 
     public Player(Vector2 position, int playerNr) {
         this.position = position;
@@ -374,4 +375,14 @@ public class Player {
             powerDownNextRound = !powerDownNextRound;
         }
     }
+
+    public void setHavePressedPowerDownButton(boolean havePressedPowerDownButton) {
+        this.havePressedPowerDownButton = havePressedPowerDownButton;
+    }
+
+    public boolean havePressedPowerDownButton() {
+        return havePressedPowerDownButton;
+    }
+
+
 }

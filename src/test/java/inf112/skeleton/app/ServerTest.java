@@ -184,4 +184,12 @@ public class ServerTest {
         verify(gameServer).sendToAll(Messages.START_TURN.toString());
     }
 
+    @Test
+    public void doNotSendCardsFromPlayersInPowerDownTest() {
+        player2.setPoweredDown(true);
+        server.sendMessage("This should be last message");
+        server.sendSelectedCards(player2);
+        assertEquals("This should be last message", server.getLastSentMessage());
+    }
+
 }

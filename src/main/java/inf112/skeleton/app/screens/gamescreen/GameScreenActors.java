@@ -160,7 +160,7 @@ public class GameScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                if (game.shouldPickCards()) {
-                    game.confirmCards();
+                    game.confirm();
                     // Confirm power down somewhere
                 }
             }
@@ -195,6 +195,7 @@ public class GameScreenActors {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (!game.mainPlayer.isPoweringDown()) {
                     game.mainPlayer.togglePowerDownOrUpNextRound();
+                    game.mainPlayer.setHavePressedPowerDownButton(true);
                 }
             }
 

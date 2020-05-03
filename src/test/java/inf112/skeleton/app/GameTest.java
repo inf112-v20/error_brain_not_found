@@ -165,4 +165,11 @@ public class GameTest {
         assertTrue(player.getRegisters().getCards().isEmpty());
     }
 
+    @Test
+    public void playerPoweringDownBecomesPoweredDownTest() {
+        player.setPoweringDown(true);
+        game.powerDown();
+        assertTrue(player.isPoweredDown());
+    }
+
 }

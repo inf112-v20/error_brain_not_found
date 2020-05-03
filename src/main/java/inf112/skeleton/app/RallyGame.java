@@ -174,7 +174,14 @@ public class RallyGame extends Game {
         return shouldPickCards;
     }
 
-    public void confirmCards() {
+    /**
+     * Called when confirmbutton in {@link inf112.skeleton.app.screens.gamescreen.GameScreenActors} is pressed.
+     */
+    public void confirm() {
+        if (mainPlayer.havePressedPowerDownButton()) {
+            mainPlayer.setPoweringDown(true);
+            System.out.println("Powering down..");
+        }
         if (!mainPlayer.getRegisters().hasRegistersWithoutCard()) {
             sendSelectedCardsToServer();
             if (isServer) {
@@ -318,6 +325,11 @@ public class RallyGame extends Game {
             }
             discardCards();
             powerDown();
+
+            letClientsAndServerContinue();
+            System.out.println("Continue talking");
+            sendPoweredDownMessage();
+
             dealCards();
             ((GameScreen) screen).updateCards();
 
@@ -325,8 +337,7 @@ public class RallyGame extends Game {
                 serverThread.getServer().setAllClientsHaveSelectedCards(false);
             }
             setShouldPickCards(true);
-            letClientsAndServerContinue();
-            System.out.println("Continue talking");
+            //letClientsAndServerContinue();
         }
     }
 
@@ -726,6 +737,9 @@ public class RallyGame extends Game {
         }
     }
 
+    /**
+     * If a player has pressed powerDown button the round before, player is in powerDown.
+     */
     public void powerDown() {
         for (Player player : players) {
             if (player.isPoweringDown()) {
@@ -734,6 +748,19 @@ public class RallyGame extends Game {
             }
             if (player.isPoweredDown()) {
                 player.resetDamageTokens();
+            }
+        }
+    }
+
+    /**
+     * Let the other players know you have powered down.
+     */
+    public void sendPoweredDownMessage() {
+        if (mainPlayer.isPoweredDown()) {
+            if (isServer) {
+                serverThread.getServer().sendToAll("1"+Messages.POWER_DOWN.toString());
+            } else {
+                client.sendMessage(mainPlayer.getPlayerNr()+Messages.POWER_DOWN.toString());
             }
         }
     }
