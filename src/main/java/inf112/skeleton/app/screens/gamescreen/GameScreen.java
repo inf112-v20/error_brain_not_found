@@ -24,6 +24,7 @@ public class GameScreen extends StandardScreen {
         actors.initializeNumberLabels();
         actors.initializePriorityLabels();
         actors.initializeLockedLabels();
+        actors.initializePowerDownButton();
 
         float tilePx = 300f;
         float unitScale = ((float) Gdx.graphics.getHeight() / game.getBoard().getHeight()) / tilePx;

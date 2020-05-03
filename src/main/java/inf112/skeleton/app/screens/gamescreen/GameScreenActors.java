@@ -1,10 +1,6 @@
 package inf112.skeleton.app.screens.gamescreen;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -12,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Align;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
@@ -29,31 +24,30 @@ public class GameScreenActors {
     public float screenWidth;
     public float screenHeight;
     public float mapRightPx;
-    private final ArrayList<Label> registerNumberLabels;
-    private final ArrayList<Label> cardPriorityLabels;
-    private final ArrayList<Label> lockedLabels;
-    private Label damageTokenLabel;
-    private Label lifeTokenLabel;
     public float programCardWidth;
     public float programCardHeight;
     public float confirmButtonSize;
     public float damageTokenSize;
     public float lifeTokenSize;
 
+    private final ArrayList<ImageButton> programCardButtons;
     private ImageButton confirmButton;
+    private ImageButton powerDownButton;
+
+    private final ArrayList<Label> registerNumberLabels;
+    private final ArrayList<Label> cardPriorityLabels;
+    private final ArrayList<Label> lockedLabels;
+    private Label damageTokenLabel;
+    private Label lifeTokenLabel;
 
     private final RallyGame game;
     private final Stage stage;
     private final ProgramCardSkin cardSkin;
-    private final ArrayList<ImageButton> programCardButtons;
-    public Skin skin;
-    public Skin numberSkin;
 
     public GameScreenActors(RallyGame game, Stage stage) {
         this.game = game;
         this.stage = stage;
-        this.skin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
-        this.numberSkin = new Skin(Gdx.files.internal("assets/skins/number-cruncher-ui.json"));
+
         programCardButtons = new ArrayList<>();
         registerNumberLabels = new ArrayList<>();
         cardPriorityLabels = new ArrayList<>();
@@ -82,6 +76,7 @@ public class GameScreenActors {
             updatePriorityLabels();
         }
         updateConfirm();
+        updatePowerDownButton();
         updateLifeTokenLabel();
         updateDamageTokenLabel();
         updateRegisterNumberLabels();
@@ -155,20 +150,17 @@ public class GameScreenActors {
     // CONFIRM BUTTON
 
     public void initializeConfirmButton() {
-        TextureAtlas atlas = new TextureAtlas();
-        TextureRegion confirmTexture = new TextureRegion(new Texture("assets/images/ConfirmButton.png"));
         ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
-        atlas.addRegion("Confirm button", confirmTexture);
-        Skin skin = new Skin(atlas);
-        style.up = skin.getDrawable("Confirm button");
+        style.up = game.getActorImages().getDrawable("Confirm ready");
         confirmButton = new ImageButton(style);
         confirmButton.setSize(confirmButtonSize, confirmButtonSize);
         confirmButton.setPosition(screenWidth - confirmButtonSize, 0);
         confirmButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if (game.shouldPickCards()) {
+               if (game.shouldPickCards()) {
                     game.confirmCards();
+                    // Confirm power down somewhere
                 }
             }
 
@@ -181,17 +173,55 @@ public class GameScreenActors {
     }
 
     public void updateConfirm() {
-        if (!game.mainPlayer.getRegisters().hasRegistersWithoutCard()) {
-            confirmButton.getStyle().up = game.buttonSkins.getSkins().getDrawable("Confirm ready");
+        if (!game.mainPlayer.getRegisters().hasRegistersWithoutCard() || game.mainPlayer.isPoweredDown()) {
+            confirmButton.getStyle().up = game.actorImages.getSkin().getDrawable("Confirm ready");
         } else {
-            confirmButton.getStyle().up = game.buttonSkins.getSkins().getDrawable("Confirm not ready");
+            confirmButton.getStyle().up = game.actorImages.getSkin().getDrawable("Confirm not ready");
+        }
+    }
+
+    // POWER DOWN BUTTON
+
+    public void initializePowerDownButton() {
+        ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
+        style.up = game.getActorImages().getDrawable("Power down active");
+        style.checked = game.getActorImages().getDrawable("Powering down");
+        powerDownButton = new ImageButton(style);
+        powerDownButton.setSize(confirmButtonSize, confirmButtonSize);
+        powerDownButton.setPosition(screenWidth - confirmButtonSize, confirmButtonSize);
+        powerDownButton.addListener(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if (!game.mainPlayer.isPoweringDown()) {
+                    game.mainPlayer.togglePowerDownOrUpNextRound();
+                }
+            }
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+        stage.addActor(powerDownButton);
+    }
+
+    public void updatePowerDownButton() {
+        if (game.mainPlayer.isPoweringDown()) {
+            powerDownButton.getStyle().up = game.getActorImages().getDrawable("Powering down");
+        } else if (game.mainPlayer.isPoweredDown()) {
+            powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power up active");
+            powerDownButton.getStyle().checked = game.getActorImages().getDrawable("Power up inactive");
+        } else {
+            powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down active");
+            powerDownButton.getStyle().checked = game.getActorImages().getDrawable("Power down inactive");
+
         }
     }
 
     // DAMAGE TOKEN IMAGES
 
     public void initializeDamageTokens() {
-        Image token = new Image(new Texture("assets/images/damageToken.png"));
+        Image token = new Image(game.getActorImages().getDrawable("Damage token"));
         token.setSize(damageTokenSize, damageTokenSize);
         token.setPosition(mapRightPx, lifeTokenSize);
         stage.addActor(token);
@@ -202,7 +232,7 @@ public class GameScreenActors {
     }
 
     public void initializeDamageTokenLabel() {
-        damageTokenLabel = new Label("", numberSkin);
+        damageTokenLabel = new Label("", game.getTextSkin());
         damageTokenLabel.setHeight(damageTokenSize);
         damageTokenLabel.setPosition(mapRightPx + damageTokenSize, lifeTokenSize);
         damageTokenLabel.setFontScale(labelFontScale * 2f);
@@ -212,7 +242,7 @@ public class GameScreenActors {
     // LIFE TOKEN IMAGES
 
     public void initializeLifeTokens() {
-        Image token = new Image(new Texture("assets/images/lifeToken.png"));
+        Image token = new Image(game.getActorImages().getDrawable("Life token"));
         token.setSize(lifeTokenSize, lifeTokenSize);
         token.setPosition(mapRightPx, 0);
         stage.addActor(token);
@@ -223,7 +253,7 @@ public class GameScreenActors {
     }
 
     public void initializeLifeTokenLabel() {
-        lifeTokenLabel = new Label("", numberSkin);
+        lifeTokenLabel = new Label("", game.getTextSkin());
         lifeTokenLabel.setHeight(lifeTokenSize);
         lifeTokenLabel.setPosition(mapRightPx + lifeTokenSize, 0);
         lifeTokenLabel.setFontScale(labelFontScale * 2f);
@@ -234,7 +264,7 @@ public class GameScreenActors {
 
     public void initializePriorityLabels() {
         for (ImageButton button : programCardButtons) {
-            Label cardPriority = new Label("", numberSkin, "lcd", Color.WHITE);
+            Label cardPriority = new Label("", game.getTextSkin(), "lcd", Color.WHITE);
             float height = programCardHeight * .18f;
             float x = button.getX() + programCardWidth * 0.1f;
             float y = button.getY() + programCardHeight + height * 0.5f;
@@ -278,7 +308,7 @@ public class GameScreenActors {
 
     public void initializeNumberLabels() {
         for (ImageButton button : programCardButtons) {
-            Label numberLabel = new Label("", numberSkin, "button", Color.RED);
+            Label numberLabel = new Label("", game.getTextSkin(), "button", Color.RED);
             float height = programCardHeight * .18f;
             float x = button.getX() + programCardWidth * 0.1f;
             float y = button.getY() + programCardHeight + height / 1.65f;
@@ -333,7 +363,7 @@ public class GameScreenActors {
     public void initializeLockedLabels() {
         for (int cardButtonIndex = 4; cardButtonIndex < 9; cardButtonIndex++) {
             ImageButton cardButton = programCardButtons.get(cardButtonIndex);
-            Label lockedLabel = new Label("LOCKED", numberSkin, "title", Color.RED);
+            Label lockedLabel = new Label("LOCKED", game.getTextSkin(), "title", Color.RED);
             Container<Label> wrapper = new Container<>(lockedLabel);
             wrapper.setTransform(true);
             wrapper.setRotation(45);

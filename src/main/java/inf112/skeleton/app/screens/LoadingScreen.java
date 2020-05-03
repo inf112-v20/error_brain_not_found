@@ -1,6 +1,5 @@
 package inf112.skeleton.app.screens;
 
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -15,7 +14,7 @@ public class LoadingScreen extends StandardScreen {
     public LoadingScreen(final RallyGame game) {
         super(game);
 
-        Image background = new Image(new Texture("assets/images/RoboRallyMenuScreen.png"));
+        Image background = new Image(game.getActorImages().getDrawable("Loading screen background"));
         background.setSize(camera.viewportWidth, camera.viewportHeight);
         background.addListener(new InputListener() {
             @Override

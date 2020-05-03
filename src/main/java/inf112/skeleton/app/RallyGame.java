@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
@@ -15,9 +16,9 @@ import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.objects.player.Player;
 import inf112.skeleton.app.objects.player.PlayerSorter;
-import inf112.skeleton.app.screens.ButtonSkin;
+import inf112.skeleton.app.screens.ActorImages;
+import inf112.skeleton.app.screens.LoadingScreen;
 import inf112.skeleton.app.screens.gifscreen.GifScreen;
-import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
 import java.util.ArrayList;
@@ -37,13 +38,17 @@ public class RallyGame extends Game {
     public Music gameMusic;
     public Player mainPlayer;
 
-    public ButtonSkin buttonSkins;
+    public Skin textSkin;
+    public Skin defaultSkin;
+    public ActorImages actorImages;
 
     public static float volume = 0.5f;
 
     public void create() {
-        this.buttonSkins = new ButtonSkin();
-        this.setScreen(new MenuScreen(this));
+        this.actorImages = new ActorImages();
+        this.textSkin = new Skin(Gdx.files.internal("assets/skins/number-cruncher-ui.json"));
+        this.defaultSkin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
+        this.setScreen(new LoadingScreen(this));
         startMusic();
     }
 
@@ -72,6 +77,18 @@ public class RallyGame extends Game {
         } else {
             Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
         }
+    }
+
+    public Skin getActorImages() {
+        return actorImages.getSkin();
+    }
+
+    public Skin getTextSkin() {
+        return textSkin;
+    }
+
+    public Skin getDefaultSkin() {
+        return defaultSkin;
     }
 
     public void setShouldPickCards(boolean shouldPickCards) {
@@ -153,12 +170,12 @@ public class RallyGame extends Game {
             if (Thread.interrupted()) {
                 return;
             }
-            for (int i = 0; i < 5; i++) {
+            for (int cardNumber = 0; cardNumber < 5; cardNumber++) {
 
-                System.out.println("Runde " + (i + 1));
+                System.out.println("Runde " + (cardNumber + 1));
 
                 // All players play one card in the correct order
-                allPlayersPlayCard(i);
+                allPlayersPlayCard(cardNumber);
                 sleep(250);
 
                 // Express belts move 1
@@ -204,6 +221,7 @@ public class RallyGame extends Game {
             respawnPlayers();
             updateRegisters();
             discardCards();
+            powerDown();
             dealCards();
             setShouldPickCards(true);
         }
@@ -229,7 +247,9 @@ public class RallyGame extends Game {
 
     public void dealCards() {
         for (Player player : players) {
-            player.drawCards(deck);
+            if (!player.isPoweredDown()) {
+                player.drawCards(deck);
+            }
         }
     }
 
@@ -269,8 +289,8 @@ public class RallyGame extends Game {
 
     public void allPlayersPlayCard(int cardNumber) {
         ArrayList<Player> playerOrder = new ArrayList<>(players);
-        // Add all players to order list, and remove players with no cards left
-        // playerOrder.removeIf(p -> p.getSelectedCards().isEmpty());
+        // Add all players to order list, and remove powered down players
+        playerOrder.removeIf(Player::isPoweredDown);
         playerOrder.sort(new PlayerSorter());
         for (Player player : playerOrder) {
             playCard(player, cardNumber);
@@ -462,5 +482,17 @@ public class RallyGame extends Game {
 
     public Board getBoard() {
         return this.board;
+    }
+
+    public void powerDown() {
+        for (Player player : players) {
+            if (player.isPoweringDown()) {
+                player.setPoweredDown(true);
+                player.setPoweringDown(false);
+            }
+            if (player.isPoweredDown()) {
+                player.resetDamageTokens();
+            }
+        }
     }
 }
