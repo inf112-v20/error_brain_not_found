@@ -207,7 +207,6 @@ public class MenuScreenActors {
         return numberOfPLayers >= 2 && numberOfPLayers <= 8;
     }
 
-
     public void initializeJoinGame() {
         ImageButton.ImageButtonStyle joinGameButtonStyle = new ImageButton.ImageButtonStyle();
         joinGameButtonStyle.up = game.actorImages.getSkin().getDrawable("Join game");

@@ -171,7 +171,7 @@ public class GameServerThreads extends Thread {
      * Tell game that cards are ready, doTurn can begin.
      */
     public void startDoTurn() {
-        game.cardsReady();
+        game.continueGameLoop();
     }
 
     /**
