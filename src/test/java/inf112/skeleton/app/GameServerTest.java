@@ -1,7 +1,7 @@
 package inf112.skeleton.app;
 
 import com.badlogic.gdx.math.Vector2;
-import inf112.skeleton.app.LAN.GameServer;
+import inf112.skeleton.app.lan.GameServer;
 import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.objects.player.Player;
 import org.junit.Before;

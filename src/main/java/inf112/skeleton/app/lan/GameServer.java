@@ -1,6 +1,5 @@
-package inf112.skeleton.app.LAN;
+package inf112.skeleton.app.lan;
 
-import com.badlogic.gdx.utils.ByteArray;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;

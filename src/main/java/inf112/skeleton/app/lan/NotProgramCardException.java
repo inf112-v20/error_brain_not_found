@@ -1,4 +1,4 @@
-package inf112.skeleton.app.LAN;
+package inf112.skeleton.app.lan;
 
 /**
  * Handling when input is not a card

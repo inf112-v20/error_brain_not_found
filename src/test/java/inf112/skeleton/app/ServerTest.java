@@ -1,9 +1,9 @@
 package inf112.skeleton.app;
 
 import com.badlogic.gdx.math.Vector2;
-import inf112.skeleton.app.LAN.Converter;
-import inf112.skeleton.app.LAN.GameServer;
-import inf112.skeleton.app.LAN.GameServerThreads;
+import inf112.skeleton.app.lan.Converter;
+import inf112.skeleton.app.lan.GameServer;
+import inf112.skeleton.app.lan.GameServerThreads;
 import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
