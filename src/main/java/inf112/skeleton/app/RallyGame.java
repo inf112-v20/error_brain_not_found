@@ -754,11 +754,15 @@ public class RallyGame extends Game {
 
     /**
      * Let the other players know you have powered down.
+     *
+     * If the host is powered down, set {@link GameServer#setServerHasConfirmed(boolean)} to true so
+     * that the next turn can start without server needed to press the confirm button.
      */
     public void sendPoweredDownMessage() {
         if (mainPlayer.isPoweredDown()) {
             if (isServer) {
                 serverThread.getServer().sendToAll("1"+Messages.POWER_DOWN.toString());
+                serverThread.getServer().setServerHasConfirmed(true);
             } else {
                 client.sendMessage(mainPlayer.getPlayerNr()+Messages.POWER_DOWN.toString());
             }

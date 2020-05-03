@@ -123,7 +123,7 @@ public class ServerTest {
         }
         server.start();
         waitForThread(server);
-        assertTrue(server.allClientsHaveSelectedCards());
+        assertTrue(server.allClientsHaveSelectedCardsOrInPowerDown());
     }
 
     @Test
@@ -162,7 +162,7 @@ public class ServerTest {
         }
         server.start();
         waitForThread(server);
-        assertTrue(server.allClientsHaveSelectedCards());
+        assertTrue(server.allClientsHaveSelectedCardsOrInPowerDown());
     }
 
     @Test
@@ -188,6 +188,22 @@ public class ServerTest {
         server.sendMessage("This should be last message");
         server.sendSelectedCards(player2);
         assertEquals("This should be last message", server.getLastSentMessage());
+    }
+
+    @Test
+    public void hostHasPoweredDownAndAllCardsReceivedStartTurnTest() {
+        player1.setPoweredDown(true);
+        try {
+            when(gameServer.serverHasConfirmed()).thenReturn(true);
+            when(reader.readLine()).thenReturn(cardString, cardString, cardString, cardString, cardString).thenReturn(Messages.STOP_THREAD.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Do not wait for doTurn to finish
+        server.continueListening();
+        server.start();
+        waitForThread(server);
+        verify(gameServer).sendToAll(Messages.START_TURN.toString());
     }
 
 }

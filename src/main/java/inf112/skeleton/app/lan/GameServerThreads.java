@@ -48,7 +48,7 @@ public class GameServerThreads extends Thread {
      *
      * When all clients have sent their cards, the {@link GameServer} will be notified, and it will wait until
      * the host confirm its cards before sending cards to the clients and start the turn. If a client is the last
-     * one to confirm its cards, then {@link #allPlayersHaveSelectedCards()} will be true and server will send all
+     * one to confirm its cards, then {@link #allPlayersHaveSelectedCardsOrInPowerDown()} will be true and server will send all
      * cards to players and tell them to start the turn.
      */
     public void run() {
@@ -73,7 +73,7 @@ public class GameServerThreads extends Thread {
                     System.out.println(player);
                     player.setPoweredDown(true);
                     server.sendToAllExcept(player, message);
-                    if (allClientsHaveSelectedCards()) {
+                    if (allClientsHaveSelectedCardsOrInPowerDown()) {
                         server.setAllClientsHaveSelectedCards(true);
                     }
                 }
@@ -83,15 +83,15 @@ public class GameServerThreads extends Thread {
                     int playerNumber = playerAndCard.getPlayerNumber();
                     Player player = game.getBoard().getPlayer(playerNumber);
                     addSelectedCard(player, card);
-                    if (allClientsHaveSelectedCards()) {
-                        server.setAllClientsHaveSelectedCards(true);
-                    }
-                    if (allPlayersHaveSelectedCards() && server.serverHasConfirmed()) {
+                    if (allPlayersHaveSelectedCardsOrInPowerDown() && server.serverHasConfirmed()) {
                         server.sendSelectedCardsToAll();
                         server.sendToAll(Messages.START_TURN.toString());
                         server.setServerHasConfirmed(false);
                         startDoTurn();
                         waitForDoTurnToFinish();
+                    }
+                    if (allClientsHaveSelectedCardsOrInPowerDown()) {
+                        server.setAllClientsHaveSelectedCards(true);
                     }
                 }
             }
@@ -141,14 +141,11 @@ public class GameServerThreads extends Thread {
 
     /**
      *
-     * @return true if all clients have selected cards. Server has playernr 1
+     * @return true if all clients have selected cards or in power down. Server has playernr 1
      */
-    public boolean allClientsHaveSelectedCards() {
+    public boolean allClientsHaveSelectedCardsOrInPowerDown() {
         for (Player player : game.getBoard().getPlayers()) {
-            if (player.isPoweredDown()) {
-                return true;
-            }
-            if (player.getPlayerNr() != 1 && player.getRegisters().hasRegistersWithoutCard()) {
+            if (player.getPlayerNr() != 1 && (player.getRegisters().hasRegistersWithoutCard() && !player.isPoweredDown())) {
                 return false;
             }
         }
@@ -194,9 +191,9 @@ public class GameServerThreads extends Thread {
      *
      * @return true if all players have selected their cards.
      */
-    public boolean allPlayersHaveSelectedCards() {
+    public boolean allPlayersHaveSelectedCardsOrInPowerDown() {
         for (Player player : game.getBoard().getPlayers()) {
-            if (player.getRegisters().hasRegistersWithoutCard()) {
+            if (player.getRegisters().hasRegistersWithoutCard() && !player.isPoweredDown()) {
                 return false;
             }
         }
