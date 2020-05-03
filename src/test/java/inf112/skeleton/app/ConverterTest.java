@@ -84,20 +84,19 @@ public class ConverterTest {
     @Test(expected = NotProgramCardException.class)
     public void throwsExceptionWhenNotACardTest() throws NotProgramCardException {
         String notACardsString = "This is not a card";
-        ProgramCard card = converter.convertToCard(notACardsString);
-        System.out.println(card.toString());
+        converter.convertToCard(notACardsString);
     }
 
     @Test(expected = NotProgramCardException.class)
     public void throwsExceptionWhenNotACardAndPlayerTest() throws NotProgramCardException {
         String notACardsString = "This is not a card";
-        PlayerAndProgramCard playerAndCard = converter.convertToCardAndExtractPlayer(notACardsString);
+        converter.convertToCardAndExtractPlayer(notACardsString);
     }
 
     @Test(expected = NotProgramCardException.class)
     public void throwsExceptionWhenOnlyCardNotCardAndPlayerTest() throws NotProgramCardException {
         String cardString = "1 20 3 NONE Move 3";
-        ProgramCard card = converter.convertToCard(cardString);
+        converter.convertToCard(cardString);
     }
 
     @Test
