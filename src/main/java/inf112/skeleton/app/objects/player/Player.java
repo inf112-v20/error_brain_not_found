@@ -30,6 +30,8 @@ public class Player {
     private int programCardsDealt;
     private Direction beltPushDir;
     private Vector2 beltPushPos;
+    private boolean poweringDown;
+    private boolean poweredDown;
 
     private int damageTokens;
     private int lifeTokens;
@@ -46,8 +48,10 @@ public class Player {
         this.beltPushDir = null;
         this.beltPushPos = null;
         this.programCardsDealt = 9;
+        this.poweringDown = false;
+        this.poweredDown = false;
 
-        setBackup(position, Direction.EAST);
+        setBackup(this.position, this.direction);
     }
 
     public ArrayList<ProgramCard> getCardsOnHand() {
@@ -313,5 +317,21 @@ public class Player {
 
     public String toString() {
         return "Player " + getPlayerNr();
+    }
+
+    public boolean isPoweringDown() {
+        return poweringDown;
+    }
+
+    public void setPoweringDown(boolean poweringDown) {
+        this.poweringDown = poweringDown;
+    }
+
+    public boolean isPoweredDown() {
+        return poweredDown;
+    }
+
+    public void setPoweredDown(boolean poweredDown) {
+        this.poweredDown = poweredDown;
     }
 }
