@@ -66,8 +66,10 @@ public class GameServerThreads extends Thread {
                     game.quitPlaying();
                     return;
                 } else {
-                    ProgramCard card = converter.convertToCardAndExtractPlayer(message);
-                    Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
+                    PlayerAndProgramCard playerAndCard = converter.convertToCardAndExtractPlayer(message);
+                    ProgramCard card = playerAndCard.getProgramCard();
+                    int playerNumber = playerAndCard.getPlayerNumber();
+                    Player player = game.getBoard().getPlayer(playerNumber);
                     addSelectedCard(player, card);
                     if (allClientsHaveSelectedCards()) {
                         server.setAllClientsHaveSelectedCards(true);

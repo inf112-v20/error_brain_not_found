@@ -100,10 +100,12 @@ public class GameClientThread extends Thread {
                 System.out.println("Got map");
             } else {
                 try {
-                    ProgramCard card = converter.convertToCardAndExtractPlayer(message);
+                    PlayerAndProgramCard playerAndCard = converter.convertToCardAndExtractPlayer(message);
+                    ProgramCard card = playerAndCard.getProgramCard();
+                    int playerNumber = playerAndCard.getPlayerNumber();
                     // Your player have already selected cards
-                    if (myPlayerNumber != converter.getPlayerNumber()) {
-                        Player player = game.getBoard().getPlayer(converter.getPlayerNumber());
+                    if (myPlayerNumber != playerNumber) {
+                        Player player = game.getBoard().getPlayer(playerNumber);
                         player.addSelectedCard(card);
                     }
                 } catch (NotProgramCardException e) {

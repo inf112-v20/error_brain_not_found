@@ -8,6 +8,7 @@ import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.enums.Rotate;
+import inf112.skeleton.app.lan.PlayerAndProgramCard;
 import inf112.skeleton.app.objects.player.Player;
 import org.junit.Before;
 import org.junit.Test;
@@ -109,11 +110,12 @@ public class ClientTest {
         client.getStartValues();
         String programCardAndPlayer = client.getMessage();
         try {
-            ProgramCard card = converter.convertToCardAndExtractPlayer(programCardAndPlayer);
+            PlayerAndProgramCard playerAndCard = converter.convertToCardAndExtractPlayer(programCardAndPlayer);
+            assertEquals(1, playerAndCard.getPlayerNumber());
         } catch (NotProgramCardException e) {
             e.printStackTrace();
         }
-        assertEquals(1, converter.getPlayerNumber());
+
     }
 
     @Test

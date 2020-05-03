@@ -4,6 +4,7 @@ import inf112.skeleton.app.lan.Converter;
 import inf112.skeleton.app.lan.NotProgramCardException;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Rotate;
+import inf112.skeleton.app.lan.PlayerAndProgramCard;
 import org.junit.Test;
 
 
@@ -60,8 +61,8 @@ public class ConverterTest {
         ProgramCard card = new ProgramCard(10, 0, Rotate.RIGHT, "Right rotate");
         String cardString = "1 10 0 RIGHT Right rotate";
         try {
-            ProgramCard convertedCard = converter.convertToCardAndExtractPlayer(cardString);
-            assertTrue("\n Expected: " + cardInfo(card) + "\n" + "Actual: " + cardInfo(convertedCard), isEqualCards(card, convertedCard));
+            PlayerAndProgramCard playerAndCard = converter.convertToCardAndExtractPlayer(cardString);
+            assertTrue("\n Expected: " + cardInfo(card) + "\n" + "Actual: " + cardInfo(playerAndCard.getProgramCard()), isEqualCards(card, playerAndCard.getProgramCard()));
         } catch (NotProgramCardException e) {
             e.printStackTrace();
         }
@@ -72,8 +73,8 @@ public class ConverterTest {
         ProgramCard card = new ProgramCard(20, 3, Rotate.NONE, "Move 3");
         String cardString = "1 20 3 NONE Move 3";
         try {
-            ProgramCard convertedCard = converter.convertToCardAndExtractPlayer(cardString);
-            assertTrue("\n Expected: " + cardInfo(card) + "\n" + "Actual: " + cardInfo(convertedCard), isEqualCards(card, convertedCard));
+            PlayerAndProgramCard playerAndCard = converter.convertToCardAndExtractPlayer(cardString);
+            assertTrue("\n Expected: " + cardInfo(card) + "\n" + "Actual: " + cardInfo(playerAndCard.getProgramCard()), isEqualCards(card, playerAndCard.getProgramCard()));
         } catch (NotProgramCardException e) {
             e.printStackTrace();
         }
@@ -90,7 +91,7 @@ public class ConverterTest {
     @Test(expected = NotProgramCardException.class)
     public void throwsExceptionWhenNotACardAndPlayerTest() throws NotProgramCardException {
         String notACardsString = "This is not a card";
-        ProgramCard card = converter.convertToCardAndExtractPlayer(notACardsString);
+        PlayerAndProgramCard playerAndCard = converter.convertToCardAndExtractPlayer(notACardsString);
     }
 
     @Test(expected = NotProgramCardException.class)

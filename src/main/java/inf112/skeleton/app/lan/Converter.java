@@ -1,5 +1,6 @@
 package inf112.skeleton.app.lan;
 
+import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Rotate;
 
@@ -12,8 +13,6 @@ import java.util.ArrayList;
  * @author Jenny
  */
 public class Converter {
-
-    private int playerNumber;
 
     /**
      * Give players playernumber and programcard, return info as a string.
@@ -81,17 +80,18 @@ public class Converter {
     }
 
     /**
-     * Convert a string to a corresponding programcard. Playernumber to player
-     * owning this card is stored in {@link #getPlayerNumber()}
+     * Convert a string to a corresponding programcard with a player.
+     *
      * @param string
-     * @return ProgramCard
+     * @return PlayerAndProgramCard a tuple with playerNumber and card
      * @throws NotProgramCardException
      */
-    public ProgramCard convertToCardAndExtractPlayer(String string) throws NotProgramCardException {
+    public PlayerAndProgramCard convertToCardAndExtractPlayer(String string) throws NotProgramCardException {
         try {
-            this.playerNumber = Character.getNumericValue(string.charAt(0));
+            int playerNumber = Character.getNumericValue(string.charAt(0));
             String card = string.substring(2);
-            return convertToCard(card);
+            ProgramCard programCard = convertToCard(card);
+            return new PlayerAndProgramCard(playerNumber, programCard);
         } catch (NumberFormatException error) {
             throw new NotProgramCardException("This is not a programcard with a player: " + string);
         }
@@ -119,10 +119,6 @@ public class Converter {
             }
         }
         return strings;
-    }
-
-    public int getPlayerNumber() {
-        return playerNumber;
     }
 
     /**
