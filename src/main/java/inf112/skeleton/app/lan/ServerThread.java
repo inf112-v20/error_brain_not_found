@@ -26,7 +26,8 @@ public class ServerThread extends Thread {
     public void run(){
         this.server = new GameServer(game);
         int numberOfClients = this.numberOfPlayers-1;
-        server.connect(portNumber, numberOfClients);
+        server.createServerSocket(portNumber);
+        server.connect(numberOfClients);
     }
 
     /**

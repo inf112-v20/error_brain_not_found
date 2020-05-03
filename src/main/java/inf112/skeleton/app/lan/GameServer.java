@@ -36,21 +36,38 @@ public class GameServer {
         game.setDeck(deck.getDeck());
     }
 
+    /**
+     * Set the socket for incoming connections.
+     *
+     * @param serverSocket
+     */
     public void setServerSocket(ServerSocket serverSocket) {
         this.serverSocket = serverSocket;
     }
 
     /**
-     * Establish a connection at given portnumber, waiting for
-     * number of clients to connect. Create a new thread for each client.
-     * Close socket after connection.
-     * @param port to open connection
+     * Create a serversocket using given portnumber
+     * @param portNumber
+     */
+    public void createServerSocket(int portNumber) {
+        try {
+            this.serverSocket = new ServerSocket(portNumber);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Establish a connection waiting for number of clients to connect. Create a new thread for each client.
+     * If no serverSocket is made by {@link #setServerSocket(ServerSocket)} or {@link #createServerSocket(int)} then
+     * a default serversocket will be made on port 9000. Close socket after connection.
+     *
      * @param numberOfClients how many clients allowed to connect before closing welcoming socket
      */
-    public void connect(int port, int numberOfClients) {
+    public void connect(int numberOfClients) {
         try {
             if (this.serverSocket == null) {
-                this.serverSocket = new ServerSocket(port);
+                this.serverSocket = new ServerSocket(9000);
             }
             // Connect to several clients
             int connected = 0;

@@ -55,13 +55,13 @@ public class GameServerTest {
 
     @Test
     public void oneClientConnectedTest() {
-        gameServer.connect(9000, 1);
+        gameServer.connect(1);
         assertEquals(1, gameServer.getClients().size());
     }
 
     @Test
     public void twoClientConnectedTest() {
-        gameServer.connect(9000, 2);
+        gameServer.connect( 2);
         assertEquals(2, gameServer.getClients().size());
     }
 
@@ -72,7 +72,7 @@ public class GameServerTest {
 
     @Test
     public void sendStartValuesWhenNewClientConnectedTest() {
-        gameServer.connect(9000, 1);
+        gameServer.connect(1);
         // Deck is sent after numberofPlayers and playernumber
         assertEquals(Messages.DECK_END.toString(), gameServer.getClients().get(0).getLastSentMessage());
     }
@@ -80,13 +80,13 @@ public class GameServerTest {
     @Test
     public void hostHasPickedMapConnectingClientGetsMapTest() {
         when(game.getMapPath()).thenReturn("My special map path");
-        gameServer.connect(9000, 1);
+        gameServer.connect(1);
         assertEquals("My special map path", gameServer.getClients().get(0).getLastSentMessage());
     }
 
     @Test
     public void sendToAllExceptPlayerNumberTwoTest() {
-        gameServer.connect(9000, 3);
+        gameServer.connect( 3);
         gameServer.sendToAll("Hello");
         gameServer.sendToAllExcept(new Player(new Vector2(0,0), 2), "Hello again");
         assertEquals("Hello", gameServer.getClients().get(0).getLastSentMessage());
@@ -94,7 +94,7 @@ public class GameServerTest {
 
     @Test
     public void removePlayerFromServerTest() {
-        gameServer.connect(9000, 2);
+        gameServer.connect(2);
         gameServer.remove(2);
         assertEquals(1, gameServer.getClients().size());
     }
