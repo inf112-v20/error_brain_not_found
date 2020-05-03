@@ -55,7 +55,6 @@ public class RallyGame extends Game {
     private ServerThread serverThread;
     private boolean isServer;
     private GameClientThread client;
-    private ProgramCard card;
     private Converter converter;
 
     public ButtonSkin buttonSkins;
@@ -294,12 +293,11 @@ public class RallyGame extends Game {
             }
             removeDeadPlayers();
             updateRegisters();
-            ArrayList<ProgramCard> lockedCards = discardCards();
 
-            if (deck.deckSize() < numberOfDealtCards()) {
-                if (isServer) {
-                    serverThread.getServer().createAndSendDeckToAll(lockedCards);
-                }
+            ArrayList<ProgramCard> lockedCards = discardCards();
+            if (isServer &&deck.deckSize() < numberOfDealtCards()) {
+                serverThread.getServer().createAndSendDeckToAll(lockedCards);
+
             }
             dealCards();
             ((GameScreen) screen).updateCards();

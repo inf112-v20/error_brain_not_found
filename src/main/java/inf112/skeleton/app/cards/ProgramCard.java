@@ -2,8 +2,6 @@ package inf112.skeleton.app.cards;
 
 import inf112.skeleton.app.enums.Rotate;
 
-import java.io.Serializable;
-
 public class ProgramCard {
     private final int priority;
     private final int distance;

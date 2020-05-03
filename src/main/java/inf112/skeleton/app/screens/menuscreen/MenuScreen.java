@@ -6,7 +6,7 @@ import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
 public class MenuScreen extends StandardScreen {
 
-    MenuScreenActors actors;
+    private MenuScreenActors actors;
 
     public MenuScreen(RallyGame game) {
         super(game);

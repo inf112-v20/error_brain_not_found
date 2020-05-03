@@ -131,10 +131,8 @@ public class GameServerThreads extends Thread {
      */
     public boolean allClientsHaveSelectedCards() {
         for (Player player : game.getBoard().getPlayers()) {
-            if (player.getPlayerNr() != 1) {
-                if (player.getRegisters().hasRegistersWithoutCard()) {
-                    return false;
-                }
+            if (player.getPlayerNr() != 1 && player.getRegisters().hasRegistersWithoutCard()) {
+                return false;
             }
         }
         return true;

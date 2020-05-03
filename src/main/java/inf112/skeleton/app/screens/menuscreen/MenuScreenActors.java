@@ -5,7 +5,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import inf112.skeleton.app.RallyGame;
@@ -37,7 +42,6 @@ public class MenuScreenActors {
 
     private SelectBox<String> selectMap;
     private ImageButton startButton;
-    private ImageButton exitButton;
     private ImageButton createGameButton;
     private ImageButton joinGameButton;
     private TextField IPInput;
@@ -106,7 +110,7 @@ public class MenuScreenActors {
         exitButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Exit");
         exitButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Exit over");
 
-        exitButton = new ImageButton(exitButtonStyle);
+        ImageButton exitButton = new ImageButton(exitButtonStyle);
         exitButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         exitButton.setPosition(CENTERED_BUTTON_X, BOTTOM_BUTTON_Y);
         exitButton.addListener(new InputListener() {
@@ -185,30 +189,38 @@ public class MenuScreenActors {
                     return true;
                 }
                 String port = portInput.getText();
-                String numberOfPlayer = numOfPlayers.getText();
-                if (port.equals("") && numberOfPlayer.equals("")) {
-                    portInput.setMessageText("Need to give a portnumber. :) ");
-                    numOfPlayers.setMessageText("Need to give number of players.");
+                String numberOfPlayers = numOfPlayers.getText();
+                if (!isValidInputPortAndNumberOfPlayers(port, numberOfPlayers)) {
+                    portInput.setText("Portnumber between 1024 and 49151.");
+                    numOfPlayers.setText("Number of players between 2 and 8.");
                     return false;
-                }
-                if (port.equals("")) {
-                    portInput.setMessageText("Need to give a portnumber. :) ");
-                    return false;
-                } else if (numberOfPlayer.equals("")) {
-                    numOfPlayers.setMessageText("Need to give number of players.");
-                    return false;
-                }
-                if (!isNumber(port)) {
-                    portInput.setMessageText("Port can only have digits.");
-                }
-                if (!portInValidRange(Integer.parseInt(port))) {
-                    portInput.setMessageText("Give number between 1024 and 49151");
                 }
                 return true;
             }
         });
         stage.addActor(createGameButton);
     }
+
+    /**
+     *
+     * @param port
+     * @param numberOfPlayers
+     * @return true og port and numberOfPlayers are not empty and in valid range
+     */
+    public boolean isValidInputPortAndNumberOfPlayers(String port, String numberOfPlayers) {
+        return (!"".equals(port) && !"".equals(numberOfPlayers) && isNumber(port) && isNumber(numberOfPlayers) &&
+                portInValidRange(Integer.parseInt(port)) && numberOfPlayersInValidRange(Integer.parseInt(numberOfPlayers)));
+    }
+
+    /**
+     *
+     * @param numberOfPLayers
+     * @return True if players between 2 and 8.
+     */
+    private boolean numberOfPlayersInValidRange(int numberOfPLayers) {
+        return numberOfPLayers >= 2 && numberOfPLayers <= 8;
+    }
+
 
     public void initializeJoinGame() {
         ImageButton.ImageButtonStyle joinGameButtonStyle = new ImageButton.ImageButtonStyle();
@@ -247,31 +259,25 @@ public class MenuScreenActors {
                 }
                 String ip = IPInput.getText();
                 String port = portInput.getText();
-                if (ip.equals("") && port.equals("")) {
-                    portInput.setMessageText("Need to give portnumber.");
-                    IPInput.setMessageText("Need to give IP address to host.");
-                    return false;
-                }
-                if (ip.equals("")) {
-                    IPInput.setMessageText("Need to give IP address to host. :)");
-                    return false;
-                }
-                if (port.equals("")) {
-                    portInput.setMessageText("Need to give portnumber..");
-                    return false;
-                }
-                if (!isNumber(port)) {
-                    portInput.setMessageText("Port can only have digits.");
-                    return false;
-                }
-                if (!portInValidRange(Integer.parseInt(port))) {
-                    portInput.setMessageText("Give number between 1024 and 49151");
+                if (!isValidInputPortAndIP(port, ip)) {
+                    IPInput.setText("You need to give IP address.");
+                    portInput.setText("Portnumber between 1024 and 49151.");
                     return false;
                 }
                 return true;
             }
         });
         stage.addActor(joinGameButton);
+    }
+
+    /**
+     *
+     * @param port
+     * @param ip
+     * @return True if port and ip is not empty, port is a number and within range.
+     */
+    public boolean isValidInputPortAndIP(String port, String ip) {
+        return !"".equals(ip) && !"".equals(port) && isNumber(port) && portInValidRange(Integer.parseInt(port));
     }
 
     /**

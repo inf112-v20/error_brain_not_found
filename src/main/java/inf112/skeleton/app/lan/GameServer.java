@@ -47,6 +47,7 @@ public class GameServer {
 
     /**
      * Create a serversocket using given portnumber
+     *
      * @param portNumber
      */
     public void createServerSocket(int portNumber) {
@@ -67,7 +68,7 @@ public class GameServer {
     public void connect(int numberOfClients) {
         try {
             if (this.serverSocket == null) {
-                this.serverSocket = new ServerSocket(9000);
+                createServerSocket(9000);
             }
             // Connect to several clients
             int connected = 0;
