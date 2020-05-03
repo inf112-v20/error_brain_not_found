@@ -1,7 +1,6 @@
 package inf112.skeleton.app.screens.menuscreen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -18,15 +17,15 @@ import inf112.skeleton.app.screens.gamescreen.GameScreen;
 
 import java.io.File;
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.Objects;
 import java.util.concurrent.Semaphore;
 
 public class MenuScreenActors {
 
+
     private final Stage stage;
     private final RallyGame game;
-    public Skin skin;
+    private final Skin skin;
 
     public float screenWidth;
     public float screenHeight;
@@ -39,6 +38,9 @@ public class MenuScreenActors {
     public float CENTERED_BUTTON_X;
     public float LEFT_BUTTON_X;
     public float RIGHT_BUTTON_X;
+    public float EXIT_BUTTON_Y;
+    public float BUTTON_X;
+    public float START_BUTTON_Y;
 
     private final InputFilter inputFilter;
 
@@ -82,13 +84,17 @@ public class MenuScreenActors {
             waitForServerToSendMapPath.tryAcquire();
         } catch (Exception e) {
             e.printStackTrace();
+
+            START_BUTTON_Y = (float) (screenHeight * 0.5);
+            EXIT_BUTTON_Y = (float) (screenHeight * 0.5 - BUTTON_HEIGHT);
+            BUTTON_X = (float) (screenWidth * 0.5 - BUTTON_WIDTH * 0.5);
         }
     }
 
     public void initializeStartButton() {
         ImageButton.ImageButtonStyle startButtonStyle = new ImageButton.ImageButtonStyle();
-        startButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Start");
-        startButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Start over");
+        startButtonStyle.up = game.actorImages.getSkin().getDrawable("Start");
+        startButtonStyle.over = game.actorImages.getSkin().getDrawable("Start over");
 
         startButton = new ImageButton(startButtonStyle);
         startButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -113,8 +119,8 @@ public class MenuScreenActors {
 
     public void initializeExitButton() {
         ImageButton.ImageButtonStyle exitButtonStyle = new ImageButton.ImageButtonStyle();
-        exitButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Exit");
-        exitButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Exit over");
+        exitButtonStyle.up = game.actorImages.getSkin().getDrawable("Exit");
+        exitButtonStyle.over = game.actorImages.getSkin().getDrawable("Exit over");
 
         ImageButton exitButton = new ImageButton(exitButtonStyle);
         exitButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -134,7 +140,7 @@ public class MenuScreenActors {
     }
 
     public void initializeSelectMap() {
-        selectMap = new SelectBox<>(skin);
+        selectMap = new SelectBox<>(game.getDefaultSkin());
         selectMap.setItems(getMaps());
         selectMap.setSelected("Risky Exchange");
         selectMap.setWidth(BUTTON_WIDTH * .87f);
@@ -155,15 +161,15 @@ public class MenuScreenActors {
     }
 
     public void initializeBackground() {
-        Image background = new Image(new Texture("assets/images/GUI_Edited.jpg"));
+        Image background = new Image(game.getActorImages().getDrawable("Menu screen background"));
         background.setSize(screenWidth, screenHeight);
         stage.addActor(background);
     }
 
     public void initializeCreateGame() {
         ImageButton.ImageButtonStyle createGameButtonStyle = new ImageButton.ImageButtonStyle();
-        createGameButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Create game");
-        createGameButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Create game over");
+        createGameButtonStyle.up = game.actorImages.getSkin().getDrawable("Create game");
+        createGameButtonStyle.over = game.actorImages.getSkin().getDrawable("Create game over");
 
         createGameButton = new ImageButton(createGameButtonStyle);
         createGameButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -171,8 +177,7 @@ public class MenuScreenActors {
         createGameButton.addListener(new InputListener() {
 
             /**
-             * If {@link #touchDown(InputEvent, float, float, int, int)} is true and player have chosen
-             * to create game, a host is started.
+             * Start a host if input is valid.
              */
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
@@ -189,10 +194,6 @@ public class MenuScreenActors {
                 }
             }
 
-            /**
-             *
-             * @return False if input is required and no input is given. True otherwise.
-             */
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -224,8 +225,8 @@ public class MenuScreenActors {
 
     public void initializeJoinGame() {
         ImageButton.ImageButtonStyle joinGameButtonStyle = new ImageButton.ImageButtonStyle();
-        joinGameButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Join game");
-        joinGameButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Join game over");
+        joinGameButtonStyle.up = game.actorImages.getSkin().getDrawable("Join game");
+        joinGameButtonStyle.over = game.actorImages.getSkin().getDrawable("Join game over");
 
         joinGameButton = new ImageButton(joinGameButtonStyle);
         joinGameButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -233,8 +234,7 @@ public class MenuScreenActors {
         joinGameButton.addListener(new InputListener() {
 
             /**
-             * If {@link #touchDown(InputEvent, float, float, int, int)} is true, player have chosen
-             * to join a game that is being hosted, then a client will connect to the host.
+             * Create a client if input is valid.
              */
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
@@ -254,10 +254,6 @@ public class MenuScreenActors {
                 }
             }
 
-            /**
-             *
-             * @return False if input is required and no input is given. True otherwise.
-             */
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;

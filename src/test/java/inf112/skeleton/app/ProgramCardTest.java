@@ -130,7 +130,7 @@ public class ProgramCardTest {
 
 
     /**
-     * Starting at east, a sequence of right, left, left, uturn, right, uturn, right should give south.
+     * Starting at east, a sequence of right, left, left, uturn, right, should give west..
      */
 
     @Test
@@ -145,8 +145,8 @@ public class ProgramCardTest {
 
 
     /**
-     * Starting at (0,0) east, move one, rotate left, move two, rotate right, move one, turn around, move two should give
-     * (0, 2)
+     * Starting at (0,0) east, move one, rotate left, move two, rotate right, move one should give
+     * (2, 2)
      */
     @Test
     public void sequenceOfCardsTest() {
