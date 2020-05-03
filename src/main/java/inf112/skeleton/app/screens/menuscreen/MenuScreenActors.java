@@ -185,7 +185,6 @@ public class MenuScreenActors {
                         game.setUpHost(Integer.parseInt(portInput.getText()), Integer.parseInt(numOfPlayers.getText()));
                     }  else {
                         updateInvalidInputLabel();
-                        invalidInputLabel.setVisible(true);
                     }
                 }
             }
