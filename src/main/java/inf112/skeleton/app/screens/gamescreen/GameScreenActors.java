@@ -160,6 +160,7 @@ public class GameScreenActors {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                if (game.shouldPickCards()) {
                     game.confirmCards();
+                    // Confirm power down somewhere
                 }
             }
 
