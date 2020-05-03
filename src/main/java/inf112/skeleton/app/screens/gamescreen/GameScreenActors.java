@@ -184,6 +184,7 @@ public class GameScreenActors {
     public void initializePowerDownButton() {
         ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
         style.up = game.getActorImages().getDrawable("Power down active");
+        style.checked = game.getActorImages().getDrawable("Powering down");
         powerDownButton = new ImageButton(style);
         powerDownButton.setSize(confirmButtonSize, confirmButtonSize);
         powerDownButton.setPosition(screenWidth - confirmButtonSize, confirmButtonSize);
@@ -191,7 +192,7 @@ public class GameScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (!game.mainPlayer.isPoweringDown()) {
-                    game.mainPlayer.togglePowerDownOrUpNextRound();
+                    //game.mainPlayer.togglePowerDownOrUpNextRound();
                 }
             }
 
@@ -207,17 +208,12 @@ public class GameScreenActors {
         if (game.mainPlayer.isPoweringDown()) {
             powerDownButton.getStyle().up = game.getActorImages().getDrawable("Powering down");
         } else if (game.mainPlayer.isPoweredDown()) {
-            if (game.mainPlayer.getPowerUpNextRound()) {
-                powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down inactive");
-            } else {
-                powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down inactive");
-            }
+            powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down active");
+            powerDownButton.getStyle().checked = game.getActorImages().getDrawable("Power down");
         } else {
-            if (game.mainPlayer.getPowerDownNextRound()) {
-                powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down inactive");
-            } else {
-                powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down active");
-            }
+            powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down active");
+            powerDownButton.getStyle().checked = game.getActorImages().getDrawable("Powering down");
+
         }
     }
 

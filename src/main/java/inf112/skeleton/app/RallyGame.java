@@ -489,6 +489,8 @@ public class RallyGame extends Game {
             if (player.isPoweringDown()) {
                 player.setPoweredDown(true);
                 player.setPoweringDown(false);
+            }
+            if (player.isPoweredDown()) {
                 player.resetDamageTokens();
             }
         }
