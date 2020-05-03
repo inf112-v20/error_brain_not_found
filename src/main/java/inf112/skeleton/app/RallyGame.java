@@ -126,7 +126,7 @@ public class RallyGame extends Game {
             System.out.println("Did not find host.");
             Gdx.app.exit();
         } catch (IOException e) {
-            System.out.println("Could not connect to " + hostIP + " on port " + portNumber + " Quit.");
+            System.out.println("Could not connect to " + hostIP + " on port " + portNumber);
         }
     }
 

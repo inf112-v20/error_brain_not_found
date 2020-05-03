@@ -40,6 +40,8 @@ public class MenuScreenActors {
     public float LEFT_BUTTON_X;
     public float RIGHT_BUTTON_X;
 
+    private InputFilter inputFilter;
+
     private SelectBox<String> selectMap;
     private ImageButton startButton;
     private ImageButton createGameButton;
@@ -49,6 +51,7 @@ public class MenuScreenActors {
     private TextField numOfPlayers;
     private Label waitForHost;
     private Label IPLabel;
+    private Label invalidInputLabel;
     public Semaphore waitForServerToSendStartValues = new Semaphore(1);
     public Semaphore waitForServerToSendMapPath = new Semaphore(1);
     public Thread waitForGameSetupThread;
@@ -56,6 +59,7 @@ public class MenuScreenActors {
     public MenuScreenActors(RallyGame game, Stage stage) {
         this.game = game;
         this.stage = stage;
+        this.inputFilter = new InputFilter();
 
         screenWidth = Gdx.graphics.getWidth();
         screenHeight = Gdx.graphics.getHeight();
@@ -92,8 +96,10 @@ public class MenuScreenActors {
         startButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setupGame("assets/maps/" + selectMap.getSelected() + ".tmx");
-                game.setScreen(new GameScreen(game));
+                if (isValidInputPortAndNumberOfPlayers(portInput.getText(), numOfPlayers.getText())) {
+                    game.setupGame("assets/maps/" + selectMap.getSelected() + ".tmx");
+                    game.setScreen(new GameScreen(game));
+                }
             }
 
             @Override
@@ -170,12 +176,17 @@ public class MenuScreenActors {
              */
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setIsServerToTrue();
                 if (joinGameButton.isVisible()) {
                     toggleVisibilityCreateFirstClick();
                 } else {
-                    toggleVisibilityCreateSecondClick();
-                    game.setUpHost(Integer.parseInt(portInput.getText()), Integer.parseInt(numOfPlayers.getText()));
+                    if (isValidInputPortAndNumberOfPlayers(portInput.getText(), numOfPlayers.getText())) {
+                        toggleVisibilityCreateSecondClick();
+                        game.setIsServerToTrue();
+                        game.setUpHost(Integer.parseInt(portInput.getText()), Integer.parseInt(numOfPlayers.getText()));
+                    }  else {
+                        updateInvalidInputLabel();
+                        invalidInputLabel.setVisible(true);
+                    }
                 }
             }
 
@@ -185,16 +196,6 @@ public class MenuScreenActors {
              */
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (joinGameButton.isVisible()) {
-                    return true;
-                }
-                String port = portInput.getText();
-                String numberOfPlayers = numOfPlayers.getText();
-                if (!isValidInputPortAndNumberOfPlayers(port, numberOfPlayers)) {
-                    portInput.setText("Portnumber between 1024 and 49151.");
-                    numOfPlayers.setText("Number of players between 2 and 8.");
-                    return false;
-                }
                 return true;
             }
         });
@@ -241,9 +242,15 @@ public class MenuScreenActors {
                 if (createGameButton.isVisible()) {
                     toggleVisibilityJoinFirstClick();
                 } else {
-                    if (setUpClient()) {
-                        toggleVisibilityJoinSecondClick();
-                        waitForGameSetUpAndStartGame();
+                    if (isValidInputPortAndIP(portInput.getText(), IPInput.getText())) {
+                        if (setUpClient()) {
+                            toggleVisibilityJoinSecondClick();
+                            waitForGameSetUpAndStartGame();
+                        } else {
+                            invalidInputLabel.setText("Could not connect to " + IPInput.getText() + " on port " + portInput.getText());
+                        }
+                    } else {
+                        updateInvalidInputLabel();
                     }
                 }
             }
@@ -254,16 +261,6 @@ public class MenuScreenActors {
              */
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                if (createGameButton.isVisible()) {
-                    return true;
-                }
-                String ip = IPInput.getText();
-                String port = portInput.getText();
-                if (!isValidInputPortAndIP(port, ip)) {
-                    IPInput.setText("You need to give IP address.");
-                    portInput.setText("Portnumber between 1024 and 49151.");
-                    return false;
-                }
                 return true;
             }
         });
@@ -309,6 +306,7 @@ public class MenuScreenActors {
         IPInput.setWidth(BUTTON_WIDTH * .87f);
         IPInput.setPosition(screenWidth / 2f + BUTTON_WIDTH * .13f, TEXT_INPUT_Y);
         IPInput.setVisible(false);
+        IPInput.setTextFieldFilter(inputFilter);
         stage.addActor(IPInput);
     }
 
@@ -318,6 +316,7 @@ public class MenuScreenActors {
         portInput.setWidth(BUTTON_WIDTH * .87f);
         portInput.setPosition(screenWidth / 2f - BUTTON_WIDTH, TEXT_INPUT_Y);
         portInput.setVisible(false);
+        portInput.setTextFieldFilter(inputFilter);
         stage.addActor(portInput);
     }
 
@@ -327,6 +326,7 @@ public class MenuScreenActors {
         numOfPlayers.setWidth(BUTTON_WIDTH * .87f);
         numOfPlayers.setPosition(screenWidth / 2f + BUTTON_WIDTH * .13f, TEXT_INPUT_Y);
         numOfPlayers.setVisible(false);
+        numOfPlayers.setTextFieldFilter(inputFilter);
         stage.addActor(numOfPlayers);
     }
 
@@ -354,6 +354,7 @@ public class MenuScreenActors {
         selectMap.setVisible(true);
         startButton.setVisible(true);
         IPLabel.setVisible(true);
+        invalidInputLabel.setVisible(false);
     }
 
     public void toggleVisibilityJoinFirstClick() {
@@ -368,6 +369,7 @@ public class MenuScreenActors {
         portInput.setVisible(false);
         IPInput.setVisible(false);
         waitForHost.setVisible(true);
+        invalidInputLabel.setVisible(false);
     }
 
     public void initializeIPLabel() {
@@ -380,9 +382,32 @@ public class MenuScreenActors {
         IPLabel = new Label("Your IP: " + IP, skin);
         IPLabel.setPosition(CENTERED_BUTTON_X, TEXT_INPUT_Y + selectMap.getHeight());
         IPLabel.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        IPLabel.setAlignment(Align.center);
         IPLabel.setFontScale(1.5f);
         IPLabel.setVisible(false);
         stage.addActor(IPLabel);
+    }
+
+    public void initializeInvalidInputLabel() {
+        invalidInputLabel = new Label("", skin);
+        invalidInputLabel.setPosition(CENTERED_BUTTON_X, TEXT_INPUT_Y + selectMap.getHeight());
+        invalidInputLabel.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        invalidInputLabel.setAlignment(Align.center);
+        invalidInputLabel.setFontScale(1.5f);
+        stage.addActor(invalidInputLabel);
+    }
+
+    public void updateInvalidInputLabel() {
+        if (portInput.getText().equals("") || !portInValidRange(Integer.parseInt(portInput.getText()))) {
+            invalidInputLabel.setText("Invalid port number, should be between 1024 and 49151");
+            portInput.setText("");
+        } else if (numOfPlayers.getText().equals("") || !numberOfPlayersInValidRange(Integer.parseInt(numOfPlayers.getText()))) {
+            invalidInputLabel.setText("Number of players should be between 2 and 8");
+            numOfPlayers.setText("");
+        } else {
+            invalidInputLabel.setText("Invalid IP number");
+            IPInput.setText("");
+        }
     }
 
     /**
