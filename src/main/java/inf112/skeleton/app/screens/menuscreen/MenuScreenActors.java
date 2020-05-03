@@ -4,12 +4,11 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import inf112.skeleton.app.RallyGame;
@@ -22,10 +21,8 @@ import java.util.concurrent.Semaphore;
 
 public class MenuScreenActors {
 
-
     private final Stage stage;
     private final RallyGame game;
-    private final Skin skin;
 
     public float screenWidth;
     public float screenHeight;
@@ -38,9 +35,6 @@ public class MenuScreenActors {
     public float CENTERED_BUTTON_X;
     public float LEFT_BUTTON_X;
     public float RIGHT_BUTTON_X;
-    public float EXIT_BUTTON_Y;
-    public float BUTTON_X;
-    public float START_BUTTON_Y;
 
     private final InputFilter inputFilter;
 
@@ -77,17 +71,11 @@ public class MenuScreenActors {
         LEFT_BUTTON_X = (float) (screenWidth * 0.5 - BUTTON_WIDTH);
         RIGHT_BUTTON_X = (float) (screenWidth * 0.5);
 
-        skin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
-
         try {
             waitForServerToSendStartValues.tryAcquire();
             waitForServerToSendMapPath.tryAcquire();
         } catch (Exception e) {
             e.printStackTrace();
-
-            START_BUTTON_Y = (float) (screenHeight * 0.5);
-            EXIT_BUTTON_Y = (float) (screenHeight * 0.5 - BUTTON_HEIGHT);
-            BUTTON_X = (float) (screenWidth * 0.5 - BUTTON_WIDTH * 0.5);
         }
     }
 
@@ -296,7 +284,7 @@ public class MenuScreenActors {
     }
 
     public void initializeIPInput() {
-        IPInput = new TextField("", skin);
+        IPInput = new TextField("", game.getDefaultSkin());
         IPInput.setMessageText("IP address");
         IPInput.setWidth(BUTTON_WIDTH * .87f);
         IPInput.setPosition(screenWidth / 2f + BUTTON_WIDTH * .13f, TEXT_INPUT_Y);
@@ -306,7 +294,7 @@ public class MenuScreenActors {
     }
 
     public void initializePortInput() {
-        portInput = new TextField("", skin);
+        portInput = new TextField("", game.getDefaultSkin());
         portInput.setMessageText("Port number");
         portInput.setWidth(BUTTON_WIDTH * .87f);
         portInput.setPosition(screenWidth / 2f - BUTTON_WIDTH, TEXT_INPUT_Y);
@@ -316,7 +304,7 @@ public class MenuScreenActors {
     }
 
     public void initializeNumOfPlayersInput() {
-        numOfPlayers = new TextField("", skin);
+        numOfPlayers = new TextField("", game.getDefaultSkin());
         numOfPlayers.setMessageText("Number of players");
         numOfPlayers.setWidth(BUTTON_WIDTH * .87f);
         numOfPlayers.setPosition(screenWidth / 2f + BUTTON_WIDTH * .13f, TEXT_INPUT_Y);
@@ -326,7 +314,7 @@ public class MenuScreenActors {
     }
 
     public void initializeWaitForHostLabel() {
-        waitForHost = new Label("Wait for host to start game", skin);
+        waitForHost = new Label("Wait for host to start game", game.getDefaultSkin());
         waitForHost.setPosition(CENTERED_BUTTON_X, TOP_BUTTON_Y);
         waitForHost.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         waitForHost.setAlignment(Align.center);
@@ -373,7 +361,7 @@ public class MenuScreenActors {
             IP = InetAddress.getLocalHost().getHostAddress();
         } catch (Exception ignored) {
         }
-        IPLabel = new Label("Your IP: " + IP, skin);
+        IPLabel = new Label("Your IP: " + IP, game.getDefaultSkin());
         IPLabel.setPosition(CENTERED_BUTTON_X, TEXT_INPUT_Y + selectMap.getHeight());
         IPLabel.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         IPLabel.setAlignment(Align.center);
@@ -383,7 +371,7 @@ public class MenuScreenActors {
     }
 
     public void initializeInvalidInputLabel() {
-        invalidInputLabel = new Label("", skin);
+        invalidInputLabel = new Label("", game.getDefaultSkin());
         invalidInputLabel.setPosition(CENTERED_BUTTON_X, TEXT_INPUT_Y + selectMap.getHeight());
         invalidInputLabel.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         invalidInputLabel.setAlignment(Align.center);
