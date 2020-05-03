@@ -37,9 +37,6 @@ public class ProgramCardTest {
         new HeadlessApplication(new EmptyApplication());
         this.game = new RallyGame();
         this.game.setupGame("assets/maps/Risky Exchange.tmx");
-
-        // Already 4 players on board.
-        //TODO: Let setupGame take in playerNumber as arg
         player = new Player(new Vector2(0, 0), 2);
         player.setDirection(Direction.EAST);
         Board board = game.getBoard();
@@ -129,11 +126,10 @@ public class ProgramCardTest {
     }
 
     /**
-     * Starting at east, a sequence of right, left, left, uturn, right, uturn, right should give south.
+     * Starting at east, a sequence of right, left, left, uturn, right, should give west..
      */
     @Test
     public void sequenceOfRotateCardsTest() {
-        // player.setSelectedCards(right, left, left, uturn, right, uturn, right);
         player.setSelectedCards(right, left, left, uturn, right);
         for (int playedCards = 0; playedCards <= 4; playedCards++) {
             game.playCard(player, playedCards);
@@ -142,12 +138,11 @@ public class ProgramCardTest {
     }
 
     /**
-     * Starting at (0,0) east, move one, rotate left, move two, rotate right, move one, turn around, move two should give
-     * (0, 2)
+     * Starting at (0,0) east, move one, rotate left, move two, rotate right, move one should give
+     * (2, 2)
      */
     @Test
     public void sequenceOfCardsTest() {
-        //player.setSelectedCards(moveOne, left, moveTwo, right, moveOne, uturn, moveTwo);
         player.setSelectedCards(moveOne, left, moveTwo, right, moveOne);
         Vector2 afterPosition = new Vector2(2, 2);
         for (int playedCards = 0; playedCards <= 4; playedCards++) {
