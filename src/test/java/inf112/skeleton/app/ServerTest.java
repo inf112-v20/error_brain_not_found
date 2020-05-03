@@ -33,36 +33,32 @@ import static org.mockito.Mockito.when;
 public class ServerTest {
 
     private GameServerThreads server;
-    private Converter converter;
-    private ArrayList<Player> players;
-    private Player player1;
     private Player player2;
-    private ProgramCard card;
     private String cardString;
 
     @Mock
-    Socket socket;
+    private Socket socket;
 
     @Mock
-    GameServer gameServer;
+    private GameServer gameServer;
 
     @Mock
-    RallyGame game;
+    private RallyGame game;
 
     @Mock
-    InputStream input;
+    private InputStream input;
 
     @Mock
-    OutputStream output;
+    private OutputStream output;
 
     @Mock
-    BufferedReader reader;
+    private BufferedReader reader;
 
     @Mock
-    Deck deck;
+    private Deck deck;
 
     @Mock
-    Board board;
+    private Board board;
 
     @Before
     public void setUp() {
@@ -74,11 +70,11 @@ public class ServerTest {
             e.printStackTrace();
         }
         this.server = new GameServerThreads(gameServer, game, socket, 2);
-        this.converter = new Converter();
-        this.player1 = new Player(new Vector2(0,0), 1);
+        Converter converter = new Converter();
+        Player player1 = new Player(new Vector2(0, 0), 1);
         this.player2 = new Player(new Vector2(0, 1), 2);
-        this.players = new ArrayList<>(Arrays.asList(player1, player2));
-        this.card = new ProgramCard(10, 2, Rotate.NONE, "Move 2");
+        ArrayList<Player> players = new ArrayList<>(Arrays.asList(player1, player2));
+        ProgramCard card = new ProgramCard(10, 2, Rotate.NONE, "Move 2");
         this.cardString = converter.convertToString(2, card);
 
         when(game.getBoard()).thenReturn(board);

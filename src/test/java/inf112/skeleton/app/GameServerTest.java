@@ -26,19 +26,19 @@ public class GameServerTest {
     private GameServer gameServer;
 
     @Mock
-    ServerSocket serverSocket;
+    private ServerSocket serverSocket;
 
     @Mock
-    Socket socket;
+    private Socket socket;
 
     @Mock
-    RallyGame game;
+    private RallyGame game;
 
     @Mock
-    InputStream inputStream;
+    private InputStream inputStream;
 
     @Mock
-    OutputStream outputStream;
+    private OutputStream outputStream;
 
     @Before
     public void setUp() {

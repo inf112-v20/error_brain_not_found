@@ -27,12 +27,14 @@ public class SettingsInput extends InputAdapter {
                 game.fullscreen();
                 break;
             case Input.Keys.D:
+                // Test if player dies
                 for (int i = 0; i < 10; i++) {
                     game.getBoard().getPlayer(2).handleDamage();
                 }
                 game.decreaseLives();
                 game.respawnPlayers();
                 game.removeDeadPlayers();
+                break;
             default:
                 // Fuck u Codacy
         }
