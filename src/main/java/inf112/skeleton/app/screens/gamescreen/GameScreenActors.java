@@ -208,11 +208,11 @@ public class GameScreenActors {
         if (game.mainPlayer.isPoweringDown()) {
             powerDownButton.getStyle().up = game.getActorImages().getDrawable("Powering down");
         } else if (game.mainPlayer.isPoweredDown()) {
-            powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down active");
-            powerDownButton.getStyle().checked = game.getActorImages().getDrawable("Power down");
+            powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power up active");
+            powerDownButton.getStyle().checked = game.getActorImages().getDrawable("Power up inactive");
         } else {
             powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down active");
-            powerDownButton.getStyle().checked = game.getActorImages().getDrawable("Powering down");
+            powerDownButton.getStyle().checked = game.getActorImages().getDrawable("Power down inactive");
 
         }
     }

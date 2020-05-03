@@ -18,9 +18,11 @@ public class ActorImages {
         TextureRegion ExitOver = new TextureRegion(new Texture("assets/images/Exit button inactive.png"));
         TextureRegion Start = new TextureRegion(new Texture("assets/images/Start button active.png"));
         TextureRegion StartOver = new TextureRegion(new Texture("assets/images/Start button inactive.png"));
-        TextureRegion powerDownActive = new TextureRegion(new Texture("assets/images/Power Down Active ROG.png"));
+        TextureRegion powerDownActive = new TextureRegion(new Texture("assets/images/Power Down Active.png"));
         TextureRegion powerDownInactive = new TextureRegion(new Texture("assets/images/Power Down Inactive.png"));
-        TextureRegion poweringDown = new TextureRegion(new Texture("assets/images/Powering Down ROG.png"));
+        TextureRegion powerUpActive = new TextureRegion(new Texture("assets/images/Power Up Active.png"));
+        TextureRegion powerUpInactive = new TextureRegion(new Texture("assets/images/Power Up Inactive.png"));
+        TextureRegion poweringDown = new TextureRegion(new Texture("assets/images/Powering Down.png"));
 
         TextureRegion damageToken = new TextureRegion(new Texture("assets/images/damageToken.png"));
         TextureRegion lifeToken = new TextureRegion(new Texture("assets/images/lifeToken.png"));
@@ -37,6 +39,8 @@ public class ActorImages {
         atlas.addRegion("Start over", StartOver);
         atlas.addRegion("Power down active", powerDownActive);
         atlas.addRegion("Power down inactive", powerDownInactive);
+        atlas.addRegion("Power up active", powerUpActive);
+        atlas.addRegion("Power up inactive", powerUpInactive);
         atlas.addRegion("Powering down", poweringDown);
         atlas.addRegion("Loading screen background", loadingScreenBackground);
         atlas.addRegion("Menu screen background", menuScreenBackground);
