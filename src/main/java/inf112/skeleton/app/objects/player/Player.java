@@ -338,19 +338,32 @@ public class Player {
         this.poweredDown = poweredDown;
     }
 
-    public void setPowerUpNextRound(boolean powerUpNextRound) {
-        this.powerUpNextRound = powerUpNextRound;
-    }
-
-    public void setPowerDownNextRound(boolean powerDownNextRound) {
-        this.powerDownNextRound = powerDownNextRound;
-    }
-
     public boolean getPowerDownNextRound() {
         return powerDownNextRound;
     }
 
     public boolean getPowerUpNextRound() {
         return powerUpNextRound;
+    }
+
+    public void confirmPowerDown() {
+        if (powerUpNextRound) {
+            poweredDown = false;
+        } else if (!poweredDown && powerDownNextRound) {
+            poweringDown = true;
+        } else if (poweringDown || poweredDown) {
+            poweredDown = true;
+            poweringDown = false;
+        }
+        powerUpNextRound = false;
+        powerDownNextRound = false;
+    }
+
+    public void togglePowerDownOrUpNextRound() {
+        if (poweredDown) {
+            powerUpNextRound = !powerUpNextRound;
+        } else {
+            powerDownNextRound = !powerDownNextRound;
+        }
     }
 }

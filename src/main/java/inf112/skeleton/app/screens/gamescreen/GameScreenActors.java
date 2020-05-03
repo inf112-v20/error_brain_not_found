@@ -158,7 +158,7 @@ public class GameScreenActors {
         confirmButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if (game.shouldPickCards()) {
+               if (game.shouldPickCards()) {
                     game.confirmCards();
                 }
             }
@@ -190,7 +190,9 @@ public class GameScreenActors {
         powerDownButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-
+                if (!game.mainPlayer.isPoweringDown()) {
+                    game.mainPlayer.togglePowerDownOrUpNextRound();
+                }
             }
 
             @Override
@@ -205,9 +207,17 @@ public class GameScreenActors {
         if (game.mainPlayer.isPoweringDown()) {
             powerDownButton.getStyle().up = game.getActorImages().getDrawable("Powering down");
         } else if (game.mainPlayer.isPoweredDown()) {
-            powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down inactive");
+            if (game.mainPlayer.getPowerUpNextRound()) {
+                powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down inactive");
+            } else {
+                powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down inactive");
+            }
         } else {
-            powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down active");
+            if (game.mainPlayer.getPowerDownNextRound()) {
+                powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down inactive");
+            } else {
+                powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down active");
+            }
         }
     }
 
