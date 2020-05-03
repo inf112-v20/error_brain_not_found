@@ -5,7 +5,6 @@ import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.board.BoardLogic;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.board.Board;
-import inf112.skeleton.app.board.BoardLogic;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.cards.Registers;
@@ -32,6 +31,8 @@ public class Player {
     private Vector2 beltPushPos;
     private boolean poweringDown;
     private boolean poweredDown;
+    private boolean powerDownNextRound;
+    private boolean powerUpNextRound;
 
     private int damageTokens;
     private int lifeTokens;
@@ -50,6 +51,8 @@ public class Player {
         this.programCardsDealt = 9;
         this.poweringDown = false;
         this.poweredDown = false;
+        this.powerUpNextRound = false;
+        this.powerDownNextRound = false;
 
         setBackup(this.position, this.direction);
     }
@@ -333,5 +336,21 @@ public class Player {
 
     public void setPoweredDown(boolean poweredDown) {
         this.poweredDown = poweredDown;
+    }
+
+    public void setPowerUpNextRound(boolean powerUpNextRound) {
+        this.powerUpNextRound = powerUpNextRound;
+    }
+
+    public void setPowerDownNextRound(boolean powerDownNextRound) {
+        this.powerDownNextRound = powerDownNextRound;
+    }
+
+    public boolean getPowerDownNextRound() {
+        return powerDownNextRound;
+    }
+
+    public boolean getPowerUpNextRound() {
+        return powerUpNextRound;
     }
 }

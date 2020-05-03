@@ -76,6 +76,7 @@ public class GameScreenActors {
             updatePriorityLabels();
         }
         updateConfirm();
+        updatePowerDownButton();
         updateLifeTokenLabel();
         updateDamageTokenLabel();
         updateRegisterNumberLabels();
@@ -171,7 +172,7 @@ public class GameScreenActors {
     }
 
     public void updateConfirm() {
-        if (!game.mainPlayer.getRegisters().hasRegistersWithoutCard()) {
+        if (!game.mainPlayer.getRegisters().hasRegistersWithoutCard() || game.mainPlayer.isPoweredDown()) {
             confirmButton.getStyle().up = game.actorImages.getSkin().getDrawable("Confirm ready");
         } else {
             confirmButton.getStyle().up = game.actorImages.getSkin().getDrawable("Confirm not ready");
@@ -189,7 +190,7 @@ public class GameScreenActors {
         powerDownButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                System.out.println("Power down");
+
             }
 
             @Override
@@ -198,6 +199,16 @@ public class GameScreenActors {
             }
         });
         stage.addActor(powerDownButton);
+    }
+
+    public void updatePowerDownButton() {
+        if (game.mainPlayer.isPoweringDown()) {
+            powerDownButton.getStyle().up = game.getActorImages().getDrawable("Powering down");
+        } else if (game.mainPlayer.isPoweredDown()) {
+            powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down inactive");
+        } else {
+            powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down active");
+        }
     }
 
     // DAMAGE TOKEN IMAGES
