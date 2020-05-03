@@ -10,6 +10,7 @@ import inf112.skeleton.app.lan.Converter;
 import inf112.skeleton.app.lan.GameClientThread;
 import inf112.skeleton.app.lan.GameServer;
 import inf112.skeleton.app.lan.ServerThread;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
@@ -23,6 +24,8 @@ import inf112.skeleton.app.objects.player.Player;
 import inf112.skeleton.app.objects.player.PlayerSorter;
 import inf112.skeleton.app.screens.ButtonSkin;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
+import inf112.skeleton.app.screens.ActorImages;
+import inf112.skeleton.app.screens.LoadingScreen;
 import inf112.skeleton.app.screens.gifscreen.GifScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
@@ -46,9 +49,7 @@ public class RallyGame extends Game {
     public boolean playing;
     public boolean shouldPickCards;
     public Sound laserSound;
-
-    public static Music gameMusic;
-
+    public Music gameMusic;
     public Player mainPlayer;
     private int numberOfPlayers;
     private int myPlayerNumber;
@@ -57,14 +58,18 @@ public class RallyGame extends Game {
     private GameClientThread client;
     private Converter converter;
 
-    public ButtonSkin buttonSkins;
+    public Skin textSkin;
+    public Skin defaultSkin;
+    public ActorImages actorImages;
 
     public static float volume = 0.5f;
     private String mapPath;
 
     public void create() {
-        this.buttonSkins = new ButtonSkin();
-        this.setScreen(new MenuScreen(this));
+        this.actorImages = new ActorImages();
+        this.textSkin = new Skin(Gdx.files.internal("assets/skins/number-cruncher-ui.json"));
+        this.defaultSkin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
+        this.setScreen(new LoadingScreen(this));
         startMusic();
     }
 
@@ -151,6 +156,18 @@ public class RallyGame extends Game {
         }
     }
 
+    public Skin getActorImages() {
+        return actorImages.getSkin();
+    }
+
+    public Skin getTextSkin() {
+        return textSkin;
+    }
+
+    public Skin getDefaultSkin() {
+        return defaultSkin;
+    }
+
     public void setShouldPickCards(boolean shouldPickCards) {
         this.shouldPickCards = shouldPickCards;
     }
@@ -178,22 +195,22 @@ public class RallyGame extends Game {
     }
 
     @Override
-    public void setScreen (Screen screen){
+    public void setScreen(Screen screen) {
         if (this.screen != null) {
             this.screen.dispose();
         }
         super.setScreen(screen);
     }
 
-    public StandardScreen getScreen () {
+    public StandardScreen getScreen() {
         return (StandardScreen) super.getScreen();
     }
 
-    public void muteMusic () {
+    public void muteMusic() {
         gameMusic.setVolume(gameMusic.getVolume() == 0 ? 0.5f : 0);
     }
 
-    public void muteSounds () {
+    public void muteSounds() {
         volume = volume == 0 ? 0.5f : 0;
     }
 
@@ -242,12 +259,12 @@ public class RallyGame extends Game {
             if (Thread.interrupted()) {
                 return;
             }
-            for (int i = 0; i < 5; i++) {
+            for (int cardNumber = 0; cardNumber < 5; cardNumber++) {
 
-                System.out.println("Runde " + (i + 1));
+                System.out.println("Runde " + (cardNumber + 1));
 
                 // All players play one card in the correct order
-                allPlayersPlayCard(i);
+                allPlayersPlayCard(cardNumber);
                 sleep(250);
 
                 // Express belts move 1
@@ -299,6 +316,8 @@ public class RallyGame extends Game {
                 serverThread.getServer().createAndSendDeckToAll(lockedCards);
 
             }
+            discardCards();
+            powerDown();
             dealCards();
             ((GameScreen) screen).updateCards();
 
@@ -339,7 +358,7 @@ public class RallyGame extends Game {
         board.pickUpFlags();
     }
 
-    private void sleep ( int milliseconds){
+    private void sleep(int milliseconds) {
         try {
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
@@ -349,7 +368,9 @@ public class RallyGame extends Game {
 
     public void dealCards() {
         for (Player player : players) {
-            player.drawCards(deck);
+            if (!player.isPoweredDown()) {
+                player.drawCards(deck);
+            }
         }
     }
 
@@ -365,7 +386,7 @@ public class RallyGame extends Game {
      * Decrease life tokens to each player that has collected 10 damage tokens.
      * Reset damage tokens, remove player from board and discard all cards
      */
-    public void decreaseLives () {
+    public void decreaseLives() {
         ArrayList<Player> removedPlayers = new ArrayList<>();
         for (Player player : players) {
             if (player.getDamageTokens() >= 10 || board.getBoardLogic().outsideBoard(player, board)) {
@@ -410,6 +431,9 @@ public class RallyGame extends Game {
         playerOrder.removeIf(p -> !p.getRegisters().getRegister(cardNumber).hasCard());
         playerOrder.sort(new PlayerSorter(cardNumber));
 
+        // Add all players to order list, and remove powered down players
+        playerOrder.removeIf(Player::isPoweredDown);
+        playerOrder.sort(new PlayerSorter());
         for (Player player : playerOrder) {
             playCard(player, cardNumber);
             // Wait 1 second for each player
@@ -453,11 +477,11 @@ public class RallyGame extends Game {
         deck.addCardToDiscardPile(card);
     }
 
-    public void setWinScreen () {
+    public void setWinScreen() {
         setScreen(new GifScreen(this));
     }
 
-    public void removeLasers () {
+    public void removeLasers() {
         for (int y = 0; y < board.getHeight(); y++) {
             for (int x = 0; x < board.getWidth(); x++) {
                 board.getLaserLayer().setCell(x, y, null);
@@ -483,7 +507,7 @@ public class RallyGame extends Game {
         }
     }
 
-    public void activateRotatePads () {
+    public void activateRotatePads() {
         for (Player player : board.getPlayers()) {
             for (RotatePad pad : board.getRotatePads()) {
                 Vector2 playerPosition = player.getPosition();
@@ -518,13 +542,13 @@ public class RallyGame extends Game {
         updateBoard();
     }
 
-    private void updateBoard () {
+    private void updateBoard() {
         board.removePlayersFromBoard();
         updatePositionsAfterBeltPush();
         board.updateBoard();
     }
 
-    public void validateBeltPushPos () {
+    public void validateBeltPushPos() {
         for (Player player : players) {
             for (Player otherPlayer : players) {
                 if (player.getBeltPushPos() != null && !player.equals(otherPlayer) && player.getBeltPushPos().equals(otherPlayer.getBeltPushPos())) {
@@ -535,7 +559,7 @@ public class RallyGame extends Game {
         }
     }
 
-    public void updatePositionsAfterBeltPush () {
+    public void updatePositionsAfterBeltPush() {
         for (Player player : players) {
             if (player.getBeltPushPos() != null) {
                 player.setPosition(player.getBeltPushPos());
@@ -544,7 +568,7 @@ public class RallyGame extends Game {
         }
     }
 
-    public void beltPush (Player player, Belt belt){
+    public void beltPush(Player player, Belt belt) {
         Direction lastPush = player.getBeltPushDir();
         Direction beltDirection = belt.getDirection();
         if (lastPush != null) {
@@ -702,6 +726,18 @@ public class RallyGame extends Game {
                 }
             });
             sendMap.start();
+        }
+    }
+
+    public void powerDown() {
+        for (Player player : players) {
+            if (player.isPoweringDown()) {
+                player.setPoweredDown(true);
+                player.setPoweringDown(false);
+            }
+            if (player.isPoweredDown()) {
+                player.resetDamageTokens();
+            }
         }
     }
 }

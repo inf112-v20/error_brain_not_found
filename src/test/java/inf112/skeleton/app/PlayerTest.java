@@ -30,6 +30,7 @@ public class PlayerTest {
         game.setDeck(deck.getDeck());
         Vector2 pos = new Vector2(0,0);
         player = new Player(pos, 1);
+        game.dealCards();
     }
 
     @Test
@@ -108,6 +109,39 @@ public class PlayerTest {
             player.decrementLifeTokens();
         }
         assertTrue(player.isDead());
+    }
+
+    @Test
+    public void fiveDamagePointsLockLastCardTest() {
+        for (int damage = 0; damage < 5; damage++) {
+            player.handleDamage();
+        }
+        player.updateRegisters();
+        assertFalse(player.getRegisters().getRegisters().get(4).isOpen());
+    }
+
+    @Test
+    public void sixDamagePointsLockSecondLastCardTest() {
+        for (int damage = 0; damage < 6; damage++) {
+            player.handleDamage();
+        }
+        player.updateRegisters();
+        assertFalse(player.getRegisters().getRegisters().get(3).isOpen());
+    }
+
+    @Test
+    public void oneDamageTokensGivePlayerOneLessDealtCardTest() {
+        player.handleDamage();
+        game.dealCards();
+        assertEquals(8, player.getProgramCardsDealt());
+    }
+
+    @Test
+    public void twoDamageTokensGivePlayerTwoLessCardsTest() {
+        player.handleDamage();
+        player.handleDamage();
+        game.dealCards();
+        assertEquals(7, player.getProgramCardsDealt());
     }
 
 }

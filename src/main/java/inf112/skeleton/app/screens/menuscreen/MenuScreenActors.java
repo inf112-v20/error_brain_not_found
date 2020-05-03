@@ -1,7 +1,6 @@
 package inf112.skeleton.app.screens.menuscreen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -9,9 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
@@ -26,7 +22,6 @@ public class MenuScreenActors {
 
     private final Stage stage;
     private final RallyGame game;
-    public Skin skin;
 
     public float screenWidth;
     public float screenHeight;
@@ -87,8 +82,8 @@ public class MenuScreenActors {
 
     public void initializeStartButton() {
         ImageButton.ImageButtonStyle startButtonStyle = new ImageButton.ImageButtonStyle();
-        startButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Start");
-        startButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Start over");
+        startButtonStyle.up = game.actorImages.getSkin().getDrawable("Start");
+        startButtonStyle.over = game.actorImages.getSkin().getDrawable("Start over");
 
         startButton = new ImageButton(startButtonStyle);
         startButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -113,8 +108,8 @@ public class MenuScreenActors {
 
     public void initializeExitButton() {
         ImageButton.ImageButtonStyle exitButtonStyle = new ImageButton.ImageButtonStyle();
-        exitButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Exit");
-        exitButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Exit over");
+        exitButtonStyle.up = game.actorImages.getSkin().getDrawable("Exit");
+        exitButtonStyle.over = game.actorImages.getSkin().getDrawable("Exit over");
 
         ImageButton exitButton = new ImageButton(exitButtonStyle);
         exitButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -134,7 +129,7 @@ public class MenuScreenActors {
     }
 
     public void initializeSelectMap() {
-        selectMap = new SelectBox<>(skin);
+        selectMap = new SelectBox<>(game.getDefaultSkin());
         selectMap.setItems(getMaps());
         selectMap.setSelected("Risky Exchange");
         selectMap.setWidth(BUTTON_WIDTH * .87f);
@@ -155,7 +150,7 @@ public class MenuScreenActors {
     }
 
     public void initializeBackground() {
-        Image background = new Image(new Texture("assets/images/GUI_Edited.jpg"));
+        Image background = new Image(game.getActorImages().getDrawable("Menu screen background"));
         background.setSize(screenWidth, screenHeight);
         stage.addActor(background);
     }
