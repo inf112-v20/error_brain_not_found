@@ -70,12 +70,16 @@ public class GameServerThreads extends Thread {
                 if (message.contains(Messages.POWER_DOWN.toString())) {
                     int playerNumber = getPlayerNumberFromMessage(message);
                     Player player = game.getBoard().getPlayer(playerNumber);
-                    System.out.println(player);
                     player.setPoweredDown(true);
                     server.sendToAllExcept(player, message);
                     if (allClientsHaveSelectedCardsOrInPowerDown()) {
                         server.setAllClientsHaveSelectedCards(true);
                     }
+                }
+                else if (message.contains(Messages.POWER_UP.toString())) {
+                    int playerNumber = getPlayerNumberFromMessage(message);
+                    Player player = game.getBoard().getPlayer(playerNumber);
+                    player.setPoweredDown(false);
                 }
                 else {
                     PlayerAndProgramCard playerAndCard = converter.convertToCardAndExtractPlayer(message);

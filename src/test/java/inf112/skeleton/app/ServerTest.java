@@ -26,6 +26,7 @@ import java.util.Arrays;
 import java.util.Stack;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -127,7 +128,7 @@ public class ServerTest {
     }
 
     @Test
-    public void player2InPowerDownModeTest() {
+    public void player2SendPowerDownMesssageTest() {
         try {
             when(reader.readLine()).thenReturn("2"+Messages.POWER_DOWN.toString()).thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
@@ -204,6 +205,19 @@ public class ServerTest {
         server.start();
         waitForThread(server);
         verify(gameServer).sendToAll(Messages.START_TURN.toString());
+    }
+
+    @Test
+    public void player2SendsPowerUpMessageTest() {
+        player2.setPoweredDown(true);
+        try {
+            when(reader.readLine()).thenReturn("2"+Messages.POWER_UP.toString()).thenReturn(Messages.STOP_THREAD.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        server.start();
+        waitForThread(server);
+        assertFalse(player2.isPoweredDown());
     }
 
 }
