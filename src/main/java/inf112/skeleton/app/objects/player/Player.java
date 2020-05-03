@@ -349,9 +349,9 @@ public class Player {
     public void confirmPowerDown() {
         if (powerUpNextRound) {
             poweredDown = false;
-        } else if (!poweredDown && powerDownNextRound) {
+        } else if (powerDownNextRound) {
             poweringDown = true;
-        } else if (poweringDown || poweredDown) {
+        } else if (poweringDown) {
             poweredDown = true;
             poweringDown = false;
         }

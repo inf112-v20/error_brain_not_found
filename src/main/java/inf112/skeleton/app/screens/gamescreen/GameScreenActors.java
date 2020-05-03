@@ -192,7 +192,7 @@ public class GameScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (!game.mainPlayer.isPoweringDown()) {
-                    //game.mainPlayer.togglePowerDownOrUpNextRound();
+                    game.mainPlayer.togglePowerDownOrUpNextRound();
                 }
             }
 
