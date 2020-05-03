@@ -128,7 +128,6 @@ public class PlayerTest {
     @Test
     public void oneDamageTokensGivePlayerOneLessDealtCardTest() {
         player.handleDamage();
-        game.dealCards();
         assertEquals(8, player.getProgramCardsDealt());
     }
 
@@ -136,7 +135,6 @@ public class PlayerTest {
     public void twoDamageTokensGivePlayerTwoLessCardsTest() {
         player.handleDamage();
         player.handleDamage();
-        game.dealCards();
         assertEquals(7, player.getProgramCardsDealt());
     }
 
