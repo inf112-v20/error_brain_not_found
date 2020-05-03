@@ -375,8 +375,7 @@ public class MenuScreenActors {
         String IP = "Unknown";
         try {
             IP = InetAddress.getLocalHost().getHostAddress();
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
+        } catch (Exception ignored) {
         }
         IPLabel = new Label("Your IP: " + IP, skin);
         IPLabel.setPosition(CENTERED_BUTTON_X, TEXT_INPUT_Y + selectMap.getHeight());
