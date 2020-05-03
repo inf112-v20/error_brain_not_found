@@ -36,8 +36,6 @@ public class MenuScreenActors {
     public float LEFT_BUTTON_X;
     public float RIGHT_BUTTON_X;
 
-    private final InputFilter inputFilter;
-
     private SelectBox<String> selectMap;
     private ImageButton startButton;
     private ImageButton createGameButton;
@@ -55,7 +53,6 @@ public class MenuScreenActors {
     public MenuScreenActors(RallyGame game, Stage stage) {
         this.game = game;
         this.stage = stage;
-        this.inputFilter = new InputFilter();
 
         screenWidth = Gdx.graphics.getWidth();
         screenHeight = Gdx.graphics.getHeight();
@@ -289,7 +286,7 @@ public class MenuScreenActors {
         IPInput.setWidth(BUTTON_WIDTH * .87f);
         IPInput.setPosition(screenWidth / 2f + BUTTON_WIDTH * .13f, TEXT_INPUT_Y);
         IPInput.setVisible(false);
-        IPInput.setTextFieldFilter(inputFilter);
+        IPInput.setTextFieldFilter(new IPInputFilter());
         stage.addActor(IPInput);
     }
 
@@ -299,7 +296,7 @@ public class MenuScreenActors {
         portInput.setWidth(BUTTON_WIDTH * .87f);
         portInput.setPosition(screenWidth / 2f - BUTTON_WIDTH, TEXT_INPUT_Y);
         portInput.setVisible(false);
-        portInput.setTextFieldFilter(inputFilter);
+        portInput.setTextFieldFilter(new PortInputFilter());
         stage.addActor(portInput);
     }
 
@@ -309,7 +306,7 @@ public class MenuScreenActors {
         numOfPlayers.setWidth(BUTTON_WIDTH * .87f);
         numOfPlayers.setPosition(screenWidth / 2f + BUTTON_WIDTH * .13f, TEXT_INPUT_Y);
         numOfPlayers.setVisible(false);
-        numOfPlayers.setTextFieldFilter(inputFilter);
+        numOfPlayers.setTextFieldFilter(new NumOfPlayersInputFilter());
         stage.addActor(numOfPlayers);
     }
 

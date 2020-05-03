@@ -1,14 +1,12 @@
 package inf112.skeleton.app.screens.menuscreen;
 
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldFilter;
 
-public class InputFilter implements TextFieldFilter {
-
+public class PortInputFilter implements TextField.TextFieldFilter {
     private final char[] accepted;
 
-    public InputFilter() {
-        accepted = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '.'};
+    public PortInputFilter() {
+        accepted = new char[] {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
     }
 
     @Override
