@@ -40,7 +40,7 @@ public class MenuScreenActors {
     public float LEFT_BUTTON_X;
     public float RIGHT_BUTTON_X;
 
-    private InputFilter inputFilter;
+    private final InputFilter inputFilter;
 
     private SelectBox<String> selectMap;
     private ImageButton startButton;
