@@ -1,5 +1,7 @@
 package inf112.skeleton.app.enums;
 
+import inf112.skeleton.app.cards.ProgramCard;
+
 /**
  * Messages to communicate between Host and Client.
  */
@@ -11,5 +13,6 @@ public enum Messages {
     CLOSED,
     START_TURN,
     HERE_IS_MAP,
-    STOP_THREAD;
+    STOP_THREAD,
+    POWER_DOWN;
 }

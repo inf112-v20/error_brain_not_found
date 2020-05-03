@@ -67,38 +67,51 @@ public class GameClientThread extends Thread {
                 System.out.println("Host left game.");
                 finishTurnAndCloseSocket();
                 return;
-            } else if (message.equals(Messages.HERE_IS_MAP.toString())){
-                receivingMap = true;
-            } else if (message.contains(Messages.QUIT.toString())) {
+            }
+            if (message.contains(Messages.QUIT.toString())) {
                 int playerNumber = getPlayerNumberFromMessage(message);
                 System.out.println("Player " + playerNumber + " left game.");
                 finishTurnAndCloseSocket();
                 return;
-            } else if (message.equals(Messages.DECK_BEGIN.toString())) {
+            }
+            if (message.contains(Messages.POWER_DOWN.toString())) {
+                int playerNumber = getPlayerNumberFromMessage(message);
+                Player player = game.getBoard().getPlayer(playerNumber);
+                player.setPoweredDown(true);
+            }
+            else if (message.equals(Messages.HERE_IS_MAP.toString())){
+                receivingMap = true;
+            }
+            else if (message.equals(Messages.DECK_BEGIN.toString())) {
                 this.stack = new Stack<>();
                 this.receivingDeck = true;
-            } else if (message.equals(Messages.DECK_END.toString())){
+            }
+            else if (message.equals(Messages.DECK_END.toString())){
                 this.receivingDeck = false;
                 game.setDeck(this.stack);
                 System.out.println("Received deck.");
                 game.setWaitForServerToSendStartValuesToRelease();
-            } else if (message.equals(Messages.START_TURN.toString())) {
+            }
+            else if (message.equals(Messages.START_TURN.toString())) {
                 startDoTurn();
                 waitForTurnToFinish();
-            } else if (receivingDeck) {
+            }
+            else if (receivingDeck) {
                 try {
                     ProgramCard card = converter.convertToCard(message);
                     this.stack.add(card);
                 } catch (NotProgramCardException e) {
                     e.printStackTrace();
                 }
-            } else if (receivingMap) {
+            }
+            else if (receivingMap) {
                 this.mapPath = message;
                 game.setMapPath(mapPath);
                 game.setWaitForServerToSendMapPathToRelease();
                 receivingMap = false;
                 System.out.println("Got map");
-            } else {
+            }
+            else {
                 try {
                     PlayerAndProgramCard playerAndCard = converter.convertToCardAndExtractPlayer(message);
                     ProgramCard card = playerAndCard.getProgramCard();

@@ -19,6 +19,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.io.*;
 import java.net.Socket;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -154,6 +155,23 @@ public class ClientTest {
         client.start();
         waitForThread(client);
         assertEquals("assets/maps/Risky Exchange.tmx", client.getMap());
+    }
+
+    @Test
+    public void playerOneIsInPowerDownModeTest() {
+        Player player1 = new Player(new Vector2(0,0), 1);
+        when(board.getPlayer(1)).thenReturn(player1);
+        try {
+            when(reader.readLine())
+                    .thenReturn("3", "4")
+                    .thenReturn("1"+Messages.POWER_DOWN.toString())
+                    .thenReturn(Messages.STOP_THREAD.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        client.start();
+        waitForThread(client);
+        assertTrue(player1.isPoweredDown());
     }
 
 }

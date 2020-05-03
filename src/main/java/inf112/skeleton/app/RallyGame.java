@@ -252,6 +252,7 @@ public class RallyGame extends Game {
     public void doTurn () {
 
         while (playing) {
+            System.out.println("Wait for cards");
             try {
                 waitForCards.acquire();
             } catch (InterruptedException e) {
@@ -260,6 +261,7 @@ public class RallyGame extends Game {
             if (Thread.interrupted()) {
                 return;
             }
+            System.out.println("Released");
             for (int cardNumber = 0; cardNumber < 5; cardNumber++) {
 
                 System.out.println("Runde " + (cardNumber + 1));
@@ -326,6 +328,7 @@ public class RallyGame extends Game {
             }
             setShouldPickCards(true);
             letClientsAndServerContinue();
+            System.out.println("Continue talking");
         }
     }
 
@@ -471,10 +474,6 @@ public class RallyGame extends Game {
         }
         board.addPlayer(player);
         deck.addCardToDiscardPile(card);
-    }
-
-    public void setWinScreen () {
-        setScreen(new GifScreen(this));
     }
 
     public void removeLasers () {

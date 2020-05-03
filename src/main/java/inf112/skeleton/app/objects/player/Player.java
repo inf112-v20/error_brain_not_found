@@ -137,11 +137,6 @@ public class Player {
         return registers.getCards();
     }
 
-    public void discardAllCards(Deck deck) {
-        deck.addCardsToDiscardPile(cardsOnHand);
-
-    }
-
     /**
      * a int on how many damageTokens
      *

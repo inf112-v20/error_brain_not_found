@@ -60,12 +60,20 @@ public class GameServerThreads extends Thread {
                 }
                 if (message.equals(Messages.STOP_THREAD.toString())) {
                     return;
-                } else if (message.contains(Messages.QUIT.toString())) {
+                }
+                if (message.contains(Messages.QUIT.toString())) {
                     int playerNumber = getPlayerNumberFromMessage(message);
                     endConnectionWithPlayerAndTellOtherPlayersThatThisPlayerLeft(game.getBoard().getPlayer(playerNumber));
                     game.quitPlaying();
                     return;
-                } else {
+                }
+                if (message.contains(Messages.POWER_DOWN.toString())) {
+                    int playerNumber = getPlayerNumberFromMessage(message);
+                    Player player = game.getBoard().getPlayer(playerNumber);
+                    player.setPoweredDown(true);
+                    server.sendToAllExcept(player, message);
+                }
+                else {
                     PlayerAndProgramCard playerAndCard = converter.convertToCardAndExtractPlayer(message);
                     ProgramCard card = playerAndCard.getProgramCard();
                     int playerNumber = playerAndCard.getPlayerNumber();
@@ -133,6 +141,9 @@ public class GameServerThreads extends Thread {
      */
     public boolean allClientsHaveSelectedCards() {
         for (Player player : game.getBoard().getPlayers()) {
+            if (player.isPoweredDown()) {
+                return true;
+            }
             if (player.getPlayerNr() != 1 && player.getRegisters().hasRegistersWithoutCard()) {
                 return false;
             }
@@ -143,7 +154,7 @@ public class GameServerThreads extends Thread {
     /**
      * Wait for doTurn to realease in game.
      */
-    private void waitForDoTurnToFinish() {
+    public void waitForDoTurnToFinish() {
         try {
             continueListening.acquire();
         } catch (InterruptedException e) {
@@ -154,7 +165,7 @@ public class GameServerThreads extends Thread {
     /**
      * Tell game that cards are ready, doTurn can begin.
      */
-    private void startDoTurn() {
+    public void startDoTurn() {
         game.cardsReady();
     }
 

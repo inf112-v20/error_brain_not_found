@@ -27,6 +27,9 @@ import java.util.Stack;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -59,6 +62,8 @@ public class ServerTest {
 
     @Mock
     private Board board;
+    private Player player1;
+    private ProgramCard card;
 
     @Before
     public void setUp() {
@@ -69,12 +74,12 @@ public class ServerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        this.server = new GameServerThreads(gameServer, game, socket, 2);
         Converter converter = new Converter();
-        Player player1 = new Player(new Vector2(0, 0), 1);
+        this.server = new GameServerThreads(gameServer, game, socket, 2);
+        this.player1 = new Player(new Vector2(0, 0), 1);
         this.player2 = new Player(new Vector2(0, 1), 2);
         ArrayList<Player> players = new ArrayList<>(Arrays.asList(player1, player2));
-        ProgramCard card = new ProgramCard(10, 2, Rotate.NONE, "Move 2");
+        this.card = new ProgramCard(10, 2, Rotate.NONE, "Move 2");
         this.cardString = converter.convertToString(2, card);
 
         when(game.getBoard()).thenReturn(board);
@@ -98,7 +103,7 @@ public class ServerTest {
     }
 
     @Test
-    public void sentCardByPlayerTwoGoesToPlayerTwoRegisterTest() {
+    public void sentCardByPlayer2GoesToPlayer2RegisterTest() {
         // Send card from player 2
         try {
             when(reader.readLine()).thenReturn(cardString).thenReturn(Messages.STOP_THREAD.toString());
@@ -121,6 +126,62 @@ public class ServerTest {
         server.start();
         waitForThread(server);
         assertTrue(server.allClientsHaveSelectedCards());
+    }
+
+    @Test
+    public void player2InPowerDownModeTest() {
+        try {
+            when(reader.readLine()).thenReturn("2"+Messages.POWER_DOWN.toString()).thenReturn(Messages.STOP_THREAD.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        server.start();
+        waitForThread(server);
+        assertTrue(player2.isPoweredDown());
+    }
+
+    @Test
+    public void letPlayer3KnowPlayer2IsPoweredDownTest() {
+        Player player3 = new Player(new Vector2(0, 2), 3);
+        ArrayList<Player> threePlayers = new ArrayList<>(Arrays.asList(player1, player2, player3));
+        when(board.getPlayers()).thenReturn(threePlayers);
+        try {
+            when(reader.readLine()).thenReturn("2"+Messages.POWER_DOWN.toString()).thenReturn(Messages.STOP_THREAD.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        server.start();
+        waitForThread(server);
+        verify(gameServer).sendToAllExcept(player2, "2"+Messages.POWER_DOWN.toString());
+    }
+
+    @Test
+    public void doNotWaitForPoweredDownPlayersToSendCardTest() {
+        try {
+            when(reader.readLine()).thenReturn("2"+Messages.POWER_DOWN.toString()).thenReturn(Messages.STOP_THREAD.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        server.start();
+        waitForThread(server);
+        assertTrue(server.allClientsHaveSelectedCards());
+    }
+
+    @Test
+    public void allPlayersHaveSelectedCardsServerSendsStartTurnMessageTest() {
+        player1.setSelectedCards(card, card, card, card, card);
+        // Send 5 cards from player 2
+        try {
+            when(gameServer.serverHasConfirmed()).thenReturn(true);
+            when(reader.readLine()).thenReturn(cardString, cardString, cardString, cardString, cardString).thenReturn(Messages.STOP_THREAD.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Do not wait for doTurn to finish
+        server.continueListening();
+        server.start();
+        waitForThread(server);
+        verify(gameServer).sendToAll(Messages.START_TURN.toString());
     }
 
 }
