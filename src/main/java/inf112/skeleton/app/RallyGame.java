@@ -22,13 +22,14 @@ import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.objects.player.Player;
 import inf112.skeleton.app.objects.player.PlayerSorter;
-import inf112.skeleton.app.screens.ButtonSkin;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
 import inf112.skeleton.app.screens.ActorImages;
 import inf112.skeleton.app.screens.LoadingScreen;
 import inf112.skeleton.app.screens.gifscreen.GifScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
+import inf112.skeleton.app.screens.ActorImages;
+import inf112.skeleton.app.screens.LoadingScreen;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
 import java.io.IOException;
@@ -433,7 +434,7 @@ public class RallyGame extends Game {
 
         // Add all players to order list, and remove powered down players
         playerOrder.removeIf(Player::isPoweredDown);
-        playerOrder.sort(new PlayerSorter());
+        playerOrder.sort(new PlayerSorter(cardNumber));
         for (Player player : playerOrder) {
             playCard(player, cardNumber);
             // Wait 1 second for each player

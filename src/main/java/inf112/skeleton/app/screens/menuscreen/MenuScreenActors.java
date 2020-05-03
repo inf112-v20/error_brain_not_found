@@ -157,8 +157,8 @@ public class MenuScreenActors {
 
     public void initializeCreateGame() {
         ImageButton.ImageButtonStyle createGameButtonStyle = new ImageButton.ImageButtonStyle();
-        createGameButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Create game");
-        createGameButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Create game over");
+        createGameButtonStyle.up = game.actorImages.getSkin().getDrawable("Create game");
+        createGameButtonStyle.over = game.actorImages.getSkin().getDrawable("Create game over");
 
         createGameButton = new ImageButton(createGameButtonStyle);
         createGameButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -166,8 +166,7 @@ public class MenuScreenActors {
         createGameButton.addListener(new InputListener() {
 
             /**
-             * If {@link #touchDown(InputEvent, float, float, int, int)} is true and player have chosen
-             * to create game, a host is started.
+             * Start a host if input is valid.
              */
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
@@ -184,10 +183,6 @@ public class MenuScreenActors {
                 }
             }
 
-            /**
-             *
-             * @return False if input is required and no input is given. True otherwise.
-             */
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
@@ -219,8 +214,8 @@ public class MenuScreenActors {
 
     public void initializeJoinGame() {
         ImageButton.ImageButtonStyle joinGameButtonStyle = new ImageButton.ImageButtonStyle();
-        joinGameButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Join game");
-        joinGameButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Join game over");
+        joinGameButtonStyle.up = game.actorImages.getSkin().getDrawable("Join game");
+        joinGameButtonStyle.over = game.actorImages.getSkin().getDrawable("Join game over");
 
         joinGameButton = new ImageButton(joinGameButtonStyle);
         joinGameButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -228,8 +223,7 @@ public class MenuScreenActors {
         joinGameButton.addListener(new InputListener() {
 
             /**
-             * If {@link #touchDown(InputEvent, float, float, int, int)} is true, player have chosen
-             * to join a game that is being hosted, then a client will connect to the host.
+             * Create a client if input is valid.
              */
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
@@ -249,10 +243,6 @@ public class MenuScreenActors {
                 }
             }
 
-            /**
-             *
-             * @return False if input is required and no input is given. True otherwise.
-             */
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 return true;
