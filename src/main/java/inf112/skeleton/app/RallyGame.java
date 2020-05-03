@@ -25,11 +25,8 @@ import inf112.skeleton.app.objects.player.PlayerSorter;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
 import inf112.skeleton.app.screens.ActorImages;
 import inf112.skeleton.app.screens.LoadingScreen;
-import inf112.skeleton.app.screens.gifscreen.GifScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
-import inf112.skeleton.app.screens.ActorImages;
-import inf112.skeleton.app.screens.LoadingScreen;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
 import java.io.IOException;

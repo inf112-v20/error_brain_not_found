@@ -158,4 +158,11 @@ public class GameTest {
         assertEquals(0, player.getDamageTokens());
     }
 
+    @Test
+    public void poweredDownPlayersDoNotGetCardsTest() {
+        player.setPoweredDown(true);
+        game.dealCards();
+        assertTrue(player.getRegisters().getCards().isEmpty());
+    }
+
 }
