@@ -29,6 +29,10 @@ public class Player {
     private int programCardsDealt;
     private Direction beltPushDir;
     private Vector2 beltPushPos;
+    private boolean poweringDown;
+    private boolean poweredDown;
+    private boolean powerDownNextRound;
+    private boolean powerUpNextRound;
 
     private int damageTokens;
     private int lifeTokens;
@@ -45,8 +49,12 @@ public class Player {
         this.beltPushDir = null;
         this.beltPushPos = null;
         this.programCardsDealt = 9;
+        this.poweringDown = false;
+        this.poweredDown = false;
+        this.powerUpNextRound = false;
+        this.powerDownNextRound = false;
 
-        setBackup(position, Direction.EAST);
+        setBackup(this.position, this.direction);
     }
 
     public ArrayList<ProgramCard> getCardsOnHand() {
@@ -312,5 +320,50 @@ public class Player {
 
     public String toString() {
         return "Player " + getPlayerNr();
+    }
+
+    public boolean isPoweringDown() {
+        return poweringDown;
+    }
+
+    public void setPoweringDown(boolean poweringDown) {
+        this.poweringDown = poweringDown;
+    }
+
+    public boolean isPoweredDown() {
+        return poweredDown;
+    }
+
+    public void setPoweredDown(boolean poweredDown) {
+        this.poweredDown = poweredDown;
+    }
+
+    public boolean getPowerDownNextRound() {
+        return powerDownNextRound;
+    }
+
+    public boolean getPowerUpNextRound() {
+        return powerUpNextRound;
+    }
+
+    public void confirmPowerDown() {
+        if (powerUpNextRound) {
+            poweredDown = false;
+        } else if (powerDownNextRound) {
+            poweringDown = true;
+        } else if (poweringDown) {
+            poweredDown = true;
+            poweringDown = false;
+        }
+        powerUpNextRound = false;
+        powerDownNextRound = false;
+    }
+
+    public void togglePowerDownOrUpNextRound() {
+        if (poweredDown) {
+            powerUpNextRound = !powerUpNextRound;
+        } else {
+            powerDownNextRound = !powerDownNextRound;
+        }
     }
 }

@@ -63,6 +63,7 @@ public abstract class BoardLayers {
         findExpressBelts();
         findHoles();
         findLasers();
+        findRepairs();
     }
 
     public void findBelts() {

@@ -79,6 +79,7 @@ public class Board extends BoardLayers {
             players.add(player);
         }
     }
+
     //TODO: might move to boardLayer
     public Vector2 getStartPosition(int number) {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
@@ -204,9 +205,9 @@ public class Board extends BoardLayers {
      *
      * @param player that is suppose to move
      */
-    public void movePlayer(Player player) {
+    public void movePlayer(Player player, boolean backUp) {
         Vector2 position = player.getPosition();
-        Direction direction = player.getDirection();
+        Direction direction = backUp ? player.getDirection().turnAround() : player.getDirection();
 
         if (!boardLogic.canGo(position, direction, this)) {
             wallImpact.play(RallyGame.volume);
@@ -385,7 +386,7 @@ public class Board extends BoardLayers {
         return boardLogic;
     }
 
-    public ArrayList<Flag> getFlags(){
+    public ArrayList<Flag> getFlags() {
         return flags;
     }
 

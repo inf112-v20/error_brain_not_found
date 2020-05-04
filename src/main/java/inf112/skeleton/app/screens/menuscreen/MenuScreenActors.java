@@ -1,17 +1,16 @@
 package inf112.skeleton.app.screens.menuscreen;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Array;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
+import inf112.skeleton.app.screens.standardscreen.SettingsScreen;
 
 import java.io.File;
 import java.util.Objects;
@@ -20,16 +19,16 @@ public class MenuScreenActors {
 
     private final Stage stage;
     private final RallyGame game;
-    public Skin skin;
 
-    public float screenWidth;
-    public float screenHeight;
+    public final float screenWidth;
+    public final float screenHeight;
 
-    public float BUTTON_WIDTH;
-    public float BUTTON_HEIGHT;
-    public float BUTTON_X;
-    public float START_BUTTON_Y;
-    public float EXIT_BUTTON_Y;
+    public final float BUTTON_WIDTH;
+    public final float BUTTON_HEIGHT;
+    public final float BUTTON_X;
+    public final float START_BUTTON_Y;
+    public final float EXIT_BUTTON_Y;
+    public final float SETTINGS_BUTTON_Y;
 
     public SelectBox<String> selectMap;
 
@@ -44,15 +43,14 @@ public class MenuScreenActors {
         BUTTON_HEIGHT = (float) (screenHeight * 0.25);
         START_BUTTON_Y = (float) (screenHeight * 0.5);
         EXIT_BUTTON_Y = (float) (screenHeight * 0.5 - BUTTON_HEIGHT);
+        SETTINGS_BUTTON_Y = (float) (screenHeight * 0.5 - (BUTTON_HEIGHT *2));
         BUTTON_X = (float) (screenWidth * 0.5 - BUTTON_WIDTH * 0.5);
-
-        skin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
     }
 
     public void initializeStartButton() {
         ImageButton.ImageButtonStyle startButtonStyle = new ImageButton.ImageButtonStyle();
-        startButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Start");
-        startButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Start over");
+        startButtonStyle.up = game.actorImages.getSkin().getDrawable("Start");
+        startButtonStyle.over = game.actorImages.getSkin().getDrawable("Start over");
 
         ImageButton startButton = new ImageButton(startButtonStyle);
         startButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -74,8 +72,8 @@ public class MenuScreenActors {
 
     public void initializeExitButton() {
         ImageButton.ImageButtonStyle exitButtonStyle = new ImageButton.ImageButtonStyle();
-        exitButtonStyle.up = game.buttonSkins.getSkins().getDrawable("Exit");
-        exitButtonStyle.over = game.buttonSkins.getSkins().getDrawable("Exit over");
+        exitButtonStyle.up = game.actorImages.getSkin().getDrawable("Exit");
+        exitButtonStyle.over = game.actorImages.getSkin().getDrawable("Exit over");
 
         ImageButton exitButton = new ImageButton(exitButtonStyle);
         exitButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -93,9 +91,31 @@ public class MenuScreenActors {
         });
         stage.addActor(exitButton);
     }
+    public void initializeSettingsButton() {
+        ImageButton.ImageButtonStyle settingsButtonStyle = new ImageButton.ImageButtonStyle();
+        settingsButtonStyle.up = game.actorImages.getSkin().getDrawable("Settings");
+        settingsButtonStyle.over = game.actorImages.getSkin().getDrawable("Settings over");
+
+
+        ImageButton settingsButton = new ImageButton(settingsButtonStyle);
+        settingsButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        settingsButton.setPosition(BUTTON_X, EXIT_BUTTON_Y);
+        settingsButton.addListener(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                game.setScreen(new SettingsScreen(game));;
+            }
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+        stage.addActor(settingsButton);
+    }
 
     public void initializeSelectMap() {
-        selectMap = new SelectBox<>(skin);
+        selectMap = new SelectBox<>(game.getDefaultSkin());
         selectMap.setItems(getMaps());
         selectMap.setSelected("assets/maps/Risky Exchange.tmx");
         selectMap.setWidth(BUTTON_WIDTH * .87f);
@@ -115,7 +135,7 @@ public class MenuScreenActors {
     }
 
     public void initializeBackground() {
-        Image background = new Image(new Texture("assets/images/GUI_Edited.jpg"));
+        Image background = new Image(game.getActorImages().getDrawable("Menu screen background"));
         background.setSize(screenWidth, screenHeight);
         stage.addActor(background);
     }

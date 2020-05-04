@@ -15,5 +15,6 @@ public class MenuScreen extends StandardScreen {
         actors.initializeStartButton();
         //actors.initializePreferenceButton();
         actors.initializeExitButton();
+        actors.initializeSettingsButton();
     }
 }
