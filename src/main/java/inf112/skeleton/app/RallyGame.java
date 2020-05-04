@@ -24,7 +24,6 @@ import inf112.skeleton.app.objects.player.Player;
 import inf112.skeleton.app.objects.player.PlayerSorter;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
 import inf112.skeleton.app.screens.ActorImages;
-import inf112.skeleton.app.screens.LoadingScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
@@ -43,7 +42,6 @@ public class RallyGame extends Game {
 
     public ArrayList<Player> players;
     public ArrayList<Player> respawnPlayers;
-    public Semaphore waitForCards;
     public boolean playing;
     public boolean shouldPickCards;
     public Sound laserSound;
@@ -62,12 +60,13 @@ public class RallyGame extends Game {
 
     public static float volume = 0.5f;
     private String mapPath;
+    public Semaphore stopGameLoop;
 
     public void create() {
         this.actorImages = new ActorImages();
         this.textSkin = new Skin(Gdx.files.internal("assets/skins/number-cruncher-ui.json"));
         this.defaultSkin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
-        this.setScreen(new LoadingScreen(this));
+        this.setScreen(new MenuScreen(this));
         startMusic();
     }
 
@@ -83,8 +82,8 @@ public class RallyGame extends Game {
         this.players = board.getPlayers();
         this.mainPlayer = board.getPlayer(this.myPlayerNumber);
         this.respawnPlayers = new ArrayList<>();
-        this.waitForCards = new Semaphore(1);
-        this.waitForCards.tryAcquire();
+        this.stopGameLoop = new Semaphore(1);
+        this.stopGameLoop.tryAcquire();
         this.playing = true;
         this.converter = new Converter();
         this.shouldPickCards = true;
@@ -192,7 +191,7 @@ public class RallyGame extends Game {
                     System.out.println("All clients selected cards");
                     server.sendSelectedCardsToAll();
                     server.sendToAll(Messages.START_TURN.toString());
-                    cardsReady();
+                    continueGameLoop();
                 }
             }
             setShouldPickCards(false);
@@ -230,8 +229,8 @@ public class RallyGame extends Game {
         gameMusic.play();
     }
 
-    public void cardsReady () {
-        waitForCards.release();
+    public void continueGameLoop() {
+        stopGameLoop.release();
     }
 
     /**
@@ -256,16 +255,17 @@ public class RallyGame extends Game {
     public void doTurn () {
 
         while (playing) {
+
             System.out.println("Wait for cards");
             try {
-                waitForCards.acquire();
+                stopGameLoop.acquire();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            if (Thread.interrupted()) {
-                return;
-            }
+
+            if (Thread.interrupted()) { return; }
             System.out.println("Released");
+
             for (int cardNumber = 0; cardNumber < 5; cardNumber++) {
 
                 System.out.println("Runde " + (cardNumber + 1));
@@ -305,7 +305,7 @@ public class RallyGame extends Game {
                 }
 
                 activateRepairTiles();
-                sleep(250);
+                sleep(500);
 
                 pickUpFlags();
                 sleep(500);
@@ -319,18 +319,27 @@ public class RallyGame extends Game {
             updateRegisters();
 
             ArrayList<ProgramCard> lockedCards = discardCards();
-            if (isServer &&deck.deckSize() < numberOfDealtCards()) {
+            if (isServer && deck.deckSize() < numberOfDealtCards()) {
                 serverThread.getServer().createAndSendDeckToAll(lockedCards);
-
             }
-            discardCards();
-            powerDown();
-
+            /*
             letClientsAndServerContinue();
             System.out.println("Continue talking");
 
             powerUpPoweredDownPlayers();
             sendPoweredDownMessage();
+            */
+            // HER MÅ MAN VELGE POWER UP/DOWN, SENDE SVAR TIL GAME SERVER, GAME SERVER MÅ SENDE SVARENE TIL
+            // ALLE KLIENTENE OG SÅ KALLE PÅ game.continueGameLoop FOR Å FORTSETTE SPILLET
+            System.out.println("Venter på power up");
+            try {
+                stopGameLoop.acquire();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println("Oookei, da kan vi fortsette");
+
+            powerDown();
 
             dealCards();
             ((GameScreen) screen).updateCards();
@@ -344,7 +353,7 @@ public class RallyGame extends Game {
     }
 
     /**
-     * After playing cards, let server and clients exhange more cards.
+     * After playing cards, let server and clients exchange more cards.
      */
     public void letClientsAndServerContinue() {
         if (!isServer) {

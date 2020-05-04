@@ -35,6 +35,10 @@ public class SettingsInput extends InputAdapter {
                 game.respawnPlayers();
                 game.removeDeadPlayers();
                 break;
+            case Input.Keys.G:
+                game.stopGameLoop.release();
+                System.out.println("Start game loop again");
+                break;
             default:
                 // Fuck u Codacy
         }
