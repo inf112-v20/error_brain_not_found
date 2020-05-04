@@ -61,6 +61,7 @@ public class RallyGame extends Game {
     private String mapPath;
     public Semaphore stopGameLoop;
     private ArrayList<Player> poweredDownPlayers;
+    private Semaphore waitForCards;
 
     public void create() {
         this.actorImages = new ActorImages();
@@ -85,6 +86,8 @@ public class RallyGame extends Game {
         this.poweredDownPlayers = new ArrayList<>();
         this.stopGameLoop = new Semaphore(1);
         this.stopGameLoop.tryAcquire();
+        this.waitForCards = new Semaphore(1);
+        this.waitForCards.tryAcquire();
         this.playing = true;
         this.converter = new Converter();
         this.shouldPickCards = true;
@@ -180,6 +183,7 @@ public class RallyGame extends Game {
     public void confirm() {
         if (mainPlayer.isPoweredDown() && mainPlayer.havePressedPowerDownButton()) {
             sendContinuePowerDownMessage();
+            System.out.println("Continue power down");
         }
         else if (mainPlayer.isPoweredDown() && !mainPlayer.havePressedPowerDownButton()) {
             mainPlayer.setPoweredDown(false);
@@ -193,6 +197,7 @@ public class RallyGame extends Game {
         }
         if (!mainPlayer.getRegisters().hasRegistersWithoutCard()) {
             sendSelectedCardsToServer();
+            System.out.println("Sending cards");
             if (isServer) {
                 GameServer server = serverThread.getServer();
                 server.setServerHasConfirmed(true);
@@ -201,7 +206,7 @@ public class RallyGame extends Game {
                     System.out.println("All clients selected cards");
                     server.sendSelectedCardsToAll();
                     server.sendToAll(Messages.START_TURN.toString());
-                    continueGameLoop();
+                    startTurn();
                 }
             }
             setShouldPickCards(false);
@@ -267,7 +272,7 @@ public class RallyGame extends Game {
         while (playing) {
 
             System.out.println("Wait for cards");
-            waitForConfirmation();
+            waitForCards();
             if (Thread.interrupted()) { return; }
             System.out.println("Released");
 
@@ -340,8 +345,6 @@ public class RallyGame extends Game {
                 System.out.println("Continue talking");
             }
 
-
-
             // HER MÅ MAN VELGE POWER UP/DOWN, SENDE SVAR TIL GAME SERVER, GAME SERVER MÅ SENDE SVARENE TIL
             // ALLE KLIENTENE OG SÅ KALLE PÅ game.continueGameLoop FOR Å FORTSETTE SPILLET
             /*
@@ -369,6 +372,18 @@ public class RallyGame extends Game {
             setShouldPickCards(true);
             //letClientsAndServerContinue();
         }
+    }
+
+    public void waitForCards() {
+        try {
+            waitForCards.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void startTurn() {
+        waitForCards.release();
     }
 
     /**
@@ -882,5 +897,13 @@ public class RallyGame extends Game {
 
     public ArrayList<Player> getPoweredDownRobots() {
         return this.poweredDownPlayers;
+    }
+
+    /**
+     *
+     * @return True if mainplayer should confirm power up or power down
+     */
+    public boolean shouldConfirmPowerUpOrDown() {
+        return  getPoweredDownRobots().contains(mainPlayer);
     }
 }

@@ -159,7 +159,8 @@ public class GameScreenActors {
         confirmButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-               if (game.shouldPickCards()) {
+                game.confirm();
+               if (game.shouldPickCards() || game.shouldConfirmPowerUpOrDown()) {
                     game.confirm();
                     // Confirm power down somewhere
                 }

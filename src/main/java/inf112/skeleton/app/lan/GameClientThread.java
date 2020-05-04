@@ -73,18 +73,12 @@ public class GameClientThread extends Thread {
                 finishTurnAndCloseSocket();
                 return;
             }
-            if (message.contains(Messages.POWER_DOWN.toString())) {
-                Player player = getPlayerFromMessage(message);
-                player.setPoweredDown(true);
-                game.addPoweredDownPlayer(player);
+            if (message.equals(Messages.CONTINUE_TURN.toString())) {
+                realeaseDoTurn();
             }
-            else if (message.contains(Messages.POWER_UP.toString())) {
-                Player player = getPlayerFromMessage(message);
-                player.setPoweredDown(false);
-                game.removePoweredDownPlayer(player);
-            }
-            else if (message.contains(Messages.CONTINUE_TURN.toString())) {
-                startDoTurn();
+            else if (message.equals(Messages.START_TURN.toString())) {
+                game.startTurn();
+                waitForTurnToFinish();
             }
             else if (message.equals(Messages.HERE_IS_MAP.toString())){
                 receivingMap = true;
@@ -98,10 +92,6 @@ public class GameClientThread extends Thread {
                 game.setDeck(this.stack);
                 System.out.println("Received deck.");
                 game.setWaitForServerToSendStartValuesToRelease();
-            }
-            else if (message.equals(Messages.START_TURN.toString())) {
-                startDoTurn();
-                waitForTurnToFinish();
             }
             else if (receivingDeck) {
                 try {
@@ -118,21 +108,33 @@ public class GameClientThread extends Thread {
                 receivingMap = false;
                 System.out.println("Got map");
             }
-            else {
-                try {
-                    PlayerAndProgramCard playerAndCard = converter.convertToCardAndExtractPlayer(message);
-                    ProgramCard card = playerAndCard.getProgramCard();
-                    int playerNumber = playerAndCard.getPlayerNumber();
-                    // Your player have already selected cards
-                    if (myPlayerNumber != playerNumber) {
-                        Player player = game.getBoard().getPlayer(playerNumber);
-                        player.addSelectedCard(card);
+            else if (Character.isDigit(message.charAt(0))) {
+                int playerNumber = Character.getNumericValue(message.charAt(0));
+                Player player = game.getBoard().getPlayer(playerNumber);
+                String messageFromPlayer = message.substring(1);
+                if (messageFromPlayer.equals(Messages.POWER_DOWN.toString())) {
+                    player.setPoweredDown(true);
+                    game.addPoweredDownPlayer(player);
+                }
+                else if (messageFromPlayer.equals(Messages.POWER_UP.toString())) {
+                    player.setPoweredDown(false);
+                    game.removePoweredDownPlayer(player);
+                }
+                else {
+                    try {
+                        PlayerAndProgramCard playerAndCard = converter.convertToCardAndExtractPlayer(message);
+                        ProgramCard card = playerAndCard.getProgramCard();
+                        // Your player have already selected cards
+                        if (myPlayerNumber != playerNumber) {
+                            player.addSelectedCard(card);
+                        }
+                    } catch (NotProgramCardException e) {
+                        e.printStackTrace();
                     }
-                } catch (NotProgramCardException e) {
-                    e.printStackTrace();
                 }
             }
         }
+
     }
 
     /**
@@ -178,7 +180,7 @@ public class GameClientThread extends Thread {
     /**
      * Tell game that cards are ready, doTurn can begin.
      */
-    private void startDoTurn() {
+    private void  realeaseDoTurn() {
         game.continueGameLoop();
     }
 
