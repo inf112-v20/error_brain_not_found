@@ -185,6 +185,7 @@ public class RallyGame extends Game {
             mainPlayer.setPoweredDown(false);
             removePoweredDownPlayer(mainPlayer);
             sendPowerUpMessage();
+            System.out.println("Im powering up..");
         }
         else if (mainPlayer.havePressedPowerDownButton()) {
             mainPlayer.setPoweringDown(true);
@@ -327,10 +328,15 @@ public class RallyGame extends Game {
                 serverThread.getServer().createAndSendDeckToAll(lockedCards);
             }
 
+
+
+            if (!poweredDownPlayers.isEmpty()) {
+                System.out.println("We have a power down!");
+                waitForConfirmation();
+            }
+
             letClientsAndServerContinue();
             System.out.println("Continue talking");
-
-            waitForConfirmation();
 
             // HER MÅ MAN VELGE POWER UP/DOWN, SENDE SVAR TIL GAME SERVER, GAME SERVER MÅ SENDE SVARENE TIL
             // ALLE KLIENTENE OG SÅ KALLE PÅ game.continueGameLoop FOR Å FORTSETTE SPILLET
@@ -345,7 +351,7 @@ public class RallyGame extends Game {
 
              */
 
-            powerUpPoweredDownPlayers();
+            //powerUpPoweredDownPlayers();
 
             powerDown();
             sendPoweredDownMessage();
@@ -823,8 +829,10 @@ public class RallyGame extends Game {
             if (isServer) {
                 serverThread.getServer().sendToAll(mainPlayer.getPlayerNr()+Messages.POWER_DOWN.toString());
                 serverThread.getServer().setServerHasConfirmed(true);
+                addPoweredDownPlayer(mainPlayer);
             } else {
                 client.sendMessage(mainPlayer.getPlayerNr()+Messages.POWER_DOWN.toString());
+                addPoweredDownPlayer(mainPlayer);
             }
         }
     }
@@ -869,4 +877,7 @@ public class RallyGame extends Game {
         this.poweredDownPlayers.remove(player);
     }
 
+    public ArrayList<Player> getPoweredDownRobots() {
+        return this.poweredDownPlayers;
+    }
 }

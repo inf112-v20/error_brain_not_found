@@ -9,7 +9,6 @@ import java.util.ArrayList;
 /**
  * Convert from a string to a programcard and vica verca.
  * Used to send cards between sockets.
- * @author Jenny
  */
 public class Converter {
 

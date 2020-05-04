@@ -37,6 +37,7 @@ public class Player {
     private int damageTokens;
     private int lifeTokens;
     private boolean havePressedPowerDownButton;
+    private boolean willContinuePowerDown;
 
     public Player(Vector2 position, int playerNr) {
         this.position = position;
@@ -384,4 +385,15 @@ public class Player {
         return havePressedPowerDownButton;
     }
 
+    /**
+     *
+     * @return True if player is in power down and want to stay powerered down
+     */
+    public boolean willContinuePowerDown() {
+        return this.willContinuePowerDown;
+    }
+
+    public void setWillContinuePowerDown(boolean willContinuePowerDown) {
+        this.willContinuePowerDown = willContinuePowerDown;
+    }
 }

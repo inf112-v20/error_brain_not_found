@@ -12,7 +12,6 @@ import java.util.concurrent.Semaphore;
 
 /**
  * Own thread for a client so client can get continous updates from server.
- * @author Jenny
  */
 public class GameClientThread extends Thread {
 
@@ -75,16 +74,17 @@ public class GameClientThread extends Thread {
                 return;
             }
             if (message.contains(Messages.POWER_DOWN.toString())) {
-                int playerNumber = getPlayerNumberFromMessage(message);
-                Player player = game.getBoard().getPlayer(playerNumber);
+                Player player = getPlayerFromMessage(message);
                 player.setPoweredDown(true);
                 game.addPoweredDownPlayer(player);
             }
             else if (message.contains(Messages.POWER_UP.toString())) {
-                int playerNumber = getPlayerNumberFromMessage(message);
-                Player player = game.getBoard().getPlayer(playerNumber);
+                Player player = getPlayerFromMessage(message);
                 player.setPoweredDown(false);
                 game.removePoweredDownPlayer(player);
+            }
+            else if (message.contains(Messages.CONTINUE_TURN.toString())) {
+                startDoTurn();
             }
             else if (message.equals(Messages.HERE_IS_MAP.toString())){
                 receivingMap = true;
@@ -270,5 +270,13 @@ public class GameClientThread extends Thread {
      */
     public String getMap() {
         return mapPath;
+    }
+
+    /**
+     * @return Player from message
+     */
+    public Player getPlayerFromMessage(String message) {
+        int playerNumber = getPlayerNumberFromMessage(message);
+        return game.getBoard().getPlayer(playerNumber);
     }
 }

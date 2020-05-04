@@ -13,7 +13,6 @@ import java.util.*;
 
 /**
  * A server for handling connection between players.
- * @author Jenny
  */
 public class GameServer {
 

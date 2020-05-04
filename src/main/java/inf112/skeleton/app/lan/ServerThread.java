@@ -5,7 +5,6 @@ import inf112.skeleton.app.RallyGame;
 /**
  * Make a new thread to make server connect to clients so that game.setUo()
  * can finish, and the game-screen is shown.
- * @author  Jenny
  */
 public class ServerThread extends Thread {
 

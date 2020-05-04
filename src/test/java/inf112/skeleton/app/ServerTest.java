@@ -28,6 +28,7 @@ import java.util.Stack;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doCallRealMethod;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -37,6 +38,9 @@ public class ServerTest {
     private GameServerThreads server;
     private Player player2;
     private String cardString;
+    private Player player1;
+    private ProgramCard card;
+    private ArrayList<Player> threePlayers;
 
     @Mock
     private Socket socket;
@@ -61,8 +65,7 @@ public class ServerTest {
 
     @Mock
     private Board board;
-    private Player player1;
-    private ProgramCard card;
+
 
     @Before
     public void setUp() {
@@ -77,13 +80,17 @@ public class ServerTest {
         this.server = new GameServerThreads(gameServer, game, socket, 2);
         this.player1 = new Player(new Vector2(0, 0), 1);
         this.player2 = new Player(new Vector2(0, 1), 2);
+        Player player3 = new Player(new Vector2(0, 2), 3);
         ArrayList<Player> players = new ArrayList<>(Arrays.asList(player1, player2));
+        this.threePlayers = new ArrayList<>(Arrays.asList(player1, player2, player3));
         this.card = new ProgramCard(10, 2, Rotate.NONE, "Move 2");
         this.cardString = converter.convertToString(2, card);
 
         when(game.getBoard()).thenReturn(board);
         when(board.getPlayers()).thenReturn(players);
+        when(board.getPlayer(1)).thenReturn(player1);
         when(board.getPlayer(2)).thenReturn(player2);
+        when(board.getPlayer(3)).thenReturn(player3);
 
         // Reader decided for each test
         server.setReader(reader);
@@ -128,7 +135,7 @@ public class ServerTest {
     }
 
     @Test
-    public void player2SendPowerDownMesssageTest() {
+    public void player2SendPowerDownMessageTest() {
         try {
             when(reader.readLine()).thenReturn("2"+Messages.POWER_DOWN.toString()).thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
@@ -141,8 +148,6 @@ public class ServerTest {
 
     @Test
     public void letPlayer3KnowPlayer2IsPoweredDownTest() {
-        Player player3 = new Player(new Vector2(0, 2), 3);
-        ArrayList<Player> threePlayers = new ArrayList<>(Arrays.asList(player1, player2, player3));
         when(board.getPlayers()).thenReturn(threePlayers);
         try {
             when(reader.readLine()).thenReturn("2"+Messages.POWER_DOWN.toString()).thenReturn(Messages.STOP_THREAD.toString());
@@ -231,5 +236,35 @@ public class ServerTest {
         waitForThread(server);
         verify(game).removePoweredDownPlayer(player2);
     }
+
+    @Test
+    public void serverBroadcastsReceivedPowerUpMessageTest() {
+        try {
+            when(reader.readLine()).thenReturn("2"+Messages.POWER_UP.toString()).thenReturn(Messages.STOP_THREAD.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        server.start();
+        waitForThread(server);
+        verify(gameServer).sendToAllExcept(player2, "2"+Messages.POWER_UP.toString());
+    }
+
+
+
+    @Test
+    public void sendMessageToAllWhenPlayerContinuesPowerDownTest() {
+        try {
+            when(reader.readLine())
+                    .thenReturn("2"+Messages.CONTINUE_POWER_DOWN.toString())
+                    .thenReturn(Messages.STOP_THREAD.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        server.start();
+        waitForThread(server);
+        verify(gameServer).sendToAllExcept(player2, "2"+Messages.CONTINUE_POWER_DOWN.toString());
+    }
+
+
 
 }

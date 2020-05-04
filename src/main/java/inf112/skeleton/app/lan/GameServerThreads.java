@@ -12,7 +12,6 @@ import java.util.concurrent.Semaphore;
 
 /**
  * Make a thread for each client connecting.
- * @author Jenny
  */
 public class GameServerThreads extends Thread {
 
@@ -62,26 +61,39 @@ public class GameServerThreads extends Thread {
                     return;
                 }
                 if (message.contains(Messages.QUIT.toString())) {
-                    int playerNumber = getPlayerNumberFromMessage(message);
-                    endConnectionWithPlayerAndTellOtherPlayersThatThisPlayerLeft(game.getBoard().getPlayer(playerNumber));
+                    endConnectionWithPlayerAndTellOtherPlayersThatThisPlayerLeft(getPlayerFromMessage(message));
                     game.quitPlaying();
                     return;
                 }
                 if (message.contains(Messages.POWER_DOWN.toString())) {
-                    int playerNumber = getPlayerNumberFromMessage(message);
-                    Player player = game.getBoard().getPlayer(playerNumber);
+                    Player player = getPlayerFromMessage(message);
                     player.setPoweredDown(true);
                     game.addPoweredDownPlayer(player);
                     server.sendToAllExcept(player, message);
+                    System.out.println(message);
                     if (allClientsHaveSelectedCardsOrInPowerDown()) {
+                        System.out.println("All clients confirmed");
                         server.setAllClientsHaveSelectedCards(true);
                     }
                 }
+                else if (message.contains(Messages.CONTINUE_POWER_DOWN.toString())) {
+                    Player player = getPlayerFromMessage(message);
+                    player.setWillContinuePowerDown(true);
+                    server.sendToAllExcept(player, message);
+                    if (allPoweredDownRobotsHaveConfirmed()) {
+                        server.sendToAll(Messages.CONTINUE_TURN.toString());
+                        startDoTurn();
+                    }
+                }
                 else if (message.contains(Messages.POWER_UP.toString())) {
-                    int playerNumber = getPlayerNumberFromMessage(message);
-                    Player player = game.getBoard().getPlayer(playerNumber);
+                    Player player = getPlayerFromMessage(message);
                     player.setPoweredDown(false);
                     game.removePoweredDownPlayer(player);
+                    server.sendToAllExcept(player, message);
+                    if (allPoweredDownRobotsHaveConfirmed()) {
+                        server.sendToAll(Messages.CONTINUE_TURN.toString());
+                        startDoTurn();
+                    }
                 }
                 else {
                     PlayerAndProgramCard playerAndCard = converter.convertToCardAndExtractPlayer(message);
@@ -177,7 +189,7 @@ public class GameServerThreads extends Thread {
     }
 
     /**
-     * Let client continue loop
+     * Let server continue loop
      */
     public void continueListening() {
         continueListening.release();
@@ -251,5 +263,28 @@ public class GameServerThreads extends Thread {
      */
     public String getLastSentMessage() {
         return sentMessage;
+    }
+
+    /**
+     *
+     * @return True if all powered down robots have told if they want to power up or down. If
+     * a robot powers up it is removed from the list.
+     */
+    public boolean allPoweredDownRobotsHaveConfirmed() {
+        for (Player player : game.getPoweredDownRobots()) {
+            if (!player.willContinuePowerDown()) {
+                System.out.println(player);
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * @return Player from message
+     */
+    public Player getPlayerFromMessage(String message) {
+        int playerNumber = getPlayerNumberFromMessage(message);
+        return game.getBoard().getPlayer(playerNumber);
     }
 }

@@ -8,7 +8,7 @@ import inf112.skeleton.app.cards.ProgramCard;
 public enum Messages {
     QUIT, HOST_LEAVES, CLOSED,
     DECK_BEGIN, DECK_END, HERE_IS_MAP,
-    START_TURN,
+    START_TURN, CONTINUE_TURN,
     POWER_DOWN, POWER_UP, CONTINUE_POWER_DOWN,
     STOP_THREAD;
 }
