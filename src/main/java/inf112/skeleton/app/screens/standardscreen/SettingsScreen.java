@@ -1,9 +1,12 @@
 package inf112.skeleton.app.screens.standardscreen;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import inf112.skeleton.app.RallyGame;
 
 public class SettingsScreen extends StandardScreen {
@@ -28,11 +31,17 @@ public class SettingsScreen extends StandardScreen {
 
     public void initializeMusicVolumeSlider() {
         musicSlider = new Slider(0, 1, 0.01f, false, game.getDefaultSkin());
-
-        musicSlider.setValue(0.6f);
-        game.sliderVolume(musicSlider.getValue());
+        musicSlider.setValue(game.gameMusic.getVolume());
         musicSlider.setPosition(camera.viewportWidth*0.2f, camera.viewportHeight*0.7f);
         musicSlider.setWidth(camera.viewportWidth*0.6f);
+        musicSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.gameMusic.setVolume(musicSlider.getValue());
+                System.out.println("Sound: " + RallyGame.soundVolume);
+                System.out.println("Music: " + game.gameMusic.getVolume());
+            }
+        });
         stage.addActor(musicSlider);
     }
 
@@ -44,10 +53,18 @@ public class SettingsScreen extends StandardScreen {
     }
 
     public void initializeSoundVolumeSlider() {
-        soundSlider = new Slider(0, 100, 1f, false, game.getDefaultSkin());
-        soundSlider.setValue(0.5f);
+        soundSlider = new Slider(0, 1, 0.01f, false, game.getDefaultSkin());
+        soundSlider.setValue(RallyGame.soundVolume);
         soundSlider.setPosition(camera.viewportWidth*0.2f, camera.viewportHeight*0.5f);
         soundSlider.setWidth(camera.viewportWidth*0.5f);
+        soundSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                RallyGame.soundVolume = soundSlider.getValue();
+                System.out.println("Sound: " + RallyGame.soundVolume);
+                System.out.println("Music: " + game.gameMusic.getVolume());
+            }
+        });
         stage.addActor(soundSlider);
 
     }

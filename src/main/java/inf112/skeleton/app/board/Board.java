@@ -210,7 +210,7 @@ public class Board extends BoardLayers {
         Direction direction = backUp ? player.getDirection().turnAround() : player.getDirection();
 
         if (!boardLogic.canGo(position, direction, this)) {
-            wallImpact.play(RallyGame.volume);
+            wallImpact.play(RallyGame.soundVolume);
             addPlayer(player);
             return;
         }
@@ -317,7 +317,7 @@ public class Board extends BoardLayers {
     public void respawnPlayers() {
         for (Player player : players) {
             if (boardLogic.outsideBoard(player, this)) {
-                scream.play(RallyGame.volume);
+                scream.play(RallyGame.soundVolume);
                 player.decrementLifeTokens();
                 respawn(player);
             }
