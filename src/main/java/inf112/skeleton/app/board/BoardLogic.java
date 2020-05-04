@@ -178,10 +178,11 @@ public class BoardLogic {
      *
      * @param board  the board that are supposed to be checked with
      * @param player trying to move
+     * @param direction to push in
      * @return true if player should push another player to move
      */
-    public boolean shouldPush(Player player, Board board) {
-        return board.hasPlayer(board.getNeighbourPosition(player.getPosition(), player.getDirection()));
+    public boolean shouldPush(Player player, Board board, Direction direction) {
+        return board.hasPlayer(board.getNeighbourPosition(player.getPosition(), direction));
     }
 
     /**

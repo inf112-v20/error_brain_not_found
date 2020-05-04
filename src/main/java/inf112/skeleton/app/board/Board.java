@@ -213,7 +213,7 @@ public class Board extends BoardLayers {
             addPlayer(player);
             return;
         }
-        if (boardLogic.shouldPush(player, this)) {
+        if (boardLogic.shouldPush(player, this, direction)) {
             Player enemyPlayer = getPlayer(getNeighbourPosition(player.getPosition(), direction));
             if (boardLogic.canPush(enemyPlayer, direction, this)) {
                 boardLogic.pushPlayer(enemyPlayer, direction, this);
@@ -221,6 +221,7 @@ public class Board extends BoardLayers {
                 addPlayer(player);
                 return;
             }
+
         }
 
         removePlayerFromBoard(player);

@@ -60,15 +60,6 @@ public class BoardTest {
         return flag1.getFlagnr() == flag2.getFlagnr() && flag1.getPosition().equals(flag2.getPosition());
     }
 
-    /*
-     *
-     * @return true if player is on backupPosition and has backupDirection
-     */
-    private boolean isInBackupState(Player player) {
-        return player.getPosition().equals(player.getBackupPosition()) && player.getDirection().equals(player.getBackupDirection());
-
-    }
-
     @Test
     public void canNotAddSamePlayerOnBoardTest() {
         board.addPlayer(player);
@@ -275,7 +266,20 @@ public class BoardTest {
         Player player2 = new Player(playerTwoPos, 2);
         player2.setDirection(Direction.WEST);
         board.addPlayer(player);
-        assertTrue(boardLogic.shouldPush(player2, board));
+        assertTrue(boardLogic.shouldPush(player2, board, player2.getDirection()));
+    }
+
+    @Test
+    public void playerPushingBackwardsTest() {
+        Vector2 playerToBePushedPosition = new Vector2(0,0);
+        player.setPosition(playerToBePushedPosition);
+        Vector2 playerTwoPos = new Vector2(1, 0);
+        Player player2 = new Player(playerTwoPos, 2);
+        // Facing away from player to be pushed
+        player2.setDirection(Direction.EAST);
+        board.addPlayer(player);
+        board.movePlayer(player2, true);
+        assertEquals(player2, board.getPlayer(playerToBePushedPosition));
     }
 
     @Test

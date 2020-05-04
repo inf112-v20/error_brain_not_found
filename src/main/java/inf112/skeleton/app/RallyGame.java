@@ -322,15 +322,15 @@ public class RallyGame extends Game {
             if (isServer && deck.deckSize() < numberOfDealtCards()) {
                 serverThread.getServer().createAndSendDeckToAll(lockedCards);
             }
-            /*
+
             letClientsAndServerContinue();
             System.out.println("Continue talking");
 
             powerUpPoweredDownPlayers();
-            sendPoweredDownMessage();
-            */
+
             // HER MÅ MAN VELGE POWER UP/DOWN, SENDE SVAR TIL GAME SERVER, GAME SERVER MÅ SENDE SVARENE TIL
             // ALLE KLIENTENE OG SÅ KALLE PÅ game.continueGameLoop FOR Å FORTSETTE SPILLET
+            /*
             System.out.println("Venter på power up");
             try {
                 stopGameLoop.acquire();
@@ -339,7 +339,10 @@ public class RallyGame extends Game {
             }
             System.out.println("Oookei, da kan vi fortsette");
 
+             */
+
             powerDown();
+            sendPoweredDownMessage();
 
             dealCards();
             ((GameScreen) screen).updateCards();
