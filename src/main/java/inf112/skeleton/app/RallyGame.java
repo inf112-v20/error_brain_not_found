@@ -325,6 +325,8 @@ public class RallyGame extends Game {
             /*
             letClientsAndServerContinue();
             System.out.println("Continue talking");
+
+            powerUpPoweredDownPlayers();
             sendPoweredDownMessage();
             */
             // HER MÅ MAN VELGE POWER UP/DOWN, SENDE SVAR TIL GAME SERVER, GAME SERVER MÅ SENDE SVARENE TIL
@@ -757,6 +759,21 @@ public class RallyGame extends Game {
             }
             if (player.isPoweredDown()) {
                 player.resetDamageTokens();
+            }
+        }
+    }
+
+    /**
+     * At the end of each round, before dealing cards, power up players in powerdown mode.
+     * If host is powered up set confirmed to false so {@link #doTurn()} need to wait for host to choose new cards.
+     */
+    public void powerUpPoweredDownPlayers() {
+        for (Player player : players) {
+            if (player.isPoweredDown()) {
+                player.setPoweredDown(false);
+                if (isServer) {
+                    serverThread.getServer().setServerHasConfirmed(false);
+                }
             }
         }
     }

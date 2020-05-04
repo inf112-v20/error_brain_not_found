@@ -19,6 +19,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 import java.io.*;
 import java.net.Socket;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -46,19 +47,22 @@ public class ClientTest {
 
     @Mock
     private InputStream inputStream;
+    private Player player1;
 
     @Before
     public void setUp() {
         try {
             when(socket.getInputStream()).thenReturn(inputStream);
             when(socket.getOutputStream()).thenReturn(outputStream);
-            when(game.getBoard()).thenReturn(board);
         } catch (IOException e) {
             e.printStackTrace();
         }
         this.client = new GameClientThread(game, socket);
         this.converter = new Converter();
         this.programcard = new ProgramCard(10, 2, Rotate.NONE, "Move 2");
+        this.player1 = new Player(new Vector2(0,0), 1);
+        when(game.getBoard()).thenReturn(board);
+        when(board.getPlayer(1)).thenReturn(player1);
         // Reader is decided in each test
         client.setReader(reader);
     }
@@ -158,9 +162,7 @@ public class ClientTest {
     }
 
     @Test
-    public void playerOneIsInPowerDownModeTest() {
-        Player player1 = new Player(new Vector2(0,0), 1);
-        when(board.getPlayer(1)).thenReturn(player1);
+    public void playerOneSendsPowerDownTest() {
         try {
             when(reader.readLine())
                     .thenReturn("3", "4")
@@ -172,6 +174,21 @@ public class ClientTest {
         client.start();
         waitForThread(client);
         assertTrue(player1.isPoweredDown());
+    }
+
+    @Test
+    public void playerOneSendsPowerUpTest() {
+        try {
+            when(reader.readLine())
+                    .thenReturn("3", "4")
+                    .thenReturn("1"+Messages.POWER_UP.toString())
+                    .thenReturn(Messages.STOP_THREAD.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        client.start();
+        waitForThread(client);
+        assertFalse(player1.isPoweredDown());
     }
 
 }
