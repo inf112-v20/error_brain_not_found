@@ -460,9 +460,9 @@ public class RallyGame extends Game {
     }
 
     public void activateRepairTiles() {
-        for (Player player : players){
-            for (Vector2 repairTilePos : board.getRepairTiles()){
-                if (player.getPosition().equals(repairTilePos)){
+        for (Player player : players) {
+            for (Vector2 repairTilePos : board.getRepairTiles()) {
+                if (player.getPosition().equals(repairTilePos)) {
                     player.resetDamageTokens();
                     player.setBackup(repairTilePos, player.getDirection());
                 }

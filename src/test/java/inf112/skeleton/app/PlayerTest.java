@@ -16,15 +16,14 @@ import static org.mockito.Mockito.mock;
 public class PlayerTest {
 
     private Player player;
-    private RallyGame game;
 
     @Before
     public void setUp() {
         Gdx.gl = mock(GL20.class);
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
-        this.game = new RallyGame();
-        this.game.setupGame("assets/maps/Risky Exchange.tmx");
+        RallyGame game = new RallyGame();
+        game.setupGame("assets/maps/Risky Exchange.tmx");
         Vector2 pos = new Vector2(0,0);
         player = new Player(pos, 1);
         game.dealCards();
@@ -129,7 +128,6 @@ public class PlayerTest {
     @Test
     public void oneDamageTokensGivePlayerOneLessDealtCardTest() {
         player.handleDamage();
-        game.dealCards();
         assertEquals(8, player.getProgramCardsDealt());
     }
 
@@ -137,7 +135,6 @@ public class PlayerTest {
     public void twoDamageTokensGivePlayerTwoLessCardsTest() {
         player.handleDamage();
         player.handleDamage();
-        game.dealCards();
         assertEquals(7, player.getProgramCardsDealt());
     }
 
