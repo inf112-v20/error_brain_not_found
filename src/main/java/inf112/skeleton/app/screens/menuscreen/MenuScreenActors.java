@@ -383,7 +383,7 @@ public class MenuScreenActors {
         if (portInput.getText().equals("") || !portInValidRange(Integer.parseInt(portInput.getText()))) {
             invalidInputLabel.setText("Invalid port number, should be between 1024 and 49151");
             portInput.setText("");
-        } else if (numOfPlayers.getText().equals("") || !numberOfPlayersInValidRange(Integer.parseInt(numOfPlayers.getText()))) {
+        } else if (numOfPlayers.getText().equals("") || !isNumber(numOfPlayers.getText()) || !numberOfPlayersInValidRange(Integer.parseInt(numOfPlayers.getText()))) {
             invalidInputLabel.setText("Number of players should be between 2 and 8");
             numOfPlayers.setText("");
         } else {
