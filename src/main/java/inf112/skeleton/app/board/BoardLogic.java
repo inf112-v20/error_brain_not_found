@@ -11,7 +11,13 @@ import java.util.ArrayList;
 
 public class BoardLogic {
 
-    public boolean validRespawnPosition(Vector2 position, Direction direction, Board board) {
+    private final Board board;
+
+    public BoardLogic(Board board) {
+        this.board = board;
+    }
+
+    public boolean validRespawnPosition(Vector2 position, Direction direction) {
         Vector2 currPos = position;
         for (int step = 0; step < 3; step++) {
             if (board.hasPlayer(currPos)) {
@@ -19,17 +25,16 @@ public class BoardLogic {
             }
             currPos = board.getNeighbourPosition(currPos, direction);
         }
-        return !hasHole(position, board);
+        return !hasHole(position);
     }
 
     /**
      * Checks if a position is outside the map
      *
      * @param position the position to check
-     * @param board    the board that is checked
      * @return true if the position is outside of the board
      */
-    public boolean outsideBoard(Vector2 position, Board board) {
+    public boolean outsideBoard(Vector2 position) {
         int boardWidth = board.getBoardWidth();
         int boardHeight = board.getBoardHeight();
         return position.x < 0 ||
@@ -43,18 +48,17 @@ public class BoardLogic {
      *
      * @param player to check
      */
-    public boolean outsideBoard(Player player, Board board) {
-        return outsideBoard(player.getPosition(), board) || hasHole(player.getPosition(), board);
+    public boolean outsideBoard(Player player) {
+        return outsideBoard(player.getPosition()) || hasHole(player.getPosition());
     }
 
     /**
      * Checks if player moves on to a hole
      *
-     * @param board    the board that are supposed to be checked with
      * @param position that is checked
      * @return true if the position contains a hole
      */
-    public boolean hasHole(Vector2 position, Board board) {
+    public boolean hasHole(Vector2 position) {
         for (Vector2 vector : board.getHoles()) {
             if (vector.equals(position)) {
                 return true;
@@ -66,12 +70,11 @@ public class BoardLogic {
     /**
      * Tells if there is possible to move in the intended {@link Direction} direction
      *
-     * @param board     the board that are supposed to be checked with
      * @param position  to go from
      * @param direction to go in
      * @return true if there is no wall blocking the way
      */
-    public boolean canGo(Vector2 position, Direction direction, Board board) {
+    public boolean canGo(Vector2 position, Direction direction) {
         TiledMapTileLayer.Cell cell = board.getWallLayer().getCell((int) position.x, (int) position.y);
         TiledMapTileLayer.Cell northCell = board.getWallLayer().getCell((int) position.x, (int) position.y + 1);
         TiledMapTileLayer.Cell southCell = board.getWallLayer().getCell((int) position.x, (int) position.y - 1);
@@ -176,11 +179,10 @@ public class BoardLogic {
     /**
      * Check if the moving player should try to push another player
      *
-     * @param board  the board that are supposed to be checked with
      * @param player trying to move
      * @return true if player should push another player to move
      */
-    public boolean shouldPush(Player player, Board board) {
+    public boolean shouldPush(Player player) {
         return board.hasPlayer(board.getNeighbourPosition(player.getPosition(), player.getDirection()));
     }
 
@@ -190,14 +192,13 @@ public class BoardLogic {
      * Update player position according to direction
      * Add player to cell that corresponds to player position
      *
-     * @param board     the board that are supposed to be checked with
      * @param player    that should be pushed
      * @param direction to push player in
      */
-    public void pushPlayer(Player player, Direction direction, Board board) {
+    public void pushPlayer(Player player, Direction direction) {
         player.setBeltPushDir(null);
         if (board.hasPlayer(board.getNeighbourPosition(player.getPosition(), direction))) {
-            pushPlayer(board.getPlayer(board.getNeighbourPosition(player.getPosition(), direction)), direction, board);
+            pushPlayer(board.getPlayer(board.getNeighbourPosition(player.getPosition(), direction)), direction);
         }
         board.removePlayerFromBoard(player);
         switch (direction) {
@@ -223,17 +224,16 @@ public class BoardLogic {
     /**
      * Checks if there is possible to push a player.
      *
-     * @param board     the board that are supposed to be checked with
      * @param player    that should be pushed
      * @param direction to push in
      * @return true if it is possible to push all enemies in a row.
      */
-    public boolean canPush(Player player, Direction direction, Board board) {
+    public boolean canPush(Player player, Direction direction) {
         if (board.hasPlayer(board.getNeighbourPosition(player.getPosition(), direction))) {
-            return canGo(player.getPosition(), direction, board) &&
-                    canPush(board.getPlayer(board.getNeighbourPosition(player.getPosition(), direction)), direction, board);
+            return canGo(player.getPosition(), direction) &&
+                    canPush(board.getPlayer(board.getNeighbourPosition(player.getPosition(), direction)), direction);
         }
-        return canGo(player.getPosition(), direction, board);
+        return canGo(player.getPosition(), direction);
     }
 
     /**
@@ -241,11 +241,10 @@ public class BoardLogic {
      *
      * @param position  the tile in question.
      * @param direction the way the fire is happening
-     * @param board     the board that are supposed to be checked with
-     * @return true if {@link #canGo(Vector2, Direction, Board) canGo} is true and if not {@link #outsideBoard(Vector2, Board) outsideBoard} is true.
+     * @return true if {@link #canGo(Vector2, Direction) canGo} is true and if not {@link #outsideBoard(Vector2) outsideBoard} is true.
      */
-    public boolean canFire(Vector2 position, Direction direction, Board board) {
-        return canGo(position, direction, board) && !outsideBoard(board.getNeighbourPosition(position, direction), board);
+    public boolean canFire(Vector2 position, Direction direction) {
+        return canGo(position, direction) && !outsideBoard(board.getNeighbourPosition(position, direction));
     }
 
     /**
