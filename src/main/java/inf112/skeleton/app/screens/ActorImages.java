@@ -24,6 +24,8 @@ public class ActorImages {
         TextureRegion updateSettingsOver = new TextureRegion(new Texture("assets/images/Update Button Active.png"));
         TextureRegion saveButton = new TextureRegion(new Texture("assets/images/Save Button Active.png"));
         TextureRegion saveButtonOver = new TextureRegion(new Texture("assets/images/Save Button Active.png"));
+        TextureRegion screenToggler = new TextureRegion(new Texture("assets/images/Screen Toggle Inactive.png"));
+        TextureRegion screenTogglerOver = new TextureRegion(new Texture("assets/images/Screen Toggle Active.png"));
 
         TextureRegion powerDownActive = new TextureRegion(new Texture("assets/images/Power Down Active.png"));
         TextureRegion powerDownInactive = new TextureRegion(new Texture("assets/images/Power Down Inactive.png"));
@@ -36,7 +38,8 @@ public class ActorImages {
 
         TextureRegion loadingScreenBackground = new TextureRegion(new Texture("assets/images/RoboRallyMenuScreen.png"));
         TextureRegion menuScreenBackground = new TextureRegion(new Texture("assets/images/GUI_Edited.jpg"));
-        TextureRegion youWinBackground = new TextureRegion(new Texture("assets/images/YouWin.png"));
+        TextureRegion youWinBackground = new TextureRegion(new Texture("assets/images/You Won.png"));
+        TextureRegion youLostBackground = new TextureRegion(new Texture("assets/images/You Lost.png"));
 
         atlas.addRegion("Confirm ready", confirmReady);
         atlas.addRegion("Confirm not ready", confirmNotReady);
@@ -49,7 +52,11 @@ public class ActorImages {
         atlas.addRegion("Save", saveButton);
         atlas.addRegion("Save over", saveButtonOver);
         atlas.addRegion("Update settings", updateSettings);
-        atlas.addRegion("Update settings", updateSettingsOver);
+        atlas.addRegion("Update settings over", updateSettingsOver);
+
+        atlas.addRegion("Screen Toggle", screenToggler);
+        atlas.addRegion("Screen Toggle over", screenTogglerOver);
+
         atlas.addRegion("Power down active", powerDownActive);
         atlas.addRegion("Power down inactive", powerDownInactive);
         atlas.addRegion("Power up active", powerUpActive);
@@ -57,7 +64,8 @@ public class ActorImages {
         atlas.addRegion("Powering down", poweringDown);
         atlas.addRegion("Loading screen background", loadingScreenBackground);
         atlas.addRegion("Menu screen background", menuScreenBackground);
-        atlas.addRegion("You win background", youWinBackground);
+        atlas.addRegion("You won background", youWinBackground);
+        atlas.addRegion("You lost background", youLostBackground);
         atlas.addRegion("Damage token", damageToken);
         atlas.addRegion("Life token", lifeToken);
 

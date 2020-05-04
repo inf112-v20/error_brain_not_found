@@ -120,7 +120,9 @@ public class RallyGame extends Game {
         return (StandardScreen) super.getScreen();
     }
 
-    public void sliderVolume(float v) {gameMusic.setVolume(v);}
+    public void setVolumeFromSlider(float v) {
+       volume = v;
+    }
 
     public void muteMusic() {
         gameMusic.setVolume(gameMusic.getVolume() == 0 ? 0.5f : 0);
@@ -136,7 +138,6 @@ public class RallyGame extends Game {
 
     public void startMusic() {
         loadMusic();
-        sliderVolume(volume);
         gameMusic.setVolume(volume);
         gameMusic.setLooping(true);
         gameMusic.play();
