@@ -139,8 +139,8 @@ public class RallyGame extends Game {
      */
     public void sendSelectedCardsToServer() {
         if (!isServer) {
-            for (Register register : mainPlayer.getRegisters().getRegisters()) {
-                client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), register.getProgramCard()));
+            for (ProgramCard card : mainPlayer.getRegisters().getCards()) {
+                client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), card));
             }
         }
     }
@@ -179,7 +179,10 @@ public class RallyGame extends Game {
     public void confirm() {
         if (mainPlayer.havePressedPowerDownButton()) {
             mainPlayer.setPoweringDown(true);
-            System.out.println("Powering down..");
+            System.out.println("Powering down next round..");
+        }
+        else if (mainPlayer.isPoweredDown() && mainPlayer.havePressedPowerDownButton()) {
+            System.out.println("Continue power down.");
         }
         if (!mainPlayer.getRegisters().hasRegistersWithoutCard()) {
             sendSelectedCardsToServer();
@@ -326,8 +329,6 @@ public class RallyGame extends Game {
             letClientsAndServerContinue();
             System.out.println("Continue talking");
 
-            powerUpPoweredDownPlayers();
-
             // HER MÅ MAN VELGE POWER UP/DOWN, SENDE SVAR TIL GAME SERVER, GAME SERVER MÅ SENDE SVARENE TIL
             // ALLE KLIENTENE OG SÅ KALLE PÅ game.continueGameLoop FOR Å FORTSETTE SPILLET
             /*
@@ -340,6 +341,8 @@ public class RallyGame extends Game {
             System.out.println("Oookei, da kan vi fortsette");
 
              */
+
+            powerUpPoweredDownPlayers();
 
             powerDown();
             sendPoweredDownMessage();
@@ -796,5 +799,17 @@ public class RallyGame extends Game {
                 client.sendMessage(mainPlayer.getPlayerNr()+Messages.POWER_DOWN.toString());
             }
         }
+    }
+
+    public void setMainPlayer(Player mainPlayer) {
+        this.mainPlayer = mainPlayer;
+    }
+
+    public void setClient(GameClientThread client) {
+        this.client = client;
+    }
+
+    public void setServerThread(ServerThread serverThread) {
+        this.serverThread = serverThread;
     }
 }

@@ -5,26 +5,56 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.board.Board;
+import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.cards.Registers;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.enums.Rotate;
+import inf112.skeleton.app.lan.GameClientThread;
+import inf112.skeleton.app.lan.GameServer;
+import inf112.skeleton.app.lan.ServerThread;
 import inf112.skeleton.app.objects.Belt;
 import inf112.skeleton.app.objects.player.Player;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.runners.MockitoJUnitRunner;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
+@RunWith(MockitoJUnitRunner.class)
 public class GameTest {
 
     private RallyGame game;
     private Player player;
     private ArrayList<Belt> belts;
+
+    @Mock
+    private Player mainPlayer;
+
+    @Mock
+    private GameClientThread client;
+
+    @Mock
+    private Registers registers;
+
+    @Mock
+    private ServerThread serverThread;
+
+    @Mock
+    private GameServer server;
 
     @Before
     public void setUp() {
@@ -37,6 +67,11 @@ public class GameTest {
         player = new Player(new Vector2(0, 0), 5);
         board.addPlayer(player);
         this.belts = board.getBelts();
+
+        game.setMainPlayer(mainPlayer);
+        when(mainPlayer.getRegisters()).thenReturn(registers);
+        ProgramCard card = new ProgramCard(1,1, Rotate.NONE, "Card");
+        when(registers.getCards()).thenReturn(new ArrayList<>(Arrays.asList(card, card, card, card, card)));
     }
 
     /**
@@ -171,5 +206,51 @@ public class GameTest {
         game.powerDown();
         assertTrue(player.isPoweredDown());
     }
+
+    @Test
+    public void powerDownResetDamageTokensTest() {
+        player.handleDamage();
+        player.setPoweredDown(true);
+        game.powerDown();
+        assertEquals(0, player.getDamageTokens());
+    }
+
+    @Test
+    public void confirmedButtonPoweringDownTest() {
+        when(mainPlayer.getRegisters().hasRegistersWithoutCard()).thenReturn(true);
+        when(mainPlayer.havePressedPowerDownButton()).thenReturn(true);
+        game.confirm();
+        verify(mainPlayer).setPoweringDown(true);
+    }
+
+    @Test
+    public void confirmingCardsSendToServerTest() {
+        game.setClient(client);
+        when(mainPlayer.getRegisters().hasRegistersWithoutCard()).thenReturn(false);
+        game.confirm();
+        verify(client, times(5)).sendMessage(anyString());
+    }
+
+    @Test
+    public void confirmingCardsSendToClientsTest() {
+        game.setServerThread(serverThread);
+        game.setIsServerToTrue();
+        when(serverThread.getServer()).thenReturn(server);
+        when(mainPlayer.getRegisters().hasRegistersWithoutCard()).thenReturn(false);
+        when(server.allClientsHaveSelectedCards()).thenReturn(true);
+        game.confirm();
+        verify(server).sendSelectedCardsToAll();
+    }
+
+    @Test
+    public void pressedPowerDownButtonAndSelectedCardsTest() {
+        game.setClient(client);
+        when(mainPlayer.havePressedPowerDownButton()).thenReturn(true);
+        when(mainPlayer.getRegisters().hasRegistersWithoutCard()).thenReturn(false);
+        game.confirm();
+        verify(client, times(5)).sendMessage(anyString());
+        verify(mainPlayer).setPoweringDown(true);
+    }
+
 
 }
