@@ -1,5 +1,9 @@
 package inf112.skeleton.app.enums;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public enum Direction {
     WEST,
     EAST,
@@ -55,6 +59,12 @@ public enum Direction {
             default:
                 return null;
         }
+    }
+
+    public static List<Direction> getDirectionRandomOrder() {
+        List<Direction> directions = Arrays.asList(Direction.values());
+        Collections.shuffle(directions);
+        return directions;
     }
 }
 

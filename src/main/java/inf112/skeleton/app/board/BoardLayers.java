@@ -66,6 +66,8 @@ public abstract class BoardLayers {
         findRepairs();
     }
 
+    // FIND OBJECTS
+
     public void findBelts() {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
@@ -326,6 +328,8 @@ public abstract class BoardLayers {
         }
     }
 
+    // GET MAP LAYERS
+
     public TiledMap getTiledMap() {
         return tiledMap;
     }
@@ -336,6 +340,15 @@ public abstract class BoardLayers {
     public TiledMapTileLayer getLaserLayer() {
         return laserLayer;
     }
+
+    /**
+     * @return {@link TiledMapTileLayer} of wall layer
+     */
+    public TiledMapTileLayer getWallLayer() {
+        return wallLayer;
+    }
+
+    // GET LIST OF OBJECTS
 
     public ArrayList<Laser> getLasers() {
         return lasers;
@@ -369,10 +382,17 @@ public abstract class BoardLayers {
         return repairTiles;
     }
 
+    // GET HEIGHT AND WIDTH
+    /**
+     * @return width of the board
+     */
     public int getBoardWidth() {
         return boardWidth;
     }
 
+    /**
+     * @return height of the board
+     */
     public int getBoardHeight() {
         return boardHeight;
     }

@@ -212,12 +212,14 @@ public class RallyGame extends Game {
                     decreaseLives();
                 }
 
-                updateBackupPosition();
-                pickUpFlags();
+                // Update back up and pick up flags
+                updateBackupAndPickUpFlagsAndRepair(false);
                 sleep(500);
 
                 sleep(1000);
             }
+            // Update back up and pick up flags and repair
+            updateBackupAndPickUpFlagsAndRepair(true);
             respawnPlayers();
             updateRegisters();
             discardCards();
@@ -233,6 +235,7 @@ public class RallyGame extends Game {
         }
     }
 
+    // TODO: Denne brukes ikke
     private void pickUpFlags() {
         for (Player player : players) {
             board.pickUpFlags(player);
@@ -343,8 +346,8 @@ public class RallyGame extends Game {
     }
 
     public void removeLasers() {
-        for (int y = 0; y < board.getHeight(); y++) {
-            for (int x = 0; x < board.getWidth(); x++) {
+        for (int y = 0; y < board.getBoardHeight(); y++) {
+            for (int x = 0; x < board.getBoardWidth(); x++) {
                 board.getLaserLayer().setCell(x, y, null);
             }
         }
@@ -369,7 +372,7 @@ public class RallyGame extends Game {
     }
 
     public void activateRotatePads() {
-        for (Player player : board.getPlayers()) {
+        for (Player player : players) {
             for (RotatePad pad : board.getRotatePads()) {
                 Vector2 playerPosition = player.getPosition();
                 Vector2 padPosition = pad.getPosition();
@@ -392,7 +395,7 @@ public class RallyGame extends Game {
      */
     public void activateBelts(boolean onlyExpress) {
         ArrayList<Belt> belts = onlyExpress ? board.getExpressBelts() : board.getBelts();
-        for (Player player : board.getPlayers()) {
+        for (Player player : players) {
             for (Belt belt : belts) {
                 if (player.getPosition().equals(belt.getPosition())) {
                     beltPush(player, belt);
@@ -462,30 +465,23 @@ public class RallyGame extends Game {
         }
     }
 
-    public void activateRepairTiles() {
-        for (Player player : players) {
-            for (Vector2 repairTilePos : board.getRepairTiles()) {
-                if (player.getPosition().equals(repairTilePos)) {
-                    player.resetDamageTokens();
-                    player.setBackup(repairTilePos, player.getDirection());
-                }
-            }
-        }
-    }
-
-    /**
-     * Update backup position and direction if a robot stands on a repair tile or a flag
-     */
-    public void updateBackupPosition() {
+    public void updateBackupAndPickUpFlagsAndRepair(boolean repair) {
         for (Player player : players) {
             for (Vector2 repairTilePos : board.getRepairTiles()) {
                 if (player.getPosition().equals(repairTilePos)) {
                     player.setBackup(repairTilePos, player.getDirection());
+                    if (repair) {
+                        player.decrementDamageTokens();
+                    }
                 }
             }
             for (Flag flag : board.getFlags()) {
                 if (player.getPosition().equals(flag.getPosition())) {
                     player.setBackup(flag.getPosition(), player.getDirection());
+                    player.tryToPickUpFlag(player, flag);
+                    if (repair) {
+                        player.decrementDamageTokens();
+                    }
                 }
             }
         }

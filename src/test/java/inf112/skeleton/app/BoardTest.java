@@ -94,12 +94,12 @@ public class BoardTest {
 
     @Test
     public void boardInitializedWithCorrectWidthTest() {
-        assertEquals(BOARD_WIDTH, board.getWidth());
+        assertEquals(BOARD_WIDTH, board.getBoardWidth());
     }
 
     @Test
     public void boardInitializedWithCorrectHeightTest() {
-        assertEquals(BOARD_HEIGHT, board.getHeight());
+        assertEquals(BOARD_HEIGHT, board.getBoardHeight());
     }
 
 

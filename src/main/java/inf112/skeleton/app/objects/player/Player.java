@@ -143,6 +143,10 @@ public class Player {
         this.damageTokens = 0;
     }
 
+    public void decrementDamageTokens() {
+        this.damageTokens--;
+    }
+
     public int getLifeTokens() {
         return lifeTokens;
     }
@@ -216,7 +220,7 @@ public class Player {
         ArrayList<Vector2> possiblePositions = board.getNeighbourhood(position);
         Collections.shuffle(possiblePositions);
         for (Vector2 pos : possiblePositions) {
-            for (Direction dir : board.getDirectionRandomOrder()) {
+            for (Direction dir : Direction.getDirectionRandomOrder()) {
                 if (boardLogic.validRespawnPosition(pos, dir, board)) {
                     setAlternativeBackup(pos, dir);
                     return;
@@ -270,6 +274,12 @@ public class Player {
 
     public void pickUpFlag(Flag flag) {
         flagsCollected.add(flag);
+    }
+
+    public void tryToPickUpFlag(Player player, Flag flag) {
+        if (player.shouldPickUpFlag(flag)) {
+            player.pickUpFlag(flag);
+        }
     }
 
     public void fire(RallyGame game) {

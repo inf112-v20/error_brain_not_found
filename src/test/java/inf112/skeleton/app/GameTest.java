@@ -143,7 +143,7 @@ public class GameTest {
         Vector2 repairTilePosition = game.getBoard().getRepairTiles().get(0);
         player.handleDamage();
         player.setPosition(repairTilePosition);
-        game.activateRepairTiles();
+        game.updateBackupAndPickUpFlagsAndRepair();
         assertEquals(0, player.getDamageTokens());
     }
 
@@ -154,7 +154,7 @@ public class GameTest {
             player.handleDamage();
         }
         player.setPosition(repairTilePosition);
-        game.activateRepairTiles();
+        game.updateBackupAndPickUpFlagsAndRepair();
         assertEquals(0, player.getDamageTokens());
     }
 

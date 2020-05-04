@@ -21,7 +21,6 @@ public class Board extends BoardLayers {
 
     private final ArrayList<Player> players;
 
-    private final Sound scream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
     private final Sound wallImpact = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/ImpactWall.mp3"));
 
     private final BoardLogic boardLogic = new BoardLogic();
@@ -152,12 +151,6 @@ public class Board extends BoardLayers {
         laserLayer.setCell((int) position.x, (int) position.y, cell);
     }
 
-    public void pickUpFlags(Player player) {
-        if (hasFlag(player.getPosition())) {
-            tryToPickUpFlag(player);
-        }
-    }
-
     /**
      * Places a player in backup position or alternative position
      *
@@ -174,24 +167,6 @@ public class Board extends BoardLayers {
             player.setDirection(player.getBackupDirection());
         }
         addPlayer(player);
-    }
-
-    public List<Direction> getDirectionRandomOrder() {
-        List<Direction> directions = Arrays.asList(Direction.values());
-        Collections.shuffle(directions);
-        return directions;
-    }
-
-    /**
-     * @return player that should be moved with arrows
-     */
-    public Player getPlayer1() {
-        for (Player player : players) {
-            if (player.getPlayerNr() == 1) {
-                return player;
-            }
-        }
-        return null;
     }
 
     /**
@@ -298,17 +273,6 @@ public class Board extends BoardLayers {
         return neighbourPosition;
     }
 
-    // TODO: Denne brukes ikke, flyttet lyden over til RallyGame::decreaseLives
-    public void respawnPlayers() {
-        for (Player player : players) {
-            if (boardLogic.outsideBoard(player, this)) {
-                scream.play(RallyGame.volume);
-                player.decrementLifeTokens();
-                respawn(player);
-            }
-        }
-    }
-
     public boolean hasPlayer(Vector2 position) {
         for (Player enemyPlayer : players) {
             if (enemyPlayer.getPosition().equals(position)) {
@@ -342,10 +306,12 @@ public class Board extends BoardLayers {
         playerLayer.setCell((int) player.getPosition().x, (int) player.getPosition().y, null);
     }
 
+    // TODO: Denne brukes ikke
     public boolean hasFlag(Vector2 position) {
         return flagLayer.getCell((int) position.x, (int) position.y) != null;
     }
 
+    // TODO: Denne brukes ikke
     public Flag getFlag(Vector2 position) {
         for (Flag flag : flags) {
             if (flag.getPosition().equals(position)) {
@@ -355,6 +321,7 @@ public class Board extends BoardLayers {
         return null;
     }
 
+    // TODO: Denne brukes ikke
     public void tryToPickUpFlag(Player player) {
         Flag flag = getFlag(player.getPosition());
         if (player.shouldPickUpFlag(flag)) {
@@ -362,12 +329,38 @@ public class Board extends BoardLayers {
         }
     }
 
-    public BoardLogic getBoardLogic() {
-        return boardLogic;
+    // TODO: Denne brukes ikke
+    public void pickUpFlags(Player player) {
+        if (hasFlag(player.getPosition())) {
+            tryToPickUpFlag(player);
+        }
     }
 
-    public ArrayList<Flag> getFlags() {
-        return flags;
+    // TODO: Denne brukes ikke, flyttet lyden over til RallyGame::decreaseLives
+    public void respawnPlayers() {
+        for (Player player : players) {
+            if (boardLogic.outsideBoard(player, this)) {
+                player.decrementLifeTokens();
+                respawn(player);
+            }
+        }
+    }
+
+    // TODO: Denne kan slettes når LAN merges inn
+    /**
+     * @return player that should be moved with arrows
+     */
+    public Player getPlayer1() {
+        for (Player player : players) {
+            if (player.getPlayerNr() == 1) {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    public BoardLogic getBoardLogic() {
+        return boardLogic;
     }
 
     /**
@@ -377,42 +370,8 @@ public class Board extends BoardLayers {
         return players;
     }
 
-    /**
-     * @return {@link TiledMapTileLayer} of laser layer
-     */
-    public TiledMapTileLayer getLaserLayer() {
-        return laserLayer;
-    }
-
-    /**
-     * @return {@link TiledMapTileLayer} of wall layer
-     */
-    public TiledMapTileLayer getWallLayer() {
-        return wallLayer;
-    }
-
-    /**
-     * @return width of the board
-     */
-    public int getWidth() {
-        return boardWidth;
-    }
-
-    /**
-     * @return height of the board
-     */
-    public int getHeight() {
-        return boardHeight;
-    }
-
-    @Override
-    public ArrayList<Vector2> getRepairTiles() {
-        return super.getRepairTiles();
-    }
-
     public void dispose() {
         wallImpact.dispose();
-        scream.dispose();
         tiledMap.dispose();
     }
 }

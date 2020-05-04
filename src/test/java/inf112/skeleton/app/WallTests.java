@@ -50,7 +50,7 @@ public class WallTests {
      * @return true if position is on tile before border
      */
     private boolean onEastBorder(Vector2 position) {
-        return position.x >= board.getWidth()-1;
+        return position.x >= board.getBoardWidth()-1;
     }
 
     /**
@@ -77,7 +77,7 @@ public class WallTests {
      * @return true if position is on tile before border
      */
     private boolean onNorthBorder(Vector2 position) {
-        return position.y >= board.getHeight()-1;
+        return position.y >= board.getBoardHeight()-1;
     }
 
     /**
@@ -233,8 +233,8 @@ public class WallTests {
      */
     private void putPositionsToWallsInLists() {
         TiledMapTileLayer wallLayer = board.getWallLayer();
-        for (int x = 0; x < board.getWidth(); x++) {
-            for (int y = 0; y < board.getHeight(); y++) {
+        for (int x = 0; x < board.getBoardWidth(); x++) {
+            for (int y = 0; y < board.getBoardHeight(); y++) {
                 Vector2 pos = new Vector2(x, y);
                 TiledMapTileLayer.Cell wall = wallLayer.getCell(x, y);
                 if (boardLogic.hasSouthWall(wall)) {
