@@ -1,6 +1,7 @@
 package inf112.skeleton.app.screens.standardscreen;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
@@ -11,7 +12,7 @@ public class SettingsScreen extends StandardScreen {
     private Slider musicSlider;
     private Slider soundSlider;
 
-    public SettingsScreen(RallyGame game) {
+    public SettingsScreen(RallyGame game, Stage stage) {
         super(game);
         initializeBackground();
         initializeMusicVolumeSlider();

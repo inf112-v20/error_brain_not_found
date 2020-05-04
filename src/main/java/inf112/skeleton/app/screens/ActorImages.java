@@ -20,6 +20,11 @@ public class ActorImages {
         TextureRegion StartOver = new TextureRegion(new Texture("assets/images/Start button inactive.png"));
         TextureRegion Settings = new TextureRegion(new Texture("assets/images/Settings Active.png"));
         TextureRegion SettingsOver = new TextureRegion(new Texture("assets/images/Settings Inactive.png"));
+        TextureRegion updateSettings = new TextureRegion(new Texture("assets/images/Update Button Inactive.png"));
+        TextureRegion updateSettingsOver = new TextureRegion(new Texture("assets/images/Update Button Active.png"));
+        TextureRegion saveButton = new TextureRegion(new Texture("assets/images/Save Button Active.png"));
+        TextureRegion saveButtonOver = new TextureRegion(new Texture("assets/images/Save Button Active.png"));
+
         TextureRegion powerDownActive = new TextureRegion(new Texture("assets/images/Power Down Active.png"));
         TextureRegion powerDownInactive = new TextureRegion(new Texture("assets/images/Power Down Inactive.png"));
         TextureRegion powerUpActive = new TextureRegion(new Texture("assets/images/Power Up Active.png"));
@@ -41,6 +46,10 @@ public class ActorImages {
         atlas.addRegion("Start over", StartOver);
         atlas.addRegion("Settings", Settings);
         atlas.addRegion("Settings over", SettingsOver);
+        atlas.addRegion("Save", saveButton);
+        atlas.addRegion("Save over", saveButtonOver);
+        atlas.addRegion("Update settings", updateSettings);
+        atlas.addRegion("Update settings", updateSettingsOver);
         atlas.addRegion("Power down active", powerDownActive);
         atlas.addRegion("Power down inactive", powerDownInactive);
         atlas.addRegion("Power up active", powerUpActive);

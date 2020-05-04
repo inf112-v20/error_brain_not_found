@@ -96,14 +96,13 @@ public class MenuScreenActors {
         settingsButtonStyle.up = game.actorImages.getSkin().getDrawable("Settings");
         settingsButtonStyle.over = game.actorImages.getSkin().getDrawable("Settings over");
 
-
         ImageButton settingsButton = new ImageButton(settingsButtonStyle);
         settingsButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         settingsButton.setPosition(BUTTON_X, EXIT_BUTTON_Y);
         settingsButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new SettingsScreen(game));
+                game.setScreen(new SettingsScreen(game,stage));
             }
 
             @Override
