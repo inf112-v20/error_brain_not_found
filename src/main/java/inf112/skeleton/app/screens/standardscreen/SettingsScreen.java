@@ -19,6 +19,12 @@ public class SettingsScreen extends StandardScreen {
         initializeSoundVolumeSlider();
         initializeSoundVolumeLabel();
     }
+    public void updateSettings(){
+
+    }
+    public void saveButton(){
+
+    }
 
     public void initializeMusicVolumeSlider() {
         musicSlider = new Slider(0, 1, 0.01f, false, game.getDefaultSkin());

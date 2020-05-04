@@ -103,7 +103,7 @@ public class MenuScreenActors {
         settingsButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new SettingsScreen(game));;
+                game.setScreen(new SettingsScreen(game));
             }
 
             @Override
