@@ -136,7 +136,8 @@ public class RallyGame extends Game {
 
     public void startMusic() {
         loadMusic();
-        gameMusic.setVolume(0.5f);
+        sliderVolume(volume);
+        gameMusic.setVolume(volume);
         gameMusic.setLooping(true);
         gameMusic.play();
     }

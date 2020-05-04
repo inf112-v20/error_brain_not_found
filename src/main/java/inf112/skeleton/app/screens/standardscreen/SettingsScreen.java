@@ -16,11 +16,14 @@ public class SettingsScreen extends StandardScreen {
         initializeBackground();
         initializeMusicVolumeSlider();
         initializeMusicVolumeLabel();
+        initializeSoundVolumeSlider();
+        initializeSoundVolumeLabel();
     }
 
     public void initializeMusicVolumeSlider() {
-        musicSlider = new Slider(0, 100, 1f, false, game.getDefaultSkin());
+        musicSlider = new Slider(0, 1, 0.01f, false, game.getDefaultSkin());
 
+        musicSlider.setValue(0.6f);
         game.sliderVolume(musicSlider.getValue());
         musicSlider.setPosition(camera.viewportWidth*0.2f, camera.viewportHeight*0.7f);
         musicSlider.setWidth(camera.viewportWidth*0.6f);
@@ -35,21 +38,24 @@ public class SettingsScreen extends StandardScreen {
     }
 
     public void initializeSoundVolumeSlider() {
-        soundSlider = new Slider(0, 100, 0.9f, false, game.getDefaultSkin());
-        soundSlider.setValue(50f);
-        soundSlider.setPosition(camera.viewportWidth*0.1f, camera.viewportHeight*0.6f);
+        soundSlider = new Slider(0, 100, 1f, false, game.getDefaultSkin());
+        soundSlider.setValue(0.5f);
+        soundSlider.setPosition(camera.viewportWidth*0.2f, camera.viewportHeight*0.5f);
         soundSlider.setWidth(camera.viewportWidth*0.5f);
         stage.addActor(soundSlider);
 
     }
 
     public void initializeSoundVolumeLabel() {
-
+        Label label = new Label("Sound Volume", game.getTextSkin(), "title", Color.WHITE);
+        label.setPosition(camera.viewportWidth*0.5f - label.getPrefWidth(), soundSlider.getY() + label.getPrefHeight() );
+        label.setFontScale(1.5f);
+        stage.addActor(label);
     }
 
     public void initializeFullscreenButton() {
         game.fullscreen();
-        // Lag ny knapp, når man trykker skal den kallle på game.fullscreen()
+        // Lag ny knapp, når man trykker skal den kalle på game.fullscreen()
     }
 
     public void initializeBackground() {
