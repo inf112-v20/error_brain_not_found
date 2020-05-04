@@ -16,13 +16,13 @@ import java.util.Collections;
 
 public class Player {
 
-    private final int playerNr;
+    private final int playerNumber;
     private final Registers registers;
     private Vector2 backupPosition;
     private Direction backupDirection;
     private Vector2 alternativeBackupPosition;
     private Direction alternativeBackupDirection;
-    private final Vector2 position;
+    private Vector2 position;
     private Direction direction;
     private final ArrayList<Flag> flagsCollected;
     private final ArrayList<ProgramCard> cardsOnHand;
@@ -37,10 +37,27 @@ public class Player {
     private int damageTokens;
     private int lifeTokens;
 
+    public Player(int playerNumber) {
+        this.direction = Direction.EAST;
+        this.playerNumber = playerNumber;
+        this.flagsCollected = new ArrayList<>();
+        this.registers = new Registers();
+        this.cardsOnHand = new ArrayList<>();
+        this.damageTokens = 0;
+        this.lifeTokens = 3;
+        this.beltPushDir = null;
+        this.beltPushPos = null;
+        this.programCardsDealt = 9;
+        this.poweringDown = false;
+        this.poweredDown = false;
+        this.powerUpNextRound = false;
+        this.powerDownNextRound = false;
+    }
+
     public Player(Vector2 position, int playerNr) {
         this.position = position;
         this.direction = Direction.EAST;
-        this.playerNr = playerNr;
+        this.playerNumber = playerNr;
         this.flagsCollected = new ArrayList<>();
         this.registers = new Registers();
         this.cardsOnHand = new ArrayList<>();
@@ -54,6 +71,12 @@ public class Player {
         this.powerUpNextRound = false;
         this.powerDownNextRound = false;
 
+        setBackup(this.position, this.direction);
+    }
+
+    public void setStartPosition(Vector2 position) {
+        this.position = position;
+        this.direction = Direction.EAST;
         setBackup(this.position, this.direction);
     }
 
@@ -221,14 +244,14 @@ public class Player {
         Collections.shuffle(possiblePositions);
         for (Vector2 pos : possiblePositions) {
             for (Direction dir : Direction.getDirectionRandomOrder()) {
-                if (boardLogic.validRespawnPosition(pos, dir, board)) {
+                if (boardLogic.validRespawnPosition(pos, dir)) {
                     setAlternativeBackup(pos, dir);
                     return;
                 }
             }
         }
-        setAlternativeBackup(board.getStartPosition(getPlayerNr()), Direction.EAST);
-        if (board.hasPlayer(board.getStartPosition(getPlayerNr()))) {
+        setAlternativeBackup(board.getStartPosition(getPlayerNumber()), Direction.EAST);
+        if (board.hasPlayer(board.getStartPosition(getPlayerNumber()))) {
             chooseAlternativeBackupPosition(board, alternativeBackupPosition, boardLogic);
         }
     }
@@ -236,8 +259,8 @@ public class Player {
     /**
      * @return number of player
      */
-    public int getPlayerNr() {
-        return playerNr;
+    public int getPlayerNumber() {
+        return playerNumber;
     }
 
     /**
@@ -251,7 +274,7 @@ public class Player {
      * Set's the position to the player
      */
     public void setPosition(Vector2 pos) {
-        this.position.set(pos.x, pos.y);
+        this.position = new Vector2(pos);
     }
 
     /**
@@ -283,7 +306,7 @@ public class Player {
     }
 
     public void fire(RallyGame game) {
-        if (game.getBoard().getBoardLogic().canFire(position, direction, game.board)) {
+        if (game.getBoard().getBoardLogic().canFire(position, direction)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }
@@ -292,7 +315,7 @@ public class Player {
         game.getBoard().addLaser(position, direction);
         if (game.getBoard().hasPlayer(position)) {
             game.getBoard().getPlayer(position).handleDamage();
-        } else if (game.getBoard().getBoardLogic().canFire(position, direction, game.board)) {
+        } else if (game.getBoard().getBoardLogic().canFire(position, direction)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }
@@ -317,7 +340,7 @@ public class Player {
     }
 
     public boolean equals(Player other) {
-        return this.getPlayerNr() == other.getPlayerNr();
+        return this.getPlayerNumber() == other.getPlayerNumber();
     }
 
     /**
@@ -329,7 +352,7 @@ public class Player {
     }
 
     public String toString() {
-        return "Player " + getPlayerNr();
+        return "Player " + getPlayerNumber();
     }
 
     public boolean isPoweringDown() {

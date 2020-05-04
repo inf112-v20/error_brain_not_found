@@ -37,8 +37,8 @@ public class BoardTest {
         Gdx.gl = mock(GL20.class);
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
-        this.board = new Board("assets/maps/Risky Exchange.tmx", NUMBER_OF_PLAYERS_WHEN_STARTING_GAME);
-        this.boardLogic = new BoardLogic();
+        this.board = new Board("assets/maps/Risky Exchange.tmx");
+        this.boardLogic = new BoardLogic(board);
         // Random position
         this.startPosition = new Vector2(5, 5);
         this.player = new Player(startPosition, 1);
@@ -106,25 +106,25 @@ public class BoardTest {
     @Test
     public void playerIsOutsideOfUpperBorderTest() {
         player.setPosition(new Vector2(0, BOARD_HEIGHT));
-        assertTrue(board.getBoardLogic().outsideBoard(player, board));
+        assertTrue(board.getBoardLogic().outsideBoard(player));
     }
 
     @Test
     public void playerIsOutsideOfRightBorderTest() {
         player.setPosition(new Vector2(BOARD_WIDTH, 0));
-        assertTrue(board.getBoardLogic().outsideBoard(player, board));
+        assertTrue(board.getBoardLogic().outsideBoard(player));
     }
 
     @Test
     public void playerIsOutsideOfLeftBorderTest() {
         player.setPosition(new Vector2(-1, 0));
-        assertTrue(board.getBoardLogic().outsideBoard(player, board));
+        assertTrue(board.getBoardLogic().outsideBoard(player));
     }
 
     @Test
     public void playerIsUnderBorderTest() {
         player.setPosition(new Vector2(0, -1));
-        assertTrue(board.getBoardLogic().outsideBoard(player, board));
+        assertTrue(board.getBoardLogic().outsideBoard(player));
     }
 
     @Test
@@ -164,7 +164,7 @@ public class BoardTest {
         for (int i = 0; i < 5; i++) {
             Vector2 holePosition = holes.get(0);
             player.setPosition(holePosition);
-            assertTrue(board.getBoardLogic().outsideBoard(player, board));
+            assertTrue(board.getBoardLogic().outsideBoard(player));
         }
     }
 
@@ -251,7 +251,7 @@ public class BoardTest {
         player.setPosition(playerPosition);
         player.setDirection(Direction.EAST);
         board.movePlayer(player, false);
-        board.pickUpFlags();
+        board.pickUpFlags(player);
         assertTrue(isEqualFlags(flag, player.getFlagsCollected().get(0)));
     }
 
@@ -275,7 +275,7 @@ public class BoardTest {
         Player player2 = new Player(playerTwoPos, 2);
         player2.setDirection(Direction.WEST);
         board.addPlayer(player);
-        assertTrue(boardLogic.shouldPush(player2, board));
+        assertTrue(boardLogic.shouldPush(player2));
     }
 
     @Test

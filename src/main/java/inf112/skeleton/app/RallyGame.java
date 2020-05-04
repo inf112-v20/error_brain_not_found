@@ -55,9 +55,10 @@ public class RallyGame extends Game {
     }
 
     public void setupGame(String mapPath) {
-        this.board = new Board(mapPath, 1);
+        this.board = new Board(mapPath);
         this.deck = new Deck();
-        this.players = board.getPlayers();
+        this.players = new ArrayList<>();
+        makePlayersAndAddToBoard(4);
         this.mainPlayer = board.getPlayer1();
         this.respawnPlayers = new ArrayList<>();
 
@@ -71,6 +72,13 @@ public class RallyGame extends Game {
         new Thread(this::doTurn).start();
 
         dealCards();
+    }
+
+    public void makePlayersAndAddToBoard(int numberOfPlayers) {
+        for (int playerNumber = 1; playerNumber <= numberOfPlayers; playerNumber++) {
+            players.add(new Player(playerNumber));
+        }
+        board.addPlayersToStartPositions(players);
     }
 
     public void fullscreen() {
@@ -271,7 +279,7 @@ public class RallyGame extends Game {
     public void decreaseLives() {
         ArrayList<Player> removedPlayers = new ArrayList<>();
         for (Player player : players) {
-            if (player.getDamageTokens() >= 10 || board.getBoardLogic().outsideBoard(player, board)) {
+            if (player.getDamageTokens() >= 10 || board.getBoardLogic().outsideBoard(player)) {
                 scream.play(RallyGame.volume);
                 player.decrementLifeTokens();
                 player.resetDamageTokens();

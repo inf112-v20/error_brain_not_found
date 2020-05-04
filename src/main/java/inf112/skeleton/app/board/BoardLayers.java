@@ -383,6 +383,7 @@ public abstract class BoardLayers {
     }
 
     // GET HEIGHT AND WIDTH
+
     /**
      * @return width of the board
      */

@@ -13,9 +13,6 @@ import inf112.skeleton.app.objects.Flag;
 import inf112.skeleton.app.objects.player.Player;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class Board extends BoardLayers {
 
@@ -23,14 +20,12 @@ public class Board extends BoardLayers {
 
     private final Sound wallImpact = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/ImpactWall.mp3"));
 
-    private final BoardLogic boardLogic = new BoardLogic();
+    private final BoardLogic boardLogic = new BoardLogic(this);
 
-    public Board(String mapPath, int numberOfPlayers) {
+    public Board(String mapPath) {
         super(mapPath);
 
-        this.players = new ArrayList<>();
-
-        addPlayersToStartPositions(numberOfPlayers);
+        players = new ArrayList<>();
     }
 
     private TiledMapTile getRobotTile(Player player) {
@@ -50,21 +45,6 @@ public class Board extends BoardLayers {
     }
 
     /**
-     * Make new player and add player to game and board
-     *
-     * @param x            coordinate
-     * @param y            coordinate
-     * @param playerNumber of player
-     */
-    public void addPlayer(int x, int y, int playerNumber) {
-        if (!boardLogic.validPlayerNumber(playerNumber, players)) {
-            return;
-        }
-        Player player = new Player(new Vector2(x, y), playerNumber);
-        addPlayer(player);
-    }
-
-    /**
      * Add a player to the player layer in coordinate (x, y) and
      * add that player to the list of players
      *
@@ -79,7 +59,19 @@ public class Board extends BoardLayers {
         }
     }
 
-    //TODO: might move to boardLayer
+    /**
+     * Check all cells on map for start positions with {@link TileID} and add a new player to that
+     * position based on number of players
+     *
+     * @param players list of robots playing, between 1-8
+     */
+    public void addPlayersToStartPositions(ArrayList<Player> players) {
+        for (Player player : players) {
+            player.setPosition(getStartPosition(player.getPlayerNumber()));
+            addPlayer(player);
+        }
+    }
+
     public Vector2 getStartPosition(int number) {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
@@ -105,22 +97,6 @@ public class Board extends BoardLayers {
             }
         }
         return null;
-    }
-
-    /**
-     * Check all cells on map for start positions with {@link TileID} and add a new player to that
-     * position based on number of players
-     *
-     * @param numPlayers number of robots playing, between 1-8
-     */
-    public void addPlayersToStartPositions(int numPlayers) {
-        if (numPlayers == 0) {
-            return;
-        }
-        for (int playerNr = 1; playerNr <= numPlayers; playerNr++) {
-            Vector2 position = getStartPosition(playerNr);
-            addPlayer((int) position.x, (int) position.y, playerNr);
-        }
     }
 
     /**
@@ -182,15 +158,15 @@ public class Board extends BoardLayers {
         Vector2 position = player.getPosition();
         Direction direction = backUp ? player.getDirection().turnAround() : player.getDirection();
 
-        if (!boardLogic.canGo(position, direction, this)) {
+        if (!boardLogic.canGo(position, direction)) {
             wallImpact.play(RallyGame.volume);
             addPlayer(player);
             return;
         }
-        if (boardLogic.shouldPush(player, this)) {
+        if (boardLogic.shouldPush(player)) {
             Player enemyPlayer = getPlayer(getNeighbourPosition(player.getPosition(), direction));
-            if (boardLogic.canPush(enemyPlayer, direction, this)) {
-                boardLogic.pushPlayer(enemyPlayer, direction, this);
+            if (boardLogic.canPush(enemyPlayer, direction)) {
+                boardLogic.pushPlayer(enemyPlayer, direction);
             } else {
                 addPlayer(player);
                 return;
@@ -339,7 +315,7 @@ public class Board extends BoardLayers {
     // TODO: Denne brukes ikke, flyttet lyden over til RallyGame::decreaseLives
     public void respawnPlayers() {
         for (Player player : players) {
-            if (boardLogic.outsideBoard(player, this)) {
+            if (boardLogic.outsideBoard(player)) {
                 player.decrementLifeTokens();
                 respawn(player);
             }
@@ -352,11 +328,27 @@ public class Board extends BoardLayers {
      */
     public Player getPlayer1() {
         for (Player player : players) {
-            if (player.getPlayerNr() == 1) {
+            if (player.getPlayerNumber() == 1) {
                 return player;
             }
         }
         return null;
+    }
+
+    // TODO: Denne kan slettes
+    /**
+     * Make new player and add player to game and board
+     *
+     * @param x            coordinate
+     * @param y            coordinate
+     * @param playerNumber of player
+     */
+    public void addPlayer(int x, int y, int playerNumber) {
+        if (!boardLogic.validPlayerNumber(playerNumber, players)) {
+            return;
+        }
+        Player player = new Player(new Vector2(x, y), playerNumber);
+        addPlayer(player);
     }
 
     public BoardLogic getBoardLogic() {

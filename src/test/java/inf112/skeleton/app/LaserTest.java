@@ -100,11 +100,14 @@ public class LaserTest {
     @Test
     public void playerTakesDamageWhenOtherPlayerFiresAtPlayerTest() {
         Vector2 neighbourPosition = board.getNeighbourPosition(player.getPosition(), Direction.EAST);
+
         Player firePlayer = new Player(neighbourPosition, 6);
         firePlayer.setDirection(Direction.WEST);
         board.addPlayer(firePlayer);
         int damageBefore = player.getDamageTokens();
         game.firePlayerLaser();
+        System.out.println(firePlayer.getPosition());
+        System.out.println(player.getPosition());
         assertEquals(damageBefore+1, player.getDamageTokens());
     }
 
