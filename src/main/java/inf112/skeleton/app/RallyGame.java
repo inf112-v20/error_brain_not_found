@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
-import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.lan.Converter;
 import inf112.skeleton.app.lan.GameClientThread;
@@ -61,7 +60,7 @@ public class RallyGame extends Game {
     public static float volume = 0.5f;
     private String mapPath;
     public Semaphore stopGameLoop;
-    private ArrayList<Player> poweredDownPlayer;
+    private ArrayList<Player> poweredDownPlayers;
 
     public void create() {
         this.actorImages = new ActorImages();
@@ -83,6 +82,7 @@ public class RallyGame extends Game {
         this.players = board.getPlayers();
         this.mainPlayer = board.getPlayer(this.myPlayerNumber);
         this.respawnPlayers = new ArrayList<>();
+        this.poweredDownPlayers = new ArrayList<>();
         this.stopGameLoop = new Semaphore(1);
         this.stopGameLoop.tryAcquire();
         this.playing = true;
@@ -179,7 +179,12 @@ public class RallyGame extends Game {
      */
     public void confirm() {
         if (mainPlayer.isPoweredDown() && mainPlayer.havePressedPowerDownButton()) {
-            System.out.println("Continue power down.");
+            sendContinuePowerDownMessage();
+        }
+        else if (mainPlayer.isPoweredDown() && !mainPlayer.havePressedPowerDownButton()) {
+            mainPlayer.setPoweredDown(false);
+            removePoweredDownPlayer(mainPlayer);
+            sendPowerUpMessage();
         }
         else if (mainPlayer.havePressedPowerDownButton()) {
             mainPlayer.setPoweringDown(true);
@@ -261,12 +266,7 @@ public class RallyGame extends Game {
         while (playing) {
 
             System.out.println("Wait for cards");
-            try {
-                stopGameLoop.acquire();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
+            waitForConfirmation();
             if (Thread.interrupted()) { return; }
             System.out.println("Released");
 
@@ -330,6 +330,8 @@ public class RallyGame extends Game {
             letClientsAndServerContinue();
             System.out.println("Continue talking");
 
+            waitForConfirmation();
+
             // HER MÅ MAN VELGE POWER UP/DOWN, SENDE SVAR TIL GAME SERVER, GAME SERVER MÅ SENDE SVARENE TIL
             // ALLE KLIENTENE OG SÅ KALLE PÅ game.continueGameLoop FOR Å FORTSETTE SPILLET
             /*
@@ -343,7 +345,7 @@ public class RallyGame extends Game {
 
              */
 
-            //powerUpPoweredDownPlayers();
+            powerUpPoweredDownPlayers();
 
             powerDown();
             sendPoweredDownMessage();
@@ -356,6 +358,17 @@ public class RallyGame extends Game {
             }
             setShouldPickCards(true);
             //letClientsAndServerContinue();
+        }
+    }
+
+    /**
+     * Wait for everyone to either power down or select cards.
+     */
+    public void waitForConfirmation() {
+        try {
+            stopGameLoop.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -775,13 +788,12 @@ public class RallyGame extends Game {
      * If host is powered up set confirmed to false so {@link #doTurn()} need to wait for host to choose new cards.
      */
     public void powerUpPoweredDownPlayers() {
-        for (Player player : players) {
-            if (player.isPoweredDown()) {
+        for (Player player : poweredDownPlayers) {
                 player.setPoweredDown(false);
+                player.setHavePressedPowerDownButton(false);
                 if (isServer) {
                     serverThread.getServer().setServerHasConfirmed(false);
                 }
-            }
         }
     }
 
@@ -792,14 +804,11 @@ public class RallyGame extends Game {
      */
     public void sendPowerUpMessage() {
         if (!isServer) {
-            if (!mainPlayer.isPoweredDown() && !mainPlayer.isPoweringDown()) {
-                client.sendMessage(mainPlayer.getPlayerNr() + Messages.POWER_UP.toString());
-            }
+            client.sendMessage(mainPlayer.getPlayerNr() + Messages.POWER_UP.toString());
+
         } else {
-            if (!mainPlayer.isPoweredDown() && !mainPlayer.isPoweringDown()) {
-                serverThread.getServer().sendToAll(mainPlayer.getPlayerNr() + Messages.POWER_UP.toString());
-                serverThread.getServer().setServerHasConfirmed(false);
-            }
+            serverThread.getServer().sendToAll(mainPlayer.getPlayerNr() + Messages.POWER_UP.toString());
+            serverThread.getServer().setServerHasConfirmed(false);
         }
     }
 
@@ -812,11 +821,22 @@ public class RallyGame extends Game {
     public void sendPoweredDownMessage() {
         if (mainPlayer.isPoweredDown()) {
             if (isServer) {
-                serverThread.getServer().sendToAll("1"+Messages.POWER_DOWN.toString());
+                serverThread.getServer().sendToAll(mainPlayer.getPlayerNr()+Messages.POWER_DOWN.toString());
                 serverThread.getServer().setServerHasConfirmed(true);
             } else {
                 client.sendMessage(mainPlayer.getPlayerNr()+Messages.POWER_DOWN.toString());
             }
+        }
+    }
+
+    /**
+     * Let the other players know that you are continueing the power down.
+     */
+    public void sendContinuePowerDownMessage () {
+        if (isServer) {
+            serverThread.getServer().sendToAll(mainPlayer.getPlayerNr() + Messages.CONTINUE_POWER_DOWN.toString());
+        } else {
+            client.sendMessage(mainPlayer.getPlayerNr() + Messages.CONTINUE_POWER_DOWN.toString());
         }
     }
 
@@ -838,7 +858,7 @@ public class RallyGame extends Game {
      * @param player who is powered down
      */
     public void addPoweredDownPlayer(Player player) {
-        this.poweredDownPlayer.add(player);
+        this.poweredDownPlayers.add(player);
     }
 
     /**
@@ -846,6 +866,7 @@ public class RallyGame extends Game {
      * @param player who is powered up
      */
     public void removePoweredDownPlayer(Player player) {
-        this.poweredDownPlayer.remove(player);
+        this.poweredDownPlayers.remove(player);
     }
+
 }

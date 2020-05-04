@@ -193,6 +193,10 @@ public class GameScreenActors {
         powerDownButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if (game.mainPlayer.isPoweredDown()) {
+                    game.mainPlayer.togglePowerDownOrUpNextRound();
+                    game.mainPlayer.setHavePressedPowerDownButton(false);
+                }
                 if (!game.mainPlayer.isPoweringDown()) {
                     game.mainPlayer.togglePowerDownOrUpNextRound();
                     game.mainPlayer.setHavePressedPowerDownButton(true);

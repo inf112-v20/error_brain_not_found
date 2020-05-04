@@ -29,7 +29,9 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -65,7 +67,7 @@ public class GameTest {
         this.game = new RallyGame();
         this.game.setupGame("assets/maps/Risky Exchange.tmx");
         Board board = game.getBoard();
-        player = new Player(new Vector2(0, 0), 5);
+        player = new Player(new Vector2(0, 0), 2);
         board.addPlayer(player);
         this.belts = board.getBelts();
 
@@ -258,8 +260,6 @@ public class GameTest {
     @Test
     public void sendPowerUpMessageToServer() {
         game.setClient(client);
-        when(mainPlayer.isPoweredDown()).thenReturn(false);
-        when(mainPlayer.isPoweringDown()).thenReturn(false);
         when(mainPlayer.getPlayerNr()).thenReturn(2);
         game.sendPowerUpMessage();
         verify(client).sendMessage("2"+ Messages.POWER_UP.toString());
@@ -269,12 +269,40 @@ public class GameTest {
     public void sendPowerUpMessageToClient() {
         game.setIsServerToTrue();
         game.setServerThread(serverThread);
-        when(mainPlayer.isPoweredDown()).thenReturn(false);
-        when(mainPlayer.isPoweringDown()).thenReturn(false);
         when(mainPlayer.getPlayerNr()).thenReturn(1);
         game.sendPowerUpMessage();
         verify(server).sendToAll("1"+Messages.POWER_UP.toString());
 
+    }
+
+    @Test
+    public void poweringUpPlayersHaveNotPressedPowerDownButtonTest() {
+        game.addPoweredDownPlayer(mainPlayer);
+        game.powerUpPoweredDownPlayers();
+        verify(mainPlayer).setHavePressedPowerDownButton(false);
+    }
+
+    @Test
+    public void confirmingPowerUpTest() {
+        game.setClient(client);
+        game.addPoweredDownPlayer(mainPlayer);
+        when(mainPlayer.isPoweredDown()).thenReturn(true);
+        when(mainPlayer.getRegisters().hasRegistersWithoutCard()).thenReturn(true);
+        when(mainPlayer.havePressedPowerDownButton()).thenReturn(false);
+        game.confirm();
+        verify(mainPlayer).setPoweredDown(false);
+    }
+
+    @Test
+    public void confirmingStayInPowerDownTest() {
+        game.setClient(client);
+        game.addPoweredDownPlayer(mainPlayer);
+        when(mainPlayer.isPoweredDown()).thenReturn(true);
+        when(mainPlayer.getRegisters().hasRegistersWithoutCard()).thenReturn(true);
+        when(mainPlayer.havePressedPowerDownButton()).thenReturn(true);
+        when(mainPlayer.getPlayerNr()).thenReturn(2);
+        game.confirm();
+        verify(client).sendMessage("2"+Messages.CONTINUE_POWER_DOWN.toString());
     }
 
 
