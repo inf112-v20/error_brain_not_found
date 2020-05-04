@@ -19,6 +19,7 @@ import inf112.skeleton.app.objects.player.PlayerSorter;
 import inf112.skeleton.app.screens.ActorImages;
 import inf112.skeleton.app.screens.LoadingScreen;
 import inf112.skeleton.app.screens.gifscreen.GifScreen;
+import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 import inf112.skeleton.app.screens.standardscreen.SettingsScreen;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
@@ -49,7 +50,7 @@ public class RallyGame extends Game {
         this.actorImages = new ActorImages();
         this.textSkin = new Skin(Gdx.files.internal("assets/skins/number-cruncher-ui.json"));
         this.defaultSkin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
-        this.setScreen(new SettingsScreen(this));
+        this.setScreen(new MenuScreen(this));
         startMusic();
     }
 
@@ -118,6 +119,8 @@ public class RallyGame extends Game {
     public StandardScreen getScreen() {
         return (StandardScreen) super.getScreen();
     }
+
+    public void sliderVolume(float v) {gameMusic.setVolume(v);}
 
     public void muteMusic() {
         gameMusic.setVolume(gameMusic.getVolume() == 0 ? 0.5f : 0);

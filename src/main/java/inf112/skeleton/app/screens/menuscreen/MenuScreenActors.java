@@ -10,6 +10,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.utils.Array;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
+import inf112.skeleton.app.screens.standardscreen.SettingsScreen;
 
 import java.io.File;
 import java.util.Objects;
@@ -27,6 +28,7 @@ public class MenuScreenActors {
     public final float BUTTON_X;
     public final float START_BUTTON_Y;
     public final float EXIT_BUTTON_Y;
+    public final float SETTINGS_BUTTON_Y;
 
     public SelectBox<String> selectMap;
 
@@ -41,6 +43,7 @@ public class MenuScreenActors {
         BUTTON_HEIGHT = (float) (screenHeight * 0.25);
         START_BUTTON_Y = (float) (screenHeight * 0.5);
         EXIT_BUTTON_Y = (float) (screenHeight * 0.5 - BUTTON_HEIGHT);
+        SETTINGS_BUTTON_Y = (float) (screenHeight * 0.5 - (BUTTON_HEIGHT *2));
         BUTTON_X = (float) (screenWidth * 0.5 - BUTTON_WIDTH * 0.5);
     }
 
@@ -87,6 +90,28 @@ public class MenuScreenActors {
             }
         });
         stage.addActor(exitButton);
+    }
+    public void initializeSettingsButton() {
+        ImageButton.ImageButtonStyle settingsButtonStyle = new ImageButton.ImageButtonStyle();
+        settingsButtonStyle.up = game.actorImages.getSkin().getDrawable("Settings");
+        settingsButtonStyle.over = game.actorImages.getSkin().getDrawable("Settings over");
+
+
+        ImageButton settingsButton = new ImageButton(settingsButtonStyle);
+        settingsButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        settingsButton.setPosition(BUTTON_X, EXIT_BUTTON_Y);
+        settingsButton.addListener(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                game.setScreen(new SettingsScreen(game));;
+            }
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+        stage.addActor(settingsButton);
     }
 
     public void initializeSelectMap() {

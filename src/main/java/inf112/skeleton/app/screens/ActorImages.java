@@ -18,6 +18,8 @@ public class ActorImages {
         TextureRegion ExitOver = new TextureRegion(new Texture("assets/images/Exit button inactive.png"));
         TextureRegion Start = new TextureRegion(new Texture("assets/images/Start button active.png"));
         TextureRegion StartOver = new TextureRegion(new Texture("assets/images/Start button inactive.png"));
+        TextureRegion Settings = new TextureRegion(new Texture("assets/images/Settings Inactive.png"));
+        TextureRegion SettingsOver = new TextureRegion(new Texture("assets/images/Settings Active.png"));
         TextureRegion powerDownActive = new TextureRegion(new Texture("assets/images/Power Down Active.png"));
         TextureRegion powerDownInactive = new TextureRegion(new Texture("assets/images/Power Down Inactive.png"));
         TextureRegion powerUpActive = new TextureRegion(new Texture("assets/images/Power Up Active.png"));
@@ -37,6 +39,8 @@ public class ActorImages {
         atlas.addRegion("Exit over", ExitOver);
         atlas.addRegion("Start", Start);
         atlas.addRegion("Start over", StartOver);
+        atlas.addRegion("Settings", Settings);
+        atlas.addRegion("Settings over", SettingsOver);
         atlas.addRegion("Power down active", powerDownActive);
         atlas.addRegion("Power down inactive", powerDownInactive);
         atlas.addRegion("Power up active", powerUpActive);
