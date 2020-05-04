@@ -17,10 +17,8 @@ import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.objects.player.Player;
 import inf112.skeleton.app.objects.player.PlayerSorter;
 import inf112.skeleton.app.screens.ActorImages;
-import inf112.skeleton.app.screens.LoadingScreen;
 import inf112.skeleton.app.screens.gifscreen.GifScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
-import inf112.skeleton.app.screens.standardscreen.SettingsScreen;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
 import java.util.ArrayList;
@@ -44,7 +42,7 @@ public class RallyGame extends Game {
     public Skin defaultSkin;
     public ActorImages actorImages;
 
-    public static float volume = 0.5f;
+    public static float soundVolume = 0.5f;
 
     public void create() {
         this.actorImages = new ActorImages();
@@ -120,16 +118,12 @@ public class RallyGame extends Game {
         return (StandardScreen) super.getScreen();
     }
 
-    public void setVolumeFromSlider(float v) {
-       volume = v;
-    }
-
     public void muteMusic() {
         gameMusic.setVolume(gameMusic.getVolume() == 0 ? 0.5f : 0);
     }
 
     public void muteSounds() {
-        volume = volume == 0 ? 0.5f : 0;
+        soundVolume = soundVolume == 0 ? 0.5f : 0;
     }
 
     public void loadMusic() {
@@ -138,7 +132,9 @@ public class RallyGame extends Game {
 
     public void startMusic() {
         loadMusic();
-        gameMusic.setVolume(volume);
+
+        gameMusic.setVolume(soundVolume);
+
         gameMusic.setLooping(true);
         gameMusic.play();
     }
@@ -358,7 +354,7 @@ public class RallyGame extends Game {
             for (Player player : players) {
                 player.fire(this);
             }
-            laserSound.play(volume);
+            laserSound.play(soundVolume);
         }
     }
 
@@ -367,7 +363,7 @@ public class RallyGame extends Game {
             for (Laser laser : board.getLasers()) {
                 laser.fire(this);
             }
-            laserSound.play(volume);
+            laserSound.play(soundVolume);
         }
     }
 

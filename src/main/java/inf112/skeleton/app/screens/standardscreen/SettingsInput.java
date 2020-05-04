@@ -16,6 +16,9 @@ public class SettingsInput extends InputAdapter {
     @Override
     public boolean keyUp(int keycode) {
         switch (keycode) {
+            case Input.Keys.P:
+                game.setScreen(new SettingsScreen(game));
+                break;
             case Input.Keys.ESCAPE:
                 Gdx.app.exit();
                 break;

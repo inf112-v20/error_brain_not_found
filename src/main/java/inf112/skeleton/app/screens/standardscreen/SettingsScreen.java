@@ -2,13 +2,17 @@ package inf112.skeleton.app.screens.standardscreen;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
-import com.badlogic.gdx.scenes.scene2d.Stage;
+
+import com.badlogic.gdx.scenes.scene2d.Actor;
+
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
@@ -55,12 +59,13 @@ public class SettingsScreen extends StandardScreen {
         initializeMusicVolumeLabel();
         initializeSoundVolumeSlider();
         initializeSoundVolumeLabel();
-        initializeUpdateSettings();
+       // initializeUpdateSettings();
         initializeFullscreenButton();
+        initializeSaveButton();
 
 
     }
-    public void initializeUpdateSettings(){
+  /*  public void initializeUpdateSettings(){
         ImageButton.ImageButtonStyle updateButtonStyle = new ImageButton.ImageButtonStyle();
         updateButtonStyle.up = game.actorImages.getSkin().getDrawable("Update settings");
         updateButtonStyle.over = game.actorImages.getSkin().getDrawable("Update settings over");
@@ -73,7 +78,6 @@ public class SettingsScreen extends StandardScreen {
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.gameMusic.dispose();
                 volume = musicSlider.getValue();
-                game.setVolumeFromSlider(volume);
                 game.startMusic();
             }
 
@@ -83,23 +87,21 @@ public class SettingsScreen extends StandardScreen {
             }
         });
         stage.addActor(updateButton);
-    }
-    public void saveButton(){
+    }*/
+    public void initializeSaveButton(){
         ImageButton.ImageButtonStyle saveButtonStyle = new ImageButton.ImageButtonStyle();
         saveButtonStyle.up = game.actorImages.getSkin().getDrawable("Save");
         saveButtonStyle.over = game.actorImages.getSkin().getDrawable("Save over");
 
         ImageButton saveButton = new ImageButton(saveButtonStyle);
         saveButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-        saveButton.setPosition(BUTTON_X, UPDATE_BUTTON_Y);
+        saveButton.setPosition(BUTTON_X, SAVE_BUTTON_Y);
         saveButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.gameMusic.dispose();
-                volume = musicSlider.getValue();
-                game.setVolumeFromSlider(volume);
                 game.startMusic();
-                game.setScreen(new GameScreen(game));
+                game.setScreen(new MenuScreen(game));
             }
 
             @Override
@@ -133,30 +135,41 @@ public class SettingsScreen extends StandardScreen {
 
     public void initializeMusicVolumeSlider() {
         musicSlider = new Slider(0, 1, 0.01f, false, game.getDefaultSkin());
-        musicSlider.setValue(volume);
         musicSlider.setPosition(camera.viewportWidth*0.2f, camera.viewportHeight*0.7f);
         musicSlider.setWidth(camera.viewportWidth*0.6f);
+        musicSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                game.gameMusic.setVolume(musicSlider.getValue());
+            }
+        });
         stage.addActor(musicSlider);
     }
 
     public void initializeMusicVolumeLabel() {
-        Label label = new Label("Music Volume", game.getTextSkin(), "title", Color.WHITE);
+        Label label = new Label("Music Volume", game.getTextSkin(), "button", Color.WHITE);
         label.setPosition(camera.viewportWidth*0.5f - label.getPrefWidth(), musicSlider.getY() + label.getPrefHeight());
         label.setFontScale(1.5f);
         stage.addActor(label);
     }
 
     public void initializeSoundVolumeSlider() {
-        soundSlider = new Slider(0, 100, 1f, false, game.getDefaultSkin());
-        soundSlider.setValue(0.5f);
+        soundSlider = new Slider(0, 1, 0.01f, false, game.getDefaultSkin());
+        soundSlider.setValue(RallyGame.soundVolume);
         soundSlider.setPosition(camera.viewportWidth*0.2f, camera.viewportHeight*0.5f);
         soundSlider.setWidth(camera.viewportWidth*0.5f);
+        soundSlider.addListener(new ChangeListener() {
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                RallyGame.soundVolume = soundSlider.getValue();
+            }
+        });
         stage.addActor(soundSlider);
 
     }
 
     public void initializeSoundVolumeLabel() {
-        Label label = new Label("Sound Volume", game.getTextSkin(), "title", Color.WHITE);
+        Label label = new Label("Sound Volume", game.getTextSkin(), "button", Color.WHITE);
         label.setPosition(camera.viewportWidth*0.5f - label.getPrefWidth(), soundSlider.getY() + label.getPrefHeight() );
         label.setFontScale(1.5f);
         stage.addActor(label);
