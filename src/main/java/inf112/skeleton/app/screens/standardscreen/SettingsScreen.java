@@ -73,8 +73,6 @@ public class SettingsScreen extends StandardScreen {
         backButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                //game.gameMusic.dispose();
-                //game.startMusic();
                 game.setScreen(new MenuScreen(game));
             }
 
@@ -111,7 +109,7 @@ public class SettingsScreen extends StandardScreen {
         musicSlider = new Slider(0, 1, 0.01f, false, game.getDefaultSkin());
         musicSlider.setValue(0.5f);
         musicSlider.setPosition(camera.viewportWidth*0.2f, camera.viewportHeight*0.7f);
-        musicSlider.setWidth(camera.viewportWidth*0.6f);
+        musicSlider.setWidth(camera.viewportWidth*0.5f);
         musicSlider.addListener(new ChangeListener() {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
@@ -123,8 +121,8 @@ public class SettingsScreen extends StandardScreen {
 
     public void initializeMusicVolumeLabel() {
         Label label = new Label("Music Volume", game.getTextSkin(), "button", Color.WHITE);
-        label.setPosition(camera.viewportWidth*0.5f - label.getPrefWidth(), musicSlider.getY() + label.getPrefHeight());
-        label.setFontScale(1f);
+        label.setPosition(camera.viewportWidth*0.5f - label.getPrefWidth()*1.3f, musicSlider.getY() + label.getPrefHeight()*0.7f);
+        label.setFontScale(0.5f);
         stage.addActor(label);
     }
 
@@ -145,8 +143,8 @@ public class SettingsScreen extends StandardScreen {
 
     public void initializeSoundVolumeLabel() {
         Label label = new Label("Sound Volume", game.getTextSkin(), "button", Color.WHITE);
-        label.setPosition(camera.viewportWidth*0.5f - label.getPrefWidth(), soundSlider.getY() + label.getPrefHeight() );
-        label.setFontScale(1f);
+        label.setPosition(camera.viewportWidth*0.5f - label.getPrefWidth()*1.23f, soundSlider.getY() + label.getPrefHeight()*0.7f );
+        label.setFontScale(0.5f);
         stage.addActor(label);
     }
 

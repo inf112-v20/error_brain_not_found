@@ -20,18 +20,15 @@ public class ActorImages {
         TextureRegion StartOver = new TextureRegion(new Texture("assets/images/Start button inactive.png"));
         TextureRegion Settings = new TextureRegion(new Texture("assets/images/Settings Active.png"));
         TextureRegion SettingsOver = new TextureRegion(new Texture("assets/images/Settings Inactive.png"));
-
         TextureRegion backButton = new TextureRegion(new Texture("assets/images/Back Button Inactive.png"));
         TextureRegion backButtonOver = new TextureRegion(new Texture("assets/images/Back Button Active.png"));
         TextureRegion screenToggler = new TextureRegion(new Texture("assets/images/Screen Toggle Inactive.png"));
         TextureRegion screenTogglerOver = new TextureRegion(new Texture("assets/images/Screen Toggle Active.png"));
-
         TextureRegion powerDownActive = new TextureRegion(new Texture("assets/images/Power Down Active.png"));
         TextureRegion powerDownInactive = new TextureRegion(new Texture("assets/images/Power Down Inactive.png"));
         TextureRegion powerUpActive = new TextureRegion(new Texture("assets/images/Power Up Active.png"));
         TextureRegion powerUpInactive = new TextureRegion(new Texture("assets/images/Power Up Inactive.png"));
         TextureRegion poweringDown = new TextureRegion(new Texture("assets/images/Powering Down.png"));
-
         TextureRegion damageToken = new TextureRegion(new Texture("assets/images/damageToken.png"));
         TextureRegion lifeToken = new TextureRegion(new Texture("assets/images/lifeToken.png"));
 
@@ -50,10 +47,8 @@ public class ActorImages {
         atlas.addRegion("Settings over", SettingsOver);
         atlas.addRegion("Back", backButton);
         atlas.addRegion("Back over", backButtonOver);
-
         atlas.addRegion("Screen Toggle", screenToggler);
         atlas.addRegion("Screen Toggle over", screenTogglerOver);
-
         atlas.addRegion("Power down active", powerDownActive);
         atlas.addRegion("Power down inactive", powerDownInactive);
         atlas.addRegion("Power up active", powerUpActive);

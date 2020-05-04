@@ -19,6 +19,7 @@ import inf112.skeleton.app.objects.player.PlayerSorter;
 import inf112.skeleton.app.screens.ActorImages;
 import inf112.skeleton.app.screens.gifscreen.GifScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
+import inf112.skeleton.app.screens.standardscreen.SettingsScreen;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
 import java.util.ArrayList;
@@ -107,11 +108,20 @@ public class RallyGame extends Game {
         }
     }
 
+    public void returnToLastScreen(){
+        if (this.screen instanceof SettingsScreen){
+            this.screen = lastScreen;
+        }
+        else{
+            this.screen = new SettingsScreen(this);
+        }
+    }
     @Override
     public void setScreen(Screen screen) {
         if (this.screen != null) {
             this.screen.dispose();
         }
+        this.lastScreen = screen;
         super.setScreen(screen);
     }
 
