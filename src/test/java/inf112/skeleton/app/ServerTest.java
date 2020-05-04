@@ -220,4 +220,16 @@ public class ServerTest {
         assertFalse(player2.isPoweredDown());
     }
 
+    @Test
+    public void player2SendsPowerUpMessageIsRemovedFromPoweredDownPlayersTest() {
+        try {
+            when(reader.readLine()).thenReturn("2"+Messages.POWER_UP.toString()).thenReturn(Messages.STOP_THREAD.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        server.start();
+        waitForThread(server);
+        verify(game).removePoweredDownPlayer(player2);
+    }
+
 }

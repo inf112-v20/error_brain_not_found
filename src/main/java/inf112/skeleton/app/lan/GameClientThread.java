@@ -78,6 +78,13 @@ public class GameClientThread extends Thread {
                 int playerNumber = getPlayerNumberFromMessage(message);
                 Player player = game.getBoard().getPlayer(playerNumber);
                 player.setPoweredDown(true);
+                game.addPoweredDownPlayer(player);
+            }
+            else if (message.contains(Messages.POWER_UP.toString())) {
+                int playerNumber = getPlayerNumberFromMessage(message);
+                Player player = game.getBoard().getPlayer(playerNumber);
+                player.setPoweredDown(false);
+                game.removePoweredDownPlayer(player);
             }
             else if (message.equals(Messages.HERE_IS_MAP.toString())){
                 receivingMap = true;

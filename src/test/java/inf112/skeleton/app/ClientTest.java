@@ -21,6 +21,7 @@ import java.net.Socket;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -189,6 +190,36 @@ public class ClientTest {
         client.start();
         waitForThread(client);
         assertFalse(player1.isPoweredDown());
+    }
+
+    @Test
+    public void playerOneSendsPowerDownIsRegisteredInGameTest() {
+        try {
+            when(reader.readLine())
+                    .thenReturn("3", "4")
+                    .thenReturn("1"+Messages.POWER_DOWN.toString())
+                    .thenReturn(Messages.STOP_THREAD.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        client.start();
+        waitForThread(client);
+        verify(game).addPoweredDownPlayer(player1);
+    }
+
+    @Test
+    public void playerOneSendsPowerUpIsRemovedFromPoweredDownInGameTest() {
+        try {
+            when(reader.readLine())
+                    .thenReturn("3", "4")
+                    .thenReturn("1"+Messages.POWER_UP.toString())
+                    .thenReturn(Messages.STOP_THREAD.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        client.start();
+        waitForThread(client);
+        verify(game).removePoweredDownPlayer(player1);
     }
 
 }

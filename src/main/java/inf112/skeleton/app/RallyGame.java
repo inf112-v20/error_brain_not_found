@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.maps.MapLayers;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.lan.Converter;
 import inf112.skeleton.app.lan.GameClientThread;
@@ -60,6 +61,7 @@ public class RallyGame extends Game {
     public static float volume = 0.5f;
     private String mapPath;
     public Semaphore stopGameLoop;
+    private ArrayList<Player> poweredDownPlayer;
 
     public void create() {
         this.actorImages = new ActorImages();
@@ -784,7 +786,9 @@ public class RallyGame extends Game {
     }
 
     /**
-     * Let server know you have powered up.
+     * Let the other players know you have powered up.
+     * If the host is powered up, set {@link GameServer#setServerHasConfirmed(boolean)} to false so
+     * that the next turn must wait for server to choose cards before start.
      */
     public void sendPowerUpMessage() {
         if (!isServer) {
@@ -794,6 +798,7 @@ public class RallyGame extends Game {
         } else {
             if (!mainPlayer.isPoweredDown() && !mainPlayer.isPoweringDown()) {
                 serverThread.getServer().sendToAll(mainPlayer.getPlayerNr() + Messages.POWER_UP.toString());
+                serverThread.getServer().setServerHasConfirmed(false);
             }
         }
     }
@@ -825,5 +830,22 @@ public class RallyGame extends Game {
 
     public void setServerThread(ServerThread serverThread) {
         this.serverThread = serverThread;
+    }
+
+    /**
+     * Add a player to power down.
+     *
+     * @param player who is powered down
+     */
+    public void addPoweredDownPlayer(Player player) {
+        this.poweredDownPlayer.add(player);
+    }
+
+    /**
+     * Remove a powered down player (player is powered up)
+     * @param player who is powered up
+     */
+    public void removePoweredDownPlayer(Player player) {
+        this.poweredDownPlayer.remove(player);
     }
 }
