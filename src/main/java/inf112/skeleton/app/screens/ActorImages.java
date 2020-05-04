@@ -20,10 +20,9 @@ public class ActorImages {
         TextureRegion StartOver = new TextureRegion(new Texture("assets/images/Start button inactive.png"));
         TextureRegion Settings = new TextureRegion(new Texture("assets/images/Settings Active.png"));
         TextureRegion SettingsOver = new TextureRegion(new Texture("assets/images/Settings Inactive.png"));
-        TextureRegion updateSettings = new TextureRegion(new Texture("assets/images/Update Button Inactive.png"));
-        TextureRegion updateSettingsOver = new TextureRegion(new Texture("assets/images/Update Button Active.png"));
-        TextureRegion saveButton = new TextureRegion(new Texture("assets/images/Save Button Active.png"));
-        TextureRegion saveButtonOver = new TextureRegion(new Texture("assets/images/Save Button Active.png"));
+
+        TextureRegion backButton = new TextureRegion(new Texture("assets/images/Back Button Inactive.png"));
+        TextureRegion backButtonOver = new TextureRegion(new Texture("assets/images/Back Button Active.png"));
         TextureRegion screenToggler = new TextureRegion(new Texture("assets/images/Screen Toggle Inactive.png"));
         TextureRegion screenTogglerOver = new TextureRegion(new Texture("assets/images/Screen Toggle Active.png"));
 
@@ -49,10 +48,8 @@ public class ActorImages {
         atlas.addRegion("Start over", StartOver);
         atlas.addRegion("Settings", Settings);
         atlas.addRegion("Settings over", SettingsOver);
-        atlas.addRegion("Save", saveButton);
-        atlas.addRegion("Save over", saveButtonOver);
-        atlas.addRegion("Update settings", updateSettings);
-        atlas.addRegion("Update settings over", updateSettingsOver);
+        atlas.addRegion("Back", backButton);
+        atlas.addRegion("Back over", backButtonOver);
 
         atlas.addRegion("Screen Toggle", screenToggler);
         atlas.addRegion("Screen Toggle over", screenTogglerOver);

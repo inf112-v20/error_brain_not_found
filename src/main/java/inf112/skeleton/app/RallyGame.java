@@ -28,6 +28,7 @@ public class RallyGame extends Game {
 
     public Board board;
     public Deck deck;
+    public Screen lastScreen;
 
     public ArrayList<Player> players;
     public ArrayList<Player> respawnPlayers;
