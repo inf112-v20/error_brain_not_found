@@ -21,19 +21,28 @@ public class Board extends BoardLayers {
 
     private final ArrayList<Player> players;
 
-    private final Sound scream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
-    private final Sound wallImpact = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/ImpactWall.mp3"));
+    private final Sound scream;
+    private final Sound wallImpact;
 
-    private final BoardLogic boardLogic = new BoardLogic();
+    private final BoardLogic boardLogic;
 
     public Board(String mapPath, int numberOfPlayers) {
         super(mapPath);
 
         this.players = new ArrayList<>();
 
+        this.scream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
+        this.wallImpact = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/ImpactWall.mp3"));
+        this.boardLogic = new BoardLogic(this);
+
         addPlayersToStartPositions(numberOfPlayers);
     }
 
+    /**
+     * Get robot tile according to player direction
+     * @param player to get tile for
+     * @return {@link TiledMapTile} with robot
+     */
     private TiledMapTile getRobotTile(Player player) {
         TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("robots");
         switch (player.getDirection()) {
@@ -51,7 +60,7 @@ public class Board extends BoardLayers {
     }
 
     /**
-     * Make new player and add player to game and board
+     * Make new {@link Player} and add player to game and board
      *
      * @param x            coordinate
      * @param y            coordinate
@@ -66,7 +75,7 @@ public class Board extends BoardLayers {
     }
 
     /**
-     * Add a player to the player layer in coordinate (x, y) and
+     * Add a {@link Player} to the player layer in coordinate (x, y) and
      * add that player to the list of players
      *
      * @param player to add to game and board
@@ -151,6 +160,9 @@ public class Board extends BoardLayers {
         laserLayer.setCell((int) position.x, (int) position.y, cell);
     }
 
+    /**
+     * Try to pick up {@link Flag} for all players on board
+     */
     public void pickUpFlags() {
         for (Player player : players) {
             if (hasFlag(player.getPosition())) {
@@ -160,7 +172,7 @@ public class Board extends BoardLayers {
     }
 
     /**
-     * Places a player in backup position or alternative position
+     * Places a {@link Player} in backup position or alternative position
      *
      * @param player to respawn
      */
@@ -177,6 +189,10 @@ public class Board extends BoardLayers {
         addPlayer(player);
     }
 
+    /**
+     * Get list of {@link Direction} in random order
+     * @return list of direction
+     */
     public List<Direction> getDirectionRandomOrder() {
         List<Direction> directions = Arrays.asList(Direction.values());
         Collections.shuffle(directions);
@@ -184,7 +200,7 @@ public class Board extends BoardLayers {
     }
 
     /**
-     * @return Player given the playernumber
+     * @return Player given the player number
      */
     public Player getPlayer(int playerNumber) {
         for (Player player : players) {
@@ -202,21 +218,21 @@ public class Board extends BoardLayers {
      * Update player position according to direction
      * Add player to cell that corresponds to player position
      *
-     * @param player that is suppose to move
+     * @param player that is supposed to move
      */
     public void movePlayer(Player player, boolean backUp) {
         Vector2 position = player.getPosition();
         Direction direction = backUp ? player.getDirection().turnAround() : player.getDirection();
 
-        if (!boardLogic.canGo(position, direction, this)) {
+        if (!boardLogic.canGo(position, direction)) {
             wallImpact.play(RallyGame.volume);
             addPlayer(player);
             return;
         }
-        if (boardLogic.shouldPush(player, this, direction)) {
+        if (boardLogic.shouldPush(player, direction)) {
             Player enemyPlayer = getPlayer(getNeighbourPosition(player.getPosition(), direction));
-            if (boardLogic.canPush(enemyPlayer, direction, this)) {
-                boardLogic.pushPlayer(enemyPlayer, direction, this);
+            if (boardLogic.canPush(enemyPlayer, direction)) {
+                boardLogic.pushPlayer(enemyPlayer, direction);
             } else {
                 addPlayer(player);
                 return;
@@ -248,18 +264,29 @@ public class Board extends BoardLayers {
         player.setBeltPushDir(null);
     }
 
+    /**
+     * Add all players to board to make sure they're facing the correct direction
+     */
     public void updateBoard() {
         for (Player player : players) {
             addPlayer(player);
         }
     }
 
+    /**
+     * Remove all {@link Player} from board
+     */
     public void removePlayersFromBoard() {
         for (Player player : players) {
             removePlayerFromBoard(player);
         }
     }
 
+    /**
+     * Get all neighbour cells for a position
+     * @param position to find neighbours from
+     * @return list of {@link Vector2} positions
+     */
     public ArrayList<Vector2> getNeighbourhood(Vector2 position) {
         ArrayList<Vector2> positions = new ArrayList<>();
         for (int yi = -1; yi <= 1; yi++) {
@@ -276,7 +303,7 @@ public class Board extends BoardLayers {
 
     /**
      * @param position  to go from
-     * @param direction to go in
+     * @param direction to go
      * @return neighbour position in direction from position
      */
     public Vector2 getNeighbourPosition(Vector2 position, Direction direction) {
@@ -300,9 +327,10 @@ public class Board extends BoardLayers {
         return neighbourPosition;
     }
 
+    // TODO: DENNE KAN SLETTES
     public void respawnPlayers() {
         for (Player player : players) {
-            if (boardLogic.outsideBoard(player, this)) {
+            if (boardLogic.outsideBoard(player)) {
                 scream.play(RallyGame.volume);
                 player.decrementLifeTokens();
                 respawn(player);
