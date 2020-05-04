@@ -35,7 +35,7 @@ public class WallTests {
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
         this.board = new Board("assets/maps/Risky Exchange.tmx", 0);
-        this.boardLogic = new BoardLogic();
+        this.boardLogic = new BoardLogic(board);
         this.player = new Player(new Vector2(0, 0), 1);
         allNorthWalls = new ArrayList<>();
         allSouthWalls = new ArrayList<>();
@@ -303,25 +303,25 @@ public class WallTests {
 
     @Test
     public void playerFacingNorthWallCanNotGoTest() {
-        assertFalse(boardLogic.canGo(allNorthWalls.get(0), Direction.NORTH, board));
+        assertFalse(boardLogic.canGo(allNorthWalls.get(0), Direction.NORTH));
 
     }
 
     @Test
     public void playerFacingEastWallCanNotGoTest() {
-        assertFalse(boardLogic.canGo(allEastWalls.get(0), Direction.EAST, board));
+        assertFalse(boardLogic.canGo(allEastWalls.get(0), Direction.EAST));
 
     }
 
     @Test
     public void playerFacingSouthWallCanNotGoTest() {
-        assertFalse(boardLogic.canGo(allSouthWalls.get(0), Direction.SOUTH, board));
+        assertFalse(boardLogic.canGo(allSouthWalls.get(0), Direction.SOUTH));
 
     }
 
     @Test
     public void playerFacingWestWallCanNotGoTest() {
-        assertFalse(boardLogic.canGo(allWestWalls.get(0), Direction.WEST, board));
+        assertFalse(boardLogic.canGo(allWestWalls.get(0), Direction.WEST));
 
     }
 

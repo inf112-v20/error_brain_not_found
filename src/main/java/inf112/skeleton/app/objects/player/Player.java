@@ -225,7 +225,7 @@ public class Player {
         Collections.shuffle(possiblePositions);
         for (Vector2 pos : possiblePositions) {
             for (Direction dir : board.getDirectionRandomOrder()) {
-                if (boardLogic.validRespawnPosition(pos, dir, board)) {
+                if (boardLogic.validRespawnPosition(pos, dir)) {
                     setAlternativeBackup(pos, dir);
                     return;
                 }
@@ -282,7 +282,7 @@ public class Player {
     }
 
     public void fire(RallyGame game) {
-        if (game.getBoard().getBoardLogic().canFire(position, direction, game.board)) {
+        if (game.getBoard().getBoardLogic().canFire(position, direction)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }
@@ -291,7 +291,7 @@ public class Player {
         game.getBoard().addLaser(position, direction);
         if (game.getBoard().hasPlayer(position)) {
             game.getBoard().getPlayer(position).handleDamage();
-        } else if (game.getBoard().getBoardLogic().canFire(position, direction, game.board)) {
+        } else if (game.getBoard().getBoardLogic().canFire(position, direction)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }

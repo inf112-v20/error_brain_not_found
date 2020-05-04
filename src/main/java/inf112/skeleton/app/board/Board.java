@@ -224,15 +224,15 @@ public class Board extends BoardLayers {
         Vector2 position = player.getPosition();
         Direction direction = backUp ? player.getDirection().turnAround() : player.getDirection();
 
-        if (!boardLogic.canGo(position, direction, this)) {
+        if (!boardLogic.canGo(position, direction)) {
             wallImpact.play(RallyGame.volume);
             addPlayer(player);
             return;
         }
-        if (boardLogic.shouldPush(player, this)) {
+        if (boardLogic.shouldPush(player)) {
             Player enemyPlayer = getPlayer(getNeighbourPosition(player.getPosition(), direction));
-            if (boardLogic.canPush(enemyPlayer, direction, this)) {
-                boardLogic.pushPlayer(enemyPlayer, direction, this);
+            if (boardLogic.canPush(enemyPlayer, direction)) {
+                boardLogic.pushPlayer(enemyPlayer, direction);
             } else {
                 addPlayer(player);
                 return;
@@ -329,7 +329,7 @@ public class Board extends BoardLayers {
     // TODO: DENNE KAN SLETTES
     public void respawnPlayers() {
         for (Player player : players) {
-            if (boardLogic.outsideBoard(player, this)) {
+            if (boardLogic.outsideBoard(player)) {
                 scream.play(RallyGame.volume);
                 player.decrementLifeTokens();
                 respawn(player);
