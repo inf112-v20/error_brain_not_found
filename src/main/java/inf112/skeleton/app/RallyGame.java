@@ -332,11 +332,15 @@ public class RallyGame extends Game {
 
             if (!poweredDownPlayers.isEmpty()) {
                 System.out.println("We have a power down!");
+                letClientsAndServerContinue();
+                System.out.println("Continue talking");
                 waitForConfirmation();
+            } else {
+                letClientsAndServerContinue();
+                System.out.println("Continue talking");
             }
 
-            letClientsAndServerContinue();
-            System.out.println("Continue talking");
+
 
             // HER MÅ MAN VELGE POWER UP/DOWN, SENDE SVAR TIL GAME SERVER, GAME SERVER MÅ SENDE SVARENE TIL
             // ALLE KLIENTENE OG SÅ KALLE PÅ game.continueGameLoop FOR Å FORTSETTE SPILLET
@@ -782,6 +786,7 @@ public class RallyGame extends Game {
             if (player.isPoweringDown()) {
                 player.setPoweredDown(true);
                 player.setPoweringDown(false);
+                addPoweredDownPlayer(player);
             }
             if (player.isPoweredDown()) {
                 player.resetDamageTokens();
@@ -829,10 +834,8 @@ public class RallyGame extends Game {
             if (isServer) {
                 serverThread.getServer().sendToAll(mainPlayer.getPlayerNr()+Messages.POWER_DOWN.toString());
                 serverThread.getServer().setServerHasConfirmed(true);
-                addPoweredDownPlayer(mainPlayer);
             } else {
                 client.sendMessage(mainPlayer.getPlayerNr()+Messages.POWER_DOWN.toString());
-                addPoweredDownPlayer(mainPlayer);
             }
         }
     }
