@@ -8,6 +8,7 @@ import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.cards.Registers;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.lan.GameClientThread;
 import inf112.skeleton.app.lan.GameServer;
@@ -72,6 +73,9 @@ public class GameTest {
         when(mainPlayer.getRegisters()).thenReturn(registers);
         ProgramCard card = new ProgramCard(1,1, Rotate.NONE, "Card");
         when(registers.getCards()).thenReturn(new ArrayList<>(Arrays.asList(card, card, card, card, card)));
+
+
+        when(serverThread.getServer()).thenReturn(server);
     }
 
     /**
@@ -235,7 +239,6 @@ public class GameTest {
     public void confirmingCardsSendToClientsTest() {
         game.setServerThread(serverThread);
         game.setIsServerToTrue();
-        when(serverThread.getServer()).thenReturn(server);
         when(mainPlayer.getRegisters().hasRegistersWithoutCard()).thenReturn(false);
         when(server.allClientsHaveSelectedCards()).thenReturn(true);
         game.confirm();
@@ -250,6 +253,28 @@ public class GameTest {
         game.confirm();
         verify(client, times(5)).sendMessage(anyString());
         verify(mainPlayer).setPoweringDown(true);
+    }
+
+    @Test
+    public void sendPowerUpMessageToServer() {
+        game.setClient(client);
+        when(mainPlayer.isPoweredDown()).thenReturn(false);
+        when(mainPlayer.isPoweringDown()).thenReturn(false);
+        when(mainPlayer.getPlayerNr()).thenReturn(2);
+        game.sendPowerUpMessage();
+        verify(client).sendMessage("2"+ Messages.POWER_UP.toString());
+    }
+
+    @Test
+    public void sendPowerUpMessageToClient() {
+        game.setIsServerToTrue();
+        game.setServerThread(serverThread);
+        when(mainPlayer.isPoweredDown()).thenReturn(false);
+        when(mainPlayer.isPoweringDown()).thenReturn(false);
+        when(mainPlayer.getPlayerNr()).thenReturn(1);
+        game.sendPowerUpMessage();
+        verify(server).sendToAll("1"+Messages.POWER_UP.toString());
+
     }
 
 

@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
-import inf112.skeleton.app.cards.Register;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.objects.Belt;
@@ -177,12 +176,12 @@ public class RallyGame extends Game {
      * Called when confirmbutton in {@link inf112.skeleton.app.screens.gamescreen.GameScreenActors} is pressed.
      */
     public void confirm() {
-        if (mainPlayer.havePressedPowerDownButton()) {
+        if (mainPlayer.isPoweredDown() && mainPlayer.havePressedPowerDownButton()) {
+            System.out.println("Continue power down.");
+        }
+        else if (mainPlayer.havePressedPowerDownButton()) {
             mainPlayer.setPoweringDown(true);
             System.out.println("Powering down next round..");
-        }
-        else if (mainPlayer.isPoweredDown() && mainPlayer.havePressedPowerDownButton()) {
-            System.out.println("Continue power down.");
         }
         if (!mainPlayer.getRegisters().hasRegistersWithoutCard()) {
             sendSelectedCardsToServer();
@@ -342,7 +341,7 @@ public class RallyGame extends Game {
 
              */
 
-            powerUpPoweredDownPlayers();
+            //powerUpPoweredDownPlayers();
 
             powerDown();
             sendPoweredDownMessage();
@@ -780,6 +779,21 @@ public class RallyGame extends Game {
                 if (isServer) {
                     serverThread.getServer().setServerHasConfirmed(false);
                 }
+            }
+        }
+    }
+
+    /**
+     * Let server know you have powered up.
+     */
+    public void sendPowerUpMessage() {
+        if (!isServer) {
+            if (!mainPlayer.isPoweredDown() && !mainPlayer.isPoweringDown()) {
+                client.sendMessage(mainPlayer.getPlayerNr() + Messages.POWER_UP.toString());
+            }
+        } else {
+            if (!mainPlayer.isPoweredDown() && !mainPlayer.isPoweringDown()) {
+                serverThread.getServer().sendToAll(mainPlayer.getPlayerNr() + Messages.POWER_UP.toString());
             }
         }
     }
