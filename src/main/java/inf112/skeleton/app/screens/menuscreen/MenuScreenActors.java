@@ -20,16 +20,16 @@ public class MenuScreenActors {
 
     private final Stage stage;
     private final RallyGame game;
-    public final Skin skin;
+    public Skin skin;
 
-    public final float screenWidth;
-    public final float screenHeight;
+    public float screenWidth;
+    public float screenHeight;
 
-    public final float BUTTON_WIDTH;
-    public final float BUTTON_HEIGHT;
-    public final float BUTTON_X;
-    public final float START_BUTTON_Y;
-    public final float EXIT_BUTTON_Y;
+    public float BUTTON_WIDTH;
+    public float BUTTON_HEIGHT;
+    public float BUTTON_X;
+    public float START_BUTTON_Y;
+    public float EXIT_BUTTON_Y;
 
     public SelectBox<String> selectMap;
 

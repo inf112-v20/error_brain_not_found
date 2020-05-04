@@ -247,18 +247,29 @@ public class Board extends BoardLayers {
         player.setBeltPushDir(null);
     }
 
+    /**
+     * Updates players positions on the board
+     */
     public void updateBoard() {
         for (Player player : players) {
             addPlayer(player);
         }
     }
 
+    /**
+     * Removes players from the board
+     */
     public void removePlayersFromBoard() {
         for (Player player : players) {
             removePlayerFromBoard(player);
         }
     }
 
+    /**
+     *
+     * @param position
+     * @return returns players positions
+     */
     public ArrayList<Vector2> getNeighbourhood(Vector2 position) {
         ArrayList<Vector2> positions = new ArrayList<>();
         for (int yi = -1; yi <= 1; yi++) {
@@ -299,6 +310,9 @@ public class Board extends BoardLayers {
         return neighbourPosition;
     }
 
+    /**
+     * Respawn players on to the board
+     */
     public void respawnPlayers() {
         for (Player player : players) {
             if (boardLogic.outsideBoard(player, this)) {
@@ -309,6 +323,11 @@ public class Board extends BoardLayers {
         }
     }
 
+    /**
+     *
+     * @param position
+     * @return true if enemy position 
+     */
     public boolean hasPlayer(Vector2 position) {
         for (Player enemyPlayer : players) {
             if (enemyPlayer.getPosition().equals(position)) {
@@ -405,11 +424,10 @@ public class Board extends BoardLayers {
         return boardHeight;
     }
 
-    @Override
-    public ArrayList<Vector2> getRepairTiles() {
-        return super.getRepairTiles();
-    }
 
+    /**
+     *
+     */
     public void dispose() {
         wallImpact.dispose();
         scream.dispose();

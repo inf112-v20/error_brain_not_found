@@ -325,6 +325,11 @@ public abstract class BoardLayers {
         }
     }
 
+   // @Override
+    //public ArrayList<Vector2> getRepairTiles() {
+      //  return super.getRepairTiles();
+    //}
+
     public TiledMap getTiledMap() {
         return tiledMap;
     }
@@ -364,6 +369,7 @@ public abstract class BoardLayers {
      * Get the {@link ArrayList repairTiles} arraylist.
      * @return the arraylist that contains the location of the repair tiles.
      */
+
     public ArrayList<Vector2> getRepairTiles() {
         return repairTiles;
     }
