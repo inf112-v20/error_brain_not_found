@@ -38,8 +38,6 @@ public class SettingsScreen extends StandardScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 game.gameMusic.setVolume(musicSlider.getValue());
-                System.out.println("Sound: " + RallyGame.soundVolume);
-                System.out.println("Music: " + game.gameMusic.getVolume());
             }
         });
         stage.addActor(musicSlider);
@@ -61,8 +59,6 @@ public class SettingsScreen extends StandardScreen {
             @Override
             public void changed(ChangeEvent event, Actor actor) {
                 RallyGame.soundVolume = soundSlider.getValue();
-                System.out.println("Sound: " + RallyGame.soundVolume);
-                System.out.println("Music: " + game.gameMusic.getVolume());
             }
         });
         stage.addActor(soundSlider);
