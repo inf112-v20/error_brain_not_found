@@ -12,6 +12,7 @@ import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Belt;
+import inf112.skeleton.app.objects.Flag;
 import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.objects.player.Player;
@@ -35,6 +36,7 @@ public class RallyGame extends Game {
     public boolean playing;
     public boolean shouldPickCards;
     public Sound laserSound;
+    public Sound scream;
     public Music gameMusic;
     public Player mainPlayer;
 
@@ -65,7 +67,7 @@ public class RallyGame extends Game {
         this.shouldPickCards = true;
 
         this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
-
+        this.scream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
         new Thread(this::doTurn).start();
 
         dealCards();
@@ -210,9 +212,7 @@ public class RallyGame extends Game {
                     decreaseLives();
                 }
 
-                activateRepairTiles();
-                sleep(250);
-
+                updateBackupPosition();
                 pickUpFlags();
                 sleep(500);
 
@@ -234,7 +234,9 @@ public class RallyGame extends Game {
     }
 
     private void pickUpFlags() {
-        board.pickUpFlags();
+        for (Player player : players) {
+            board.pickUpFlags(player);
+        }
     }
 
     private void sleep(int milliseconds) {
@@ -267,6 +269,7 @@ public class RallyGame extends Game {
         ArrayList<Player> removedPlayers = new ArrayList<>();
         for (Player player : players) {
             if (player.getDamageTokens() >= 10 || board.getBoardLogic().outsideBoard(player, board)) {
+                scream.play(RallyGame.volume);
                 player.decrementLifeTokens();
                 player.resetDamageTokens();
                 board.removePlayerFromBoard(player);
@@ -465,6 +468,24 @@ public class RallyGame extends Game {
                 if (player.getPosition().equals(repairTilePos)) {
                     player.resetDamageTokens();
                     player.setBackup(repairTilePos, player.getDirection());
+                }
+            }
+        }
+    }
+
+    /**
+     * Update backup position and direction if a robot stands on a repair tile or a flag
+     */
+    public void updateBackupPosition() {
+        for (Player player : players) {
+            for (Vector2 repairTilePos : board.getRepairTiles()) {
+                if (player.getPosition().equals(repairTilePos)) {
+                    player.setBackup(repairTilePos, player.getDirection());
+                }
+            }
+            for (Flag flag : board.getFlags()) {
+                if (player.getPosition().equals(flag.getPosition())) {
+                    player.setBackup(flag.getPosition(), player.getDirection());
                 }
             }
         }

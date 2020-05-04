@@ -152,11 +152,9 @@ public class Board extends BoardLayers {
         laserLayer.setCell((int) position.x, (int) position.y, cell);
     }
 
-    public void pickUpFlags() {
-        for (Player player : players) {
-            if (hasFlag(player.getPosition())) {
-                tryToPickUpFlag(player);
-            }
+    public void pickUpFlags(Player player) {
+        if (hasFlag(player.getPosition())) {
+            tryToPickUpFlag(player);
         }
     }
 
@@ -300,6 +298,7 @@ public class Board extends BoardLayers {
         return neighbourPosition;
     }
 
+    // TODO: Denne brukes ikke, flyttet lyden over til RallyGame::decreaseLives
     public void respawnPlayers() {
         for (Player player : players) {
             if (boardLogic.outsideBoard(player, this)) {
