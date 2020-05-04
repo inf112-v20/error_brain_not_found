@@ -286,6 +286,9 @@ public abstract class BoardLayers {
         }
     }
 
+    /**
+     *
+     */
     public void findLasers() {
         for (int x = 0; x < wallLayer.getWidth(); x++) {
             for (int y = 0; y < wallLayer.getHeight(); y++) {
