@@ -866,6 +866,7 @@ public class RallyGame extends Game {
         if (isServer) {
             return poweredDownPlayers.contains(mainPlayer) && poweredDownPlayers.size() == 1;
         }
+        return false;
     }
 
     /**
