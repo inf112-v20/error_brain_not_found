@@ -207,17 +207,4 @@ public class ServerTest {
         verify(gameServer).sendToAll(Messages.START_TURN.toString());
     }
 
-    @Test
-    public void player2SendsPowerUpMessageTest() {
-        player2.setPoweredDown(true);
-        try {
-            when(reader.readLine()).thenReturn("2"+Messages.POWER_UP.toString()).thenReturn(Messages.STOP_THREAD.toString());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        server.start();
-        waitForThread(server);
-        assertFalse(player2.isPoweredDown());
-    }
-
 }
