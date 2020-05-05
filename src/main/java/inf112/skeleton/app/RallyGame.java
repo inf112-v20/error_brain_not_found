@@ -862,12 +862,19 @@ public class RallyGame extends Game {
         }
     }
 
+    public boolean serverIsOnlyOneInPowerDown() {
+        if (isServer) {
+            return poweredDownPlayers.contains(mainPlayer) && poweredDownPlayers.size() == 1;
+        }
+    }
+
     /**
      * Let the other players know that you are continueing the power down.
      */
     public void sendContinuePowerDownMessage () {
         if (isServer) {
-            if (serverThread.getServer().allPoweredDownRobotsHaveConfirmed()) {
+            //TODO: also send continue when onyl server is power down
+            if (serverThread.getServer().allPoweredDownRobotsHaveConfirmed() || serverIsOnlyOneInPowerDown()) {
                 System.out.println("All powered down have confirmed.");
                 serverThread.getServer().sendToAll(Messages.CONTINUE_TURN.toString());
                 serverThread.getServer().setAllPoweredDownRobotsHaveConfirmed(false);
