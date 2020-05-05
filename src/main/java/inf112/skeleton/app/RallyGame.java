@@ -328,19 +328,6 @@ public class RallyGame extends Game {
 
             powerUpPoweredDownPlayers();
 
-            // HER MÅ MAN VELGE POWER UP/DOWN, SENDE SVAR TIL GAME SERVER, GAME SERVER MÅ SENDE SVARENE TIL
-            // ALLE KLIENTENE OG SÅ KALLE PÅ game.continueGameLoop FOR Å FORTSETTE SPILLET
-            /*
-            System.out.println("Venter på power up");
-            try {
-                stopGameLoop.acquire();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println("Oookei, da kan vi fortsette");
-
-             */
-
             powerDown();
             sendPoweredDownMessage();
 
@@ -771,6 +758,7 @@ public class RallyGame extends Game {
      * If host is powered up set confirmed to false so {@link #doTurn()} need to wait for host to choose new cards.
      */
     public void powerUpPoweredDownPlayers() {
+        mainPlayer.setHavePressedPowerDownButton(false);
         for (Player player : players) {
             if (player.isPoweredDown()) {
                 player.setPoweredDown(false);
