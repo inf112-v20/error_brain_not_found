@@ -167,7 +167,7 @@ public class ClientTest {
         try {
             when(reader.readLine())
                     .thenReturn("3", "4")
-                    .thenReturn("1"+Messages.POWER_DOWN.toString())
+                    .thenReturn("1"+Messages.POWERING_DOWN.toString())
                     .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
@@ -197,7 +197,7 @@ public class ClientTest {
         try {
             when(reader.readLine())
                     .thenReturn("3", "4")
-                    .thenReturn("1"+Messages.POWER_DOWN.toString())
+                    .thenReturn("1"+Messages.POWERING_DOWN.toString())
                     .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();

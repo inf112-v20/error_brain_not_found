@@ -19,12 +19,12 @@ public class GameServer {
     private ArrayList<GameServerThreads> clients;
     private RallyGame game;
     private Converter converter;
-    private boolean allClientsHaveSelectedCards;
+    private boolean allClientsHaveSelectedCardsOrIsPoweredDown;
     private Deck deck;
     private HashMap<GameServerThreads, Boolean> haveSentMapPath;
     private boolean serverHasConfirmed;
     private ServerSocket serverSocket;
-    private boolean allPoweredDownRobotsHaveConfirmed;
+    private boolean allPoweredDownClientsHaveConfirmed;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
@@ -253,18 +253,18 @@ public class GameServer {
 
     /**
      * Tell if all clients have selected their cards or not.
-     * @param allClientsHaveSelectedCards true if all have selected cards
+     * @param allClientsHaveSelectedCardsOrIsPoweredDown true if all have selected cards
      */
-    public void setAllClientsHaveSelectedCards(boolean allClientsHaveSelectedCards) {
-        this.allClientsHaveSelectedCards = allClientsHaveSelectedCards;
+    public void setAllClientsHaveSelectedCardsOrIsPoweredDown(boolean allClientsHaveSelectedCardsOrIsPoweredDown) {
+        this.allClientsHaveSelectedCardsOrIsPoweredDown = allClientsHaveSelectedCardsOrIsPoweredDown;
     }
 
     /**
      *
      * @return true if all clients have selected cards
      */
-    public boolean allClientsHaveSelectedCards() {
-        return allClientsHaveSelectedCards;
+    public boolean allClientsHaveSelectedCardsOrIsPoweredDown() {
+        return allClientsHaveSelectedCardsOrIsPoweredDown;
     }
 
     public boolean allClientsHaveReceivedMap() {
@@ -293,11 +293,11 @@ public class GameServer {
         return deck;
     }
 
-    public boolean allPoweredDownRobotsHaveConfirmed() {
-        return this.allPoweredDownRobotsHaveConfirmed;
+    public boolean allPoweredDownClientsHaveConfirmed() {
+        return this.allPoweredDownClientsHaveConfirmed;
     }
 
-    public void setAllPoweredDownRobotsHaveConfirmed(boolean allPoweredDownRobotsHaveConfirmed) {
-        this.allPoweredDownRobotsHaveConfirmed = allPoweredDownRobotsHaveConfirmed;
+    public void setAllPoweredDownClientsHaveConfirmed(boolean allPoweredDownClientsHaveConfirmed) {
+        this.allPoweredDownClientsHaveConfirmed = allPoweredDownClientsHaveConfirmed;
     }
 }

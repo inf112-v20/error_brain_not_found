@@ -112,9 +112,8 @@ public class GameClientThread extends Thread {
                 int playerNumber = Character.getNumericValue(message.charAt(0));
                 Player player = game.getBoard().getPlayer(playerNumber);
                 String messageFromPlayer = message.substring(1);
-                if (messageFromPlayer.equals(Messages.POWER_DOWN.toString())) {
-                    player.setPoweredDown(true);
-                    game.addPoweredDownPlayer(player);
+                if (messageFromPlayer.equals(Messages.POWERING_DOWN.toString())) {
+                    player.setPoweringDown(true);
                 }
                 else if (messageFromPlayer.equals(Messages.POWER_UP.toString())) {
                     player.setPoweredDown(false);

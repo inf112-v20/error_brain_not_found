@@ -69,7 +69,7 @@ public class GameScreenActors {
     }
 
     public void updateButtons() {
-        if (game.shouldPickCards()) {
+        if (game.isWaitingForCards()) {
             updateCards();
             moveLockedCards();
             updateLockedLabels();
@@ -108,7 +108,7 @@ public class GameScreenActors {
         cardButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if (game.shouldPickCards()) {
+                if (game.isWaitingForCards()) {
                     game.mainPlayer.selectCard(card);
                     System.out.println(game.mainPlayer.getRegisters());
                 }
@@ -133,6 +133,7 @@ public class GameScreenActors {
                 cardButton.setVisible(false);
             }
         }
+        updatePriorityLabels();
     }
 
     public void moveLockedCards() {
@@ -160,7 +161,7 @@ public class GameScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.confirm();
-               if (game.shouldPickCards() || game.shouldConfirmPowerUpOrDown()) {
+               if (game.isWaitingForCards() || game.shouldConfirmPowerUpOrDown()) {
                     game.confirm();
                     // Confirm power down somewhere
                 }
@@ -194,13 +195,8 @@ public class GameScreenActors {
         powerDownButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if (game.mainPlayer.isPoweredDown()) {
+                if (game.waitingForPowerUp || game.waitingForCards) {
                     game.mainPlayer.togglePowerDownOrUpNextRound();
-                    game.mainPlayer.setHavePressedPowerDownButton(false);
-                }
-                if (!game.mainPlayer.isPoweringDown()) {
-                    game.mainPlayer.togglePowerDownOrUpNextRound();
-                    game.mainPlayer.setHavePressedPowerDownButton(true);
                 }
             }
 
