@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.TileID;
-import inf112.skeleton.app.objects.Flag;
 import inf112.skeleton.app.objects.player.Player;
 
 import java.util.ArrayList;
@@ -247,6 +246,12 @@ public class Board extends BoardLayers {
         return neighbourPosition;
     }
 
+    /**
+     * Return true if there is a player in that position
+     *
+     * @param position to check
+     * @return true if position has player
+     */
     public boolean hasPlayer(Vector2 position) {
         for (Player enemyPlayer : players) {
             if (enemyPlayer.getPosition().equals(position)) {
@@ -292,6 +297,13 @@ public class Board extends BoardLayers {
         tiledMap.dispose();
     }
 
+    /**
+     * Check respawn position according to RoboRally rules
+     *
+     * @param position  to check for respawn
+     * @param direction after respawn
+     * @return true of position is valid
+     */
     public boolean validRespawnPosition(Vector2 position, Direction direction) {
         Vector2 currPos = position;
         for (int step = 0; step < 3; step++) {
