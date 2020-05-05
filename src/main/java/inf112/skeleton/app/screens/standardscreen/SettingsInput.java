@@ -36,7 +36,7 @@ public class SettingsInput extends InputAdapter {
                 game.removeDeadPlayers();
                 break;
             case Input.Keys.G:
-                game.stopGameLoop.release();
+                game.waitForPowerUp.release();
                 System.out.println("Start game loop again");
                 break;
             default:

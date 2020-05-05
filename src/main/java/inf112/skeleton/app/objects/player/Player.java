@@ -18,6 +18,7 @@ public class Player {
 
     private final int playerNr;
     private final Registers registers;
+    private boolean confirmedPowerUp;
     private Vector2 backupPosition;
     private Direction backupDirection;
     private Vector2 alternativeBackupPosition;
@@ -36,8 +37,6 @@ public class Player {
 
     private int damageTokens;
     private int lifeTokens;
-    private boolean havePressedPowerDownButton;
-    private boolean willContinuePowerDown;
 
     public Player(Vector2 position, int playerNr) {
         this.position = position;
@@ -55,6 +54,7 @@ public class Player {
         this.poweredDown = false;
         this.powerUpNextRound = false;
         this.powerDownNextRound = false;
+        this.confirmedPowerUp = false;
 
         setBackup(this.position, this.direction);
     }
@@ -356,44 +356,28 @@ public class Player {
         return powerUpNextRound;
     }
 
-    public void confirmPowerDown() {
-        if (powerUpNextRound) {
-            poweredDown = false;
-        } else if (powerDownNextRound) {
-            poweringDown = true;
-        } else if (poweringDown) {
-            poweredDown = true;
-            poweringDown = false;
-        }
-        powerUpNextRound = false;
-        powerDownNextRound = false;
+    public void setPowerDownNextRound(boolean powerDownNextRound) {
+        this.powerDownNextRound = powerDownNextRound;
+    }
+
+    public void setPowerUpNextRound(boolean powerUpNextRound) {
+        this.powerUpNextRound = powerUpNextRound;
     }
 
     public void togglePowerDownOrUpNextRound() {
         if (poweredDown) {
-            powerUpNextRound = !powerUpNextRound;
+            setPowerUpNextRound(!getPowerUpNextRound());
         } else {
-            powerDownNextRound = !powerDownNextRound;
+            setPowerDownNextRound(!getPowerDownNextRound());
         }
     }
 
-    public void setHavePressedPowerDownButton(boolean havePressedPowerDownButton) {
-        this.havePressedPowerDownButton = havePressedPowerDownButton;
+    public boolean hasConfirmedPowerUp() {
+        return confirmedPowerUp;
     }
 
-    public boolean havePressedPowerDownButton() {
-        return havePressedPowerDownButton;
+    public void setConfirmedPowerUp(boolean confirmedPowerUp) {
+        this.confirmedPowerUp = confirmedPowerUp;
     }
 
-    /**
-     *
-     * @return True if player is in power down and want to stay powerered down
-     */
-    public boolean willContinuePowerDown() {
-        return this.willContinuePowerDown;
-    }
-
-    public void setWillContinuePowerDown(boolean willContinuePowerDown) {
-        this.willContinuePowerDown = willContinuePowerDown;
-    }
 }

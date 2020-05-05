@@ -42,7 +42,8 @@ public class RallyGame extends Game {
     public ArrayList<Player> players;
     public ArrayList<Player> respawnPlayers;
     public boolean playing;
-    public boolean shouldPickCards;
+    public boolean waitingForCards;
+    public boolean waitingForPowerUp;
     public Sound laserSound;
     public Music gameMusic;
     public Player mainPlayer;
@@ -59,7 +60,7 @@ public class RallyGame extends Game {
 
     public static float volume = 0.5f;
     private String mapPath;
-    public Semaphore stopGameLoop;
+    public Semaphore waitForPowerUp;
     private ArrayList<Player> poweredDownPlayers;
     private Semaphore waitForCards;
 
@@ -84,13 +85,14 @@ public class RallyGame extends Game {
         this.mainPlayer = board.getPlayer(this.myPlayerNumber);
         this.respawnPlayers = new ArrayList<>();
         this.poweredDownPlayers = new ArrayList<>();
-        this.stopGameLoop = new Semaphore(1);
-        this.stopGameLoop.tryAcquire();
+        this.waitForPowerUp = new Semaphore(1);
+        this.waitForPowerUp.tryAcquire();
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
         this.playing = true;
         this.converter = new Converter();
-        this.shouldPickCards = true;
+        this.waitingForCards = true;
+        this.waitingForPowerUp = false;
 
         this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
 
@@ -169,49 +171,73 @@ public class RallyGame extends Game {
         return defaultSkin;
     }
 
-    public void setShouldPickCards(boolean shouldPickCards) {
-        this.shouldPickCards = shouldPickCards;
+    public void setWaitingForCards(boolean waitingForCards) {
+        this.waitingForCards = waitingForCards;
     }
 
-    public boolean shouldPickCards() {
-        return shouldPickCards;
+    public boolean isWaitingForCards() {
+        return waitingForCards;
+    }
+
+    public boolean isWaitingForPowerUp() {
+        return waitingForPowerUp;
+    }
+
+    public void setWaitingForPowerUp(boolean waitingForPowerUp) {
+        this.waitingForPowerUp = waitingForPowerUp;
     }
 
     /**
-     * Called when confirmbutton in {@link inf112.skeleton.app.screens.gamescreen.GameScreenActors} is pressed.
+     * Called when confirm button in {@link inf112.skeleton.app.screens.gamescreen.GameScreenActors} is pressed.
      */
     public void confirm() {
-        if (mainPlayer.isPoweredDown() && mainPlayer.havePressedPowerDownButton()) {
-            mainPlayer.setWillContinuePowerDown(true);
-            sendContinuePowerDownMessage();
-            System.out.println("Continue power down");
-        }
-        else if (mainPlayer.isPoweredDown() && !mainPlayer.havePressedPowerDownButton()) {
-            mainPlayer.setPoweredDown(false);
-            removePoweredDownPlayer(mainPlayer);
-            sendPowerUpMessage();
-            System.out.println("Im powering up..");
-        }
-        else if (mainPlayer.havePressedPowerDownButton()) {
-            mainPlayer.setPoweringDown(true);
-            System.out.println("Powering down next round..");
-        }
-        if (!mainPlayer.getRegisters().hasRegistersWithoutCard()) {
+        setWaitingForPowerUp(false);
+        if (waitingForCards) {
+            setWaitingForCards(false);
+            if (mainPlayer.getPowerDownNextRound()) {
+                mainPlayer.setPoweringDown(true);
+                mainPlayer.setPowerDownNextRound(false);
+                sendPoweringDownMessage();
+            }
             sendSelectedCardsToServer();
-            System.out.println("Sending cards");
             if (isServer) {
                 GameServer server = serverThread.getServer();
                 server.setServerHasConfirmed(true);
-                if (server.allClientsHaveSelectedCards()) {
-                    server.setAllClientsHaveSelectedCards(false);
+                if (server.allClientsHaveSelectedCardsOrIsPoweredDown()) {
+                    server.setServerHasConfirmed(false);
+                    server.setAllClientsHaveSelectedCardsOrIsPoweredDown(false);
                     System.out.println("All clients selected cards");
                     server.sendSelectedCardsToAll();
                     server.sendToAll(Messages.START_TURN.toString());
                     startTurn();
                 }
             }
-            setShouldPickCards(false);
+        } else {
+            if (mainPlayer.getPowerUpNextRound()) {
+                mainPlayer.setPoweredDown(false);
+                mainPlayer.setPowerUpNextRound(false);
+                removePoweredDownPlayer(mainPlayer);
+                sendPowerUpMessage();
+            } else {
+                sendContinuePowerDownMessage();
+            }
+            if (isServer) {
+                GameServer server = serverThread.getServer();
+                server.setServerHasConfirmed(true);
+                if (server.allPoweredDownClientsHaveConfirmed() || serverIsOnlyOneInPowerDown()) {
+                    server.setAllPoweredDownClientsHaveConfirmed(false);
+                    server.setServerHasConfirmed(false);
+                    System.out.println("All clients confirmed powered up");
+                    server.sendToAll(Messages.CONTINUE_TURN.toString());
+                    continueGameLoop();
+                }
+            }
         }
+    }
+
+    public boolean readyToConfirm() {
+        return isWaitingForCards() ?
+                !mainPlayer.getRegisters().hasRegistersWithoutCard() : isWaitingForPowerUp();
     }
 
     @Override
@@ -246,7 +272,7 @@ public class RallyGame extends Game {
     }
 
     public void continueGameLoop() {
-        stopGameLoop.release();
+        waitForPowerUp.release();
     }
 
     /**
@@ -275,7 +301,7 @@ public class RallyGame extends Game {
             System.out.println("Wait for cards");
             waitForCards();
             if (Thread.interrupted()) { return; }
-            System.out.println("Released");
+            System.out.println("Start game loop");
 
             for (int cardNumber = 0; cardNumber < 5; cardNumber++) {
 
@@ -334,46 +360,35 @@ public class RallyGame extends Game {
                 serverThread.getServer().createAndSendDeckToAll(lockedCards);
             }
 
-
-
             if (!poweredDownPlayers.isEmpty()) {
-                System.out.println("We have a power down!");
+                if (isServer) {
+                    serverThread.getServer().setServerHasConfirmed(!mainPlayer.isPoweredDown());
+                }
+                System.out.println("Wait for power up");
                 letClientsAndServerContinue();
-                System.out.println("Continue talking");
-                waitForConfirmation();
-            } else {
-                letClientsAndServerContinue();
-                System.out.println("Continue talking");
+                setWaitingForPowerUp(mainPlayer.isPoweredDown());
+                waitForPowerUp();
+                System.out.println("Continue game loop");
             }
 
-            // HER MÅ MAN VELGE POWER UP/DOWN, SENDE SVAR TIL GAME SERVER, GAME SERVER MÅ SENDE SVARENE TIL
-            // ALLE KLIENTENE OG SÅ KALLE PÅ game.continueGameLoop FOR Å FORTSETTE SPILLET
-            /*
-            System.out.println("Venter på power up");
-            try {
-                stopGameLoop.acquire();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println("Oookei, da kan vi fortsette");
-
-             */
-
-            /*
-             * Hvis alt blir fucket kan vi i det minste bruke denne. :)
-             */
-            //powerUpPoweredDownPlayers();
+            resetConfirmPowerUp();
 
             powerDown();
-            sendPoweredDownMessage();
 
             dealCards();
             ((GameScreen) screen).updateCards();
 
             if (isServer) {
-                serverThread.getServer().setAllClientsHaveSelectedCards(false);
+                serverThread.getServer().setAllClientsHaveSelectedCardsOrIsPoweredDown(false);
+                serverThread.getServer().setServerHasConfirmed(false);
             }
-            setShouldPickCards(true);
+            setWaitingForCards(!mainPlayer.isPoweredDown());
+            setWaitingForPowerUp(!mainPlayer.isPoweredDown());
+
+            letClientsAndServerContinue();
+            if (mainPlayer.isPoweredDown()) {
+                sendConfirmMessage();
+            }
         }
     }
 
@@ -390,11 +405,11 @@ public class RallyGame extends Game {
     }
 
     /**
-     * Wait for everyone to either power down or select cards.
+     * Wait for everyone to either power up or remain powered down
      */
-    public void waitForConfirmation() {
+    public void waitForPowerUp() {
         try {
-            stopGameLoop.acquire();
+            waitForPowerUp.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -474,18 +489,16 @@ public class RallyGame extends Game {
     }
 
     public void removeDeadPlayers() {
-        Player playerToRemove = null;
         for (Player player : players) {
             if (player.isDead()) {
                 board.removePlayerFromBoard(player);
-                playerToRemove = player;
+                players.remove(player);
                 if (isServer) {
                     serverThread.getServer().remove(player.getPlayerNr());
                     serverThread.getServer().disconnect(player.getPlayerNr());
                 }
             }
         }
-        players.remove(playerToRemove);
     }
 
     public void respawnPlayers() {
@@ -498,18 +511,16 @@ public class RallyGame extends Game {
 
     public void allPlayersPlayCard(int cardNumber) {
         ArrayList<Player> playerOrder = new ArrayList<>(players);
-        // Add all players to order list, and remove players with no cards left
-        playerOrder.removeIf(p -> !p.getRegisters().getRegister(cardNumber).hasCard());
-        playerOrder.sort(new PlayerSorter(cardNumber));
-
-        // Add all players to order list, and remove powered down players
+        // Add all players to order list, and remove players with no cards left or powered down
         playerOrder.removeIf(Player::isPoweredDown);
+        playerOrder.removeIf(p -> !p.getRegisters().getRegister(cardNumber).hasCard());
         playerOrder.sort(new PlayerSorter(cardNumber));
         for (Player player : playerOrder) {
             playCard(player, cardNumber);
             // Wait 1 second for each player
             sleep(500);
-            //decreaseLives();
+            // Decrease lives in case player is pushed outside board
+            decreaseLives();
             sleep(500);
         }
     }
@@ -804,7 +815,7 @@ public class RallyGame extends Game {
             if (player.isPoweringDown()) {
                 player.setPoweredDown(true);
                 player.setPoweringDown(false);
-                addPoweredDownPlayer(player);
+                poweredDownPlayers.add(player);
             }
             if (player.isPoweredDown()) {
                 player.resetDamageTokens();
@@ -813,60 +824,34 @@ public class RallyGame extends Game {
     }
 
     /**
-     * At the end of each round, before dealing cards, power up players in powerdown mode.
-     * If host is powered up set confirmed to false so {@link #doTurn()} need to wait for host to choose new cards.
-     */
-    public void powerUpPoweredDownPlayers() {
-        for (Player player : poweredDownPlayers) {
-                player.setPoweredDown(false);
-                player.setHavePressedPowerDownButton(false);
-                if (isServer) {
-                    serverThread.getServer().setServerHasConfirmed(false);
-                }
-        }
-    }
-
-    /**
      * Let the other players know you have powered up.
-     * If the host is powered up, set {@link GameServer#setServerHasConfirmed(boolean)} to false so
-     * that the next turn must wait for server to choose cards before start.
      */
     public void sendPowerUpMessage() {
-        if (!isServer) {
-            client.sendMessage(mainPlayer.getPlayerNr() + Messages.POWER_UP.toString());
-
-        } else {
+        if (isServer) {
             serverThread.getServer().sendToAll(mainPlayer.getPlayerNr() + Messages.POWER_UP.toString());
-            serverThread.getServer().setServerHasConfirmed(false);
-            if (serverThread.getServer().allPoweredDownRobotsHaveConfirmed()) {
-                serverThread.getServer().sendToAll(Messages.CONTINUE_TURN.toString());
-                serverThread.getServer().setAllPoweredDownRobotsHaveConfirmed(false);
-            }
+        } else {
+            client.sendMessage(mainPlayer.getPlayerNr() + Messages.POWER_UP.toString());
         }
     }
 
     /**
-     * Let the other players know you have powered down.
-     *
-     * If the host is powered down, set {@link GameServer#setServerHasConfirmed(boolean)} to true so
-     * that the next turn can start without server needed to press the confirm button.
+     * Let the other players know you are powering down.
      */
-    public void sendPoweredDownMessage() {
-        if (mainPlayer.isPoweredDown()) {
-            if (isServer) {
-                serverThread.getServer().sendToAll(mainPlayer.getPlayerNr()+Messages.POWER_DOWN.toString());
-                serverThread.getServer().setServerHasConfirmed(true);
-            } else {
-                client.sendMessage(mainPlayer.getPlayerNr()+Messages.POWER_DOWN.toString());
-            }
+    public void sendPoweringDownMessage() {
+        if (isServer) {
+            serverThread.getServer().sendToAll(mainPlayer.getPlayerNr()+Messages.POWERING_DOWN.toString());
+        } else {
+            client.sendMessage(mainPlayer.getPlayerNr()+Messages.POWERING_DOWN.toString());
         }
     }
 
     public boolean serverIsOnlyOneInPowerDown() {
-        if (isServer) {
-            return poweredDownPlayers.contains(mainPlayer) && poweredDownPlayers.size() == 1;
+        for (Player player : players) {
+            if (player.getPlayerNr() != 1 && player.isPoweredDown() && !player.hasConfirmedPowerUp()) {
+                return false;
+            }
         }
-        return false;
+        return true;
     }
 
     /**
@@ -874,13 +859,30 @@ public class RallyGame extends Game {
      */
     public void sendContinuePowerDownMessage () {
         if (isServer) {
-            if (serverThread.getServer().allPoweredDownRobotsHaveConfirmed() || serverIsOnlyOneInPowerDown()) {
-                System.out.println("All powered down have confirmed.");
-                serverThread.getServer().sendToAll(Messages.CONTINUE_TURN.toString());
-                serverThread.getServer().setAllPoweredDownRobotsHaveConfirmed(false);
-            }
+            serverThread.getServer().setServerHasConfirmed(true);
         } else {
             client.sendMessage(mainPlayer.getPlayerNr() + Messages.CONTINUE_POWER_DOWN.toString());
+        }
+    }
+
+    /**
+     * Send confirm message that you are continuing power down.
+     */
+    public void sendConfirmMessage () {
+        if (isServer) {
+            serverThread.getServer().setServerHasConfirmed(true);
+            System.out.println("Server sendte confirm melding");
+            System.out.println("Har de andre valgt kort? " + serverThread.getServer().allClientsHaveSelectedCardsOrIsPoweredDown());
+            if (serverThread.getServer().allClientsHaveSelectedCardsOrIsPoweredDown()) {
+                System.out.println("Server sa at alle skulle starte");
+                serverThread.getServer().setServerHasConfirmed(false);
+                serverThread.getServer().setAllClientsHaveSelectedCardsOrIsPoweredDown(false);
+                serverThread.getServer().sendToAll(Messages.START_TURN.toString());
+                startTurn();
+            }
+        } else {
+            System.out.println("Client sendte confirm melding");
+            client.sendMessage(mainPlayer.getPlayerNr() + Messages.CONFIRM.toString());
         }
     }
 
@@ -894,6 +896,10 @@ public class RallyGame extends Game {
 
     public void setServerThread(ServerThread serverThread) {
         this.serverThread = serverThread;
+    }
+
+    public void setIsServer(boolean isServer) {
+        this.isServer = isServer;
     }
 
     /**
@@ -917,11 +923,7 @@ public class RallyGame extends Game {
         return this.poweredDownPlayers;
     }
 
-    /**
-     *
-     * @return True if mainplayer should confirm power up or power down
-     */
-    public boolean shouldConfirmPowerUpOrDown() {
-        return  getPoweredDownRobots().contains(mainPlayer);
+    public void resetConfirmPowerUp() {
+        players.forEach(player -> player.setConfirmedPowerUp(false));
     }
 }

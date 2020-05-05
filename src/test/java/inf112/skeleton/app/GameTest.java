@@ -31,7 +31,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -223,8 +222,10 @@ public class GameTest {
 
     @Test
     public void confirmedButtonPoweringDownTest() {
+        game.setIsServer(false);
+        game.setClient(client);
         when(mainPlayer.getRegisters().hasRegistersWithoutCard()).thenReturn(true);
-        when(mainPlayer.havePressedPowerDownButton()).thenReturn(true);
+        when(mainPlayer.getPowerDownNextRound()).thenReturn(true);
         game.confirm();
         verify(mainPlayer).setPoweringDown(true);
     }
@@ -242,7 +243,7 @@ public class GameTest {
         game.setServerThread(serverThread);
         game.setIsServerToTrue();
         when(mainPlayer.getRegisters().hasRegistersWithoutCard()).thenReturn(false);
-        when(server.allClientsHaveSelectedCards()).thenReturn(true);
+        when(server.allClientsHaveSelectedCardsOrIsPoweredDown()).thenReturn(true);
         game.confirm();
         verify(server).sendSelectedCardsToAll();
     }
@@ -250,10 +251,10 @@ public class GameTest {
     @Test
     public void pressedPowerDownButtonAndSelectedCardsTest() {
         game.setClient(client);
-        when(mainPlayer.havePressedPowerDownButton()).thenReturn(true);
+        when(mainPlayer.getPowerDownNextRound()).thenReturn(true);
         when(mainPlayer.getRegisters().hasRegistersWithoutCard()).thenReturn(false);
         game.confirm();
-        verify(client, times(5)).sendMessage(anyString());
+        verify(client, times(6)).sendMessage(anyString());
         verify(mainPlayer).setPoweringDown(true);
     }
 
@@ -276,19 +277,13 @@ public class GameTest {
     }
 
     @Test
-    public void poweringUpPlayersHaveNotPressedPowerDownButtonTest() {
-        game.addPoweredDownPlayer(mainPlayer);
-        game.powerUpPoweredDownPlayers();
-        verify(mainPlayer).setHavePressedPowerDownButton(false);
-    }
-
-    @Test
     public void confirmingPowerUpTest() {
         game.setClient(client);
         game.addPoweredDownPlayer(mainPlayer);
+        game.setWaitingForCards(false);
         when(mainPlayer.isPoweredDown()).thenReturn(true);
         when(mainPlayer.getRegisters().hasRegistersWithoutCard()).thenReturn(true);
-        when(mainPlayer.havePressedPowerDownButton()).thenReturn(false);
+        when(mainPlayer.getPowerUpNextRound()).thenReturn(true);
         game.confirm();
         verify(mainPlayer).setPoweredDown(false);
     }
@@ -296,10 +291,11 @@ public class GameTest {
     @Test
     public void confirmingStayInPowerDownTest() {
         game.setClient(client);
+        game.setWaitingForCards(false);
         game.addPoweredDownPlayer(mainPlayer);
         when(mainPlayer.isPoweredDown()).thenReturn(true);
         when(mainPlayer.getRegisters().hasRegistersWithoutCard()).thenReturn(true);
-        when(mainPlayer.havePressedPowerDownButton()).thenReturn(true);
+        when(mainPlayer.getPowerUpNextRound()).thenReturn(false);
         when(mainPlayer.getPlayerNr()).thenReturn(2);
         game.confirm();
         verify(client).sendMessage("2"+Messages.CONTINUE_POWER_DOWN.toString());

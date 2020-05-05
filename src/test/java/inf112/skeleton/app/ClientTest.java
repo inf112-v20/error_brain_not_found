@@ -163,18 +163,19 @@ public class ClientTest {
     }
 
     @Test
-    public void playerOneSendsPowerDownTest() {
+    public void playerOneSendsPoweringDownTest() {
         try {
             when(reader.readLine())
                     .thenReturn("3", "4")
-                    .thenReturn("1"+Messages.POWER_DOWN.toString())
+                    .thenReturn("1"+Messages.POWERING_DOWN.toString())
                     .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
         client.start();
         waitForThread(client);
-        assertTrue(player1.isPoweredDown());
+        // TODO: Endret til .isPoweringDown()
+        assertTrue(player1.isPoweringDown());
     }
 
     @Test
@@ -193,18 +194,18 @@ public class ClientTest {
     }
 
     @Test
-    public void playerOneSendsPowerDownIsRegisteredInGameTest() {
+    public void playerOneSendsPowerDownIsRegisteredTest() {
         try {
             when(reader.readLine())
                     .thenReturn("3", "4")
-                    .thenReturn("1"+Messages.POWER_DOWN.toString())
+                    .thenReturn("1"+Messages.POWERING_DOWN.toString())
                     .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
         client.start();
         waitForThread(client);
-        verify(game).addPoweredDownPlayer(player1);
+        assertTrue(player1.isPoweringDown());
     }
 
     @Test

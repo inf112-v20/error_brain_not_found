@@ -6,7 +6,6 @@ import inf112.skeleton.app.cards.Register;
 import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.objects.player.Player;
 
-import javax.imageio.spi.ImageInputStreamSpi;
 import java.io.*;
 import java.net.Socket;
 import java.util.concurrent.Semaphore;
@@ -69,49 +68,58 @@ public class GameServerThreads extends Thread {
                 if (Character.isDigit(message.charAt(0))) {
                     int playerNumber = Character.getNumericValue(message.charAt(0));
                     String messageFromPlayer = message.substring(1);
-                    if (messageFromPlayer.equals(Messages.POWER_DOWN.toString())) {
-                        System.out.println("Power down");
-                        Player player = game.getBoard().getPlayer(playerNumber);
-                        player.setPoweredDown(true);
-                        game.addPoweredDownPlayer(player);
+                    Player player = game.getBoard().getPlayer(playerNumber);
+                    if (messageFromPlayer.equals(Messages.POWERING_DOWN.toString())) {
+                        player.setPoweringDown(true);
                         server.sendToAllExcept(player, message);
-                        System.out.println(message);
-                        if (allClientsHaveSelectedCardsOrInPowerDown()) {
-                            System.out.println("All clients confirmed power down or chosen card");
-                            server.setAllClientsHaveSelectedCards(true);
-                        }
                     }
                     else if (messageFromPlayer.equals(Messages.CONTINUE_POWER_DOWN.toString())) {
-                        Player player = game.getBoard().getPlayer(playerNumber);
-                        System.out.println(message);
-                        player.setWillContinuePowerDown(true);
-                        System.out.println(player.willContinuePowerDown());
-                        server.sendToAllExcept(player, message);
-                        if (allPoweredDownRobotsHaveConfirmed()) {
-                            server.setAllPoweredDownRobotsHaveConfirmed(true);
-                            System.out.println("all clients confirmed");
-                            server.sendToAll(Messages.CONTINUE_TURN.toString());
-                            if (allClientsHaveSelectedCardsOrInPowerDown()) {
-                                server.setAllClientsHaveSelectedCards(true);
+                        player.setConfirmedPowerUp(true);
+                        if (allPoweredDownClientsHaveConfirmed()) {
+                            if (server.serverHasConfirmed()) {
+                                server.setAllPoweredDownClientsHaveConfirmed(false);
+                                server.setServerHasConfirmed(false);
+                                server.sendToAll(Messages.CONTINUE_TURN.toString());
+                                releaseDoTurn();
+                                waitForTurnToFinish();
+                            } else {
+                                server.setAllPoweredDownClientsHaveConfirmed(true);
                             }
-                            releaseDoTurn();
                         }
                     }
                     else if (messageFromPlayer.equals(Messages.POWER_UP.toString())) {
-                        Player player = game.getBoard().getPlayer(playerNumber);
                         player.setPoweredDown(false);
+                        player.setConfirmedPowerUp(true);
                         game.removePoweredDownPlayer(player);
                         server.sendToAllExcept(player, message);
-                        if (allPoweredDownRobotsHaveConfirmed()) {
-                            server.setAllPoweredDownRobotsHaveConfirmed(true);
-                            server.sendToAll(Messages.CONTINUE_TURN.toString());
-                            releaseDoTurn();
+                        if (allPoweredDownClientsHaveConfirmed()) {
+                            if (server.serverHasConfirmed()) {
+                                server.setAllPoweredDownClientsHaveConfirmed(false);
+                                server.setServerHasConfirmed(false);
+                                server.sendToAll(Messages.CONTINUE_TURN.toString());
+                                releaseDoTurn();
+                                waitForTurnToFinish();
+                            } else {
+                                server.setAllPoweredDownClientsHaveConfirmed(true);
+                            }
+                        }
+                    }
+                    else if (messageFromPlayer.equals(Messages.CONFIRM.toString())) {
+                        if (allClientsHaveSelectedCardsOrInPowerDown()) {
+                            if (server.serverHasConfirmed()) {
+                                server.setAllClientsHaveSelectedCardsOrIsPoweredDown(false);
+                                server.setServerHasConfirmed(false);
+                                server.sendToAll(Messages.START_TURN.toString());
+                                game.startTurn();
+                                waitForTurnToFinish();
+                            } else {
+                                server.setAllClientsHaveSelectedCardsOrIsPoweredDown(true);
+                            }
                         }
                     }
                     else {
                         PlayerAndProgramCard playerAndCard = converter.convertToCardAndExtractPlayer(message);
                         ProgramCard card = playerAndCard.getProgramCard();
-                        Player player = game.getBoard().getPlayer(playerNumber);
                         addSelectedCard(player, card);
                         if (allPlayersHaveSelectedCardsOrInPowerDown() && server.serverHasConfirmed()) {
                             server.sendSelectedCardsToAll();
@@ -121,7 +129,7 @@ public class GameServerThreads extends Thread {
                             waitForTurnToFinish();
                         }
                         if (allClientsHaveSelectedCardsOrInPowerDown()) {
-                            server.setAllClientsHaveSelectedCards(true);
+                            server.setAllClientsHaveSelectedCardsOrIsPoweredDown(true);
                         }
                     }
                 }
@@ -285,8 +293,16 @@ public class GameServerThreads extends Thread {
      */
     public boolean allPoweredDownRobotsHaveConfirmed() {
         for (Player player : game.getPoweredDownRobots()) {
-            if (!player.willContinuePowerDown()) {
-                System.out.println(player);
+            if (!player.hasConfirmedPowerUp()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean allPoweredDownClientsHaveConfirmed() {
+        for (Player player : game.getPoweredDownRobots()) {
+            if (player.getPlayerNr() != 1 && !player.hasConfirmedPowerUp()) {
                 return false;
             }
         }
