@@ -186,6 +186,12 @@ public class ServerTest {
     }
 
     @Test
+    public void notAllPlayersHavePoweredDownOrChosenCardsTest() {
+        player1.setPoweredDown(true);
+        assertFalse(server.allPlayersHaveSelectedCardsOrInPowerDown());
+    }
+
+    @Test
     public void allPlayersHaveSelectedCardsServerSendsStartTurnMessageTest() {
         player1.setSelectedCards(card, card, card, card, card);
         // Send 5 cards from player 2
