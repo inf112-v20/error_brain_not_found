@@ -366,9 +366,9 @@ public class Player {
 
     public void togglePowerDownOrUpNextRound() {
         if (poweredDown) {
-            powerUpNextRound = !powerUpNextRound;
+            setPowerUpNextRound(!getPowerUpNextRound());
         } else {
-            powerDownNextRound = !powerDownNextRound;
+            setPowerDownNextRound(!getPowerDownNextRound());
         }
     }
 
@@ -376,9 +376,8 @@ public class Player {
         return confirmedPowerUp;
     }
 
-    public Player setConfirmedPowerUp(boolean confirmedPowerUp) {
+    public void setConfirmedPowerUp(boolean confirmedPowerUp) {
         this.confirmedPowerUp = confirmedPowerUp;
-        return this;
     }
 
 }

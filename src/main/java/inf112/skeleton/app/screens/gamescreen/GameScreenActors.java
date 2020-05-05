@@ -161,9 +161,8 @@ public class GameScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.confirm();
-               if (game.isWaitingForCards() || game.shouldConfirmPowerUpOrDown()) {
+               if (game.isWaitingForCards() || game.isWaitingForPowerUp()) {
                     game.confirm();
-                    // Confirm power down somewhere
                 }
             }
 
@@ -195,7 +194,7 @@ public class GameScreenActors {
         powerDownButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if (game.waitingForPowerUp || game.waitingForCards) {
+                if (game.isWaitingForCards() || game.isWaitingForPowerUp()) {
                     game.mainPlayer.togglePowerDownOrUpNextRound();
                 }
             }
