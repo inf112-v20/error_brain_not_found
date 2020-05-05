@@ -14,7 +14,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import inf112.skeleton.app.RallyGame;
-import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 
 public class SettingsScreen extends StandardScreen {
 
