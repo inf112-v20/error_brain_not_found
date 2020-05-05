@@ -182,6 +182,7 @@ public class RallyGame extends Game {
      */
     public void confirm() {
         if (mainPlayer.isPoweredDown() && mainPlayer.havePressedPowerDownButton()) {
+            mainPlayer.setWillContinuePowerDown(true);
             sendContinuePowerDownMessage();
             System.out.println("Continue power down");
         }
@@ -358,6 +359,9 @@ public class RallyGame extends Game {
 
              */
 
+            /*
+             * Hvis alt blir fucket kan vi i det minste bruke denne. :)
+             */
             //powerUpPoweredDownPlayers();
 
             powerDown();
@@ -370,7 +374,6 @@ public class RallyGame extends Game {
                 serverThread.getServer().setAllClientsHaveSelectedCards(false);
             }
             setShouldPickCards(true);
-            //letClientsAndServerContinue();
         }
     }
 
@@ -835,6 +838,10 @@ public class RallyGame extends Game {
         } else {
             serverThread.getServer().sendToAll(mainPlayer.getPlayerNr() + Messages.POWER_UP.toString());
             serverThread.getServer().setServerHasConfirmed(false);
+            if (serverThread.getServer().allPoweredDownRobotsHaveConfirmed()) {
+                serverThread.getServer().sendToAll(Messages.CONTINUE_TURN.toString());
+                serverThread.getServer().setAllPoweredDownRobotsHaveConfirmed(false);
+            }
         }
     }
 
@@ -860,7 +867,11 @@ public class RallyGame extends Game {
      */
     public void sendContinuePowerDownMessage () {
         if (isServer) {
-            serverThread.getServer().sendToAll(mainPlayer.getPlayerNr() + Messages.CONTINUE_POWER_DOWN.toString());
+            if (serverThread.getServer().allPoweredDownRobotsHaveConfirmed()) {
+                System.out.println("All powered down have confirmed.");
+                serverThread.getServer().sendToAll(Messages.CONTINUE_TURN.toString());
+                serverThread.getServer().setAllPoweredDownRobotsHaveConfirmed(false);
+            }
         } else {
             client.sendMessage(mainPlayer.getPlayerNr() + Messages.CONTINUE_POWER_DOWN.toString());
         }

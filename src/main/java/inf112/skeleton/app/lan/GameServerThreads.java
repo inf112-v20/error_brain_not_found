@@ -88,6 +88,7 @@ public class GameServerThreads extends Thread {
                         System.out.println(player.willContinuePowerDown());
                         server.sendToAllExcept(player, message);
                         if (allPoweredDownRobotsHaveConfirmed()) {
+                            server.setAllPoweredDownRobotsHaveConfirmed(true);
                             System.out.println("all clients confirmed");
                             server.sendToAll(Messages.CONTINUE_TURN.toString());
                             if (allClientsHaveSelectedCardsOrInPowerDown()) {
@@ -102,6 +103,7 @@ public class GameServerThreads extends Thread {
                         game.removePoweredDownPlayer(player);
                         server.sendToAllExcept(player, message);
                         if (allPoweredDownRobotsHaveConfirmed()) {
+                            server.setAllPoweredDownRobotsHaveConfirmed(true);
                             server.sendToAll(Messages.CONTINUE_TURN.toString());
                             releaseDoTurn();
                         }

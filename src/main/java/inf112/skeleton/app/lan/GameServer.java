@@ -24,6 +24,7 @@ public class GameServer {
     private HashMap<GameServerThreads, Boolean> haveSentMapPath;
     private boolean serverHasConfirmed;
     private ServerSocket serverSocket;
+    private boolean allPoweredDownRobotsHaveConfirmed;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
@@ -290,5 +291,13 @@ public class GameServer {
 
     public Deck getDeck() {
         return deck;
+    }
+
+    public boolean allPoweredDownRobotsHaveConfirmed() {
+        return this.allPoweredDownRobotsHaveConfirmed;
+    }
+
+    public void setAllPoweredDownRobotsHaveConfirmed(boolean allPoweredDownRobotsHaveConfirmed) {
+        this.allPoweredDownRobotsHaveConfirmed = allPoweredDownRobotsHaveConfirmed;
     }
 }
