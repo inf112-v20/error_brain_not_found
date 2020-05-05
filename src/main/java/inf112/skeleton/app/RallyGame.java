@@ -873,7 +873,6 @@ public class RallyGame extends Game {
      */
     public void sendContinuePowerDownMessage () {
         if (isServer) {
-            //TODO: also send continue when onyl server is power down
             if (serverThread.getServer().allPoweredDownRobotsHaveConfirmed() || serverIsOnlyOneInPowerDown()) {
                 System.out.println("All powered down have confirmed.");
                 serverThread.getServer().sendToAll(Messages.CONTINUE_TURN.toString());
