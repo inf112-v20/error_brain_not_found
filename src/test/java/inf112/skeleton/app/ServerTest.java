@@ -276,7 +276,4 @@ public class ServerTest {
         verify(gameServer).sendToAllExcept(player2, powerUpMessage);
     }
 
-
-
-
 }

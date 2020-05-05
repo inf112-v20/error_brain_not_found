@@ -10,6 +10,7 @@ import inf112.skeleton.app.cards.Registers;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.enums.Rotate;
+import inf112.skeleton.app.lan.Converter;
 import inf112.skeleton.app.lan.GameClientThread;
 import inf112.skeleton.app.lan.GameServer;
 import inf112.skeleton.app.lan.ServerThread;
@@ -29,7 +30,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
-import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -42,6 +42,7 @@ public class GameTest {
     private RallyGame game;
     private Player player;
     private ArrayList<Belt> belts;
+    private Converter converter;
 
     @Mock
     private Player mainPlayer;
@@ -69,6 +70,7 @@ public class GameTest {
         player = new Player(new Vector2(0, 0), 2);
         board.addPlayer(player);
         this.belts = board.getBelts();
+        this.converter = new Converter();
 
         game.setMainPlayer(mainPlayer);
         when(mainPlayer.getRegisters()).thenReturn(registers);
@@ -263,7 +265,7 @@ public class GameTest {
         game.setClient(client);
         when(mainPlayer.getPlayerNr()).thenReturn(2);
         game.sendPowerUpMessage();
-        verify(client).sendMessage("2"+ Messages.POWER_UP.toString());
+        verify(client).sendMessage(converter.createMessageFromPlayer(2, Messages.POWER_UP));
     }
 
     @Test
@@ -272,7 +274,7 @@ public class GameTest {
         game.setServerThread(serverThread);
         when(mainPlayer.getPlayerNr()).thenReturn(1);
         game.sendPowerUpMessage();
-        verify(server).sendToAll("1"+Messages.POWER_UP.toString());
+        verify(server).sendToAll(converter.createMessageFromPlayer(1, Messages.POWER_UP));
 
     }
 
@@ -298,8 +300,23 @@ public class GameTest {
         when(mainPlayer.getPowerUpNextRound()).thenReturn(false);
         when(mainPlayer.getPlayerNr()).thenReturn(2);
         game.confirm();
-        verify(client).sendMessage("2"+Messages.CONTINUE_POWER_DOWN.toString());
+        verify(client).sendMessage(converter.createMessageFromPlayer(2, Messages.CONTINUE_POWER_DOWN));
     }
 
+    @Test
+    public void serverConfirmsAndAllOtherHaveConfirmesThenStartTurnTest() {
+        game.setIsServer(true);
+        game.setServerThread(serverThread);
+        when(server.allClientsHaveSelectedCardsOrIsPoweredDown()).thenReturn(true);
+        game.sendConfirmMessage();
+        verify(server).sendToAll(Messages.START_TURN.toString());
+    }
+
+    @Test
+    public void clientInPowerDownSendsConfirmMessageTest() {
+        game.setClient(client);
+        game.sendConfirmMessage();
+        verify(client).sendMessage(Messages.CONFIRM.toString());
+    }
 
 }

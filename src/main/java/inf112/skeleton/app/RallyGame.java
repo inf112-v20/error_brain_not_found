@@ -866,7 +866,7 @@ public class RallyGame extends Game {
     }
 
     /**
-     * Send confirm message that you are continuing power down.
+     * Send confirm message when you are powered down.
      */
     public void sendConfirmMessage () {
         if (isServer) {
