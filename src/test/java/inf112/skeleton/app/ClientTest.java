@@ -205,8 +205,7 @@ public class ClientTest {
         }
         client.start();
         waitForThread(client);
-        // TODO: La til dette for å få testen til å kjøre
-        game.powerDown();
+        // TODO: De legges ikke til i listen av POWERING_DOWN, men i funksjonen game.PowerDown()
         verify(game).addPoweredDownPlayer(player1);
     }
 
