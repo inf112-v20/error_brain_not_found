@@ -74,7 +74,8 @@ public class GameClientThread extends Thread {
                 return;
             }
             if (message.equals(Messages.CONTINUE_TURN.toString())) {
-                realeaseDoTurn();
+                releaseDoTurn();
+                waitForTurnToFinish();
             }
             else if (message.equals(Messages.START_TURN.toString())) {
                 game.startTurn();
@@ -179,7 +180,7 @@ public class GameClientThread extends Thread {
     /**
      * Tell game that cards are ready, doTurn can begin.
      */
-    private void  realeaseDoTurn() {
+    private void releaseDoTurn() {
         game.continueGameLoop();
     }
 

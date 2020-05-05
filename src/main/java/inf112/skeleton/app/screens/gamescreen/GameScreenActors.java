@@ -70,10 +70,9 @@ public class GameScreenActors {
 
     public void updateButtons() {
         if (game.isWaitingForCards()) {
-            updateCards();
             moveLockedCards();
             updateLockedLabels();
-            updatePriorityLabels();
+            updateCards();
         }
         updateConfirm();
         updatePowerDownButton();
@@ -160,10 +159,9 @@ public class GameScreenActors {
         confirmButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.confirm();
-               if (game.isWaitingForCards() || game.isWaitingForPowerUp()) {
-                    game.confirm();
-                }
+               if (game.readyToConfirm()) {
+                   game.confirm();
+               }
             }
 
             @Override
@@ -175,7 +173,7 @@ public class GameScreenActors {
     }
 
     public void updateConfirm() {
-        if (!game.mainPlayer.getRegisters().hasRegistersWithoutCard() || game.mainPlayer.isPoweredDown()) {
+        if (game.readyToConfirm()) {
             confirmButton.getStyle().up = game.actorImages.getSkin().getDrawable("Confirm ready");
         } else {
             confirmButton.getStyle().up = game.actorImages.getSkin().getDrawable("Confirm not ready");
@@ -187,7 +185,6 @@ public class GameScreenActors {
     public void initializePowerDownButton() {
         ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle();
         style.up = game.getActorImages().getDrawable("Power down active");
-        style.checked = game.getActorImages().getDrawable("Powering down");
         powerDownButton = new ImageButton(style);
         powerDownButton.setSize(confirmButtonSize, confirmButtonSize);
         powerDownButton.setPosition(screenWidth - confirmButtonSize, confirmButtonSize);
@@ -211,12 +208,17 @@ public class GameScreenActors {
         if (game.mainPlayer.isPoweringDown()) {
             powerDownButton.getStyle().up = game.getActorImages().getDrawable("Powering down");
         } else if (game.mainPlayer.isPoweredDown()) {
-            powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power up active");
-            powerDownButton.getStyle().checked = game.getActorImages().getDrawable("Power up inactive");
+            if (game.mainPlayer.getPowerUpNextRound()) {
+                powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power up inactive");
+            } else {
+                powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power up active");
+            }
         } else {
-            powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down active");
-            powerDownButton.getStyle().checked = game.getActorImages().getDrawable("Power down inactive");
-
+            if (game.mainPlayer.getPowerDownNextRound()) {
+                powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down inactive");
+            } else {
+                powerDownButton.getStyle().up = game.getActorImages().getDrawable("Power down active");
+            }
         }
     }
 

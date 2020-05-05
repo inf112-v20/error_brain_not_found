@@ -68,53 +68,50 @@ public class GameServerThreads extends Thread {
                 if (Character.isDigit(message.charAt(0))) {
                     int playerNumber = Character.getNumericValue(message.charAt(0));
                     String messageFromPlayer = message.substring(1);
+                    Player player = game.getBoard().getPlayer(playerNumber);
                     if (messageFromPlayer.equals(Messages.POWERING_DOWN.toString())) {
-                        System.out.println("Powering down " + playerNumber);
-                        Player player = game.getBoard().getPlayer(playerNumber);
                         player.setPoweringDown(true);
                         server.sendToAllExcept(player, message);
-                        System.out.println(message);
                     }
                     else if (messageFromPlayer.equals(Messages.CONTINUE_POWER_DOWN.toString())) {
-                        Player player = game.getBoard().getPlayer(playerNumber);
-                        System.out.println(message);
                         player.setConfirmedPowerUp(true);
-                        if (allPoweredDownRobotsHaveConfirmed()) {
+                        if (allPoweredDownClientsHaveConfirmed()) {
                             if (server.serverHasConfirmed()) {
                                 server.setAllPoweredDownClientsHaveConfirmed(false);
                                 server.setServerHasConfirmed(false);
                                 server.sendToAll(Messages.CONTINUE_TURN.toString());
                                 releaseDoTurn();
+                                waitForTurnToFinish();
                             } else {
                                 server.setAllPoweredDownClientsHaveConfirmed(true);
                             }
                         }
                     }
                     else if (messageFromPlayer.equals(Messages.POWER_UP.toString())) {
-                        Player player = game.getBoard().getPlayer(playerNumber);
                         player.setPoweredDown(false);
+                        player.setConfirmedPowerUp(true);
                         game.removePoweredDownPlayer(player);
                         server.sendToAllExcept(player, message);
-                        if (allPoweredDownRobotsHaveConfirmed()) {
+                        if (allPoweredDownClientsHaveConfirmed()) {
                             if (server.serverHasConfirmed()) {
                                 server.setAllPoweredDownClientsHaveConfirmed(false);
                                 server.setServerHasConfirmed(false);
                                 server.sendToAll(Messages.CONTINUE_TURN.toString());
                                 releaseDoTurn();
+                                waitForTurnToFinish();
                             } else {
                                 server.setAllPoweredDownClientsHaveConfirmed(true);
                             }
                         }
                     }
                     else if (messageFromPlayer.equals(Messages.CONFIRM.toString())) {
-                        Player player = game.getBoard().getPlayer(playerNumber);
-                        server.sendToAllExcept(player, message);
                         if (allClientsHaveSelectedCardsOrInPowerDown()) {
                             if (server.serverHasConfirmed()) {
                                 server.setAllClientsHaveSelectedCardsOrIsPoweredDown(false);
                                 server.setServerHasConfirmed(false);
                                 server.sendToAll(Messages.START_TURN.toString());
-                                releaseDoTurn();
+                                game.startTurn();
+                                waitForTurnToFinish();
                             } else {
                                 server.setAllClientsHaveSelectedCardsOrIsPoweredDown(true);
                             }
@@ -123,7 +120,6 @@ public class GameServerThreads extends Thread {
                     else {
                         PlayerAndProgramCard playerAndCard = converter.convertToCardAndExtractPlayer(message);
                         ProgramCard card = playerAndCard.getProgramCard();
-                        Player player = game.getBoard().getPlayer(playerNumber);
                         addSelectedCard(player, card);
                         if (allPlayersHaveSelectedCardsOrInPowerDown() && server.serverHasConfirmed()) {
                             server.sendSelectedCardsToAll();
