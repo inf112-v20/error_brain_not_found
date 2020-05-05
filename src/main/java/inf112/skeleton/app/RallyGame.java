@@ -59,7 +59,7 @@ public class RallyGame extends Game {
         this.deck = new Deck();
         this.players = new ArrayList<>();
         makePlayersAndAddToBoard(4);
-        this.mainPlayer = board.getPlayer1();
+        this.mainPlayer = players.get(0);
         this.respawnPlayers = new ArrayList<>();
 
         this.waitForCards = new Semaphore(1);
@@ -79,6 +79,14 @@ public class RallyGame extends Game {
             players.add(new Player(playerNumber));
         }
         board.addPlayersToStartPositions(players);
+    }
+
+    public void addPlayer(Player player) {
+        if (!players.contains(player)) {
+            players.add(player);
+        }
+        board.removePlayerFromBoard(player);
+        board.addPlayer(player);
     }
 
     public void fullscreen() {
@@ -243,13 +251,6 @@ public class RallyGame extends Game {
         }
     }
 
-    // TODO: Denne brukes ikke
-    private void pickUpFlags() {
-        for (Player player : players) {
-            board.pickUpFlags(player);
-        }
-    }
-
     private void sleep(int milliseconds) {
         try {
             Thread.sleep(milliseconds);
@@ -279,7 +280,7 @@ public class RallyGame extends Game {
     public void decreaseLives() {
         ArrayList<Player> removedPlayers = new ArrayList<>();
         for (Player player : players) {
-            if (player.getDamageTokens() >= 10 || board.getBoardLogic().outsideBoard(player)) {
+            if (player.getDamageTokens() >= 10 || board.outsideBoard(player)) {
                 scream.play(RallyGame.volume);
                 player.decrementLifeTokens();
                 player.resetDamageTokens();
@@ -406,6 +407,7 @@ public class RallyGame extends Game {
         for (Player player : players) {
             for (Belt belt : belts) {
                 if (player.getPosition().equals(belt.getPosition())) {
+                    System.out.println("Spiller ble pushet");
                     beltPush(player, belt);
                 }
             }
@@ -486,7 +488,7 @@ public class RallyGame extends Game {
             for (Flag flag : board.getFlags()) {
                 if (player.getPosition().equals(flag.getPosition())) {
                     player.setBackup(flag.getPosition(), player.getDirection());
-                    player.tryToPickUpFlag(player, flag);
+                    player.tryToPickUpFlag(flag);
                     if (repair) {
                         player.decrementDamageTokens();
                     }

@@ -35,7 +35,7 @@ public class GameTest {
         this.game.setupGame("assets/maps/Risky Exchange.tmx");
         Board board = game.getBoard();
         player = new Player(new Vector2(0, 0), 5);
-        board.addPlayer(player);
+        game.addPlayer(player);
         this.belts = board.getBelts();
     }
 

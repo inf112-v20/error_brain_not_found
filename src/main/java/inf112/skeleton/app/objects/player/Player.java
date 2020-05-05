@@ -4,7 +4,6 @@ package inf112.skeleton.app.objects.player;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.board.Board;
-import inf112.skeleton.app.board.BoardLogic;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.cards.Registers;
@@ -239,12 +238,12 @@ public class Player {
     }
 
 
-    public void chooseAlternativeBackupPosition(Board board, Vector2 position, BoardLogic boardLogic) {
+    public void chooseAlternativeBackupPosition(Board board, Vector2 position) {
         ArrayList<Vector2> possiblePositions = board.getNeighbourhood(position);
         Collections.shuffle(possiblePositions);
         for (Vector2 pos : possiblePositions) {
             for (Direction dir : Direction.getDirectionRandomOrder()) {
-                if (boardLogic.validRespawnPosition(pos, dir)) {
+                if (board.validRespawnPosition(pos, dir)) {
                     setAlternativeBackup(pos, dir);
                     return;
                 }
@@ -252,7 +251,7 @@ public class Player {
         }
         setAlternativeBackup(board.getStartPosition(getPlayerNumber()), Direction.EAST);
         if (board.hasPlayer(board.getStartPosition(getPlayerNumber()))) {
-            chooseAlternativeBackupPosition(board, alternativeBackupPosition, boardLogic);
+            chooseAlternativeBackupPosition(board, alternativeBackupPosition);
         }
     }
 
@@ -299,14 +298,14 @@ public class Player {
         flagsCollected.add(flag);
     }
 
-    public void tryToPickUpFlag(Player player, Flag flag) {
-        if (player.shouldPickUpFlag(flag)) {
-            player.pickUpFlag(flag);
+    public void tryToPickUpFlag(Flag flag) {
+        if (shouldPickUpFlag(flag)) {
+            pickUpFlag(flag);
         }
     }
 
     public void fire(RallyGame game) {
-        if (game.getBoard().getBoardLogic().canFire(position, direction)) {
+        if (game.getBoard().canFire(position, direction)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }
@@ -315,7 +314,7 @@ public class Player {
         game.getBoard().addLaser(position, direction);
         if (game.getBoard().hasPlayer(position)) {
             game.getBoard().getPlayer(position).handleDamage();
-        } else if (game.getBoard().getBoardLogic().canFire(position, direction)) {
+        } else if (game.getBoard().canFire(position, direction)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }

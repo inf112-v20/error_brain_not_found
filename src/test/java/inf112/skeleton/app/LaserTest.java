@@ -36,7 +36,7 @@ public class LaserTest {
         this.board = game.getBoard();
         this.lasers = board.getLasers();
         this.player = new Player(new Vector2(0,0), 5);
-        board.addPlayer(player);
+        game.addPlayer(player);
     }
 
     /**
@@ -103,7 +103,7 @@ public class LaserTest {
 
         Player firePlayer = new Player(neighbourPosition, 6);
         firePlayer.setDirection(Direction.WEST);
-        board.addPlayer(firePlayer);
+        game.addPlayer(firePlayer);
         int damageBefore = player.getDamageTokens();
         game.firePlayerLaser();
         System.out.println(firePlayer.getPosition());

@@ -40,7 +40,7 @@ public class RotatePadTest {
         // Already 4 players on board.
         //TODO: Let setupGame take in playerNumber as arg
         player = new Player(new Vector2(0,0), 5);
-        board.addPlayer(player);
+        game.addPlayer(player);
     }
 
     /**
