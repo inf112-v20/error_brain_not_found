@@ -3,6 +3,7 @@ package inf112.skeleton.app.lan;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.cards.Register;
+import inf112.skeleton.app.cards.Registers;
 import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.objects.player.Player;
 
@@ -43,7 +44,7 @@ public class GameServerThreads extends Thread {
 
     /**
      * Receive messages from client. If none of the messages match, then it is a {@link ProgramCard}.
-     * The player who sent this Programcard will have it added to its {@link inf112.skeleton.app.cards.Registers}.
+     * The player who sent this Programcard will have it added to its {@link Registers}.
      *
      * When all clients have sent their cards, the {@link GameServer} will be notified, and it will wait until
      * the host confirm its cards before sending cards to the clients and start the turn. If a client is the last
@@ -65,9 +66,9 @@ public class GameServerThreads extends Thread {
                     game.quitPlaying();
                     return;
                 }
-                if (Character.isDigit(message.charAt(0))) {
-                    int playerNumber = Character.getNumericValue(message.charAt(0));
-                    String messageFromPlayer = message.substring(1);
+                if (converter.isMessageFromAnotherPlayer(message)) {
+                    int playerNumber = converter.getPlayerNumberFromMessage(message);
+                    String messageFromPlayer = converter.getMessageFromPlayer(message);
                     Player player = game.getBoard().getPlayer(playerNumber);
                     if (messageFromPlayer.equals(Messages.POWERING_DOWN.toString())) {
                         player.setPoweringDown(true);
@@ -118,7 +119,7 @@ public class GameServerThreads extends Thread {
                         }
                     }
                     else {
-                        PlayerAndProgramCard playerAndCard = converter.convertToCardAndExtractPlayer(message);
+                        PlayerAndProgramCard playerAndCard = converter.getSentCardFromPlayer(message);
                         ProgramCard card = playerAndCard.getProgramCard();
                         addSelectedCard(player, card);
                         if (allPlayersHaveSelectedCardsOrInPowerDown() && server.serverHasConfirmed()) {
@@ -150,15 +151,7 @@ public class GameServerThreads extends Thread {
         server.remove(playerNumber);
     }
 
-    /**
-     * Playernumber is always first in the message.
-     *
-     * @param message
-     * @return the playerNumber for the player sending this message
-     */
-    private int getPlayerNumberFromMessage(String message) {
-        return Character.getNumericValue(message.charAt(0));
-    }
+
 
     /**
      *
@@ -279,20 +272,6 @@ public class GameServerThreads extends Thread {
         return sentMessage;
     }
 
-    /**
-     *
-     * @return True if all powered down robots have told if they want to power up or down. If
-     * a robot powers up it is removed from the list.
-     */
-    public boolean allPoweredDownRobotsHaveConfirmed() {
-        for (Player player : game.getPoweredDownRobots()) {
-            if (!player.hasConfirmedPowerUp()) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public boolean allPoweredDownClientsHaveConfirmed() {
         for (Player player : game.getPoweredDownRobots()) {
             if (player.getPlayerNr() != 1 && !player.hasConfirmedPowerUp()) {
@@ -306,7 +285,7 @@ public class GameServerThreads extends Thread {
      * @return Player from message
      */
     public Player getPlayerFromMessage(String message) {
-        int playerNumber = getPlayerNumberFromMessage(message);
+        int playerNumber = converter.getPlayerNumberFromMessage(message);
         return game.getBoard().getPlayer(playerNumber);
     }
 }

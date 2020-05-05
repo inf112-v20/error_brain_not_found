@@ -109,10 +109,10 @@ public class GameClientThread extends Thread {
                 receivingMap = false;
                 System.out.println("Got map");
             }
-            else if (Character.isDigit(message.charAt(0))) {
-                int playerNumber = Character.getNumericValue(message.charAt(0));
+            else if (converter.isMessageFromAnotherPlayer(message)) {
+                int playerNumber = converter.getPlayerNumberFromMessage(message);
                 Player player = game.getBoard().getPlayer(playerNumber);
-                String messageFromPlayer = message.substring(1);
+                String messageFromPlayer = converter.getMessageFromPlayer(message);
                 if (messageFromPlayer.equals(Messages.POWERING_DOWN.toString())) {
                     player.setPoweringDown(true);
                 }
@@ -122,7 +122,7 @@ public class GameClientThread extends Thread {
                 }
                 else {
                     try {
-                        PlayerAndProgramCard playerAndCard = converter.convertToCardAndExtractPlayer(message);
+                        PlayerAndProgramCard playerAndCard = converter.getSentCardFromPlayer(message);
                         ProgramCard card = playerAndCard.getProgramCard();
                         // Your player have already selected cards
                         if (myPlayerNumber != playerNumber) {
@@ -265,13 +265,5 @@ public class GameClientThread extends Thread {
      */
     public String getMap() {
         return mapPath;
-    }
-
-    /**
-     * @return Player from message
-     */
-    public Player getPlayerFromMessage(String message) {
-        int playerNumber = getPlayerNumberFromMessage(message);
-        return game.getBoard().getPlayer(playerNumber);
     }
 }

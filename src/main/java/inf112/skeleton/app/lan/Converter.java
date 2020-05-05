@@ -1,7 +1,9 @@
 package inf112.skeleton.app.lan;
 
 import inf112.skeleton.app.cards.ProgramCard;
+import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.enums.Rotate;
+import inf112.skeleton.app.objects.player.Player;
 
 import java.util.ArrayList;
 
@@ -84,7 +86,7 @@ public class Converter {
      * @return PlayerAndProgramCard a tuple with playerNumber and card
      * @throws NotProgramCardException
      */
-    public PlayerAndProgramCard convertToCardAndExtractPlayer(String string) throws NotProgramCardException {
+    public PlayerAndProgramCard getSentCardFromPlayer(String string) throws NotProgramCardException {
         try {
             int playerNumber = Character.getNumericValue(string.charAt(0));
             String card = string.substring(2);
@@ -150,7 +152,7 @@ public class Converter {
 
 
     /**
-     * Get the rotation sent by client
+     * Get the rotation
      * @param message
      * @return rotation
      */
@@ -168,6 +170,52 @@ public class Converter {
             return Rotate.NONE;
         }
         return null;
+    }
+
+    /**
+     *
+     * @param message
+     * @return true if message is attached to a player
+     */
+    public boolean isMessageFromAnotherPlayer(String message) {
+        return Character.isDigit(message.charAt(0));
+    }
+
+    /**
+     * Playernumber is always first in the message. Get the playernumber from this
+     * message. {@link #isMessageFromAnotherPlayer(String)} needs to be true.
+     *
+     * @param message
+     * @return the playerNumber for the player sending this message. Return -1 if the message is not attached to a
+     * player.
+     */
+    public int getPlayerNumberFromMessage(String message) {
+        if (isMessageFromAnotherPlayer(message)) {
+            return Character.getNumericValue(message.charAt(0));
+        }
+        return -1;
+    }
+
+    /**
+     *
+     * @param message
+     * @return the message that a player sent you. {@link #isMessageFromAnotherPlayer(String)} needs to be true.
+     */
+    public String getMessageFromPlayer(String message) {
+        if (isMessageFromAnotherPlayer(message)) {
+            return message.substring(2);
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param playerNumber
+     * @param message
+     * @return message with player attached
+     */
+    public String createMessageFromPlayer(int playerNumber, Messages message) {
+        return playerNumber + " " + message.toString();
     }
 
 

@@ -116,7 +116,7 @@ public class ClientTest {
         client.getStartValues();
         String programCardAndPlayer = client.getMessage();
         try {
-            PlayerAndProgramCard playerAndCard = converter.convertToCardAndExtractPlayer(programCardAndPlayer);
+            PlayerAndProgramCard playerAndCard = converter.getSentCardFromPlayer(programCardAndPlayer);
             assertEquals(1, playerAndCard.getPlayerNumber());
         } catch (NotProgramCardException e) {
             e.printStackTrace();
@@ -167,14 +167,13 @@ public class ClientTest {
         try {
             when(reader.readLine())
                     .thenReturn("3", "4")
-                    .thenReturn("1"+Messages.POWERING_DOWN.toString())
+                    .thenReturn(converter.createMessageFromPlayer(1, Messages.POWERING_DOWN))
                     .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
         client.start();
         waitForThread(client);
-        // TODO: Endret til .isPoweringDown()
         assertTrue(player1.isPoweringDown());
     }
 
@@ -183,7 +182,7 @@ public class ClientTest {
         try {
             when(reader.readLine())
                     .thenReturn("3", "4")
-                    .thenReturn("1"+Messages.POWER_UP.toString())
+                    .thenReturn(converter.createMessageFromPlayer(1, Messages.POWER_UP))
                     .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
@@ -198,7 +197,7 @@ public class ClientTest {
         try {
             when(reader.readLine())
                     .thenReturn("3", "4")
-                    .thenReturn("1"+Messages.POWERING_DOWN.toString())
+                    .thenReturn(converter.createMessageFromPlayer(1, Messages.POWERING_DOWN))
                     .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
@@ -213,7 +212,7 @@ public class ClientTest {
         try {
             when(reader.readLine())
                     .thenReturn("3", "4")
-                    .thenReturn("1"+Messages.POWER_UP.toString())
+                    .thenReturn(converter.createMessageFromPlayer(1, Messages.POWER_UP))
                     .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();

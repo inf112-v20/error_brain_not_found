@@ -828,9 +828,9 @@ public class RallyGame extends Game {
      */
     public void sendPowerUpMessage() {
         if (isServer) {
-            serverThread.getServer().sendToAll(mainPlayer.getPlayerNr() + Messages.POWER_UP.toString());
+            serverThread.getServer().sendToAll(converter.createMessageFromPlayer(mainPlayer.getPlayerNr(), Messages.POWER_UP));
         } else {
-            client.sendMessage(mainPlayer.getPlayerNr() + Messages.POWER_UP.toString());
+            client.sendMessage(converter.createMessageFromPlayer(mainPlayer.getPlayerNr(), Messages.POWER_UP));
         }
     }
 
@@ -839,9 +839,9 @@ public class RallyGame extends Game {
      */
     public void sendPoweringDownMessage() {
         if (isServer) {
-            serverThread.getServer().sendToAll(mainPlayer.getPlayerNr()+Messages.POWERING_DOWN.toString());
+            serverThread.getServer().sendToAll(converter.createMessageFromPlayer(mainPlayer.getPlayerNr(), Messages.POWERING_DOWN));
         } else {
-            client.sendMessage(mainPlayer.getPlayerNr()+Messages.POWERING_DOWN.toString());
+            client.sendMessage(converter.createMessageFromPlayer(mainPlayer.getPlayerNr(), Messages.POWERING_DOWN));
         }
     }
 
@@ -861,7 +861,7 @@ public class RallyGame extends Game {
         if (isServer) {
             serverThread.getServer().setServerHasConfirmed(true);
         } else {
-            client.sendMessage(mainPlayer.getPlayerNr() + Messages.CONTINUE_POWER_DOWN.toString());
+            client.sendMessage(converter.createMessageFromPlayer(mainPlayer.getPlayerNr(), Messages.CONTINUE_POWER_DOWN));
         }
     }
 

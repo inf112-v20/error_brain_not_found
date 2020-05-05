@@ -36,11 +36,12 @@ public class ServerTest {
 
     private GameServerThreads server;
     private Player player2;
-    private String cardString;
+    private String cardStringFromPlayer2;
     private Player player1;
     private ProgramCard card;
     private ArrayList<Player> threePlayers;
     private ArrayList<Player> players;
+    private Converter converter;
 
     @Mock
     private Socket socket;
@@ -77,7 +78,7 @@ public class ServerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        Converter converter = new Converter();
+        this.converter = new Converter();
         this.server = new GameServerThreads(gameServer, game, socket, 2);
         this.player1 = new Player(new Vector2(0, 0), 1);
         this.player2 = new Player(new Vector2(0, 1), 2);
@@ -85,7 +86,7 @@ public class ServerTest {
         this.players = new ArrayList<>(Arrays.asList(player1, player2));
         this.threePlayers = new ArrayList<>(Arrays.asList(player1, player2, player3));
         this.card = new ProgramCard(10, 2, Rotate.NONE, "Move 2");
-        this.cardString = converter.convertToString(2, card);
+        this.cardStringFromPlayer2 = converter.convertToString(2, card);
 
         when(game.getBoard()).thenReturn(board);
         when(board.getPlayers()).thenReturn(players);
@@ -113,7 +114,7 @@ public class ServerTest {
     public void sentCardByPlayer2GoesToPlayer2RegisterTest() {
         // Send card from player 2
         try {
-            when(reader.readLine()).thenReturn(cardString).thenReturn(Messages.STOP_THREAD.toString());
+            when(reader.readLine()).thenReturn(cardStringFromPlayer2).thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -126,7 +127,7 @@ public class ServerTest {
     public void allClientsHaveSentCardsTest() {
         // Send 5 cards from player 2
         try {
-            when(reader.readLine()).thenReturn(cardString, cardString, cardString, cardString, cardString).thenReturn(Messages.STOP_THREAD.toString());
+            when(reader.readLine()).thenReturn(cardStringFromPlayer2, cardStringFromPlayer2, cardStringFromPlayer2, cardStringFromPlayer2, cardStringFromPlayer2).thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -138,7 +139,9 @@ public class ServerTest {
     @Test
     public void player2SendPowerDownMessageTest() {
         try {
-            when(reader.readLine()).thenReturn("2"+Messages.POWERING_DOWN.toString()).thenReturn(Messages.STOP_THREAD.toString());
+            when(reader.readLine())
+                    .thenReturn(converter.createMessageFromPlayer(2, Messages.POWERING_DOWN))
+                    .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -149,15 +152,18 @@ public class ServerTest {
 
     @Test
     public void letPlayer3KnowPlayer2IsPoweringDownTest() {
+        String poweringDownMessage = converter.createMessageFromPlayer(2, Messages.POWERING_DOWN);
         when(board.getPlayers()).thenReturn(threePlayers);
         try {
-            when(reader.readLine()).thenReturn("2"+Messages.POWERING_DOWN.toString()).thenReturn(Messages.STOP_THREAD.toString());
+            when(reader.readLine())
+                    .thenReturn(poweringDownMessage)
+                    .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
         server.start();
         waitForThread(server);
-        verify(gameServer).sendToAllExcept(player2, "2"+Messages.POWERING_DOWN.toString());
+        verify(gameServer).sendToAllExcept(player2, poweringDownMessage);
     }
 
     @Test
@@ -165,7 +171,9 @@ public class ServerTest {
         player1.setPoweredDown(true);
         player2.setPoweredDown(true);
         try {
-            when(reader.readLine()).thenReturn("2"+Messages.POWERING_DOWN.toString()).thenReturn(Messages.STOP_THREAD.toString());
+            when(reader.readLine())
+                    .thenReturn(converter.createMessageFromPlayer(2, Messages.CONFIRM))
+                    .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -180,7 +188,8 @@ public class ServerTest {
         // Send 5 cards from player 2
         try {
             when(gameServer.serverHasConfirmed()).thenReturn(true);
-            when(reader.readLine()).thenReturn(cardString, cardString, cardString, cardString, cardString).thenReturn(Messages.STOP_THREAD.toString());
+            when(reader.readLine()).thenReturn(cardStringFromPlayer2, cardStringFromPlayer2, cardStringFromPlayer2, cardStringFromPlayer2, cardStringFromPlayer2)
+                    .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -204,7 +213,8 @@ public class ServerTest {
         player1.setPoweredDown(true);
         try {
             when(gameServer.serverHasConfirmed()).thenReturn(true);
-            when(reader.readLine()).thenReturn(cardString, cardString, cardString, cardString, cardString).thenReturn(Messages.STOP_THREAD.toString());
+            when(reader.readLine()).thenReturn(cardStringFromPlayer2, cardStringFromPlayer2, cardStringFromPlayer2, cardStringFromPlayer2, cardStringFromPlayer2)
+                    .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -219,7 +229,9 @@ public class ServerTest {
     public void player2SendsPowerUpMessageTest() {
         player2.setPoweredDown(true);
         try {
-            when(reader.readLine()).thenReturn("2"+Messages.POWER_UP.toString()).thenReturn(Messages.STOP_THREAD.toString());
+            when(reader.readLine())
+                    .thenReturn(converter.createMessageFromPlayer(2, Messages.POWER_UP))
+                    .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -231,7 +243,9 @@ public class ServerTest {
     @Test
     public void player2SendsPowerUpMessageIsRemovedFromPoweredDownPlayersTest() {
         try {
-            when(reader.readLine()).thenReturn("2"+Messages.POWER_UP.toString()).thenReturn(Messages.STOP_THREAD.toString());
+            when(reader.readLine())
+                    .thenReturn(converter.createMessageFromPlayer(2, Messages.POWER_UP))
+                    .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -242,14 +256,15 @@ public class ServerTest {
 
     @Test
     public void serverBroadcastsReceivedPowerUpMessageTest() {
+        String powerUpMessage = converter.createMessageFromPlayer(2, Messages.POWER_UP);
         try {
-            when(reader.readLine()).thenReturn("2"+Messages.POWER_UP.toString()).thenReturn(Messages.STOP_THREAD.toString());
+            when(reader.readLine()).thenReturn(powerUpMessage).thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
         server.start();
         waitForThread(server);
-        verify(gameServer).sendToAllExcept(player2, "2"+Messages.POWER_UP.toString());
+        verify(gameServer).sendToAllExcept(player2, powerUpMessage);
     }
 
 
