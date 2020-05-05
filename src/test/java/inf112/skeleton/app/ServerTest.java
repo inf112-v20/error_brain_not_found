@@ -167,19 +167,22 @@ public class ServerTest {
     }
 
     @Test
-    public void doNotWaitForPoweredDownPlayersToSendCardTest() {
+    public void doNotWaitForPoweredDownPlayersToStartTurnTest() {
         player1.setPoweredDown(true);
         player2.setPoweredDown(true);
+        when(gameServer.serverHasConfirmed()).thenReturn(true);
         try {
             when(reader.readLine())
-                    .thenReturn(converter.createMessageFromPlayer(2, Messages.CONFIRM))
+                    .thenReturn(Messages.CONFIRM.toString())
                     .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
+        // Do not wait for do turn to finish
+        server.continueListening();
         server.start();
         waitForThread(server);
-        assertTrue(server.allClientsHaveSelectedCardsOrInPowerDown());
+        verify(game).startTurn();
     }
 
     @Test

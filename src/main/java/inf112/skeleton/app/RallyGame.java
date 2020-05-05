@@ -882,7 +882,7 @@ public class RallyGame extends Game {
             }
         } else {
             System.out.println("Client sendte confirm melding");
-            client.sendMessage(mainPlayer.getPlayerNr() + Messages.CONFIRM.toString());
+            client.sendMessage(Messages.CONFIRM.toString());
         }
     }
 
