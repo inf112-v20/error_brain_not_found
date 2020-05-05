@@ -142,6 +142,7 @@ public class ServerTest {
         }
         server.start();
         waitForThread(server);
+        // TODO: POWERING_DOWN setter den ikke til "Power down", bare "Powering down"
         assertTrue(player2.isPoweredDown());
     }
 
@@ -165,6 +166,7 @@ public class ServerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        // TODO: POWERING_DOWN setter den ikke til "Power down", bare "Powering down"
         server.start();
         waitForThread(server);
         assertTrue(server.allClientsHaveSelectedCardsOrInPowerDown());
@@ -261,6 +263,7 @@ public class ServerTest {
         }
         server.start();
         waitForThread(server);
+        // TODO: CONTINUE_POWER_DOWN sender ikke til alle, bare til server, clientene trenger bare å få POWER_UP
         verify(gameServer).sendToAllExcept(player2, "2"+Messages.CONTINUE_POWER_DOWN.toString());
     }
 

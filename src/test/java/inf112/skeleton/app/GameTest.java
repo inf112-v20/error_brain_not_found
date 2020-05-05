@@ -278,6 +278,7 @@ public class GameTest {
     @Test
     public void poweringUpPlayersHaveNotPressedPowerDownButtonTest() {
         game.addPoweredDownPlayer(mainPlayer);
+        // TODO: Denne funksjonen finnes ikke lenger
         //game.powerUpPoweredDownPlayers();
         verify(mainPlayer).setPowerDownNextRound(false);
     }
