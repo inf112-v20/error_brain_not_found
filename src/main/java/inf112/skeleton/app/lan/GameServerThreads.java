@@ -80,7 +80,7 @@ public class GameServerThreads extends Thread {
                                 server.setAllPoweredDownClientsHaveConfirmed(false);
                                 server.setServerHasConfirmed(false);
                                 server.sendToAll(Messages.CONTINUE_TURN.toString());
-                                releaseDoTurn();
+                                game.continueTurn();
                                 waitForTurnToFinish();
                             } else {
                                 server.setAllPoweredDownClientsHaveConfirmed(true);
@@ -97,7 +97,7 @@ public class GameServerThreads extends Thread {
                                 server.setAllPoweredDownClientsHaveConfirmed(false);
                                 server.setServerHasConfirmed(false);
                                 server.sendToAll(Messages.CONTINUE_TURN.toString());
-                                releaseDoTurn();
+                                game.continueTurn();
                                 waitForTurnToFinish();
                             } else {
                                 server.setAllPoweredDownClientsHaveConfirmed(true);
@@ -200,13 +200,6 @@ public class GameServerThreads extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Tell game that cards are ready, doTurn can begin.
-     */
-    public void releaseDoTurn() {
-        game.continueGameLoop();
     }
 
     /**

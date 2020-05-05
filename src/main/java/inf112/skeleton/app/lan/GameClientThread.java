@@ -74,7 +74,7 @@ public class GameClientThread extends Thread {
                 return;
             }
             if (message.equals(Messages.CONTINUE_TURN.toString())) {
-                releaseDoTurn();
+                game.continueTurn();
                 waitForTurnToFinish();
             }
             else if (message.equals(Messages.START_TURN.toString())) {
@@ -175,13 +175,6 @@ public class GameClientThread extends Thread {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Tell game that cards are ready, doTurn can begin.
-     */
-    private void releaseDoTurn() {
-        game.continueGameLoop();
     }
 
     /**

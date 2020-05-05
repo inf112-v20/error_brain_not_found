@@ -223,4 +223,21 @@ public class ClientTest {
         verify(game).removePoweredDownPlayer(player1);
     }
 
+    @Test
+    public void continueTurnWhenServerSendsContinueMessage() {
+        try {
+            when(reader.readLine())
+                    .thenReturn("3", "4")
+                    .thenReturn(Messages.CONTINUE_TURN.toString())
+                    .thenReturn(Messages.STOP_THREAD.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Do not wait for doTurn to finish
+        client.continueListening();
+        client.start();
+        waitForThread(client);
+        verify(game).continueTurn();
+    }
+
 }

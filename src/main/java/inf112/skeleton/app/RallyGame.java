@@ -229,7 +229,7 @@ public class RallyGame extends Game {
                     server.setServerHasConfirmed(false);
                     System.out.println("All clients confirmed powered up");
                     server.sendToAll(Messages.CONTINUE_TURN.toString());
-                    continueGameLoop();
+                    continueTurn();
                 }
             }
         }
@@ -269,10 +269,6 @@ public class RallyGame extends Game {
         gameMusic.setVolume(0.5f);
         gameMusic.setLooping(true);
         gameMusic.play();
-    }
-
-    public void continueGameLoop() {
-        waitForPowerUp.release();
     }
 
     /**
@@ -402,6 +398,10 @@ public class RallyGame extends Game {
 
     public void startTurn() {
         waitForCards.release();
+    }
+
+    public void continueTurn() {
+        waitForPowerUp.release();
     }
 
     /**
