@@ -73,7 +73,7 @@ public class SettingsScreen extends StandardScreen {
         backButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new MenuScreen(game));
+                game.returnToLastScreen();
             }
 
             @Override

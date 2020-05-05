@@ -109,23 +109,28 @@ public class RallyGame extends Game {
         }
     }
 
-    public void returnToLastScreen(){
-        if (screen instanceof SettingsScreen){
+    public void returnToLastScreen() {
+
+        if (this.screen instanceof SettingsScreen) {
+
             if (lastScreen instanceof GameScreen) {
                 setScreen(new GameScreen(this));
             } else if (lastScreen instanceof MenuScreen) {
                 setScreen(new MenuScreen(this));
             }
-        } else{
+        } else {
             setScreen(new SettingsScreen(this));
         }
     }
+
     @Override
     public void setScreen(Screen screen) {
         if (this.screen != null) {
             this.screen.dispose();
         }
-        this.lastScreen = screen;
+        if (!(screen instanceof SettingsScreen)) {
+            this.lastScreen = screen;
+        }
         super.setScreen(screen);
     }
 
