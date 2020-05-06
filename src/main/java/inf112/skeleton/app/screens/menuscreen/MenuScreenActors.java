@@ -49,6 +49,8 @@ public class MenuScreenActors {
     private Semaphore waitForServerToSendStartValues = new Semaphore(1);
     private Semaphore waitForServerToSendMapPath = new Semaphore(1);
     private Thread waitForGameSetupThread;
+    private Semaphore waitForAllClientsToConnect = new Semaphore(1);
+    private Thread waitForAllClients;
 
     public MenuScreenActors(RallyGame game, Stage stage) {
         this.game = game;
@@ -71,6 +73,7 @@ public class MenuScreenActors {
         try {
             waitForServerToSendStartValues.tryAcquire();
             waitForServerToSendMapPath.tryAcquire();
+            waitForAllClientsToConnect.tryAcquire();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -88,8 +91,7 @@ public class MenuScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (isValidInputPortAndNumberOfPlayers(portInput.getText(), numOfPlayers.getText())) {
-                    game.setupGame("assets/maps/" + selectMap.getSelected() + ".tmx");
-                    game.setScreen(new GameScreen(game));
+                    waitForAllClientsToConnectBeforeStartingGame();
                 }
             }
 
@@ -443,5 +445,35 @@ public class MenuScreenActors {
             });
         });
         waitForGameSetupThread.start();
+    }
+
+    /**
+     * Create own thread to wait for {@link #waitForAllClientsToConnect()} so all clients have connected
+     * before starting game screen.
+     */
+    public void waitForAllClientsToConnectBeforeStartingGame() {
+        waitForAllClients = new Thread(() -> {
+            waitForAllClientsToConnect();
+            Gdx.app.postRunnable(() -> {
+                game.setupGame("assets/maps/" + selectMap.getSelected() + ".tmx");
+                game.setScreen(new GameScreen(game));
+            });
+        });
+        waitForAllClients.start();
+    }
+
+    public void waitForAllClientsToConnect() {
+        try {
+            waitForAllClientsToConnect.acquire();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Release {@link #waitForAllClientsToConnect()} so that tha game can begin.
+     */
+    public void allClientsHaveConnected() {
+        waitForAllClientsToConnect.release();
     }
 }

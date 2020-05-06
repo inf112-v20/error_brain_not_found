@@ -89,6 +89,7 @@ public class GameServer {
                 clients.add(client);
                 connected++;
             }
+            game.getMenuScreenActors().allClientsHaveConnected();
             System.out.println("Connected! :D");
             serverSocket.close();
 
