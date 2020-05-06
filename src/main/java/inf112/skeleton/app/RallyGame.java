@@ -921,17 +921,13 @@ public class RallyGame extends Game {
     public void sendConfirmMessage () {
         if (isServer) {
             serverThread.getServer().setServerHasConfirmed(true);
-            System.out.println("Server sendte confirm melding");
-            System.out.println("Har de andre valgt kort? " + serverThread.getServer().allClientsHaveSelectedCardsOrIsPoweredDown());
             if (serverThread.getServer().allClientsHaveSelectedCardsOrIsPoweredDown()) {
-                System.out.println("Server sa at alle skulle starte");
                 serverThread.getServer().setServerHasConfirmed(false);
                 serverThread.getServer().setAllClientsHaveSelectedCardsOrIsPoweredDown(false);
                 serverThread.getServer().sendToAll(Messages.START_TURN.toString());
                 startTurn();
             }
         } else {
-            System.out.println("Client sendte confirm melding");
             client.sendMessage(Messages.CONFIRM.toString());
         }
     }
