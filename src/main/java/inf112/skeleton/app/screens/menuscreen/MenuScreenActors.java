@@ -41,7 +41,6 @@ public class MenuScreenActors {
     private ImageButton createGameButton;
     private ImageButton joinGameButton;
     private TextField IPInput;
-    private TextField portInput;
     private TextField numOfPlayers;
     private Label waitForHost;
     private Label IPLabel;
@@ -98,7 +97,8 @@ public class MenuScreenActors {
                     // Allow client to set up game right away
                     game.setMapPath("assets/maps/" + selectMap.getSelected() + ".tmx");
                     waitForClients.setVisible(true);
-                    waitForAllClientsToConnectBeforeStartingGame();
+                    startButton.setVisible(false);
+                    selectMap.setVisible(false);
                 }
             }
 
@@ -180,11 +180,12 @@ public class MenuScreenActors {
                 } else {
                     if (isValidNumberOfPlayers(numOfPlayers.getText())) {
                         toggleVisibilityCreateSecondClick();
+                        waitForAllClientsToConnectBeforeStartingGame();
                         game.setIsServerToTrue();
                         // Defaul port is 9000
                         game.setUpHost(9000, Integer.parseInt(numOfPlayers.getText()));
                     }  else {
-                        updateInvalidInputLabel();
+                        updateInvalidInputLabel(numOfPlayers);
                     }
                 }
             }
@@ -237,10 +238,10 @@ public class MenuScreenActors {
                             toggleVisibilityJoinSecondClick();
                             waitForGameSetUpAndStartGame();
                         } else {
-                            invalidInputLabel.setText("Could not connect to " + IPInput.getText() + " on port " + portInput.getText());
+                            updateInvalidInputLabel(null);
                         }
                     } else {
-                        updateInvalidInputLabel();
+                        updateInvalidInputLabel(IPInput);
                     }
                 }
             }
@@ -280,27 +281,17 @@ public class MenuScreenActors {
         IPInput = new TextField("", game.getDefaultSkin());
         IPInput.setMessageText("IP address");
         IPInput.setWidth(BUTTON_WIDTH * .87f);
-        IPInput.setPosition(screenWidth / 2f + BUTTON_WIDTH * .13f, TEXT_INPUT_Y);
+        IPInput.setPosition(screenWidth / 2f - (BUTTON_WIDTH * .87f ) / 2f, TEXT_INPUT_Y);
         IPInput.setVisible(false);
         IPInput.setTextFieldFilter(new IPInputFilter());
         stage.addActor(IPInput);
-    }
-
-    public void initializePortInput() {
-        portInput = new TextField("", game.getDefaultSkin());
-        portInput.setMessageText("Port number");
-        portInput.setWidth(BUTTON_WIDTH * .87f);
-        portInput.setPosition(screenWidth / 2f - BUTTON_WIDTH, TEXT_INPUT_Y);
-        portInput.setVisible(false);
-        portInput.setTextFieldFilter(new PortInputFilter());
-        stage.addActor(portInput);
     }
 
     public void initializeNumOfPlayersInput() {
         numOfPlayers = new TextField("", game.getDefaultSkin());
         numOfPlayers.setMessageText("Number of players");
         numOfPlayers.setWidth(BUTTON_WIDTH * .87f);
-        numOfPlayers.setPosition(screenWidth / 2f + BUTTON_WIDTH * .13f, TEXT_INPUT_Y);
+        numOfPlayers.setPosition(screenWidth / 2f - (BUTTON_WIDTH * .87f ) / 2f, TEXT_INPUT_Y);
         numOfPlayers.setVisible(false);
         numOfPlayers.setTextFieldFilter(new NumOfPlayersInputFilter());
         stage.addActor(numOfPlayers);
@@ -329,13 +320,11 @@ public class MenuScreenActors {
     public void toggleVisibilityCreateFirstClick() {
         joinGameButton.setVisible(false);
         createGameButton.setPosition(CENTERED_BUTTON_X, TOP_BUTTON_Y);
-        portInput.setVisible(true);
         numOfPlayers.setVisible(true);
     }
 
     public void toggleVisibilityCreateSecondClick() {
         createGameButton.setVisible(false);
-        portInput.setVisible(false);
         numOfPlayers.setVisible(false);
         selectMap.setVisible(true);
         startButton.setVisible(true);
@@ -346,13 +335,11 @@ public class MenuScreenActors {
     public void toggleVisibilityJoinFirstClick() {
         createGameButton.setVisible(false);
         joinGameButton.setPosition(CENTERED_BUTTON_X, TOP_BUTTON_Y);
-        portInput.setVisible(true);
         IPInput.setVisible(true);
     }
 
     public void toggleVisibilityJoinSecondClick() {
         joinGameButton.setVisible(false);
-        portInput.setVisible(false);
         IPInput.setVisible(false);
         waitForHost.setVisible(true);
         invalidInputLabel.setVisible(false);
@@ -382,15 +369,15 @@ public class MenuScreenActors {
         stage.addActor(invalidInputLabel);
     }
 
-    public void updateInvalidInputLabel() {
-        if (portInput.getText().equals("") || !portInValidRange(Integer.parseInt(portInput.getText()))) {
-            invalidInputLabel.setText("Invalid port number, should be between 1024 and 49151");
-            portInput.setText("");
-        } else if (numOfPlayers.getText().equals("") || !isNumber(numOfPlayers.getText()) || !numberOfPlayersInValidRange(Integer.parseInt(numOfPlayers.getText()))) {
+    public void updateInvalidInputLabel(TextField textField) {
+        if (textField == numOfPlayers) {
             invalidInputLabel.setText("Number of players should be between 2 and 8");
             numOfPlayers.setText("");
-        } else {
+        } else if (textField == IPInput) {
             invalidInputLabel.setText("Invalid IP number");
+            IPInput.setText("");
+        } else {
+            invalidInputLabel.setText("Could not connect to " + IPInput.getText() + " on port 9000");
             IPInput.setText("");
         }
     }
