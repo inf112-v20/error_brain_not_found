@@ -176,7 +176,8 @@ public class MenuScreenActors {
                     if (isValidInputPortAndNumberOfPlayers(portInput.getText(), numOfPlayers.getText())) {
                         toggleVisibilityCreateSecondClick();
                         game.setIsServerToTrue();
-                        game.setUpHost(Integer.parseInt(portInput.getText()), Integer.parseInt(numOfPlayers.getText()));
+                        // Defaul port is 9000
+                        game.setUpHost(9000, Integer.parseInt(numOfPlayers.getText()));
                     }  else {
                         updateInvalidInputLabel();
                     }
@@ -418,12 +419,12 @@ public class MenuScreenActors {
 
     /**
      *
-     * Setting up new client.
+     * Setting up new client on default port 9000
      *
      * @return true if a client has been made
      */
     public boolean setUpClient() {
-        game.setUpClient(IPInput.getText(), Integer.parseInt(portInput.getText()));
+        game.setUpClient(IPInput.getText(), 9000);
         if (game.getClient() == null) {
             return false;
         }
