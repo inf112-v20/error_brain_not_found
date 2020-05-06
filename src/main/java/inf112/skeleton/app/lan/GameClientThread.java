@@ -4,6 +4,7 @@ import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.objects.player.Player;
+import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
 
 import java.io.*;
 import java.net.Socket;
@@ -55,7 +56,6 @@ public class GameClientThread extends Thread {
 
         while (true) {
             String message = getMessage();
-            System.out.println(message);
             if (message == null) {
                 break;
             }
@@ -63,14 +63,7 @@ public class GameClientThread extends Thread {
                 return;
             }
             if (message.equals(Messages.HOST_LEAVES.toString())) {
-                System.out.println("Host left game.");
-                finishTurnAndCloseSocket();
-                return;
-            }
-            if (message.contains(Messages.QUIT.toString())) {
-                int playerNumber = getPlayerNumberFromMessage(message);
-                System.out.println("Player " + playerNumber + " left game.");
-                finishTurnAndCloseSocket();
+                printMessageFinishTurnAndCloseSocket();
                 return;
             }
             if (message.equals(Messages.CONTINUE_TURN.toString())) {
@@ -85,34 +78,25 @@ public class GameClientThread extends Thread {
                 receivingMap = true;
             }
             else if (message.equals(Messages.DECK_BEGIN.toString())) {
-                this.stack = new Stack<>();
-                this.receivingDeck = true;
+                createNewDeckAndWaitForCardsForThisDeck();
             }
             else if (message.equals(Messages.DECK_END.toString())){
-                this.receivingDeck = false;
-                game.setDeck(this.stack);
-                System.out.println("Received deck.");
-                game.setWaitForServerToSendStartValuesToRelease();
+                giveDeckToGameAndTellStartValuesAreReceived();
             }
             else if (receivingDeck) {
-                try {
-                    ProgramCard card = converter.convertToCard(message);
-                    this.stack.add(card);
-                } catch (NotProgramCardException e) {
-                    e.printStackTrace();
-                }
+                addReceivedCardToDeck(message);
             }
             else if (receivingMap) {
-                this.mapPath = message;
-                game.setMapPath(mapPath);
-                game.setWaitForServerToSendMapPathToRelease();
-                receivingMap = false;
-                System.out.println("Got map");
+                giveMapToGameAndTellMapIsReceived(message);
             }
             else if (converter.isMessageFromAnotherPlayer(message)) {
                 int playerNumber = converter.getPlayerNumberFromMessage(message);
                 Player player = game.getBoard().getPlayer(playerNumber);
                 String messageFromPlayer = converter.getMessageFromPlayer(message);
+                if (messageFromPlayer.contains(Messages.QUIT.toString())) {
+                    printMessageFinishTurnAndCloseSocket(playerNumber);
+                    return;
+                }
                 if (messageFromPlayer.equals(Messages.POWERING_DOWN.toString())) {
                     player.setPoweringDown(true);
                 }
@@ -137,24 +121,63 @@ public class GameClientThread extends Thread {
 
     }
 
+    private void createNewDeckAndWaitForCardsForThisDeck() {
+        this.stack = new Stack<>();
+        this.receivingDeck = true;
+    }
+
     /**
-     * Finishes the ongoing round and then stops the turn. Closes socket.
+     * When startValues have been received call on {@link MenuScreenActors#haveReceivedStartValues()}
+     * so that we can receive the mapPath.
      */
-    public void finishTurnAndCloseSocket() {
+    public void giveDeckToGameAndTellStartValuesAreReceived() {
+        this.receivingDeck = false;
+        game.setDeck(this.stack);
+        System.out.println("Received deck.");
+        game.getMenuScreenActors().haveReceivedStartValues();
+    }
+
+    public void addReceivedCardToDeck(String message) {
+        try {
+            ProgramCard card = converter.convertToCard(message);
+            this.stack.add(card);
+        } catch (NotProgramCardException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * When mapPath is received we can release {@link MenuScreenActors#haveReceivedMapPath()} and game can begin.
+     *
+     * @param path mappath from server
+     */
+    public void giveMapToGameAndTellMapIsReceived(String path) {
+        this.mapPath = path;
+        game.setMapPath(mapPath);
+        receivingMap = false;
+        System.out.println("Got map");
+        game.getMenuScreenActors().haveReceivedMapPath();
+    }
+
+    /**
+     * When another player leaves then finish turn and close.
+     *
+     * @param playernumber player who leaves
+     */
+    private void printMessageFinishTurnAndCloseSocket(int playernumber) {
+        System.out.println(playernumber + " left game.");
         game.quitPlaying();
         close();
     }
 
     /**
-     * Playernumber is always first in the message.
-     *
-     * @param message
-     * @return the playerNumber for the player sending this message
+     * When host has left game then finish turn and close.
      */
-    public int getPlayerNumberFromMessage(String message) {
-        return Character.getNumericValue(message.charAt(0));
+    public void printMessageFinishTurnAndCloseSocket() {
+        System.out.println("Host left game.");
+        game.quitPlaying();
+        close();
     }
-
     /**
      * Wait for server to send your playernumber and how many players are in the game.
      * Give the values to {@link RallyGame} so it can be initialized.

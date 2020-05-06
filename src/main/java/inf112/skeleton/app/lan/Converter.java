@@ -3,10 +3,8 @@ package inf112.skeleton.app.lan;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.enums.Rotate;
-import inf112.skeleton.app.objects.player.Player;
 
 import java.util.ArrayList;
-
 
 /**
  * Convert from a string to a programcard and vica verca.

@@ -46,9 +46,9 @@ public class MenuScreenActors {
     private Label waitForHost;
     private Label IPLabel;
     private Label invalidInputLabel;
-    public Semaphore waitForServerToSendStartValues = new Semaphore(1);
-    public Semaphore waitForServerToSendMapPath = new Semaphore(1);
-    public Thread waitForGameSetupThread;
+    private Semaphore waitForServerToSendStartValues = new Semaphore(1);
+    private Semaphore waitForServerToSendMapPath = new Semaphore(1);
+    private Thread waitForGameSetupThread;
 
     public MenuScreenActors(RallyGame game, Stage stage) {
         this.game = game;
@@ -386,6 +386,20 @@ public class MenuScreenActors {
             invalidInputLabel.setText("Invalid IP number");
             IPInput.setText("");
         }
+    }
+
+    /**
+     * Release {@link #waitForGameSetup()} so that game can start.
+     */
+    public void haveReceivedMapPath() {
+        waitForServerToSendMapPath.release();
+    }
+
+    /**
+     * Release {@link #waitForGameSetup()} so that we can receive the mapPath
+     */
+    public void haveReceivedStartValues() {
+        waitForServerToSendStartValues.release();
     }
 
     /**

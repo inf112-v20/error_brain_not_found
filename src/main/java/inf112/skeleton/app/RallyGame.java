@@ -816,20 +816,15 @@ public class RallyGame extends Game {
         return client;
     }
 
-    public void setWaitForServerToSendStartValuesToRelease() {
+    /**
+     * @return MenuScreenActors if the current screen is a {@link MenuScreen}. Null otherwise;
+     */
+    public MenuScreenActors getMenuScreenActors() {
         StandardScreen screen = getScreen();
         if (screen instanceof MenuScreen) {
-            MenuScreenActors actors = ((MenuScreen) screen).getActors();
-            actors.waitForServerToSendStartValues.release();
+            return ((MenuScreen) screen).getActors();
         }
-    }
-
-    public void setWaitForServerToSendMapPathToRelease() {
-        StandardScreen screen = getScreen();
-        if (screen instanceof MenuScreen) {
-            MenuScreenActors actors = ((MenuScreen) screen).getActors();
-            actors.waitForServerToSendMapPath.release();
-        }
+        return null;
     }
 
     /**
