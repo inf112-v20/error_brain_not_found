@@ -45,10 +45,11 @@ public class MenuScreenActors {
         START_BUTTON_Y = (float) (screenHeight * 0.5);
         EXIT_BUTTON_Y = (float) (screenHeight * 0.5 - BUTTON_HEIGHT);
         SETTINGS_BUTTON_Y = (float) (screenHeight * 0.5 - (BUTTON_HEIGHT *2));
-        BUTTON_X = (float) (BUTTON_WIDTH * 1);
-        BUTTON_Y = (float)(BUTTON_WIDTH * 2);
+        BUTTON_X = (BUTTON_WIDTH * 1);
+        BUTTON_Y = (BUTTON_WIDTH * 2);
 
     }
+
 
     public void initializeStartButton() {
         ImageButton.ImageButtonStyle startButtonStyle = new ImageButton.ImageButtonStyle();
@@ -121,7 +122,7 @@ public class MenuScreenActors {
         selectMap.setItems(getMaps());
         selectMap.setSelected("assets/maps/Risky Exchange.tmx");
         selectMap.setWidth(BUTTON_WIDTH * .87f);
-        selectMap.setPosition(BUTTON_X - selectMap.getWidth(), START_BUTTON_Y - BUTTON_HEIGHT / 2);
+        selectMap.setPosition(BUTTON_Y, (float) (START_BUTTON_Y + BUTTON_HEIGHT / 1.5));
         stage.addActor(selectMap);
     }
 
