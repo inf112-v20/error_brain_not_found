@@ -56,19 +56,6 @@ public class Board extends BoardLayers {
         }
     }
 
-    /**
-     * Check all cells on map for start positions with {@link TileID} and add a new player to that
-     * position based on number of players
-     *
-     * @param players list of robots playing, between 1-8
-     */
-    public void addPlayersToStartPositions(ArrayList<Player> players) {
-        for (Player player : players) {
-            player.setPosition(getStartPosition(player.getPlayerNumber()));
-            addPlayer(player);
-        }
-    }
-
     public Vector2 getStartPosition(int number) {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {

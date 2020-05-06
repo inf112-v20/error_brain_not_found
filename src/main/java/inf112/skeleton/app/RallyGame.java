@@ -58,7 +58,7 @@ public class RallyGame extends Game {
         this.board = new Board(mapPath);
         this.deck = new Deck();
         this.players = new ArrayList<>();
-        makePlayersAndAddToBoard(4);
+        this.makePlayersAndAddToBoard(4);
         this.mainPlayer = players.get(0);
         this.respawnPlayers = new ArrayList<>();
 
@@ -76,9 +76,11 @@ public class RallyGame extends Game {
 
     public void makePlayersAndAddToBoard(int numberOfPlayers) {
         for (int playerNumber = 1; playerNumber <= numberOfPlayers; playerNumber++) {
-            players.add(new Player(playerNumber));
+            Vector2 startPos = board.getStartPosition(playerNumber);
+            Player player = new Player(startPos, playerNumber);
+            players.add(player);
+            board.addPlayer(player);
         }
-        board.addPlayersToStartPositions(players);
     }
 
     public void addPlayer(Player player) {
