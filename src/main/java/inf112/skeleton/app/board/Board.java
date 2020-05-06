@@ -88,6 +88,7 @@ public class Board extends BoardLayers {
             players.add(player);
         }
     }
+
     //TODO: might move to boardLayer
     public Vector2 getStartPosition(int number) {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
@@ -395,7 +396,7 @@ public class Board extends BoardLayers {
         return boardLogic;
     }
 
-    public ArrayList<Flag> getFlags(){
+    public ArrayList<Flag> getFlags() {
         return flags;
     }
 

@@ -29,10 +29,18 @@ public class Deck {
         makeMoveCards();
     }
 
+    /**
+     * Takes the given ArrayList and adds the cards to the discard pile
+     * @param programCards List of cards to be added to the discard pile
+     */
     public void addCardsToDiscardPile(ArrayList<ProgramCard> programCards) {
         discardPile.addAll(programCards);
     }
 
+    /**
+     * Takes the given card and places it in the discard pile
+     * @param programCard Card to be placed in the discard pile
+     */
     public void addCardToDiscardPile(ProgramCard programCard) {
         discardPile.push(programCard);
     }
