@@ -10,6 +10,7 @@ import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.lan.PlayerAndProgramCard;
 import inf112.skeleton.app.objects.player.Player;
+import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,6 +22,7 @@ import java.net.Socket;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -47,6 +49,9 @@ public class ClientTest {
     private BufferedReader reader;
 
     @Mock
+    MenuScreenActors menuScreenActors;
+
+    @Mock
     private InputStream inputStream;
     private Player player1;
 
@@ -64,6 +69,7 @@ public class ClientTest {
         this.player1 = new Player(new Vector2(0,0), 1);
         when(game.getBoard()).thenReturn(board);
         when(board.getPlayer(1)).thenReturn(player1);
+        when(game.getMenuScreenActors()).thenReturn(menuScreenActors);
         // Reader is decided in each test
         client.setReader(reader);
     }

@@ -137,6 +137,11 @@ public class GameClientThread extends Thread {
         game.getMenuScreenActors().haveReceivedStartValues();
     }
 
+    /**
+     * Get the card from the message using {@link Converter#convertToCard(String)} and add it to Deck
+     *
+     * @param message
+     */
     public void addReceivedCardToDeck(String message) {
         try {
             ProgramCard card = converter.convertToCard(message);
