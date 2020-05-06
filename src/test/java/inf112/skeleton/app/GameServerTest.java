@@ -4,6 +4,7 @@ import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.lan.GameServer;
 import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.objects.player.Player;
+import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,12 +41,16 @@ public class GameServerTest {
     @Mock
     private OutputStream outputStream;
 
+    @Mock
+    MenuScreenActors menuScreenActors;
+
     @Before
     public void setUp() {
         try {
             when(serverSocket.accept()).thenReturn(socket);
             when(socket.getOutputStream()).thenReturn(outputStream);
             when(socket.getInputStream()).thenReturn(inputStream);
+            when(game.getMenuScreenActors()).thenReturn(menuScreenActors);
         } catch (IOException e) {
             e.printStackTrace();
         }
