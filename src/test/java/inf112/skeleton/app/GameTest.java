@@ -17,6 +17,7 @@ import inf112.skeleton.app.lan.GameServer;
 import inf112.skeleton.app.lan.ServerThread;
 import inf112.skeleton.app.objects.Belt;
 import inf112.skeleton.app.objects.player.Player;
+import inf112.skeleton.app.screens.gamescreen.GameScreen;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +27,6 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Stack;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -45,6 +45,8 @@ public class GameTest {
     private Player player1;
     private ArrayList<Belt> belts;
     private Converter converter;
+    private Player player2;
+    private Player player3;
 
     @Mock
     private Player mainPlayer;
@@ -60,8 +62,9 @@ public class GameTest {
 
     @Mock
     private GameServer server;
-    private Player player2;
-    private Player player3;
+
+    @Mock
+    private GameScreen screen;
 
     @Before
     public void setUp() {
@@ -71,6 +74,7 @@ public class GameTest {
         this.game = new RallyGame();
         this.game.setupGame("assets/maps/Risky Exchange.tmx");
         this.game.setDeck(new Deck().getDeck());
+        this.game.setScreen(screen);
         Board board = game.getBoard();
         player1 = new Player(new Vector2(0, 0), 1);
         player2 = new Player(new Vector2(0, 1), 2);
