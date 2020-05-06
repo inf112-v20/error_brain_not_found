@@ -5,6 +5,7 @@ import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.board.Board;
+import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.cards.Registers;
 import inf112.skeleton.app.enums.Direction;
@@ -41,7 +42,7 @@ import static org.mockito.Mockito.when;
 public class GameTest {
 
     private RallyGame game;
-    private Player player;
+    private Player player1;
     private ArrayList<Belt> belts;
     private Converter converter;
 
@@ -59,6 +60,8 @@ public class GameTest {
 
     @Mock
     private GameServer server;
+    private Player player2;
+    private Player player3;
 
     @Before
     public void setUp() {
@@ -67,10 +70,13 @@ public class GameTest {
         new HeadlessApplication(new EmptyApplication());
         this.game = new RallyGame();
         this.game.setupGame("assets/maps/Risky Exchange.tmx");
-        this.game.setDeck(new Stack<>());
+        this.game.setDeck(new Deck().getDeck());
         Board board = game.getBoard();
-        player = new Player(new Vector2(0, 0), 2);
-        board.addPlayer(player);
+        player1 = new Player(new Vector2(0, 0), 1);
+        player2 = new Player(new Vector2(0, 1), 2);
+        player3 = new Player(new Vector2(0, 2), 3);
+        game.setPlayers(player1, player2, player3);
+        board.addPlayer(player1);
         this.belts = board.getBelts();
         this.converter = new Converter();
 
@@ -95,41 +101,41 @@ public class GameTest {
 
     @Test
     public void lifeDecreasedWhenCollectedTenDamageTokensTest() {
-        int livesBefore = player.getLifeTokens();
-        fillUpDamageTokens(player);
+        int livesBefore = player1.getLifeTokens();
+        fillUpDamageTokens(player1);
         game.decreaseLives();
-        assertEquals(livesBefore-1, player.getLifeTokens());
+        assertEquals(livesBefore-1, player1.getLifeTokens());
     }
 
     @Test
     public void respawnIfTenCollectedDamageTokensTest() {
         // Move player out of backupposition
-        game.getBoard().movePlayer(player, false);
-        fillUpDamageTokens(player);
+        game.getBoard().movePlayer(player1, false);
+        fillUpDamageTokens(player1);
         game.decreaseLives();
         game.respawnPlayers();
-        assertTrue(player.isInBackupState());
+        assertTrue(player1.isInBackupState());
     }
 
     @Test
     public void deadPlayerAreRemovedFromGameTest() {
         // Kill player
         for (int livesTaken = 1; livesTaken <= 3; livesTaken++) {
-            fillUpDamageTokens(player);
-            player.decrementLifeTokens();
+            fillUpDamageTokens(player1);
+            player1.decrementLifeTokens();
             game.decreaseLives();
         }
         game.removeDeadPlayers();
-        assertFalse(game.players.contains(player));
+        assertFalse(game.players.contains(player1));
     }
 
     @Test
     public void playerMovesOnBeltTest() {
         Belt belt = belts.get(0);
         Vector2 beltPosition = belt.getPosition();
-        player.setPosition(beltPosition);
+        player1.setPosition(beltPosition);
         game.activateBelts(false);
-        assertNotEquals(beltPosition, player.getPosition());
+        assertNotEquals(beltPosition, player1.getPosition());
     }
 
     @Test
@@ -138,9 +144,9 @@ public class GameTest {
         Vector2 beltPosition = belt.getPosition();
         Direction beltDirection = belt.getDirection();
         Vector2 newPosition = game.getBoard().getNeighbourPosition(beltPosition, beltDirection);
-        player.setPosition(beltPosition);
+        player1.setPosition(beltPosition);
         game.activateBelts(false);
-        assertEquals(newPosition, player.getPosition());
+        assertEquals(newPosition, player1.getPosition());
     }
 
     /**
@@ -151,77 +157,77 @@ public class GameTest {
     public void playerChangesDirectionWhenInACornerOfTheBeltTest() {
         // Found postition in Risky Exhange
         Vector2 fromSouthToNorthBeltPosition = new Vector2(1, 1);
-        player.setPosition(fromSouthToNorthBeltPosition);
-        player.setDirection(Direction.NORTH);
+        player1.setPosition(fromSouthToNorthBeltPosition);
+        player1.setDirection(Direction.NORTH);
         // Move player onto corner belt
         game.activateBelts(false);
         // Turn player with corner belt
         game.activateBelts(false);
-        assertEquals(Direction.WEST, player.getDirection());
+        assertEquals(Direction.WEST, player1.getDirection());
     }
 
     @Test
     public void moveOneStepWhenOnBeltTest() {
         // Found postition in Risky Exhange. Belt goes east.
         Vector2 startBeltPosition = new Vector2(5, 5);
-        player.setPosition(startBeltPosition);
+        player1.setPosition(startBeltPosition);
         game.activateBelts(false);
         game.activateBelts(true);
         Vector2 beltMovedToPosition = new Vector2(6, 5);
-        assertEquals(beltMovedToPosition, player.getPosition());
+        assertEquals(beltMovedToPosition, player1.getPosition());
     }
 
     @Test
     public void moveTwoStepOnExpressBeltTest() {
         // Found position in Risky Exhange. Belt goes west
         Vector2 startBeltPosition = new Vector2(8, 6);
-        player.setPosition(startBeltPosition);
+        player1.setPosition(startBeltPosition);
         game.activateBelts(false);
         game.activateBelts(true);
         Vector2 beltMovedToPosition = new Vector2(6, 6);
-        assertEquals(beltMovedToPosition, player.getPosition());
+        assertEquals(beltMovedToPosition, player1.getPosition());
     }
 
     @Test
     public void repairTileResetsDamageTokensToZeroWhenOneDamageToken() {
         Vector2 repairTilePosition = game.getBoard().getRepairTiles().get(0);
-        player.handleDamage();
-        player.setPosition(repairTilePosition);
+        player1.handleDamage();
+        player1.setPosition(repairTilePosition);
         game.activateRepairTiles();
-        assertEquals(0, player.getDamageTokens());
+        assertEquals(0, player1.getDamageTokens());
     }
 
     @Test
     public void repairTileResetsDamageTokenToZeroWhenTenDamageTokens() {
         Vector2 repairTilePosition = game.getBoard().getRepairTiles().get(0);
         for (int i = 0; i < 10; i++) {
-            player.handleDamage();
+            player1.handleDamage();
         }
-        player.setPosition(repairTilePosition);
+        player1.setPosition(repairTilePosition);
         game.activateRepairTiles();
-        assertEquals(0, player.getDamageTokens());
+        assertEquals(0, player1.getDamageTokens());
     }
 
     @Test
     public void poweredDownPlayersDoNotGetCardsTest() {
-        player.setPoweredDown(true);
+        player1.setPoweredDown(true);
         game.dealCards();
-        assertTrue(player.getRegisters().getCards().isEmpty());
+        assertTrue(player1.getRegisters().getCards().isEmpty());
     }
 
     @Test
     public void playerPoweringDownBecomesPoweredDownTest() {
-        player.setPoweringDown(true);
+        player1.setPoweringDown(true);
         game.powerDown();
-        assertTrue(player.isPoweredDown());
+        assertTrue(player1.isPoweredDown());
     }
 
     @Test
     public void powerDownResetDamageTokensTest() {
-        player.handleDamage();
-        player.setPoweredDown(true);
+        player1.handleDamage();
+        player1.setPoweredDown(true);
         game.powerDown();
-        assertEquals(0, player.getDamageTokens());
+        assertEquals(0, player1.getDamageTokens());
     }
 
     @Test
@@ -306,12 +312,45 @@ public class GameTest {
     }
 
     @Test
-    public void serverConfirmsAndAllOtherHaveConfirmesThenStartTurnTest() {
+    public void serverConfirmsAndAllOtherHaveConfirmedThenStartTurnTest() {
         game.setIsServer(true);
         game.setServerThread(serverThread);
         when(server.allClientsHaveSelectedCardsOrIsPoweredDown()).thenReturn(true);
         game.sendConfirmMessage();
         verify(server).sendToAll(Messages.START_TURN.toString());
+    }
+
+    @Test
+    public void everyOneInPowerDownAtEndOfTurnNextTurnStartsRightAwayTest() {
+        game.setIsServer(true);
+        game.setServerThread(serverThread);
+        player1.setPoweringDown(true);
+        player2.setPoweringDown(true);
+        player3.setPoweringDown(true);
+        game.powerDown();
+        game.getReadyForNextRound();
+        verify(server).sendToAll(Messages.START_TURN.toString());
+    }
+
+    @Test
+    public void onlyServerInPowerDownThenServerHasConfirmedTest() {
+        game.setIsServer(true);
+        game.setServerThread(serverThread);
+        player1.setPoweringDown(true);
+        game.powerDown();
+        game.getReadyForNextRound();
+        verify(server).setServerHasConfirmed(true);
+    }
+
+    @Test
+    public void onlyServerIsPoweredUpThenAllClientsHaveConfirmedTest() {
+        game.setIsServer(true);
+        game.setServerThread(serverThread);
+        player2.setPoweringDown(true);
+        player3.setPoweringDown(true);
+        game.powerDown();
+        game.getReadyForNextRound();
+        verify(server).setAllClientsHaveSelectedCardsOrIsPoweredDown(true);
     }
 
 }

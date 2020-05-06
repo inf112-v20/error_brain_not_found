@@ -28,9 +28,11 @@ import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Stack;
 import java.util.concurrent.Semaphore;
 
@@ -973,5 +975,9 @@ public class RallyGame extends Game {
 
     public void resetConfirmPowerUp() {
         players.forEach(player -> player.setConfirmedPowerUp(false));
+    }
+
+    public void setPlayers(Player... players) {
+        this.players = new ArrayList<>(Arrays.asList(players));
     }
 }
