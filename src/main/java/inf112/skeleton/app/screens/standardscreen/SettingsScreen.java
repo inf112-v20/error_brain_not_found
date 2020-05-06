@@ -28,6 +28,7 @@ public class SettingsScreen extends StandardScreen {
     public final float BUTTON_WIDTH;
     public final float BUTTON_HEIGHT;
     public final float BUTTON_X;
+    public final float BUTTON_XS;
     public final float UPDATE_BUTTON_Y;
     public final float SAVE_BUTTON_Y;
     public final float TOGGLE_BUTTON_Y;
@@ -46,9 +47,9 @@ public class SettingsScreen extends StandardScreen {
         BUTTON_HEIGHT = (float) (screenHeight * 0.25);
         UPDATE_BUTTON_Y = (float) (screenHeight * 0.5 - BUTTON_HEIGHT *1.2);
         SAVE_BUTTON_Y = (float) (screenHeight * 0.5 - (BUTTON_HEIGHT *2));
-        TOGGLE_BUTTON_Y = (float) (screenHeight * 0.5 - (BUTTON_HEIGHT ));
-        BUTTON_X = (float) (screenWidth * 0.5 - BUTTON_WIDTH * 0.5);
-
+        TOGGLE_BUTTON_Y = (float) (screenHeight * 0.4 - (BUTTON_HEIGHT));
+        BUTTON_X = (BUTTON_WIDTH * 1);
+        BUTTON_XS = (BUTTON_WIDTH * 2);
         volume = 0.5f;
 
         initializeBackground();
@@ -68,7 +69,7 @@ public class SettingsScreen extends StandardScreen {
 
         ImageButton backButton = new ImageButton(backButtonStyle);
         backButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-        backButton.setPosition(BUTTON_X, SAVE_BUTTON_Y);
+        backButton.setPosition(BUTTON_XS, TOGGLE_BUTTON_Y);
         backButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
