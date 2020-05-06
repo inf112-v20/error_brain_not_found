@@ -40,7 +40,6 @@ public class ServerTest {
     private Player player1;
     private ProgramCard card;
     private ArrayList<Player> threePlayers;
-    private ArrayList<Player> players;
     private Converter converter;
 
     @Mock
@@ -83,7 +82,7 @@ public class ServerTest {
         this.player1 = new Player(new Vector2(0, 0), 1);
         this.player2 = new Player(new Vector2(0, 1), 2);
         Player player3 = new Player(new Vector2(0, 2), 3);
-        this.players = new ArrayList<>(Arrays.asList(player1, player2));
+        ArrayList<Player> players = new ArrayList<>(Arrays.asList(player1, player2));
         this.threePlayers = new ArrayList<>(Arrays.asList(player1, player2, player3));
         this.card = new ProgramCard(10, 2, Rotate.NONE, "Move 2");
         this.cardStringFromPlayer2 = converter.convertToString(2, card);
