@@ -51,6 +51,7 @@ public class MenuScreenActors {
     private Thread waitForGameSetupThread;
     private Semaphore waitForAllClientsToConnect = new Semaphore(1);
     private Thread waitForAllClients;
+    private Label waitForClients;
 
     public MenuScreenActors(RallyGame game, Stage stage) {
         this.game = game;
@@ -91,6 +92,7 @@ public class MenuScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (isValidInputPortAndNumberOfPlayers(portInput.getText(), numOfPlayers.getText())) {
+                    waitForClients.setVisible(true);
                     waitForAllClientsToConnectBeforeStartingGame();
                 }
             }
@@ -319,6 +321,16 @@ public class MenuScreenActors {
         waitForHost.setFontScale(2);
         waitForHost.setVisible(false);
         stage.addActor(waitForHost);
+    }
+
+    public void initializeWaitForClientsLabel() {
+        waitForClients = new Label("Wait for clients to connect...", game.getDefaultSkin());
+        waitForClients.setPosition(CENTERED_BUTTON_X, TOP_BUTTON_Y);
+        waitForClients.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        waitForClients.setAlignment(Align.center);
+        waitForClients.setFontScale(2);
+        waitForClients.setVisible(false);
+        stage.addActor(waitForClients);
     }
 
     public void toggleVisibilityCreateFirstClick() {
