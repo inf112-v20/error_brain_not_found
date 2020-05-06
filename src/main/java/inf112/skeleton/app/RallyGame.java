@@ -384,21 +384,38 @@ public class RallyGame extends Game {
             letClientsAndServerContinue();
 
             if (isServer) {
-                if (everyOneIsPoweredDown()) {
-                    serverThread.getServer().sendToAll(Messages.START_TURN.toString());
-                    startTurn();
-                }
-                else if (serverIsOnlyOneInPowerDown()) {
-                    serverThread.getServer().setServerHasConfirmed(true);
-                }
-                else if (everyOneExceptServerIsPoweredDown()) {
-                    serverThread.getServer().setAllClientsHaveSelectedCardsOrIsPoweredDown(true);
-                }
+                getReadyForNextRound();
             }
 
             //if (mainPlayer.isPoweredDown()) {
             //    sendConfirmMessage();
             //}
+        }
+    }
+
+    /**
+     * If {@link #everyOneIsPoweredDown()} is true, then send a message to all players
+     * telling them to start the next turn immediately.
+     *
+     * If {@link #serverIsOnlyOneInPowerDown()} is true, when server gets the last message in
+     * {@link inf112.skeleton.app.lan.GameServerThreads} from another player the server to have confirmed
+     * {@link GameServer#setServerHasConfirmed(boolean)} to true beforehand so that it will send out start turn messages.
+     *
+     * If {@link #everyOneExceptServerIsPoweredDown()} then server should not wait for any messages, and
+     * when server then confirms its cards the turn should start. Therefore it needs to set
+     * {@link GameServer#setAllClientsHaveSelectedCardsOrIsPoweredDown(boolean)} to true so that it can send start turn
+     * messages when pressing confirm button.
+     */
+    public void getReadyForNextRound() {
+        if (everyOneIsPoweredDown()) {
+            serverThread.getServer().sendToAll(Messages.START_TURN.toString());
+            startTurn();
+        }
+        else if (serverIsOnlyOneInPowerDown()) {
+            serverThread.getServer().setServerHasConfirmed(true);
+        }
+        else if (everyOneExceptServerIsPoweredDown()) {
+            serverThread.getServer().setAllClientsHaveSelectedCardsOrIsPoweredDown(true);
         }
     }
 
