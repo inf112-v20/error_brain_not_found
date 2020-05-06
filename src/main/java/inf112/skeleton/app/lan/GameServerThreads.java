@@ -66,19 +66,6 @@ public class GameServerThreads extends Thread {
                     game.quitPlaying();
                     return;
                 }
-                if (message.equals(Messages.CONFIRM.toString())) {
-                    if (allClientsHaveSelectedCardsOrInPowerDown()) {
-                        if (server.serverHasConfirmed()) {
-                            server.setAllClientsHaveSelectedCardsOrIsPoweredDown(false);
-                            server.setServerHasConfirmed(false);
-                            server.sendToAll(Messages.START_TURN.toString());
-                            game.startTurn();
-                            waitForTurnToFinish();
-                        } else {
-                            server.setAllClientsHaveSelectedCardsOrIsPoweredDown(true);
-                        }
-                    }
-                }
                 if (converter.isMessageFromAnotherPlayer(message)) {
                     int playerNumber = converter.getPlayerNumberFromMessage(message);
                     String messageFromPlayer = converter.getMessageFromPlayer(message);

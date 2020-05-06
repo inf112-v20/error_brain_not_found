@@ -25,6 +25,7 @@ import org.mockito.runners.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Stack;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -66,6 +67,7 @@ public class GameTest {
         new HeadlessApplication(new EmptyApplication());
         this.game = new RallyGame();
         this.game.setupGame("assets/maps/Risky Exchange.tmx");
+        this.game.setDeck(new Stack<>());
         Board board = game.getBoard();
         player = new Player(new Vector2(0, 0), 2);
         board.addPlayer(player);
@@ -310,13 +312,6 @@ public class GameTest {
         when(server.allClientsHaveSelectedCardsOrIsPoweredDown()).thenReturn(true);
         game.sendConfirmMessage();
         verify(server).sendToAll(Messages.START_TURN.toString());
-    }
-
-    @Test
-    public void clientInPowerDownSendsConfirmMessageTest() {
-        game.setClient(client);
-        game.sendConfirmMessage();
-        verify(client).sendMessage(Messages.CONFIRM.toString());
     }
 
 }
