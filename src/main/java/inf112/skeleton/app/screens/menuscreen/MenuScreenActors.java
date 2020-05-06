@@ -52,7 +52,7 @@ public class MenuScreenActors {
     private Thread waitForAllClients;
     private Label waitForClients;
     private int clientsConnected;
-    private Semaphore waitForServerToSendShowCameScreen = new Semaphore(1);
+    private Semaphore waitForServerToSendShowGameScreen = new Semaphore(1);
 
     public MenuScreenActors(RallyGame game, Stage stage) {
         this.game = game;
@@ -76,7 +76,7 @@ public class MenuScreenActors {
             waitForServerToSendStartValues.tryAcquire();
             waitForServerToSendMapPath.tryAcquire();
             waitForAllClientsToConnect.tryAcquire();
-            waitForServerToSendShowCameScreen.tryAcquire();
+            waitForServerToSendShowGameScreen.tryAcquire();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -96,9 +96,8 @@ public class MenuScreenActors {
                 if (isValidNumberOfPlayers(numOfPlayers.getText())) {
                     // Allow client to set up game right away
                     game.setMapPath("assets/maps/" + selectMap.getSelected() + ".tmx");
-                    waitForClients.setVisible(true);
-                    startButton.setVisible(false);
-                    selectMap.setVisible(false);
+                    game.setupGame("assets/maps/" + selectMap.getSelected() + ".tmx");
+                    game.setScreen(new GameScreen(game));
                 }
             }
 
@@ -179,11 +178,13 @@ public class MenuScreenActors {
                     toggleVisibilityCreateFirstClick();
                 } else {
                     if (isValidNumberOfPlayers(numOfPlayers.getText())) {
-                        toggleVisibilityCreateSecondClick();
-                        waitForAllClientsToConnectBeforeStartingGame();
                         game.setIsServerToTrue();
                         // Defaul port is 9000
                         game.setUpHost(9000, Integer.parseInt(numOfPlayers.getText()));
+                        waitForClients.setVisible(true);
+                        createGameButton.setVisible(false);
+                        numOfPlayers.setVisible(false);
+                        waitForAllClientsToConnectBeforeStartingGame();
                     }  else {
                         updateInvalidInputLabel(numOfPlayers);
                     }
@@ -418,7 +419,7 @@ public class MenuScreenActors {
         try {
             waitForServerToSendStartValues.acquire();
             waitForServerToSendMapPath.acquire();
-            waitForServerToSendShowCameScreen.acquire();
+            waitForServerToSendShowGameScreen.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -447,10 +448,8 @@ public class MenuScreenActors {
     public void waitForAllClientsToConnectBeforeStartingGame() {
         waitForAllClients = new Thread(() -> {
             waitForAllClientsToConnect();
-            Gdx.app.postRunnable(() -> {
-                game.setupGame("assets/maps/" + selectMap.getSelected() + ".tmx");
-                game.setScreen(new GameScreen(game));
-            });
+            toggleVisibilityCreateSecondClick();
+            waitForClients.setVisible(false);
         });
         waitForAllClients.start();
     }
@@ -474,8 +473,8 @@ public class MenuScreenActors {
      * Release Semaphore waitForServerToSendShowGameScreen {@link #waitForGameSetup()} can be released.
      */
     public void showGameScreen() {
-        waitForServerToSendShowCameScreen.release();
-        System.out.println("Realesed screen");
+        waitForServerToSendShowGameScreen.release();
+        System.out.println("Released screen");
     }
 }
 
