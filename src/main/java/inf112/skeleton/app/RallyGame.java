@@ -948,23 +948,6 @@ public class RallyGame extends Game {
         }
     }
 
-    /**
-     * Send confirm message when you are powered down.
-     */
-    public void sendConfirmMessage () {
-        if (isServer) {
-            serverThread.getServer().setServerHasConfirmed(true);
-            if (serverThread.getServer().allClientsHaveSelectedCardsOrIsPoweredDown()) {
-                serverThread.getServer().setServerHasConfirmed(false);
-                serverThread.getServer().setAllClientsHaveSelectedCardsOrIsPoweredDown(false);
-                serverThread.getServer().sendToAll(Messages.START_TURN.toString());
-                startTurn();
-            }
-        } else {
-            client.sendMessage(Messages.CONFIRM.toString());
-        }
-    }
-
     public void setMainPlayer(Player mainPlayer) {
         this.mainPlayer = mainPlayer;
     }

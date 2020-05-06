@@ -316,15 +316,6 @@ public class GameTest {
     }
 
     @Test
-    public void serverConfirmsAndAllOtherHaveConfirmedThenStartTurnTest() {
-        game.setIsServer(true);
-        game.setServerThread(serverThread);
-        when(server.allClientsHaveSelectedCardsOrIsPoweredDown()).thenReturn(true);
-        game.sendConfirmMessage();
-        verify(server).sendToAll(Messages.START_TURN.toString());
-    }
-
-    @Test
     public void everyOneInPowerDownAtEndOfTurnNextTurnStartsRightAwayTest() {
         game.setIsServer(true);
         game.setServerThread(serverThread);
