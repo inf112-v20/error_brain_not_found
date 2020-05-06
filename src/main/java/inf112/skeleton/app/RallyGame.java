@@ -28,7 +28,6 @@ import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -295,56 +294,15 @@ public class RallyGame extends Game {
     public void doTurn () {
 
         while (playing) {
-
             System.out.println("Wait for cards");
             waitForCards();
             if (Thread.interrupted()) { return; }
-            System.out.println("Start game loop");
-
             for (int cardNumber = 0; cardNumber < 5; cardNumber++) {
-
                 System.out.println("Runde " + (cardNumber + 1));
-
-                // All players play one card in the correct order
                 allPlayersPlayCard(cardNumber);
-                sleep(250);
-
-                // Express belts move 1
-                activateBelts(true);
-                sleep(250);
-
-                decreaseLives();
-
-                // All belts move 1
-                activateBelts(false);
-                sleep(250);
-
-                // Rotate pads rotate
-                activateRotatePads();
-                sleep(250);
-
-                // Fire lasers for 250 ms
-                firePlayerLaser();
-                sleep(250);
-                removeLasers();
-                sleep(500);
-
-                decreaseLives();
-                if (!board.getLasers().isEmpty()) {
-                    fireLasers();
-                    sleep(250);
-                    removeLasers();
-                    sleep(500);
-
-                    decreaseLives();
-                }
-
-                activateRepairTiles();
-                sleep(500);
-
-                pickUpFlags();
-                sleep(500);
-
+                activateBeltsAndRotatePads();
+                fireAllLasers();
+                activateRepairAndPickUpFlags();
                 sleep(1000);
             }
             if (!respawnPlayers.isEmpty()) {
@@ -352,50 +310,117 @@ public class RallyGame extends Game {
             }
             removeDeadPlayers();
             updateRegisters();
-
-            ArrayList<ProgramCard> lockedCards = discardCards();
-            if (isServer && deck.deckSize() < numberOfDealtCards()) {
-                serverThread.getServer().createAndSendDeckToAll(lockedCards);
-            }
-
+            discardCardsAndServerCreatesNewDeckIfEmpty();
             if (!poweredDownPlayers.isEmpty()) {
-                if (isServer) {
-                    serverThread.getServer().setServerHasConfirmed(!mainPlayer.isPoweredDown());
-                }
-                System.out.println("Wait for power up");
-                letClientsAndServerContinue();
-                setWaitingForPowerUp(mainPlayer.isPoweredDown());
-                waitForPowerUp();
-                System.out.println("Continue game loop");
+                getPowerUpOrDownConfirm();
             }
-
             resetConfirmPowerUp();
-
             powerDown();
-
             dealCards();
             ((GameScreen) screen).updateCards();
-
-            if (isServer) {
-                serverThread.getServer().setAllClientsHaveSelectedCardsOrIsPoweredDown(false);
-                serverThread.getServer().setServerHasConfirmed(false);
-            }
+            serverResetConfirms();
             setWaitingForCards(!mainPlayer.isPoweredDown());
             setWaitingForPowerUp(!mainPlayer.isPoweredDown());
-
             letClientsAndServerContinue();
-
-            if (isServer) {
-                getReadyForNextRound();
-            }
-
-            //if (mainPlayer.isPoweredDown()) {
-            //    sendConfirmMessage();
-            //}
+            serverGetReadyForNextRound();
         }
     }
 
     /**
+     * Discard all players cards using {@link #discardCards()}.
+     *
+     * If isServer and there is not enough cards left in deck, create a new deck,
+     * and remove the discarded cards from the new deck.
+     */
+    public void discardCardsAndServerCreatesNewDeckIfEmpty() {
+        ArrayList<ProgramCard> lockedCards = discardCards();
+        if (isServer && deck.deckSize() < numberOfDealtCards()) {
+            serverThread.getServer().createAndSendDeckToAll(lockedCards);
+        }
+    }
+
+    /**
+     * Activate the repair keys and pick up flags. Thread sleeps between each method call
+     */
+    public void activateRepairAndPickUpFlags() {
+        activateRepairTiles();
+        sleep(500);
+        pickUpFlags();
+        sleep(500);
+    }
+
+    /**
+     * First fire player lasers and then wall lasers. Wall lasers are only
+     * activated if there are any wall lasers on the board. Make thread sleep after each methodcall.
+     *
+     * {@link #decreaseLives()} is invoked after both {@link #firePlayerLaser()} and {@link #fireLasers()}
+     */
+    private void fireAllLasers() {
+        firePlayerLaser();
+        sleep(250);
+        removeLasers();
+        sleep(500);
+        decreaseLives();
+        if (!board.getLasers().isEmpty()) {
+            fireLasers();
+            sleep(250);
+            removeLasers();
+            sleep(500);
+            decreaseLives();
+        }
+    }
+
+    /**
+     * Move express belts one and then all belts one. Turn rotatepads.
+     * Make doTurn thread sleep after each movement.
+     *
+     * {@link #decreaseLives()} at the end
+     */
+    public void activateBeltsAndRotatePads() {
+        activateBelts(true);
+        sleep(250);
+        decreaseLives();
+        activateBelts(false);
+        sleep(250);
+        activateRotatePads();
+        sleep(250);
+        decreaseLives();
+    }
+
+    /**
+     * If isServer is true, update the {@link GameServer#setServerHasConfirmed(boolean)}.
+     *
+     * Both client and server continue talking, and wait to continue
+     * gameloop until everyone have confirmed.
+     */
+    public void getPowerUpOrDownConfirm() {
+        if (isServer) {
+            serverThread.getServer().setServerHasConfirmed(!mainPlayer.isPoweredDown());
+        }
+        System.out.println("Wait for power up");
+        letClientsAndServerContinue();
+        setWaitingForPowerUp(mainPlayer.isPoweredDown());
+        waitForPowerUp();
+        System.out.println("Continue game loop");
+    }
+
+    /**
+     * After each round, the server needs to reset the confirms from server and clients so that
+     * if will wait for new confirms before starting next rounds.
+     *
+     * isServer needs to be true
+     */
+    public void serverResetConfirms() {
+        if (isServer) {
+            serverThread.getServer().setAllClientsHaveSelectedCardsOrIsPoweredDown(false);
+            serverThread.getServer().setServerHasConfirmed(false);
+        }
+    }
+
+    /**
+     *
+     * isServer needs to be true
+     *
      * If {@link #everyOneIsPoweredDown()} is true, then send a message to all players
      * telling them to start the next turn immediately.
      *
@@ -408,16 +433,16 @@ public class RallyGame extends Game {
      * {@link GameServer#setAllClientsHaveSelectedCardsOrIsPoweredDown(boolean)} to true so that it can send start turn
      * messages when pressing confirm button.
      */
-    public void getReadyForNextRound() {
-        if (everyOneIsPoweredDown()) {
-            serverThread.getServer().sendToAll(Messages.START_TURN.toString());
-            startTurn();
-        }
-        else if (serverIsOnlyOneInPowerDown()) {
-            serverThread.getServer().setServerHasConfirmed(true);
-        }
-        else if (everyOneExceptServerIsPoweredDown()) {
-            serverThread.getServer().setAllClientsHaveSelectedCardsOrIsPoweredDown(true);
+    public void serverGetReadyForNextRound() {
+        if (isServer) {
+            if (everyOneIsPoweredDown()) {
+                serverThread.getServer().sendToAll(Messages.START_TURN.toString());
+                startTurn();
+            } else if (serverIsOnlyOneInPowerDown()) {
+                serverThread.getServer().setServerHasConfirmed(true);
+            } else if (everyOneExceptServerIsPoweredDown()) {
+                serverThread.getServer().setAllClientsHaveSelectedCardsOrIsPoweredDown(true);
+            }
         }
     }
 
@@ -559,6 +584,10 @@ public class RallyGame extends Game {
         respawnPlayers.clear();
     }
 
+    /**
+     * All players move their card. doTurn thread sleeps at the end and between moves.
+     * @param cardNumber
+     */
     public void allPlayersPlayCard(int cardNumber) {
         ArrayList<Player> playerOrder = new ArrayList<>(players);
         // Add all players to order list, and remove players with no cards left or powered down
@@ -573,6 +602,7 @@ public class RallyGame extends Game {
             decreaseLives();
             sleep(500);
         }
+        sleep(250);
     }
 
     public void playCard(Player player, int cardNumber) {

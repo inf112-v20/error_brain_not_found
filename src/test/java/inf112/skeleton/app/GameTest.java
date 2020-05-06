@@ -332,7 +332,7 @@ public class GameTest {
         player2.setPoweringDown(true);
         player3.setPoweringDown(true);
         game.powerDown();
-        game.getReadyForNextRound();
+        game.serverGetReadyForNextRound();
         verify(server).sendToAll(Messages.START_TURN.toString());
     }
 
@@ -342,7 +342,7 @@ public class GameTest {
         game.setServerThread(serverThread);
         player1.setPoweringDown(true);
         game.powerDown();
-        game.getReadyForNextRound();
+        game.serverGetReadyForNextRound();
         verify(server).setServerHasConfirmed(true);
     }
 
@@ -353,7 +353,7 @@ public class GameTest {
         player2.setPoweringDown(true);
         player3.setPoweringDown(true);
         game.powerDown();
-        game.getReadyForNextRound();
+        game.serverGetReadyForNextRound();
         verify(server).setAllClientsHaveSelectedCardsOrIsPoweredDown(true);
     }
 
