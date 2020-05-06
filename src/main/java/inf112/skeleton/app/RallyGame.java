@@ -382,10 +382,41 @@ public class RallyGame extends Game {
             setWaitingForPowerUp(!mainPlayer.isPoweredDown());
 
             letClientsAndServerContinue();
-            if (mainPlayer.isPoweredDown()) {
-                sendConfirmMessage();
+
+            if (isServer) {
+                if (everyOneIsPoweredDown()) {
+                    serverThread.getServer().sendToAll(Messages.START_TURN.toString());
+                    startTurn();
+                }
+                else if (serverIsOnlyOneInPowerDown()) {
+                    serverThread.getServer().setServerHasConfirmed(true);
+                }
+                else if (everyOneExceptServerIsPoweredDown()) {
+                    serverThread.getServer().setAllClientsHaveSelectedCardsOrIsPoweredDown(true);
+                }
             }
+
+            //if (mainPlayer.isPoweredDown()) {
+            //    sendConfirmMessage();
+            //}
         }
+    }
+
+    /**
+     *
+     * @return True if only player is powered up
+     */
+    private boolean everyOneExceptServerIsPoweredDown() {
+        Player hostPlayer = board.getPlayer(1);
+        return getPoweredDownRobots().size() == (players.size()-1) && !getPoweredDownRobots().contains(hostPlayer);
+    }
+
+    /**
+     *
+     * @return True if every player in the game is in power down
+     */
+    private boolean everyOneIsPoweredDown() {
+        return getPoweredDownRobots().size() == players.size();
     }
 
     public void waitForCards() {
