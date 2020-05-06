@@ -200,6 +200,7 @@ public class RallyGame extends Game {
                 mainPlayer.setPowerDownNextRound(false);
                 sendPoweringDownMessage();
             }
+            System.out.println("Sending cards");
             sendSelectedCardsToServer();
             if (isServer) {
                 GameServer server = serverThread.getServer();
@@ -424,8 +425,8 @@ public class RallyGame extends Game {
      * If {@link #everyOneIsPoweredDown()} is true, then send a message to all players
      * telling them to start the next turn immediately.
      *
-     * If {@link #serverIsOnlyOneInPowerDown()} is true, when server gets the last message in
-     * {@link inf112.skeleton.app.lan.GameServerThreads} from another player the server to have confirmed
+     * If {@link #serverIsOnlyOneInPowerDown()} or server is in power down, when server gets the last message in
+     * {@link inf112.skeleton.app.lan.GameServerThreads} from another player the server have confirmed
      * {@link GameServer#setServerHasConfirmed(boolean)} to true beforehand so that it will send out start turn messages.
      *
      * If {@link #everyOneExceptServerIsPoweredDown()} then server should not wait for any messages, and
@@ -439,6 +440,8 @@ public class RallyGame extends Game {
                 serverThread.getServer().sendToAll(Messages.START_TURN.toString());
                 startTurn();
             } else if (serverIsOnlyOneInPowerDown()) {
+                serverThread.getServer().setServerHasConfirmed(true);
+            } else if (getPoweredDownRobots().contains(mainPlayer)) {
                 serverThread.getServer().setServerHasConfirmed(true);
             } else if (everyOneExceptServerIsPoweredDown()) {
                 serverThread.getServer().setAllClientsHaveSelectedCardsOrIsPoweredDown(true);

@@ -109,7 +109,9 @@ public class GameServerThreads extends Thread {
                         PlayerAndProgramCard playerAndCard = converter.getSentCardFromPlayer(message);
                         ProgramCard card = playerAndCard.getProgramCard();
                         addSelectedCard(player, card);
+                        System.out.println(card);
                         if (allPlayersHaveSelectedCardsOrInPowerDown() && server.serverHasConfirmed()) {
+                            System.out.println("Server has confirmed");
                             server.sendSelectedCardsToAll();
                             server.sendToAll(Messages.START_TURN.toString());
                             server.setServerHasConfirmed(false);
