@@ -58,18 +58,19 @@ public class GameServerThreads extends Thread {
                 if (message == null) {
                     break;
                 }
+                System.out.println(message);
                 if (message.equals(Messages.STOP_THREAD.toString())) {
-                    return;
-                }
-                if (message.contains(Messages.QUIT.toString())) {
-                    endConnectionWithPlayerAndTellOtherPlayersThatThisPlayerLeft(getPlayerFromMessage(message));
-                    game.quitPlaying();
                     return;
                 }
                 if (converter.isMessageFromAnotherPlayer(message)) {
                     int playerNumber = converter.getPlayerNumberFromMessage(message);
                     String messageFromPlayer = converter.getMessageFromPlayer(message);
                     Player player = game.getBoard().getPlayer(playerNumber);
+                    if (messageFromPlayer.equals(Messages.QUIT.toString())) {
+                        endConnectionWithPlayerAndTellOtherPlayersThatThisPlayerLeft(player);
+                        game.quitPlaying();
+                        return;
+                    }
                     if (messageFromPlayer.equals(Messages.POWERING_DOWN.toString())) {
                         player.setPoweringDown(true);
                         server.sendToAllExcept(player, message);
@@ -134,7 +135,7 @@ public class GameServerThreads extends Thread {
      * @param player to end connection with
      */
     private void endConnectionWithPlayerAndTellOtherPlayersThatThisPlayerLeft(Player player) {
-        server.sendToAllExcept(player, playerNumber + Messages.QUIT.toString());
+        server.sendToAllExcept(player, converter.createQuitMessage(player.getPlayerNr()));
         System.out.println("Player " + playerNumber + " is leaving...");
         server.disconnect(playerNumber);
         server.remove(playerNumber);
@@ -268,13 +269,5 @@ public class GameServerThreads extends Thread {
             }
         }
         return true;
-    }
-
-    /**
-     * @return Player from message
-     */
-    public Player getPlayerFromMessage(String message) {
-        int playerNumber = converter.getPlayerNumberFromMessage(message);
-        return game.getBoard().getPlayer(playerNumber);
     }
 }

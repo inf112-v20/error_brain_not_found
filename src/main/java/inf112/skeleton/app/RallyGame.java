@@ -834,7 +834,7 @@ public class RallyGame extends Game {
         try {
             // Tell server you are leaving. Close your socket.
             if (!isServer) {
-                this.client.sendMessage(this.client.createQuitMessage(this.myPlayerNumber));
+                this.client.sendMessage(converter.createQuitMessage(this.myPlayerNumber));
                 this.client.close();
                 this.client.sendMessage(Messages.CLOSED.toString());
             }

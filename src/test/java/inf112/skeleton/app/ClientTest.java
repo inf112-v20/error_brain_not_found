@@ -245,4 +245,21 @@ public class ClientTest {
         verify(game).continueTurn();
     }
 
+    @Test
+    public void client2SendsQuitMessageTest() {
+        try {
+            when(reader.readLine())
+                    .thenReturn("3", "4")
+                    .thenReturn(converter.createQuitMessage(2))
+                    .thenReturn(Messages.STOP_THREAD.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        // Do not wait for doTurn to finish
+        client.continueListening();
+        client.start();
+        waitForThread(client);
+        verify(game).quitPlaying();
+    }
+
 }

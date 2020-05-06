@@ -256,4 +256,16 @@ public class ServerTest {
         verify(gameServer).sendToAllExcept(player2, powerUpMessage);
     }
 
+    @Test
+    public void playerSendsQuitMessageTest() {
+        try {
+            when(reader.readLine()).thenReturn(converter.createQuitMessage(2)).thenReturn(Messages.STOP_THREAD.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        server.start();
+        waitForThread(server);
+        verify(gameServer).sendToAllExcept(player2, converter.createQuitMessage(2));
+    }
+
 }

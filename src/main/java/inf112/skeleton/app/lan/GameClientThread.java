@@ -93,7 +93,7 @@ public class GameClientThread extends Thread {
                 int playerNumber = converter.getPlayerNumberFromMessage(message);
                 Player player = game.getBoard().getPlayer(playerNumber);
                 String messageFromPlayer = converter.getMessageFromPlayer(message);
-                if (messageFromPlayer.contains(Messages.QUIT.toString())) {
+                if (messageFromPlayer.equals(Messages.QUIT.toString())) {
                     printMessageFinishTurnAndCloseSocket(playerNumber);
                     return;
                 }
@@ -252,15 +252,6 @@ public class GameClientThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Create a string to send if you are exiting game.
-     * @param playerNumber
-     * @return string for quitting game
-     */
-    public String createQuitMessage(int playerNumber) {
-        return playerNumber + Messages.QUIT.toString();
     }
 
     /**

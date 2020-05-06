@@ -216,5 +216,7 @@ public class Converter {
         return playerNumber + " " + message.toString();
     }
 
-
+    public String createQuitMessage(int myPlayerNumber) {
+        return (myPlayerNumber + " " + Messages.QUIT.toString());
+    }
 }
