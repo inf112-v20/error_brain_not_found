@@ -91,7 +91,7 @@ public class MenuScreenActors {
         startButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if (isValidInputPortAndNumberOfPlayers(portInput.getText(), numOfPlayers.getText())) {
+                if (isValidNumberOfPlayers(numOfPlayers.getText())) {
                     waitForClients.setVisible(true);
                     waitForAllClientsToConnectBeforeStartingGame();
                 }
@@ -173,7 +173,7 @@ public class MenuScreenActors {
                 if (joinGameButton.isVisible()) {
                     toggleVisibilityCreateFirstClick();
                 } else {
-                    if (isValidInputPortAndNumberOfPlayers(portInput.getText(), numOfPlayers.getText())) {
+                    if (isValidNumberOfPlayers(numOfPlayers.getText())) {
                         toggleVisibilityCreateSecondClick();
                         game.setIsServerToTrue();
                         // Defaul port is 9000
@@ -193,14 +193,11 @@ public class MenuScreenActors {
     }
 
     /**
-     *
-     * @param port
      * @param numberOfPlayers
      * @return true og port and numberOfPlayers are not empty and in valid range
      */
-    public boolean isValidInputPortAndNumberOfPlayers(String port, String numberOfPlayers) {
-        return (!"".equals(port) && !"".equals(numberOfPlayers) && isNumber(port) && isNumber(numberOfPlayers) &&
-                portInValidRange(Integer.parseInt(port)) && numberOfPlayersInValidRange(Integer.parseInt(numberOfPlayers)));
+    public boolean isValidNumberOfPlayers(String numberOfPlayers) {
+        return (!"".equals(numberOfPlayers)&& isNumber(numberOfPlayers)&& numberOfPlayersInValidRange(Integer.parseInt(numberOfPlayers)));
     }
 
     /**
@@ -230,7 +227,7 @@ public class MenuScreenActors {
                 if (createGameButton.isVisible()) {
                     toggleVisibilityJoinFirstClick();
                 } else {
-                    if (isValidInputPortAndIP(portInput.getText(), IPInput.getText())) {
+                    if (!"".equals(IPInput.getText())) {
                         if (setUpClient()) {
                             toggleVisibilityJoinSecondClick();
                             waitForGameSetUpAndStartGame();
@@ -249,16 +246,6 @@ public class MenuScreenActors {
             }
         });
         stage.addActor(joinGameButton);
-    }
-
-    /**
-     *
-     * @param port
-     * @param ip
-     * @return True if port and ip is not empty, port is a number and within range.
-     */
-    public boolean isValidInputPortAndIP(String port, String ip) {
-        return !"".equals(ip) && !"".equals(port) && isNumber(port) && portInValidRange(Integer.parseInt(port));
     }
 
     /**
