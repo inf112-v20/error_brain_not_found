@@ -52,6 +52,8 @@ public class MenuScreenActors {
     private Semaphore waitForAllClientsToConnect = new Semaphore(1);
     private Thread waitForAllClients;
     private Label waitForClients;
+    private int clientsConnected;
+    private Semaphore waitForServerToSendShowCameScreen = new Semaphore(1);
 
     public MenuScreenActors(RallyGame game, Stage stage) {
         this.game = game;
@@ -75,6 +77,7 @@ public class MenuScreenActors {
             waitForServerToSendStartValues.tryAcquire();
             waitForServerToSendMapPath.tryAcquire();
             waitForAllClientsToConnect.tryAcquire();
+            waitForServerToSendShowCameScreen.tryAcquire();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -92,6 +95,8 @@ public class MenuScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (isValidNumberOfPlayers(numOfPlayers.getText())) {
+                    // Allow client to set up game right away
+                    game.setMapPath("assets/maps/" + selectMap.getSelected() + ".tmx");
                     waitForClients.setVisible(true);
                     waitForAllClientsToConnectBeforeStartingGame();
                 }
@@ -426,6 +431,7 @@ public class MenuScreenActors {
         try {
             waitForServerToSendStartValues.acquire();
             waitForServerToSendMapPath.acquire();
+            waitForServerToSendShowCameScreen.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -476,4 +482,13 @@ public class MenuScreenActors {
     public void allClientsHaveConnected() {
         waitForAllClientsToConnect.release();
     }
+
+    /**
+     * Release Semaphore waitForServerToSendShowGameScreen {@link #waitForGameSetup()} can be released.
+     */
+    public void showGameScreen() {
+        waitForServerToSendShowCameScreen.release();
+        System.out.println("Realesed screen");
+    }
 }
+
