@@ -112,7 +112,7 @@ public class Board extends BoardLayers {
      * Check all cells on map for start positions with {@link TileID} and add a new player to that
      * position based on number of players
      *
-     * @param numPlayers number of robots playing, between 1-8
+         * @param numPlayers number of robots playing, between 1-8
      */
     public void addPlayersToStartPositions(int numPlayers) {
         if (numPlayers == 0) {

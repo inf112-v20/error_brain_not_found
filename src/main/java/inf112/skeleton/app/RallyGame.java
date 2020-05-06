@@ -37,8 +37,14 @@ public class RallyGame extends Game {
     public Semaphore waitForCards;
     public boolean playing;
     public boolean shouldPickCards;
-    public Sound laserSound;
+
+    public Sound walledLaserSound;
+    public Sound robotLaserSound;
+    public Sound firstBeltStartUp;
+    public Sound secondBeltStartUp;
+    public Sound repairRobotSound;
     public Music gameMusic;
+
     public Player mainPlayer;
 
     public Skin textSkin;
@@ -67,7 +73,11 @@ public class RallyGame extends Game {
         this.playing = true;
         this.shouldPickCards = true;
 
-        this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
+        this.walledLaserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
+        this.robotLaserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/laser.mp3"));
+        this.firstBeltStartUp = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/firstBeltStartUp.mp3"));
+        this.secondBeltStartUp = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/secondBeltStartUp.mp3"));
+        this.repairRobotSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/Repair.mp3"));
 
         new Thread(this::doTurn).start();
 
@@ -202,13 +212,15 @@ public class RallyGame extends Game {
 
                 // Express belts move 1
                 activateBelts(true);
-                sleep(250);
+                firstBeltStartUp.play(soundVolume);
+                sleep(500);
 
                 decreaseLives();
 
                 // All belts move 1
                 activateBelts(false);
-                sleep(250);
+                secondBeltStartUp.play(soundVolume);
+                sleep(1000);
 
                 // Rotate pads rotate
                 activateRotatePads();
@@ -374,7 +386,7 @@ public class RallyGame extends Game {
             for (Player player : players) {
                 player.fire(this);
             }
-            laserSound.play(soundVolume);
+            robotLaserSound.play(soundVolume);
         }
     }
 
@@ -383,7 +395,7 @@ public class RallyGame extends Game {
             for (Laser laser : board.getLasers()) {
                 laser.fire(this);
             }
-            laserSound.play(soundVolume);
+            walledLaserSound.play(soundVolume);
         }
     }
 
@@ -410,6 +422,7 @@ public class RallyGame extends Game {
      * @param onlyExpress if true then the pool of belts should be set to expressBelts
      */
     public void activateBelts(boolean onlyExpress) {
+
         ArrayList<Belt> belts = onlyExpress ? board.getExpressBelts() : board.getBelts();
         for (Player player : board.getPlayers()) {
             for (Belt belt : belts) {
@@ -485,6 +498,7 @@ public class RallyGame extends Game {
         for (Player player : players) {
             for (Vector2 repairTilePos : board.getRepairTiles()) {
                 if (player.getPosition().equals(repairTilePos)) {
+                    repairRobotSound.play(soundVolume);
                     player.resetDamageTokens();
                     player.setBackup(repairTilePos, player.getDirection());
                 }
@@ -495,7 +509,7 @@ public class RallyGame extends Game {
     public void dispose() {
         try {
             gameMusic.dispose();
-            laserSound.dispose();
+            walledLaserSound.dispose();
             screen.dispose();
             board.dispose();
         } catch (Exception ignored) {
