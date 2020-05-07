@@ -102,12 +102,13 @@ public class ClientTest {
     @Test
     public void clientGetCorrectNumberOfPlayersTest() {
         try {
-            when(reader.readLine()).thenReturn(converter.createNumberOfPlayersMessage(4));
+            when(reader.readLine()).thenReturn(converter.createNumberOfPlayersMessage(4)).thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        client.getStartValues();
-        assertEquals(4, client.getNumberOfPlayers());
+        client.start();
+        waitForThread(client);
+        verify(game).setNumberOfPlayers(4);
     }
 
     @Test
@@ -115,11 +116,13 @@ public class ClientTest {
         String programCardAsString = converter.convertToString(1, programcard);
         try {
             when(reader.readLine())
-                    .thenReturn(programCardAsString);
+                    .thenReturn(programCardAsString)
+                    .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        client.getStartValues();
+        client.start();
+        waitForThread(client);
         String programCardAndPlayer = client.getMessage();
         try {
             PlayerAndProgramCard playerAndCard = converter.getSentCardFromPlayer(programCardAndPlayer);

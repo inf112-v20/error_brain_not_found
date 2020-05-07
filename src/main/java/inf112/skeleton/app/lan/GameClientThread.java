@@ -88,6 +88,9 @@ public class GameClientThread extends Thread {
             else if (message.contains(Messages.YOUR_NUMBER.toString())) {
                 game.setPlayerNumber(converter.getMyPlayerNumber(message));
             }
+            else if (message.contains(Messages.PLAYERS.toString())) {
+                game.setNumberOfPlayers(converter.getNumbersOfPlayers(message));
+            }
             else if (receivingDeck) {
                 addReceivedCardToDeck(message);
             }
