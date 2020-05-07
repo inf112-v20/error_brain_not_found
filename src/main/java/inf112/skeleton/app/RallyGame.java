@@ -45,9 +45,9 @@ public class RallyGame extends Game {
     public Sound repairRobotSound;
     public Sound hitByLaser;
     public Sound robotDestroyed;
-    public Sound wallCollision;
+   /* public Sound wallCollision;
     public Sound WilhelmScream;
-    public Sound robotCollide;
+    public Sound robotCollide;*/
     public Music gameMusic;
 
     public Player mainPlayer;
@@ -86,9 +86,7 @@ public class RallyGame extends Game {
         this.repairRobotSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/Repair.mp3"));
         this.hitByLaser = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserHit.mp3"));
         this.robotDestroyed = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/Destroyed.mp3"));
-        this.WilhelmScream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
-        this.wallCollision = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/wall_Collision.mp3"));
-        this.robotCollide = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/robotCollide.mp3"));
+
 
         new Thread(this::doTurn).start();
 
@@ -537,8 +535,6 @@ public class RallyGame extends Game {
             secondBeltStartUp.dispose();
             robotDestroyed.dispose();
             robotLaserSound.dispose();
-            wallCollision.dispose();
-            WilhelmScream.dispose();
             screen.dispose();
             board.dispose();
         } catch (Exception ignored) {
