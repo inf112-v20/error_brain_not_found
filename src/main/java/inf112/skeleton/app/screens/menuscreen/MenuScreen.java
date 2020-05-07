@@ -14,6 +14,8 @@ public class MenuScreen extends StandardScreen {
         actors = new MenuScreenActors(game, stage);
         actors.initializeBackground();
         actors.initializeExitButton();
+        actors.initializeSettingsButton();
+
         actors.initializeCreateGame();
         actors.initializeJoinGame();
     }
@@ -28,6 +30,5 @@ public class MenuScreen extends StandardScreen {
         if (game.isServer()) {
             actors.updateClientsConnectedLabel();
         }
-        actors.initializeSettingsButton();
     }
 }

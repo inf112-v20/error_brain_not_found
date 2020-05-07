@@ -26,6 +26,14 @@ public class MenuScreenActors {
 
     public float BUTTON_WIDTH;
     public float BUTTON_HEIGHT;
+    public final float BUTTON_WIDTH;
+    public final float BUTTON_HEIGHT;
+    public final float BUTTON_X;
+    public final float BUTTON_Y;
+    public final float START_BUTTON_Y;
+    public final float EXIT_BUTTON_Y;
+    public final float SETTINGS_BUTTON_Y;
+
     public float TOP_BUTTON_Y;
     public float BOTTOM_BUTTON_Y;
     public float TEXT_INPUT_Y;
@@ -60,6 +68,7 @@ public class MenuScreenActors {
 
         BUTTON_WIDTH = (float) (screenWidth * 0.25);
         BUTTON_HEIGHT = (float) (screenHeight * 0.25);
+
         START_BUTTON_Y = (float) (screenHeight * 0.5);
         EXIT_BUTTON_Y = (float) (screenHeight * 0.5 - BUTTON_HEIGHT);
         SETTINGS_BUTTON_Y = (float) (screenHeight * 0.5 - (BUTTON_HEIGHT *2));
@@ -125,8 +134,7 @@ public class MenuScreenActors {
 
         ImageButton exitButton = new ImageButton(exitButtonStyle);
         exitButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-        exitButton.setPosition(CENTERED_BUTTON_X, BOTTOM_BUTTON_Y);
-        exitButton.setPosition(BUTTON_Y, EXIT_BUTTON_Y);
+        exitButton.setPosition(RIGHT_BUTTON_X, BOTTOM_BUTTON_Y);
         exitButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
@@ -147,7 +155,7 @@ public class MenuScreenActors {
 
         ImageButton settingsButton = new ImageButton(settingsButtonStyle);
         settingsButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-        settingsButton.setPosition(BUTTON_X, EXIT_BUTTON_Y);
+        settingsButton.setPosition(LEFT_BUTTON_X, BOTTOM_BUTTON_Y);
         settingsButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
@@ -235,7 +243,7 @@ public class MenuScreenActors {
         selectMap.setItems(getMaps());
         selectMap.setSelected("Risky Exchange");
         selectMap.setWidth(BUTTON_WIDTH * .87f);
-        selectMap.setPosition(BUTTON_Y, (float) (START_BUTTON_Y + BUTTON_HEIGHT / 1.5));
+
         selectMap.setPosition(screenWidth / 2f - selectMap.getWidth() / 2f, TEXT_INPUT_Y);
         selectMap.setVisible(false);
         stage.addActor(selectMap);

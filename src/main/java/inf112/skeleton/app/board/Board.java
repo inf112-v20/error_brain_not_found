@@ -21,17 +21,24 @@ public class Board extends BoardLayers {
 
     private final ArrayList<Player> players;
 
-    private Sound WilhelmScream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
-    private Sound wallCollision = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/wall_Collision.mp3"));
-    private Sound robotCollide = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/robotCollide.mp3"));
 
+    private final Sound scream;
+    private final Sound wall_Collision;
+    private final Sound robotCollide;
 
-    private final BoardLogic boardLogic = new BoardLogic(this);
+    private final BoardLogic boardLogic;
+
 
     public Board(String mapPath, int numberOfPlayers) {
         super(mapPath);
 
         this.players = new ArrayList<>();
+
+        this.scream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
+        this.robotCollide = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/robotCollide.mp3"));
+        this.wall_Collision = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/robotCollide.mp3"));
+
+        this.boardLogic = new BoardLogic(this);
 
         addPlayersToStartPositions(numberOfPlayers);
     }
@@ -214,13 +221,16 @@ public class Board extends BoardLayers {
         Direction direction = backUp ? player.getDirection().turnAround() : player.getDirection();
 
         if (!boardLogic.canGo(position, direction)) {
-            wallCollision.play(RallyGame.getSoundVolume());
+            wall_Collision.play(RallyGame.soundVolume);
+
             addPlayer(player);
             return;
         }
         if (boardLogic.shouldPush(player, direction)) {
             Player enemyPlayer = getPlayer(getNeighbourPosition(player.getPosition(), direction));
+
             if (boardLogic.canPush(enemyPlayer, direction)) {
+               robotCollide.play(RallyGame.soundVolume);
                 boardLogic.pushPlayer(enemyPlayer, direction);
             } else {
                 addPlayer(player);
@@ -253,6 +263,7 @@ public class Board extends BoardLayers {
     }
 
     /**
+
      * Add all players to board to make sure they're facing the correct direction
      */
     public void updateBoard() {
@@ -262,6 +273,7 @@ public class Board extends BoardLayers {
     }
 
     /**
+
      * Remove all {@link Player} from board
      */
     public void removePlayersFromBoard() {
@@ -271,6 +283,7 @@ public class Board extends BoardLayers {
     }
 
     /**
+
      * Get all neighbour cells for a position
      * @param position to find neighbours from
      * @return list of {@link Vector2} positions
@@ -315,11 +328,12 @@ public class Board extends BoardLayers {
         return neighbourPosition;
     }
 
+
     // TODO: DENNE KAN SLETTES
     public void respawnPlayers() {
         for (Player player : players) {
             if (boardLogic.outsideBoard(player)) {
-                WilhelmScream.play(RallyGame.getSoundVolume());
+                scream.play(RallyGame.soundVolume);
                 player.decrementLifeTokens();
                 respawn(player);
             }
@@ -429,8 +443,9 @@ public class Board extends BoardLayers {
 
 
     public void dispose() {
-        wallCollision.dispose();
-        WilhelmScream.dispose();
+
+        wall_Collision.dispose();
+        scream.dispose();
         tiledMap.dispose();
     }
 }
