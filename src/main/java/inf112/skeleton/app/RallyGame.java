@@ -25,10 +25,8 @@ import inf112.skeleton.app.screens.ActorImages;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
 import inf112.skeleton.app.screens.gifscreen.GifScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
-import inf112.skeleton.app.screens.standardscreen.SettingsScreen;
-import inf112.skeleton.app.screens.gamescreen.GameScreen;
-import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
+import inf112.skeleton.app.screens.standardscreen.SettingsScreen;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
 import java.io.IOException;
@@ -588,7 +586,7 @@ public class RallyGame extends Game {
     public void decreaseLives() {
         ArrayList<Player> removedPlayers = new ArrayList<>();
         for (Player player : players) {
-            if (player.getDamageTokens() >= 10 || board.getBoardLogic().outsideBoard(player, board)) {
+            if (player.getDamageTokens() >= 10 || board.getBoardLogic().outsideBoard(player)) {
                 robotDestroyed.play(soundVolume);
                 player.decrementLifeTokens();
                 player.resetDamageTokens();
@@ -897,10 +895,6 @@ public class RallyGame extends Game {
         }
         try {
             gameMusic.dispose();
-        } catch (Exception ignored) {
-        }
-        try {
-            laserSound.dispose();
         } catch (Exception ignored) {
         }
         try {

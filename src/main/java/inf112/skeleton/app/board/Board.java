@@ -26,7 +26,7 @@ public class Board extends BoardLayers {
     private Sound robotCollide = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/robotCollide.mp3"));
 
 
-    private final BoardLogic boardLogic = new BoardLogic();
+    private final BoardLogic boardLogic = new BoardLogic(this);
 
     public Board(String mapPath, int numberOfPlayers) {
         super(mapPath);
@@ -213,7 +213,7 @@ public class Board extends BoardLayers {
         Vector2 position = player.getPosition();
         Direction direction = backUp ? player.getDirection().turnAround() : player.getDirection();
 
-        if (!boardLogic.canGo(position, direction, this)) {
+        if (!boardLogic.canGo(position, direction)) {
             wallCollision.play(RallyGame.getSoundVolume());
             addPlayer(player);
             return;
@@ -318,8 +318,8 @@ public class Board extends BoardLayers {
     // TODO: DENNE KAN SLETTES
     public void respawnPlayers() {
         for (Player player : players) {
-            if (boardLogic.outsideBoard(player, this)) {
-                WilhelmScream.play(game.getSoundVolume());
+            if (boardLogic.outsideBoard(player)) {
+                WilhelmScream.play(RallyGame.getSoundVolume());
                 player.decrementLifeTokens();
                 respawn(player);
             }
