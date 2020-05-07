@@ -219,4 +219,28 @@ public class Converter {
     public String createQuitMessage(int myPlayerNumber) {
         return (myPlayerNumber + " " + Messages.QUIT.toString());
     }
+
+    public String getMapPath(String message) {
+        return message.substring(Messages.HERE_IS_MAP.toString().length());
+    }
+
+    public String createMapPathMessage(String mapPath) {
+        return Messages.HERE_IS_MAP.toString()+mapPath;
+    }
+
+    public String createNumberOfPlayersMessage(int numberOfPlayers) {
+        return Messages.PLAYERS.toString()+numberOfPlayers;
+    }
+
+    public int getNumbersOfPlayers(String message) {
+        return Integer.parseInt(message.substring(Messages.PLAYERS.toString().length()));
+    }
+
+    public String createPlayerNumberMessage(int playerNumber) {
+        return Messages.YOUR_NUMBER.toString()+playerNumber;
+    }
+
+    public int getMyPlayerNumber(String message) {
+        return Integer.parseInt(message.substring(Messages.YOUR_NUMBER.toString().length()));
+    }
 }

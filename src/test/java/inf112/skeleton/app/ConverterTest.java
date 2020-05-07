@@ -161,5 +161,15 @@ public class ConverterTest {
         assertEquals("Hello I am player 6. :)", converter.getMessageFromPlayer("6 Hello I am player 6. :)"));
     }
 
+    @Test
+    public void getMapPathFromMessageTest() {
+        assertEquals("My map path", converter.getMapPath(converter.createMapPathMessage("My map path")));
+    }
+
+    @Test
+    public void getNumberOfPlayersTest() {
+        assertEquals(1, converter.getNumbersOfPlayers(converter.createNumberOfPlayersMessage(1)));
+    }
+
 }
 

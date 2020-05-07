@@ -26,8 +26,6 @@ public class GameClientThread extends Thread {
     private Semaphore continueListening;
     private Stack<ProgramCard> stack;
     private boolean receivingDeck;
-    private boolean receivingMap;
-    private String mapPath;
 
 
     public GameClientThread(RallyGame game, Socket clientSideSocket) {
@@ -52,7 +50,7 @@ public class GameClientThread extends Thread {
     @Override
     public void run() {
 
-        getStartValues();
+        //getStartValues();
 
         while (true) {
             String message = getMessage();
@@ -74,8 +72,8 @@ public class GameClientThread extends Thread {
                 game.startTurn();
                 waitForTurnToFinish();
             }
-            else if (message.equals(Messages.HERE_IS_MAP.toString())){
-                receivingMap = true;
+            else if (message.contains(Messages.HERE_IS_MAP.toString())){
+                giveMapToGameAndTellMapIsReceived(message);
             }
             else if (message.equals(Messages.DECK_BEGIN.toString())) {
                 createNewDeckAndWaitForCardsForThisDeck();
@@ -87,11 +85,11 @@ public class GameClientThread extends Thread {
                 game.getMenuScreenActors().showGameScreen();
                 System.out.println(message);
             }
+            else if (message.contains(Messages.YOUR_NUMBER.toString())) {
+                game.setPlayerNumber(converter.getMyPlayerNumber(message));
+            }
             else if (receivingDeck) {
                 addReceivedCardToDeck(message);
-            }
-            else if (receivingMap) {
-                giveMapToGameAndTellMapIsReceived(message);
             }
             else if (converter.isMessageFromAnotherPlayer(message)) {
                 int playerNumber = converter.getPlayerNumberFromMessage(message);
@@ -158,12 +156,10 @@ public class GameClientThread extends Thread {
     /**
      * When mapPath is received we can release {@link MenuScreenActors#haveReceivedMapPath()} and game can begin.
      *
-     * @param path mappath from server
+     * @param message from server
      */
-    public void giveMapToGameAndTellMapIsReceived(String path) {
-        this.mapPath = path;
-        game.setMapPath(mapPath);
-        receivingMap = false;
+    public void giveMapToGameAndTellMapIsReceived(String message) {
+        game.setMapPath(converter.getMapPath(message));
         System.out.println("Got map");
         game.getMenuScreenActors().haveReceivedMapPath();
     }
@@ -282,11 +278,4 @@ public class GameClientThread extends Thread {
         return stack;
     }
 
-    /**
-     * 
-     * @return the map received from server
-     */
-    public String getMap() {
-        return mapPath;
-    }
 }

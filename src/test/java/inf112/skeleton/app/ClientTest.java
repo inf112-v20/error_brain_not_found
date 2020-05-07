@@ -89,18 +89,20 @@ public class ClientTest {
     @Test
     public void clientGetCorrectPlayerNumberTest() {
         try {
-            when(reader.readLine()).thenReturn("3", "4");
+            when(reader.readLine()).thenReturn(converter.createPlayerNumberMessage(3))
+            .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        client.getStartValues();
-        assertEquals(3, client.getMyPlayerNumber());
+        client.start();
+        waitForThread(client);
+        verify(game).setPlayerNumber(3);
     }
 
     @Test
     public void clientGetCorrectNumberOfPlayersTest() {
         try {
-            when(reader.readLine()).thenReturn("3", "4");
+            when(reader.readLine()).thenReturn(converter.createNumberOfPlayersMessage(4));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -113,8 +115,6 @@ public class ClientTest {
         String programCardAsString = converter.convertToString(1, programcard);
         try {
             when(reader.readLine())
-                    .thenReturn("3")
-                    .thenReturn("4")
                     .thenReturn(programCardAsString);
         } catch (IOException e) {
             e.printStackTrace();
@@ -137,7 +137,6 @@ public class ClientTest {
         String programCardNotBelongingToDeck = converter.convertToString(1, programcard);
         try {
             when(reader.readLine())
-                    .thenReturn("3", "4")
                     .thenReturn(Messages.DECK_BEGIN.toString())
                     .thenReturn(programCardString)
                     .thenReturn(Messages.DECK_END.toString())
@@ -156,23 +155,20 @@ public class ClientTest {
     public void receivingCorrectMapTest() {
         try {
             when(reader.readLine())
-                    .thenReturn("3", "4")
-                    .thenReturn(Messages.HERE_IS_MAP.toString())
-                    .thenReturn("assets/maps/Risky Exchange.tmx")
+                    .thenReturn(converter.createMapPathMessage("assets/maps/Risky Exchange.tmx"))
                     .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
             e.printStackTrace();
         }
         client.start();
         waitForThread(client);
-        assertEquals("assets/maps/Risky Exchange.tmx", client.getMap());
+        verify(game).setMapPath("assets/maps/Risky Exchange.tmx");
     }
 
     @Test
     public void playerOneSendsPoweringDownTest() {
         try {
             when(reader.readLine())
-                    .thenReturn("3", "4")
                     .thenReturn(converter.createMessageFromPlayer(1, Messages.POWERING_DOWN))
                     .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
@@ -187,7 +183,6 @@ public class ClientTest {
     public void playerOneSendsPowerUpTest() {
         try {
             when(reader.readLine())
-                    .thenReturn("3", "4")
                     .thenReturn(converter.createMessageFromPlayer(1, Messages.POWER_UP))
                     .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
@@ -202,7 +197,6 @@ public class ClientTest {
     public void playerOneSendsPowerDownIsRegisteredTest() {
         try {
             when(reader.readLine())
-                    .thenReturn("3", "4")
                     .thenReturn(converter.createMessageFromPlayer(1, Messages.POWERING_DOWN))
                     .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
@@ -217,7 +211,6 @@ public class ClientTest {
     public void playerOneSendsPowerUpIsRemovedFromPoweredDownInGameTest() {
         try {
             when(reader.readLine())
-                    .thenReturn("3", "4")
                     .thenReturn(converter.createMessageFromPlayer(1, Messages.POWER_UP))
                     .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
@@ -232,7 +225,6 @@ public class ClientTest {
     public void continueTurnWhenServerSendsContinueMessage() {
         try {
             when(reader.readLine())
-                    .thenReturn("3", "4")
                     .thenReturn(Messages.CONTINUE_TURN.toString())
                     .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
@@ -249,7 +241,6 @@ public class ClientTest {
     public void client2SendsQuitMessageTest() {
         try {
             when(reader.readLine())
-                    .thenReturn("3", "4")
                     .thenReturn(converter.createQuitMessage(2))
                     .thenReturn(Messages.STOP_THREAD.toString());
         } catch (IOException e) {
