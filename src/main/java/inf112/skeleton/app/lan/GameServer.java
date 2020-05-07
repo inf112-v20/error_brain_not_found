@@ -315,12 +315,12 @@ public class GameServer {
     }
 
     /**
-     * Stop while loop and close serversockt if false.
+     * Stop while loop and close serversocket if false.
      * @param connectingToClients
      */
     public void setConnectingToClients(boolean connectingToClients) {
         this.connectingToClients = connectingToClients;
-        if (connectingToClients == false) {
+        if (!connectingToClients) {
             try {
                 serverSocket.close();
             } catch (IOException e) {

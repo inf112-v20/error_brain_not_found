@@ -52,10 +52,6 @@ public class RallyGame extends Game {
     private int myPlayerNumber;
     private ServerThread serverThread;
 
-    public boolean isServer() {
-        return isServer;
-    }
-
     private boolean isServer;
     private GameClientThread client;
     private Converter converter;
@@ -979,5 +975,9 @@ public class RallyGame extends Game {
             return serverThread.getServer();
         }
         return null;
+    }
+
+    public boolean isServer() {
+        return isServer;
     }
 }

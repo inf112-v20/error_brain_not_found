@@ -18,7 +18,6 @@ public class GameClientThread extends Thread {
 
     private Socket clientSideSocket;
     private int myPlayerNumber;
-    private int numberOfPlayers;
     private PrintWriter writer;
     private BufferedReader reader;
     private RallyGame game;
@@ -80,7 +79,8 @@ public class GameClientThread extends Thread {
                 giveDeckToGameAndTellStartValuesAreReceived();
             }
             else if (message.contains(Messages.YOUR_NUMBER.toString())) {
-                game.setPlayerNumber(converter.getMyPlayerNumber(message));
+                myPlayerNumber = converter.getMyPlayerNumber(message);
+                game.setPlayerNumber(myPlayerNumber);
             }
             else if (message.contains(Messages.PLAYERS.toString())) {
                 game.setNumberOfPlayers(converter.getNumbersOfPlayers(message));
