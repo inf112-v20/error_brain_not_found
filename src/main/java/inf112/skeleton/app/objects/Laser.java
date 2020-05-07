@@ -21,6 +21,7 @@ public class Laser {
     public void fire(RallyGame game, Vector2 position) {
         game.getBoard().addLaser(position, direction);
         if (game.getBoard().hasPlayer(position)) {
+            game.hitByLaser.play(game.getSoundVolume());
             game.getBoard().getPlayer(position).handleDamage();
         } else if (game.getBoard().getBoardLogic().canFire(position, this.direction, game.board)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));

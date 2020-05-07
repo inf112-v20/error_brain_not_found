@@ -43,6 +43,11 @@ public class RallyGame extends Game {
     public Sound firstBeltStartUp;
     public Sound secondBeltStartUp;
     public Sound repairRobotSound;
+    public Sound hitByLaser;
+    public Sound robotDestroyed;
+    public Sound wallCollision;
+    public Sound WilhelmScream;
+    public Sound robotCollide;
     public Music gameMusic;
 
     public Player mainPlayer;
@@ -68,6 +73,7 @@ public class RallyGame extends Game {
         this.mainPlayer = board.getPlayer1();
         this.respawnPlayers = new ArrayList<>();
 
+
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
         this.playing = true;
@@ -78,6 +84,11 @@ public class RallyGame extends Game {
         this.firstBeltStartUp = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/firstBeltStartUp.mp3"));
         this.secondBeltStartUp = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/secondBeltStartUp.mp3"));
         this.repairRobotSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/Repair.mp3"));
+        this.hitByLaser = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserHit.mp3"));
+        this.robotDestroyed = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/Destroyed.mp3"));
+        this.WilhelmScream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
+        this.wallCollision = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/wall_Collision.mp3"));
+        this.robotCollide = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/robotCollide.mp3"));
 
         new Thread(this::doTurn).start();
 
@@ -162,11 +173,13 @@ public class RallyGame extends Game {
 
     public void startMusic() {
         loadMusic();
-
         gameMusic.setVolume(soundVolume);
-
         gameMusic.setLooping(true);
         gameMusic.play();
+    }
+
+    public float getSoundVolume(){
+        return soundVolume;
     }
 
     private void cardsReady() {
@@ -211,41 +224,42 @@ public class RallyGame extends Game {
                 sleep(250);
 
                 // Express belts move 1
-                activateBelts(true);
-                firstBeltStartUp.play(soundVolume);
-                sleep(500);
-
+                if (!board.getExpressBelts().isEmpty()) {
+                    activateBelts(true);
+                    sleep(1000);
+                }
                 decreaseLives();
 
                 // All belts move 1
                 activateBelts(false);
-                secondBeltStartUp.play(soundVolume);
-                sleep(1000);
+                sleep(1300);
 
                 // Rotate pads rotate
                 activateRotatePads();
-                sleep(250);
+                sleep(800);
 
+                //legg en if statement som sjekker om alle robotter lever og ikke i powerdown
                 // Fire lasers for 250 ms
                 firePlayerLaser();
-                sleep(250);
+                sleep(350);
                 removeLasers();
-                sleep(500);
+                sleep(650);
 
                 decreaseLives();
 
                 // Fire lasers for 250 ms
                 if (!board.getLasers().isEmpty()) {
                     fireLasers();
-                    sleep(250);
+                    sleep(350);
                     removeLasers();
-                    sleep(500);
+                    sleep(650);
 
                     decreaseLives();
                 }
 
-                activateRepairTiles();
-                sleep(250);
+                activateRepairTiles(); //sound file lasts for 2secs
+                //sleep(1500);
+                sleep(10);
 
                 pickUpFlags();
                 sleep(500);
@@ -301,6 +315,7 @@ public class RallyGame extends Game {
         ArrayList<Player> removedPlayers = new ArrayList<>();
         for (Player player : players) {
             if (player.getDamageTokens() >= 10 || board.getBoardLogic().outsideBoard(player, board)) {
+                robotDestroyed.play(soundVolume);
                 player.decrementLifeTokens();
                 player.resetDamageTokens();
                 board.removePlayerFromBoard(player);
@@ -431,6 +446,13 @@ public class RallyGame extends Game {
                 }
             }
         }
+        if (!onlyExpress){
+            firstBeltStartUp.play(soundVolume);
+        }
+        else {
+            secondBeltStartUp.play(soundVolume);
+        }
+        sleep(500);
         validateBeltPushPos();
         updateBoard();
     }
@@ -510,6 +532,13 @@ public class RallyGame extends Game {
         try {
             gameMusic.dispose();
             walledLaserSound.dispose();
+            repairRobotSound.dispose();
+            firstBeltStartUp.dispose();
+            secondBeltStartUp.dispose();
+            robotDestroyed.dispose();
+            robotLaserSound.dispose();
+            wallCollision.dispose();
+            WilhelmScream.dispose();
             screen.dispose();
             board.dispose();
         } catch (Exception ignored) {

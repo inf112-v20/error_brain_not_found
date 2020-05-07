@@ -1,7 +1,5 @@
 package inf112.skeleton.app.board;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
@@ -21,8 +19,7 @@ public class Board extends BoardLayers {
 
     private final ArrayList<Player> players;
 
-    private final Sound scream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
-    private final Sound wallImpact = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/ImpactWall.mp3"));
+    RallyGame game = new RallyGame();
 
     private final BoardLogic boardLogic = new BoardLogic();
 
@@ -210,14 +207,16 @@ public class Board extends BoardLayers {
         Direction direction = backUp ? player.getDirection().turnAround() : player.getDirection();
 
         if (!boardLogic.canGo(position, direction, this)) {
-            wallImpact.play(RallyGame.soundVolume);
+            game.wallCollision.play(game.getSoundVolume());
             addPlayer(player);
             return;
         }
         if (boardLogic.shouldPush(player, this)) {
             Player enemyPlayer = getPlayer(getNeighbourPosition(player.getPosition(), direction));
             if (boardLogic.canPush(enemyPlayer, direction, this)) {
+                game.robotCollide.play(game.getSoundVolume());
                 boardLogic.pushPlayer(enemyPlayer, direction, this);
+
             } else {
                 addPlayer(player);
                 return;
@@ -317,7 +316,7 @@ public class Board extends BoardLayers {
     public void respawnPlayers() {
         for (Player player : players) {
             if (boardLogic.outsideBoard(player, this)) {
-                scream.play(RallyGame.soundVolume);
+                game.WilhelmScream.play(game.getSoundVolume());
                 player.decrementLifeTokens();
                 respawn(player);
             }
@@ -430,8 +429,6 @@ public class Board extends BoardLayers {
      *
      */
     public void dispose() {
-        wallImpact.dispose();
-        scream.dispose();
         tiledMap.dispose();
     }
 }
