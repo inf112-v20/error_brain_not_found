@@ -19,6 +19,7 @@ public class LoadingScreen extends StandardScreen {
         background.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                game.getScreen().dispose();
                 game.setScreen(new MenuScreen(game));
             }
 

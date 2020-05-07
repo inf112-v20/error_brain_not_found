@@ -23,11 +23,6 @@ import inf112.skeleton.app.objects.player.Player;
 import inf112.skeleton.app.objects.player.PlayerSorter;
 import inf112.skeleton.app.screens.ActorImages;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
-
-import inf112.skeleton.app.screens.menuscreen.MenuScreen;
-import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
-
-import inf112.skeleton.app.screens.standardscreen.SettingsScreen;
 import inf112.skeleton.app.screens.gifscreen.GifScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
@@ -267,13 +262,11 @@ public class RallyGame extends Game {
     }
 
     public void returnToLastScreen() {
-
         if (this.screen instanceof SettingsScreen) {
-
             if (lastScreen instanceof GameScreen) {
                 setScreen(new GameScreen(this));
             } else if (lastScreen instanceof MenuScreen) {
-                setScreen(new MenuScreen(this));
+                setScreen(lastScreen);
             }
         } else {
             setScreen(new SettingsScreen(this));
@@ -282,7 +275,7 @@ public class RallyGame extends Game {
 
     @Override
     public void setScreen(Screen screen) {
-        if (this.screen != null) {
+        if (this.screen != null && !(this.screen instanceof MenuScreen)) {
             this.screen.dispose();
         }
         if (!(screen instanceof SettingsScreen)) {

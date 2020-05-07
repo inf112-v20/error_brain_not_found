@@ -24,12 +24,8 @@ public class MenuScreenActors {
     public float screenWidth;
     public float screenHeight;
 
-    public float BUTTON_WIDTH;
-    public float BUTTON_HEIGHT;
     public final float BUTTON_WIDTH;
     public final float BUTTON_HEIGHT;
-    public final float BUTTON_X;
-    public final float BUTTON_Y;
     public final float START_BUTTON_Y;
     public final float EXIT_BUTTON_Y;
     public final float SETTINGS_BUTTON_Y;
@@ -44,9 +40,6 @@ public class MenuScreenActors {
     public float FONT_SCALE;
     public final float BUTTON_X;
     public final float BUTTON_Y;
-    public final float START_BUTTON_Y;
-    public final float EXIT_BUTTON_Y;
-    public final float SETTINGS_BUTTON_Y;
 
     private SelectBox<String> selectMap;
     private ImageButton startButton;
@@ -74,7 +67,6 @@ public class MenuScreenActors {
         SETTINGS_BUTTON_Y = (float) (screenHeight * 0.5 - (BUTTON_HEIGHT *2));
         BUTTON_X = (BUTTON_WIDTH * 1);
         BUTTON_Y = (BUTTON_WIDTH * 2);
-
 
         TOP_BUTTON_Y = (float) (screenHeight * 0.5);
         BOTTOM_BUTTON_Y = (float) (screenHeight * 0.5 - BUTTON_HEIGHT);
@@ -351,10 +343,10 @@ public class MenuScreenActors {
     }
 
     public void updateErrorLabel(TextField textField) {
-        if (textField.equals(IPInput)) {
-            errorLabel.setText("Invalid IP address");
-        } else {
+        if (textField == null) {
             errorLabel.setText("Could not connect to " + IPInput.getText() + " on port 9000");
+        } else if (textField.equals(IPInput)) {
+            errorLabel.setText("Invalid IP address");
         }
         IPInput.setText("");
     }
