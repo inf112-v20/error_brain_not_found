@@ -14,6 +14,7 @@ public class Main {
         cfg.vSyncEnabled = true;
         //cfg.fullscreen = true;
 
+
         new LwjglApplication(new RallyGame(), cfg);
     }
 }

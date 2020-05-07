@@ -90,7 +90,7 @@ public class Registers {
         return open;
     }
 
-    public int getCardsSelected() {
+    public int getNumberOfCardsSelected() {
         int cards = 0;
         for (Register register : registers) {
             if (!register.hasCard()) {
@@ -114,19 +114,14 @@ public class Registers {
         }
     }
 
-    public void openOneRegister() {
+    public ArrayList<ProgramCard> getCards() {
+        ArrayList<ProgramCard> cards = new ArrayList<>();
         for (Register register : registers) {
-            if (!register.isOpen()) {
-                register.setOpen(true);
-                return;
+            if (register.hasCard()) {
+                cards.add(register.getProgramCard());
             }
         }
-    }
-
-    public void openAllRegisters() {
-        for (Register register : registers) {
-            register.setOpen(true);
-        }
+        return cards;
     }
 
     public void updateRegisters(int damageToken) {
