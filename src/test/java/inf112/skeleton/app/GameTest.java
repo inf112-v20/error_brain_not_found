@@ -24,19 +24,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-
 import java.util.ArrayList;
 import java.util.Arrays;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GameTest {
@@ -72,7 +65,8 @@ public class GameTest {
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
         this.game = new RallyGame();
-        this.game.setupGame("assets/maps/Risky Exchange.tmx");
+        this.game.setMapPath("assets/maps/Risky Exchange.tmx");
+        this.game.setupGame();
         this.game.setDeck(new Deck().getDeck());
         this.game.setScreen(screen);
         Board board = game.getBoard();

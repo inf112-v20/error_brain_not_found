@@ -13,19 +13,20 @@ public class MenuScreen extends StandardScreen {
 
         actors = new MenuScreenActors(game, stage);
         actors.initializeBackground();
-        actors.initializeSelectMap();
-        actors.initializeStartButton();
         actors.initializeExitButton();
         actors.initializeCreateGame();
         actors.initializeJoinGame();
-        actors.initializeIPInput();
-        actors.initializeWaitForHostLabel();
-        actors.initializeIPLabel();
-        actors.initializeErrorLabel();
-        actors.initializeWaitForClientsLabel();
     }
 
     public MenuScreenActors getActors() {
         return actors;
+    }
+
+    @Override
+    public void render(float v) {
+        super.render(v);
+        if (game.isServer()) {
+            actors.updateClientsConnectedLabel();
+        }
     }
 }

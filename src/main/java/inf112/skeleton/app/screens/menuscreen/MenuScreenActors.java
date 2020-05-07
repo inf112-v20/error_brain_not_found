@@ -4,11 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import inf112.skeleton.app.RallyGame;
@@ -35,21 +31,20 @@ public class MenuScreenActors {
     public float CENTERED_BUTTON_X;
     public float LEFT_BUTTON_X;
     public float RIGHT_BUTTON_X;
+    public float LABEL_Y;
+    public float FONT_SCALE;
 
     private SelectBox<String> selectMap;
     private ImageButton startButton;
     private ImageButton createGameButton;
     private ImageButton joinGameButton;
     private TextField IPInput;
-    private Label waitForHost;
-    public Label IPLabel;
+    private Label IPLabel;
     private Label errorLabel;
+    private Label clientsConnectedLabel;
     private Semaphore waitForServerToSendStartValues = new Semaphore(1);
     private Semaphore waitForServerToSendMapPath = new Semaphore(1);
     private Thread waitForGameSetupThread;
-    private Label waitForClients;
-    private int clientsConnected;
-    private Label clientsConnectedLabel;
 
     public MenuScreenActors(RallyGame game, Stage stage) {
         this.game = game;
@@ -69,6 +64,9 @@ public class MenuScreenActors {
         LEFT_BUTTON_X = (float) (screenWidth * 0.5 - BUTTON_WIDTH);
         RIGHT_BUTTON_X = (float) (screenWidth * 0.5);
 
+        LABEL_Y = screenHeight * (440f/540f);
+        FONT_SCALE = screenWidth / 960f;
+
         try {
             waitForServerToSendStartValues.tryAcquire();
             waitForServerToSendMapPath.tryAcquire();
@@ -77,6 +75,7 @@ public class MenuScreenActors {
         }
     }
 
+    // BUTTONS
     public void initializeStartButton() {
         ImageButton.ImageButtonStyle startButtonStyle = new ImageButton.ImageButtonStyle();
         startButtonStyle.up = game.actorImages.getSkin().getDrawable("Start");
@@ -88,17 +87,15 @@ public class MenuScreenActors {
         startButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if (game.getServer().getNumberOfConnectedClients() > 0) {
-                    game.getServer().setMapPath("assets/maps/" + selectMap.getSelected() + ".tmx");
-                    game.getServer().setConnectingToClients(false);
-                    game.setupGame();
-                    game.setScreen(new GameScreen(game));
-                }
+                game.getServer().setMapPath("assets/maps/" + selectMap.getSelected() + ".tmx");
+                game.getServer().setConnectingToClients(false);
+                game.setupGame();
+                game.setScreen(new GameScreen(game));
             }
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return true;
+                return game.getServer().getNumberOfConnectedClients() > 0;
             }
         });
         startButton.setVisible(false);
@@ -125,33 +122,6 @@ public class MenuScreenActors {
             }
         });
         stage.addActor(exitButton);
-    }
-
-    public void initializeSelectMap() {
-        selectMap = new SelectBox<>(game.getDefaultSkin());
-        selectMap.setItems(getMaps());
-        selectMap.setSelected("Risky Exchange");
-        selectMap.setWidth(BUTTON_WIDTH * .87f);
-        selectMap.setPosition(screenWidth / 2f - selectMap.getWidth() / 2f, TEXT_INPUT_Y);
-        selectMap.setVisible(false);
-        stage.addActor(selectMap);
-    }
-
-    private Array<String> getMaps() {
-        Array<String> mapArray = new Array<>();
-        File maps = new File("assets/maps");
-        for (String fileType : Objects.requireNonNull(maps.list())) {
-            if (fileType.endsWith(".tmx")) {
-                mapArray.add(fileType.substring(0, fileType.length() - 4));
-            }
-        }
-        return mapArray;
-    }
-
-    public void initializeBackground() {
-        Image background = new Image(game.getActorImages().getDrawable("Menu screen background"));
-        background.setSize(screenWidth, screenHeight);
-        stage.addActor(background);
     }
 
     public void initializeCreateGame() {
@@ -201,7 +171,7 @@ public class MenuScreenActors {
                 if (createGameButton.isVisible()) {
                     toggleVisibilityJoinFirstClick();
                 } else {
-                    if (!"".equals(IPInput.getText())) {
+                    if (validIP(IPInput.getText())) {
                         if (setUpClient()) {
                             toggleVisibilityJoinSecondClick();
                             waitForGameSetUpAndStartGame();
@@ -222,56 +192,60 @@ public class MenuScreenActors {
         stage.addActor(joinGameButton);
     }
 
+    public void initializeSelectMap() {
+        selectMap = new SelectBox<>(game.getDefaultSkin());
+        selectMap.setItems(getMaps());
+        selectMap.setSelected("Risky Exchange");
+        selectMap.setWidth(BUTTON_WIDTH * .87f);
+        selectMap.setPosition(screenWidth / 2f - selectMap.getWidth() / 2f, TEXT_INPUT_Y);
+        selectMap.setVisible(false);
+        stage.addActor(selectMap);
+    }
+
+    private Array<String> getMaps() {
+        Array<String> mapArray = new Array<>();
+        File maps = new File("assets/maps");
+        for (String fileType : Objects.requireNonNull(maps.list())) {
+            if (fileType.endsWith(".tmx")) {
+                mapArray.add(fileType.substring(0, fileType.length() - 4));
+            }
+        }
+        return mapArray;
+    }
+
+    public void initializeBackground() {
+        Image background = new Image(game.getActorImages().getDrawable("Menu screen background"));
+        background.setSize(screenWidth, screenHeight);
+        stage.addActor(background);
+    }
+
+    // LABELS AND TEXTFIELD
+
     public void initializeIPInput() {
         IPInput = new TextField("", game.getDefaultSkin());
         IPInput.setMessageText("IP address");
         IPInput.setWidth(BUTTON_WIDTH * .87f);
-        IPInput.setPosition(screenWidth / 2f - (BUTTON_WIDTH * .87f ) / 2f, TEXT_INPUT_Y);
-        IPInput.setVisible(false);
+        IPInput.setPosition(CENTERED_BUTTON_X + (BUTTON_WIDTH * .065f), TEXT_INPUT_Y);
         IPInput.setTextFieldFilter(new IPInputFilter());
         stage.addActor(IPInput);
     }
 
     public void initializeWaitForHostLabel() {
-        waitForHost = new Label("Wait for host to start game", game.getDefaultSkin());
+        Label waitForHost = new Label("Wait for host to start game", game.getTextSkin(), "button");
         waitForHost.setPosition(CENTERED_BUTTON_X, TOP_BUTTON_Y);
         waitForHost.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         waitForHost.setAlignment(Align.center);
-        waitForHost.setFontScale(2);
-        waitForHost.setVisible(false);
+        waitForHost.setFontScale(FONT_SCALE);
         stage.addActor(waitForHost);
     }
 
-    public void initializeWaitForClientsLabel() {
-        waitForClients = new Label("Wait for clients to connect...", game.getDefaultSkin());
-        waitForClients.setPosition(CENTERED_BUTTON_X, TOP_BUTTON_Y);
-        waitForClients.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-        waitForClients.setAlignment(Align.center);
-        waitForClients.setFontScale(2);
-        waitForClients.setVisible(false);
-        stage.addActor(waitForClients);
-    }
-
-    public void toggleVisibilityCreateClick() {
-        createGameButton.setVisible(false);
-        joinGameButton.setVisible(false);
-        selectMap.setVisible(true);
-        startButton.setVisible(true);
-        IPLabel.setVisible(true);
-        errorLabel.setVisible(false);
-    }
-
-    public void toggleVisibilityJoinFirstClick() {
-        createGameButton.setVisible(false);
-        joinGameButton.setPosition(CENTERED_BUTTON_X, TOP_BUTTON_Y);
-        IPInput.setVisible(true);
-    }
-
-    public void toggleVisibilityJoinSecondClick() {
-        joinGameButton.setVisible(false);
-        IPInput.setVisible(false);
-        waitForHost.setVisible(true);
-        errorLabel.setVisible(false);
+    public void initializeClientsConnectedLabel() {
+        this.clientsConnectedLabel = new Label("0 clients connected", game.getTextSkin(), "button");
+        clientsConnectedLabel.setPosition(screenWidth * 0.63f, LABEL_Y);
+        clientsConnectedLabel.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        clientsConnectedLabel.setAlignment(Align.center);
+        clientsConnectedLabel.setFontScale(FONT_SCALE * 0.8f);
+        stage.addActor(clientsConnectedLabel);
     }
 
     public void initializeIPLabel() {
@@ -280,32 +254,78 @@ public class MenuScreenActors {
             IP = InetAddress.getLocalHost().getHostAddress();
         } catch (Exception ignored) {
         }
-        IPLabel = new Label("Your IP: " + IP, game.getDefaultSkin());
-        IPLabel.setPosition(CENTERED_BUTTON_X, TEXT_INPUT_Y + selectMap.getHeight());
+        IPLabel = new Label("IP: " + IP, game.getTextSkin(), "button");
+        IPLabel.setPosition(screenWidth*0.072f, LABEL_Y);
         IPLabel.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         IPLabel.setAlignment(Align.center);
-        IPLabel.setFontScale(1.5f);
+        IPLabel.setFontScale(FONT_SCALE * 0.8f);
         IPLabel.setVisible(false);
         stage.addActor(IPLabel);
     }
 
+    public void updateClientsConnectedLabel() {
+        int connected = getClientsConnected();
+        clientsConnectedLabel.setText(connected + (connected == 1 ? " client": " clients") + " connected");
+    }
+
+    public void toggleVisibilityCreateClick() {
+        initializeSelectMap();
+        initializeStartButton();
+        initializeIPLabel();
+        initializeClientsConnectedLabel();
+        createGameButton.setVisible(false);
+        joinGameButton.setVisible(false);
+        selectMap.setVisible(true);
+        startButton.setVisible(true);
+        IPLabel.setVisible(true);
+    }
+
+    public void toggleVisibilityJoinFirstClick() {
+        createGameButton.setVisible(false);
+        joinGameButton.setPosition(CENTERED_BUTTON_X, TOP_BUTTON_Y);
+        initializeIPInput();
+        initializeErrorLabel();
+    }
+
+    public void toggleVisibilityJoinSecondClick() {
+        initializeWaitForHostLabel();
+        joinGameButton.setVisible(false);
+        IPInput.setVisible(false);
+        errorLabel.setVisible(false);
+    }
+
     public void initializeErrorLabel() {
-        errorLabel = new Label("", game.getDefaultSkin());
-        errorLabel.setPosition(CENTERED_BUTTON_X, TEXT_INPUT_Y + selectMap.getHeight());
+        errorLabel = new Label("", game.getTextSkin(), "button");
+        errorLabel.setPosition(CENTERED_BUTTON_X, LABEL_Y);
         errorLabel.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         errorLabel.setAlignment(Align.center);
-        errorLabel.setFontScale(1.5f);
+        errorLabel.setFontScale(FONT_SCALE * 0.8f);
         stage.addActor(errorLabel);
     }
 
     public void updateErrorLabel(TextField textField) {
         if (textField == IPInput) {
-            errorLabel.setText("Invalid IP number");
+            errorLabel.setText("Invalid IP address");
         } else {
             errorLabel.setText("Could not connect to " + IPInput.getText() + " on port 9000");
         }
         IPInput.setText("");
     }
+
+    public boolean ipAddress(String ip) {
+        for (char c : ip.toCharArray()) {
+            if (!(Character.isDigit(c) || (c == '.'))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean validIP(String ip) {
+        return !ip.equals("") && (ip.toLowerCase().equals("localhost") || ipAddress(ip));
+    }
+
+    // LAN STUFF
 
     /**
      * Release {@link #waitForGameSetup()} so that game can start.
@@ -366,19 +386,6 @@ public class MenuScreenActors {
 
     public int getClientsConnected() {
         return game.getServer().getNumberOfConnectedClients();
-    }
-
-    public void initializeClientsConnectedLabel() {
-        this.clientsConnectedLabel = new Label("0 clients connected", game.getTextSkin());
-        clientsConnectedLabel.setPosition(CENTERED_BUTTON_X, TEXT_INPUT_Y + selectMap.getHeight());
-        clientsConnectedLabel.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-        clientsConnectedLabel.setAlignment(Align.center);
-        clientsConnectedLabel.setFontScale(1f);
-        stage.addActor(clientsConnectedLabel);
-    }
-
-    public void updateClientsConnectedLabel() {
-        clientsConnectedLabel.setText(getClientsConnected() + " clients connected");
     }
 }
 

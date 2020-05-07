@@ -6,23 +6,23 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.math.Vector2;
-import inf112.skeleton.app.lan.Converter;
-import inf112.skeleton.app.lan.GameClientThread;
-import inf112.skeleton.app.lan.GameServer;
-import inf112.skeleton.app.lan.ServerThread;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.Messages;
+import inf112.skeleton.app.lan.Converter;
+import inf112.skeleton.app.lan.GameClientThread;
+import inf112.skeleton.app.lan.GameServer;
+import inf112.skeleton.app.lan.ServerThread;
 import inf112.skeleton.app.objects.Belt;
 import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.objects.player.Player;
 import inf112.skeleton.app.objects.player.PlayerSorter;
-import inf112.skeleton.app.screens.gamescreen.GameScreen;
 import inf112.skeleton.app.screens.ActorImages;
+import inf112.skeleton.app.screens.gamescreen.GameScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
@@ -51,6 +51,11 @@ public class RallyGame extends Game {
     private int numberOfPlayers;
     private int myPlayerNumber;
     private ServerThread serverThread;
+
+    public boolean isServer() {
+        return isServer;
+    }
+
     private boolean isServer;
     private GameClientThread client;
     private Converter converter;
