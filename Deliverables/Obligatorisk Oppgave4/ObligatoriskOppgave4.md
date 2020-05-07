@@ -48,7 +48,7 @@ roles that we have. This has been beneficial to us because we can easier adopt o
 and often think about other members should use your code.   
 
 **The project:**
-
+These mounts we have learn a lot. In the start most of us had not used Git before. So the learning  
 ### Project board
 ![Project board form github]()
 
@@ -290,4 +290,9 @@ If a turn is played, the players should move at the same time.
 #### Choosing screen  
 *   The server chooses the screen. Start a new host and choose a map. Start a new client and join the game. The two screens 
 should bw identical.   
-*   Start a new host and choose one screen. Than exit the program and choose another screen. The screens should be different. 
+*   Start a new host and choose one screen. Than exit the program and choose another screen. The screens should be different.
+
+### Comment to classdiagram
+The project is getting big, so the diagram is no only the classes. If you want to se the content of the classes in the UML
+there is possible to put it on in the `ClassDiagramMandatoryAssignment4.uml` in the `Deliverables/ObligatoriskOppgave4`
+folder. 
