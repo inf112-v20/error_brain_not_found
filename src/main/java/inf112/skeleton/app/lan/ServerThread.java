@@ -7,14 +7,11 @@ import inf112.skeleton.app.RallyGame;
  * can finish, and the game-screen is shown.
  */
 public class ServerThread extends Thread {
-
-    private int numberOfPlayers;
     private GameServer server;
     private RallyGame game;
     private int portNumber;
 
-    public ServerThread(RallyGame game, int numberOfPlayers, int portNumber) {
-        this.numberOfPlayers = numberOfPlayers;
+    public ServerThread(RallyGame game, int portNumber) {
         this.game = game;
         this.portNumber = portNumber;
     }
@@ -24,10 +21,8 @@ public class ServerThread extends Thread {
      */
     public void run(){
         this.server = new GameServer(game);
-        int numberOfClients = this.numberOfPlayers-1;
         server.createServerSocket(portNumber);
-        //server.connect(numberOfClients);
-        server.connect(7);
+        server.connect();
     }
 
     /**

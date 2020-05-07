@@ -27,6 +27,8 @@ public class GameServer {
     private boolean allPoweredDownClientsHaveConfirmed;
     private boolean connectingToClients;
     private int waitForNextConnectionMilliSeconds;
+    private String mapPath;
+    private int numberOfPlayers;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
@@ -85,22 +87,22 @@ public class GameServer {
                 GameServerThreads client = new GameServerThreads(this, game, socket, playerNumber);
                 System.out.println("I have connected to player" + playerNumber);
                 client.start();
-                //sendStartValues(client, numberOfClients+1, playerNumber, this.deck);
-                if (game.getMapPath() == null) {
-                    haveSentMapPath.put(client, false);
-                } else {
-                    sendMapPath(client, game.getMapPath());
-                    haveSentMapPath.put(client, true);
-                }
+                sendPlayerNumberAndDeck(client, playerNumber, this.deck);
                 clients.add(client);
                 connected++;
                 if (waitForNextConnectionMilliSeconds != 0) {
                     waitForNextConnection(waitForNextConnectionMilliSeconds);
                 }
             }
+            this.numberOfPlayers = getConnectedClients()+1;
+            game.setNumberOfPlayers(numberOfPlayers);
             game.getMenuScreenActors().allClientsHaveConnected();
             sendToAll(Messages.SHOW_SCREEN.toString());
             System.out.println("Connected! :D");
+            sendToAll(converter.createNumberOfPlayersMessage(numberOfPlayers));
+            if (mapPath!=null) {
+                sendToAll(converter.createMapPathMessage(mapPath));
+            }
             serverSocket.close();
 
         } catch (IOException e) {
@@ -113,39 +115,11 @@ public class GameServer {
     }
 
     /**
-     * Send values so client can start game:
-     * Playernumber, number of players and a deck.
-     * @param client
+     * @param client to send to
      */
-    public void sendStartValues(GameServerThreads client, int numberOfPlayers, int playerNumber, Deck deck) {
-        client.sendMessage(playerNumber+"");
-        client.sendMessage(numberOfPlayers+"");
+    public void sendPlayerNumberAndDeck(GameServerThreads client, int playerNumber, Deck deck) {
+        client.sendMessage(converter.createPlayerNumberMessage(playerNumber));
         sendDeck(client, deck);
-    }
-
-    /**
-     * When the host calls on {@link RallyGame#setupGame(String)} (starts the game) after a client has connected,
-     * it needs to let the client know it has chosen a map so that it can send the map.
-     * @param mapPath
-     */
-    public void sendMapPathToNewlyConnectedClients(String mapPath) {
-        for (Map.Entry<GameServerThreads, Boolean> entry : haveSentMapPath.entrySet()) {
-            Boolean haveSentMap = entry.getValue();
-            if (!haveSentMap) {
-                GameServerThreads client = entry.getKey();
-                System.out.println("Have sent map to client");
-                sendMapPath(client, mapPath);
-                entry.setValue(true);
-            }
-        }
-    }
-
-    /**
-     * Send the map to a client.
-     */
-    public void sendMapPath(GameServerThreads client, String map) {
-        client.sendMessage(Messages.HERE_IS_MAP.toString());
-        client.sendMessage(map);
     }
 
     /**
@@ -282,16 +256,6 @@ public class GameServer {
         return allClientsHaveSelectedCardsOrIsPoweredDown;
     }
 
-    public boolean allClientsHaveReceivedMap() {
-        for (Map.Entry<GameServerThreads, Boolean> entry : haveSentMapPath.entrySet()) {
-            Boolean haveSentMap = entry.getValue();
-            if (!haveSentMap) {
-                return false;
-            }
-        }
-        return true;
-    }
-
     public void setServerHasConfirmed(boolean serverHasConfirmed) {
         this.serverHasConfirmed = serverHasConfirmed;
     }
@@ -356,5 +320,28 @@ public class GameServer {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * When server ends connection the number of clients are given.
+     *
+     *
+     * @return numberOfClients if server has ended connection, -1 if still connecting.
+     */
+    public int getConnectedClients() {
+        if (!connectingToClients) {
+            return clients.size();
+        }
+        return -1;
+    }
+
+    /**
+     * When server has pressed start, mappath should be set.
+     * Set mappath in game.
+     * @param mapPath
+     */
+    public void setMapPath(String mapPath) {
+        this.mapPath = mapPath;
+        game.setMapPath(mapPath);
     }
 }

@@ -1,8 +1,8 @@
 package inf112.skeleton.app;
 
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.lan.Converter;
 import inf112.skeleton.app.lan.GameServer;
-import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.objects.player.Player;
 import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
 import org.junit.Before;
@@ -19,7 +19,9 @@ import java.net.Socket;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyInt;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -27,6 +29,7 @@ import static org.mockito.Mockito.when;
 public class GameServerTest {
 
     private GameServer gameServer;
+    private Converter converter;
 
     @Mock
     private ServerSocket serverSocket;
@@ -57,6 +60,7 @@ public class GameServerTest {
             e.printStackTrace();
         }
         this.gameServer = new GameServer(game);
+        this.converter = new Converter();
         gameServer.setServerSocket(serverSocket);
         gameServer.setConnectingToClients(true);
     }
@@ -68,7 +72,7 @@ public class GameServerTest {
         // after 2 seconds, gives 2 connected clients.
         gameServer.setWaitBetweenEachConnection(1000);
         gameServer.setConnectingToClientsTimeout(2000);
-        assertEquals(2, gameServer.getClients().size());
+        assertEquals(2, gameServer.getConnectedClients());
     }
 
     @Test
@@ -87,17 +91,18 @@ public class GameServerTest {
     }
 
     @Test
-    public void sendStartValuesWhenNewClientConnectedTest() {
-        gameServer.connect(1);
-        // Deck is sent after numberofPlayers and playernumber
-        assertEquals(Messages.DECK_END.toString(), gameServer.getClients().get(0).getLastSentMessage());
+    public void sendPlayerNumberAndDeckWhenNewClientConnectedTest() {
+        GameServer spyServer = spy(gameServer);
+        spyServer.connect(1);
+        verify(spyServer).sendPlayerNumberAndDeck(any(), anyInt(), any());
     }
 
     @Test
-    public void hostHasPickedMapConnectingClientGetsMapTest() {
-        when(game.getMapPath()).thenReturn("My special map path");
-        gameServer.connect(1);
-        assertEquals("My special map path", gameServer.getClients().get(0).getLastSentMessage());
+    public void sendMapToClientsAfterMapIsChosenTest() {
+        GameServer spyServer = spy(gameServer);
+        spyServer.setMapPath("My map path");
+        spyServer.connect(1);
+        verify(spyServer).sendToAll(converter.createMapPathMessage("My map path"));
     }
 
     @Test

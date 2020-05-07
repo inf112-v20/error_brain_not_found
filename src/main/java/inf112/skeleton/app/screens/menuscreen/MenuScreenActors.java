@@ -94,8 +94,8 @@ public class MenuScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 if (isValidNumberOfPlayers(numOfPlayers.getText())) {
-                    // Allow client to set up game right away
-                    game.setMapPath("assets/maps/" + selectMap.getSelected() + ".tmx");
+                    game.getServer().setMapPath("assets/maps/" + selectMap.getSelected() + ".tmx");
+                    game.getServer().setConnectingToClients(false);
                     game.setupGame("assets/maps/" + selectMap.getSelected() + ".tmx");
                     game.setScreen(new GameScreen(game));
                 }
@@ -177,17 +177,18 @@ public class MenuScreenActors {
                 if (joinGameButton.isVisible()) {
                     toggleVisibilityCreateFirstClick();
                 } else {
-                    if (isValidNumberOfPlayers(numOfPlayers.getText())) {
+                    //if (isValidNumberOfPlayers(numOfPlayers.getText())) {
                         game.setIsServerToTrue();
                         // Defaul port is 9000
-                        game.setUpHost(9000, Integer.parseInt(numOfPlayers.getText()));
-                        waitForClients.setVisible(true);
+                        game.setUpHost(9000);
+                        //waitForClients.setVisible(true);
                         createGameButton.setVisible(false);
                         numOfPlayers.setVisible(false);
-                        waitForAllClientsToConnectBeforeStartingGame();
-                    }  else {
-                        updateInvalidInputLabel(numOfPlayers);
-                    }
+                        startButton.setVisible(true);
+                        //waitForAllClientsToConnectBeforeStartingGame();
+                   // }  else {
+                        //updateInvalidInputLabel(numOfPlayers);
+                   // }
                 }
             }
 

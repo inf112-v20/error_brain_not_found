@@ -99,21 +99,17 @@ public class RallyGame extends Game {
 
         new Thread(this::doTurn).start();
 
-        sendMapToClients();
-
         dealCards();
     }
 
     /**
      * Set up a host for this game.
      * @param portNumber on port
-     * @param numberOfPlayers in this game (including host)
      */
-    public void setUpHost(int portNumber, int numberOfPlayers) {
+    public void setUpHost(int portNumber) {
         this.isServer = true;
         this.myPlayerNumber = 1;
-        this.numberOfPlayers = numberOfPlayers;
-        this.serverThread = new ServerThread(this, numberOfPlayers, portNumber);
+        this.serverThread = new ServerThread(this, portNumber);
         serverThread.start();
     }
 
@@ -873,29 +869,6 @@ public class RallyGame extends Game {
     }
 
     /**
-     * Create a new thread to send map to clients that are connectet to server.
-     * If server have started {@link RallyGame#setupGame(String)} after client have connected,
-     * client needs to get notified that server has chosen map and get the map from server.
-     * If client joins after the host has picked a map, it will get the map right away.
-     *
-     * Send the map to all clients that are connected, until every client has a map.
-     *
-     *
-     * isServer needs to be true to send the map
-     */
-    private void sendMapToClients() {
-        if (isServer) {
-            // If clients have connected before you started game, give them the map
-            Thread sendMap = new Thread(() -> {
-                while (!serverThread.getServer().allClientsHaveReceivedMap()) {
-                    serverThread.getServer().sendMapPathToNewlyConnectedClients(mapPath);
-                }
-            });
-            sendMap.start();
-        }
-    }
-
-    /**
      * If a player has pressed powerDown button the round before, player is in powerDown.
      */
     public void powerDown() {
@@ -996,5 +969,12 @@ public class RallyGame extends Game {
 
     public void setPlayers(Player... players) {
         this.players = new ArrayList<>(Arrays.asList(players));
+    }
+
+    public GameServer getServer() {
+        if (isServer) {
+            return serverThread.getServer();
+        }
+        return null;
     }
 }
