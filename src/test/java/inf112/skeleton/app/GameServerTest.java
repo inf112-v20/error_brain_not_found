@@ -19,6 +19,8 @@ import java.net.Socket;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -56,18 +58,27 @@ public class GameServerTest {
         }
         this.gameServer = new GameServer(game);
         gameServer.setServerSocket(serverSocket);
+        gameServer.setConnectingToClients(true);
     }
 
     @Test
-    public void oneClientConnectedTest() {
-        gameServer.connect(1);
-        assertEquals(1, gameServer.getClients().size());
-    }
-
-    @Test
-    public void twoClientConnectedTest() {
-        gameServer.connect( 2);
+    public void clientsConnectUntilServerIsToldToCloseTest() {
+        new Thread(gameServer::connect).start();
+        // Make server wait for each new connection for 1 second, and stop connecting
+        // after 2 seconds, gives 2 connected clients.
+        gameServer.setWaitBetweenEachConnection(1000);
+        gameServer.setConnectingToClientsTimeout(2000);
         assertEquals(2, gameServer.getClients().size());
+    }
+
+    @Test
+    public void serverStopsConnectionAfterMaxNumberOfConnectionsIsMadeTest() {
+        gameServer.connect(2);
+        try {
+            verify(serverSocket).close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

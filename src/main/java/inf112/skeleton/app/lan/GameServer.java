@@ -25,6 +25,8 @@ public class GameServer {
     private boolean serverHasConfirmed;
     private ServerSocket serverSocket;
     private boolean allPoweredDownClientsHaveConfirmed;
+    private boolean connectingToClients;
+    private int waitForNextConnectionMilliSeconds;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
@@ -34,6 +36,7 @@ public class GameServer {
         this.deck = new Deck();
         deck.shuffleDeck();
         game.setDeck(deck.getDeck());
+        this.connectingToClients = true;
     }
 
     /**
@@ -63,23 +66,26 @@ public class GameServer {
      * If no serverSocket is made by {@link #setServerSocket(ServerSocket)} or {@link #createServerSocket(int)} then
      * a default serversocket will be made on port 9000. Close socket after connection.
      *
-     * @param numberOfClients how many clients allowed to connect before closing welcoming socket
+     * @param maxNumberOfClients how many clients allowed to connect before closing welcoming socket
      */
-    public void connect(int numberOfClients) {
+    public void connect(int maxNumberOfClients) {
         try {
             if (this.serverSocket == null) {
                 createServerSocket(9000);
             }
             // Connect to several clients
             int connected = 0;
-            while (connected < numberOfClients) {
+            while (connectingToClients) {
+                if (connected >= maxNumberOfClients) {
+                    break;
+                }
                 Socket socket = serverSocket.accept();
                 // Server is player 1
                 int playerNumber = connected+2;
                 GameServerThreads client = new GameServerThreads(this, game, socket, playerNumber);
                 System.out.println("I have connected to player" + playerNumber);
                 client.start();
-                sendStartValues(client, numberOfClients+1, playerNumber, this.deck);
+                //sendStartValues(client, numberOfClients+1, playerNumber, this.deck);
                 if (game.getMapPath() == null) {
                     haveSentMapPath.put(client, false);
                 } else {
@@ -88,6 +94,9 @@ public class GameServer {
                 }
                 clients.add(client);
                 connected++;
+                if (waitForNextConnectionMilliSeconds != 0) {
+                    waitForNextConnection(waitForNextConnectionMilliSeconds);
+                }
             }
             game.getMenuScreenActors().allClientsHaveConnected();
             sendToAll(Messages.SHOW_SCREEN.toString());
@@ -97,6 +106,10 @@ public class GameServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void connect() {
+        connect(7);
     }
 
     /**
@@ -301,5 +314,47 @@ public class GameServer {
 
     public void setAllPoweredDownClientsHaveConfirmed(boolean allPoweredDownClientsHaveConfirmed) {
         this.allPoweredDownClientsHaveConfirmed = allPoweredDownClientsHaveConfirmed;
+    }
+
+    public void setConnectingToClients(boolean connectingToClients) {
+        this.connectingToClients = connectingToClients;
+    }
+
+    public boolean getStopConnectingToClients() {
+        return this.connectingToClients;
+    }
+
+    /***
+     *
+     * @param milliseconds time before connection is ended
+     */
+    public void setConnectingToClientsTimeout(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        setConnectingToClients(false);
+    }
+
+    /***
+     * Make the socket wait before listening for new client.
+     *
+     * @param milliseconds
+     */
+    public void setWaitBetweenEachConnection(int milliseconds) {
+        this.waitForNextConnectionMilliSeconds = milliseconds;
+    }
+
+    /**
+     * Wait given milliseconds before accepting new connection.
+     * @param milliseconds
+     */
+    public void waitForNextConnection(int milliseconds) {
+        try {
+            Thread.sleep(milliseconds);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }
