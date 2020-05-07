@@ -24,7 +24,7 @@ public class PlayerTest {
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
         RallyGame game = new RallyGame();
-        game.setupGame("assets/maps/Risky Exchange.tmx");
+        game.setMapPath("assets/maps/Risky Exchange.tmx");
         Deck deck = new Deck();
         game.setDeck(deck.getDeck());
         Vector2 pos = new Vector2(0,0);

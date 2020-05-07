@@ -86,19 +86,21 @@ public class MenuScreenActors {
         startButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         startButton.setPosition(CENTERED_BUTTON_X, TOP_BUTTON_Y);
         startButton.addListener(new InputListener() {
+            /**
+             *
+             * Is activated only if {@link #touchDown(InputEvent, float, float, int, int)} is true
+             */
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                if (game.getServer().getNumberOfConnectedClients() > 0) {
-                    game.getServer().setMapPath("assets/maps/" + selectMap.getSelected() + ".tmx");
-                    game.getServer().setConnectingToClients(false);
-                    game.setupGame();
-                    game.setScreen(new GameScreen(game));
-                }
+                game.getServer().setMapPath("assets/maps/" + selectMap.getSelected() + ".tmx");
+                game.getServer().setConnectingToClients(false);
+                game.setupGame();
+                game.setScreen(new GameScreen(game));
             }
 
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return true;
+                return game.getServer().getNumberOfConnectedClients() > 0;
             }
         });
         startButton.setVisible(false);
