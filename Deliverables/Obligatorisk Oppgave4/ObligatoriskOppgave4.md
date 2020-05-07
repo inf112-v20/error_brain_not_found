@@ -10,7 +10,8 @@ Team: error_no_brain_found
 [Meeting 11](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-11)  
 [Meeting 12](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-12)  
 [Meeting 12.5](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-12.5), this was not meant as a meeting just
-catchup before the presentation.
+catchup before the presentation.  
+[Meeting 13](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-13)
 
 
 ### Roles
@@ -47,10 +48,10 @@ We have been working mainly with defined areas of responsibility, but we have al
 roles that we have. This has been beneficial to us because we can easier adopt our code to match the other ones needs,
 and often think about other members should use your code.   
 
-**The project:**
-These mounts we have learn a lot. In the start most of us had not used Git before. So the learning  
+**The project:**  
+
 ### Project board
-![Project board form github]()
+![Project board form github](ScreenshotProdjectBoard.png)
 
 ### Group dynamic and communication   
 We communicate much better then in the beginning of the semester, even though it is only over internet because of corona. 
@@ -243,10 +244,10 @@ Tasks:
 - [x] The game should be able to do a round, and do the phases in the correct order in that round.  
 - [x] The robot should be able to win by going to the flags in a specific order.   
 - [x] The robot is stopped by walls, pushed by other players and respawned when outside board/on hole.   
-- [ ] The robot should be able to do a powerdown.  
+- [x] The robot should be able to do a powerdown.  
 - [x] The laser can shoot the robots, and the robots take damage.   
 - [x] The belts move, so the player can be moved by belts. 
-- [ ] Create AI/LAN so player can play with other robots 
+- [x] Create LAN so player can play with other robots 
 
 
 ## Task 3 - Productdelivery and codequality
@@ -281,9 +282,9 @@ start the turn.
 *   Press the "m" button. The sound should be muted. 
 
 #### LAN  
-*   Allow parallell processes to run in "Run/Debug Configurations". Start a new game, press Create. Then give the portnumber
+*   Allow parallel processes to run in "Run/Debug Configurations". Start a new game, press Create. Then give the portnumber
 to establish the connection on, and how many players that will play the game. Open a new game-process. Press Join, and input the 
-same portnumber as before and "localhost" (because host is running on your computer). Press Join again. The screen should freeze until 
+same port number as before and "localhost" (because host is running on your computer). Press Join again. The screen should freeze until 
 the host has started the game. Press Start in the game thats hosting the game. Both windows should now show two players on the map.  
 If a turn is played, the players should move at the same time.  
 
