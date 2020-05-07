@@ -91,7 +91,7 @@ public class GameServer {
                 try {
                     Socket socket = serverSocket.accept();
                     System.out.println("Got timeout or client connected");
-                    createThreadForCommunicatingWithClientAndSendStartValues(connected, socket);
+                    createThreadForCommunicatingWithClientAndSendStartValues(connectedClients, socket);
                     connectedClients++;
                     if (waitForNextConnectionMilliSeconds != 0) {
                         waitForNextConnection(waitForNextConnectionMilliSeconds);
@@ -367,20 +367,6 @@ public class GameServer {
             e.printStackTrace();
         }
     }
-
-    /**
-     * When server ends connection the number of clients are given.
-     *
-     *
-     * @return numberOfClients if server has ended connection, -1 if still connecting.
-     */
-    /*
-    public int getNumberOfConnectedClients() {
-        if (!connectingToClients) {
-            return clients.size();
-        }
-        return -1;
-    }*/
 
     /**
      * When server has pressed start, mappath should be set.
