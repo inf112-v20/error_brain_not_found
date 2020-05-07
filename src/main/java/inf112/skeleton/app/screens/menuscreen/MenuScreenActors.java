@@ -47,9 +47,7 @@ public class MenuScreenActors {
     private Semaphore waitForServerToSendStartValues = new Semaphore(1);
     private Semaphore waitForServerToSendMapPath = new Semaphore(1);
     private Thread waitForGameSetupThread;
-    private Semaphore waitForAllClientsToConnect = new Semaphore(1);
     private Label waitForClients;
-    private Semaphore waitForServerToSendShowGameScreen = new Semaphore(1);
 
     public MenuScreenActors(RallyGame game, Stage stage) {
         this.game = game;
@@ -72,8 +70,6 @@ public class MenuScreenActors {
         try {
             waitForServerToSendStartValues.tryAcquire();
             waitForServerToSendMapPath.tryAcquire();
-            waitForAllClientsToConnect.tryAcquire();
-            waitForServerToSendShowGameScreen.tryAcquire();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -368,7 +364,6 @@ public class MenuScreenActors {
         try {
             waitForServerToSendStartValues.acquire();
             waitForServerToSendMapPath.acquire();
-            waitForServerToSendShowGameScreen.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -390,12 +385,5 @@ public class MenuScreenActors {
         waitForGameSetupThread.start();
     }
 
-    /**
-     * Release Semaphore waitForServerToSendShowGameScreen {@link #waitForGameSetup()} can be released.
-     */
-    public void showGameScreen() {
-        waitForServerToSendShowGameScreen.release();
-        System.out.println("Released screen");
-    }
 }
 
