@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -399,7 +400,7 @@ public class GameScreenActors {
 
     public void initializeInfoLabel() {
         this.infoLabel = new InfoLabel("Dette er en info label", TimeUnit.SECONDS.toMillis(5));
-             infoLabel.setPosition(10, Gdx.graphics.getHeight() - 20);
+             infoLabel.setPosition(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() - 20);
              infoLabel.setDeltaX(-100);
 
              stage.addActor(infoLabel);
@@ -417,10 +418,13 @@ public class GameScreenActors {
         private final long animationDuration;
 
         private final BitmapFont font = game.getTextSkin().getFont("title");
-
+        private final GlyphLayout layout = new GlyphLayout();
+        private float textWidth;
         public InfoLabel(String text, long animationDuration) {
             this.text = text;
             this.animationDuration = animationDuration;
+            layout.setText(font, text);
+            textWidth = layout.width;
         }
 
         public void setDeltaX(float deltaX) {
@@ -443,17 +447,15 @@ public class GameScreenActors {
         @Override
         public void draw(Batch batch, float parentAlpha) {
             if (animated) {
-                // The component will auto-destruct when animation is finished.
-                if (isDisposable()) {
-                    dispose();
-                    return;
-                }
 
                 float elapsed = System.currentTimeMillis() - animationStart;
 
-                // The text will be fading.
-                font.setColor(getColor().r, getColor().g, getColor().b, parentAlpha * (1 - elapsed / animationDuration));
+                if (textWidth + getX() + deltaX * elapsed / 1000f < 0) {
+                    animationStart = System.currentTimeMillis();
+                    elapsed = 0;
+                }
 
+                //font.draw(batch, text, getX() + deltaX * elapsed / 1000f, getY() + deltaY * elapsed / 1000f);
                 font.draw(batch, text, getX() + deltaX * elapsed / 1000f, getY() + deltaY * elapsed / 1000f);
             }
         }
