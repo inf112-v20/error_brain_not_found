@@ -67,10 +67,12 @@ public class Board extends BoardLayers {
      * @param playerNumber of player
      */
     public void addPlayer(int x, int y, int playerNumber) {
+        System.out.println(playerNumber);
         if (!boardLogic.validPlayerNumber(playerNumber, players)) {
             return;
         }
         Player player = new Player(new Vector2(x, y), playerNumber);
+        System.out.println(player);
         addPlayer(player);
     }
 
@@ -128,7 +130,9 @@ public class Board extends BoardLayers {
             return;
         }
         for (int playerNr = 1; playerNr <= numPlayers; playerNr++) {
+            System.out.println(playerNr);
             Vector2 position = getStartPosition(playerNr);
+            System.out.println(position);
             addPlayer((int) position.x, (int) position.y, playerNr);
         }
     }

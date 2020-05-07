@@ -363,4 +363,10 @@ public class BoardTest {
         assertEquals(playerToBeStoppedByWall, board.getPlayer(northWallPosition));
     }
 
+    @Test
+    public void maxNumberOfPlayersTest() {
+        Board board = new Board("assets/maps/Risky Exchange.tmx", 8);
+        assertEquals(8, board.getPlayers().size());
+    }
+
 }
