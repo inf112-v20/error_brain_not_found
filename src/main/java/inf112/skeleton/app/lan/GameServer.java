@@ -17,9 +17,9 @@ import java.util.*;
  */
 public class GameServer {
 
-    private ArrayList<GameServerThreads> clients;
-    private RallyGame game;
-    private Converter converter;
+    private final ArrayList<GameServerThreads> clients;
+    private final RallyGame game;
+    private final Converter converter;
     private boolean allClientsHaveSelectedCardsOrIsPoweredDown;
     private Deck deck;
     private boolean serverHasConfirmed;
@@ -28,7 +28,6 @@ public class GameServer {
     private boolean connectingToClients;
     private int waitForNextConnectionMilliSeconds;
     private String mapPath;
-    private int numberOfPlayers;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
@@ -83,12 +82,7 @@ public class GameServer {
                 try {
                     Socket socket = serverSocket.accept();
                     System.out.println("Got timeout or client connected");
-                    int playerNumber = getNewPlayerNumber(connected);
-                    GameServerThreads client = new GameServerThreads(this, game, socket, playerNumber);
-                    System.out.println("I have connected to player" + playerNumber);
-                    client.start();
-                    sendPlayerNumberAndDeck(client, playerNumber, this.deck);
-                    clients.add(client);
+                    createThreadForCommunicatingWithClientAndSendStartValues(connected, socket);
                     connected++;
                     if (waitForNextConnectionMilliSeconds != 0) {
                         waitForNextConnection(waitForNextConnectionMilliSeconds);
@@ -97,7 +91,7 @@ public class GameServer {
                     System.out.println("Closed connection.");
                 }
             }
-            this.numberOfPlayers = getNumberOfConnectedClients()+1;
+            int numberOfPlayers = getNumberOfConnectedClients() + 1;
             game.setNumberOfPlayers(numberOfPlayers);
             System.out.println("Connected! :D");
             sendToAll(converter.createNumberOfPlayersMessage(numberOfPlayers));
@@ -109,6 +103,21 @@ public class GameServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Create a new thread {@link GameServerThreads} for communicating with the connected client. 
+     * Send player number and deck using {@link #sendPlayerNumberAndDeck(GameServerThreads, int, Deck)}
+     * 
+     * @param connected number of connected clients at this point in time
+     * @param socket socket for communicating with client
+     */
+    public void createThreadForCommunicatingWithClientAndSendStartValues(int connected, Socket socket) {
+        int playerNumber = getNewPlayerNumber(connected);
+        GameServerThreads client = new GameServerThreads(this, game, socket, playerNumber);
+        client.start();
+        sendPlayerNumberAndDeck(client, playerNumber, this.deck);
+        clients.add(client);
     }
 
     /**

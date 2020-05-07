@@ -1,7 +1,5 @@
 package inf112.skeleton.app.enums;
 
-import inf112.skeleton.app.cards.ProgramCard;
-
 /**
  * Messages to communicate between Host and Client.
  */
