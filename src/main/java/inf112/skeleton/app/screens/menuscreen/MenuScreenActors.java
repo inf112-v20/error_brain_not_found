@@ -42,16 +42,14 @@ public class MenuScreenActors {
     private ImageButton joinGameButton;
     private TextField IPInput;
     private Label waitForHost;
-    private Label IPLabel;
+    public Label IPLabel;
     private Label errorLabel;
     private Semaphore waitForServerToSendStartValues = new Semaphore(1);
     private Semaphore waitForServerToSendMapPath = new Semaphore(1);
     private Thread waitForGameSetupThread;
-    private Semaphore waitForAllClientsToConnect = new Semaphore(1);
-    private Thread waitForAllClients;
     private Label waitForClients;
     private int clientsConnected;
-    private Semaphore waitForServerToSendShowGameScreen = new Semaphore(1);
+    private Label clientsConnectedLabel;
 
     public MenuScreenActors(RallyGame game, Stage stage) {
         this.game = game;
@@ -74,8 +72,6 @@ public class MenuScreenActors {
         try {
             waitForServerToSendStartValues.tryAcquire();
             waitForServerToSendMapPath.tryAcquire();
-            waitForAllClientsToConnect.tryAcquire();
-            waitForServerToSendShowGameScreen.tryAcquire();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -92,13 +88,12 @@ public class MenuScreenActors {
         startButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                //if (isValidNumberOfPlayers(numOfPlayers.getText())) {
+                if (game.getServer().getNumberOfConnectedClients() > 0) {
                     game.getServer().setMapPath("assets/maps/" + selectMap.getSelected() + ".tmx");
                     game.getServer().setConnectingToClients(false);
-                    System.out.println("Pressed start button");
-                    game.setupGame("assets/maps/" + selectMap.getSelected() + ".tmx");
+                    game.setupGame();
                     game.setScreen(new GameScreen(game));
-                //}
+                }
             }
 
             @Override
@@ -194,7 +189,7 @@ public class MenuScreenActors {
                         //selectMap.setVisible(true);
                         //waitForAllClientsToConnectBeforeStartingGame();
                    // }  else {
-                        //updateErrorMessageLabel(numOfPlayers);
+                        //updateErrorLabel(numOfPlayers);
                    // }
                 }*/
             }
@@ -205,23 +200,6 @@ public class MenuScreenActors {
             }
         });
         stage.addActor(createGameButton);
-    }
-
-    /**
-     * @param numberOfPlayers
-     * @return true og port and numberOfPlayers are not empty and in valid range
-     */
-    public boolean isValidNumberOfPlayers(String numberOfPlayers) {
-        return (!"".equals(numberOfPlayers)&& isNumber(numberOfPlayers)&& numberOfPlayersInValidRange(Integer.parseInt(numberOfPlayers)));
-    }
-
-    /**
-     *
-     * @param numberOfPLayers
-     * @return True if players between 2 and 8.
-     */
-    private boolean numberOfPlayersInValidRange(int numberOfPLayers) {
-        return numberOfPLayers >= 2 && numberOfPLayers <= 8;
     }
 
     public void initializeJoinGame() {
@@ -247,10 +225,10 @@ public class MenuScreenActors {
                             toggleVisibilityJoinSecondClick();
                             waitForGameSetUpAndStartGame();
                         } else {
-                            updateErrorMessageLabel(null);
+                            updateErrorLabel(null);
                         }
                     } else {
-                        updateErrorMessageLabel(IPInput);
+                        updateErrorLabel(IPInput);
                     }
                 }
             }
@@ -261,29 +239,6 @@ public class MenuScreenActors {
             }
         });
         stage.addActor(joinGameButton);
-    }
-
-    /**
-     *
-     * @param string
-     * @return True if string is an int
-     */
-    public boolean isNumber(String string) {
-        try {
-            Integer.parseInt(string);
-        } catch (NumberFormatException e) {
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     *
-     * @param port to check
-     * @return True if portnumber is registered but not well-known
-     */
-    public boolean portInValidRange(int port) {
-        return port >= 1024 &&port <= 49151;
     }
 
     public void initializeIPInput() {
@@ -353,7 +308,7 @@ public class MenuScreenActors {
         stage.addActor(IPLabel);
     }
 
-    public void initializeInvalidInputLabel() {
+    public void initializeErrorLabel() {
         errorLabel = new Label("", game.getDefaultSkin());
         errorLabel.setPosition(CENTERED_BUTTON_X, TEXT_INPUT_Y + selectMap.getHeight());
         errorLabel.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
@@ -362,7 +317,7 @@ public class MenuScreenActors {
         stage.addActor(errorLabel);
     }
 
-    public void updateErrorMessageLabel(TextField textField) {
+    public void updateErrorLabel(TextField textField) {
         if (textField == IPInput) {
             errorLabel.setText("Invalid IP number");
         } else {
@@ -407,7 +362,6 @@ public class MenuScreenActors {
         try {
             waitForServerToSendStartValues.acquire();
             waitForServerToSendMapPath.acquire();
-            waitForServerToSendShowGameScreen.acquire();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -422,47 +376,28 @@ public class MenuScreenActors {
         waitForGameSetupThread = new Thread(() -> {
             waitForGameSetup();
             Gdx.app.postRunnable(() -> {
-                game.setupGame(game.getMapPath());
+                game.setupGame();
                 game.setScreen(new GameScreen(game));
             });
         });
         waitForGameSetupThread.start();
     }
 
-    /**
-     * Create own thread to wait for {@link #waitForAllClientsToConnect()} so all clients have connected
-     * before starting game screen.
-     */
-    public void waitForAllClientsToConnectBeforeStartingGame() {
-        waitForAllClients = new Thread(() -> {
-            waitForAllClientsToConnect();
-            toggleVisibilityCreateClick();
-            waitForClients.setVisible(false);
-        });
-        waitForAllClients.start();
+    public int getClientsConnected() {
+        return game.getServer().getNumberOfConnectedClients();
     }
 
-    public void waitForAllClientsToConnect() {
-        try {
-            waitForAllClientsToConnect.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+    public void initializeClientsConnectedLabel() {
+        this.clientsConnectedLabel = new Label("0 clients connected", game.getTextSkin());
+        clientsConnectedLabel.setPosition(CENTERED_BUTTON_X, TEXT_INPUT_Y + selectMap.getHeight());
+        clientsConnectedLabel.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        clientsConnectedLabel.setAlignment(Align.center);
+        clientsConnectedLabel.setFontScale(1f);
+        stage.addActor(clientsConnectedLabel);
     }
 
-    /**
-     * Release {@link #waitForAllClientsToConnect()} so that tha game can begin.
-     */
-    public void allClientsHaveConnected() {
-        waitForAllClientsToConnect.release();
-    }
-
-    /**
-     * Release Semaphore waitForServerToSendShowGameScreen {@link #waitForGameSetup()} can be released.
-     */
-    public void showGameScreen() {
-        waitForServerToSendShowGameScreen.release();
-        System.out.println("Released screen");
+    public void updateClientsConnectedLabel() {
+        clientsConnectedLabel.setText(getClientsConnected() + " clients connected");
     }
 }
 

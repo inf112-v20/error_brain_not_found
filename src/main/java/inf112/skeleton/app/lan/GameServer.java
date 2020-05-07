@@ -30,6 +30,7 @@ public class GameServer {
     private int waitForNextConnectionMilliSeconds;
     private String mapPath;
     private int numberOfPlayers;
+    private int connectedClients;
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
@@ -65,6 +66,14 @@ public class GameServer {
     }
 
     /**
+     *
+     * @return number of clients connected to server
+     */
+    public int getNumberOfConnectedClients() {
+        return connectedClients;
+    }
+
+    /**
      * Establish a connection waiting for number of clients to connect. Create a new thread for each client.
      * If no serverSocket is made by {@link #setServerSocket(ServerSocket)} or {@link #createServerSocket(int)} then
      * a default serversocket will be made on port 9000. Close socket after connection.
@@ -77,9 +86,9 @@ public class GameServer {
                 createServerSocket(9000);
             }
             // Connect to several clients
-            int connected = 0;
+            connectedClients = 0;
             while (connectingToClients) {
-                if (connected >= maxNumberOfClients) {
+                if (connectedClients >= maxNumberOfClients) {
                     break;
                 }
                 System.out.println("Waiting for client to connect");
@@ -87,13 +96,13 @@ public class GameServer {
                     Socket socket = serverSocket.accept();
                     System.out.println("Got timeout or client connected");
                     // Server is player 1
-                    int playerNumber = connected+2;
+                    int playerNumber = connectedClients +2;
                     GameServerThreads client = new GameServerThreads(this, game, socket, playerNumber);
                     System.out.println("I have connected to player" + playerNumber);
                     client.start();
                     sendPlayerNumberAndDeck(client, playerNumber, this.deck);
                     clients.add(client);
-                    connected++;
+                    connectedClients++;
                     if (waitForNextConnectionMilliSeconds != 0) {
                         waitForNextConnection(waitForNextConnectionMilliSeconds);
                     }
@@ -103,7 +112,6 @@ public class GameServer {
             }
             this.numberOfPlayers = getConnectedClients()+1;
             game.setNumberOfPlayers(numberOfPlayers);
-            game.getMenuScreenActors().allClientsHaveConnected();
             sendToAll(Messages.SHOW_SCREEN.toString());
             System.out.println("Connected! :D");
             sendToAll(converter.createNumberOfPlayersMessage(numberOfPlayers));

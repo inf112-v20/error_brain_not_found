@@ -76,10 +76,8 @@ public class RallyGame extends Game {
     /**
      * Set up game with given map
      *
-     * @param mapPath
      */
-    public void setupGame(String mapPath) {
-        this.mapPath = mapPath;
+    public void setupGame() {
         this.board = new Board(mapPath, this.numberOfPlayers);
         this.players = new ArrayList<>();
         this.players = board.getPlayers();
