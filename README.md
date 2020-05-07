@@ -11,14 +11,11 @@ Clone the repo from github to you computer: `git clone https://github.com/inf112
 Then open `pom.xml` in IntelliJ and the IntelliJ will build the project for you.  
 Then open the repo and go to `src/main/java/inf112/skeleton/app/Main.java` and run `main` function.
 
-
 ## How to play  
 Multiplayer:  
-The game runs over LAN. If you want to host a game, you press "Create" and give a portnumber and how many players participating 
-in the game. The portnumber should be between 1024 to 49151. You can max play with 7 others, so a maksimum number of players is 8. 
-When you have created the game your IP address will be displayed to you one the screen. Give this 
-IP address to you friend(s) and tell them to join the game with this IP address.   
-You also need to choose a map. When you have chosen a map you can start the game.   
+The game runs over LAN. If you want to host a game, you press "Create". Your IP address will be displayed 
+ to you. Give this IP address to you friend(s) and tell them to join the game with this IP address. When everyone 
+ has joined the game you press start.    
 
 
 ## Known bugs
