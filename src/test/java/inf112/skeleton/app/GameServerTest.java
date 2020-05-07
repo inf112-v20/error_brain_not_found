@@ -47,7 +47,7 @@ public class GameServerTest {
     private OutputStream outputStream;
 
     @Mock
-    MenuScreenActors menuScreenActors;
+    private MenuScreenActors menuScreenActors;
 
     @Before
     public void setUp() {

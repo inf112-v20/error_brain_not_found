@@ -22,7 +22,6 @@ import java.net.Socket;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -32,6 +31,7 @@ public class ClientTest {
     private GameClientThread client;
     private Converter converter;
     private ProgramCard programcard;
+    private Player player1;
 
     @Mock
     private Socket socket;
@@ -49,11 +49,10 @@ public class ClientTest {
     private BufferedReader reader;
 
     @Mock
-    MenuScreenActors menuScreenActors;
+    private MenuScreenActors menuScreenActors;
 
     @Mock
     private InputStream inputStream;
-    private Player player1;
 
     @Before
     public void setUp() {

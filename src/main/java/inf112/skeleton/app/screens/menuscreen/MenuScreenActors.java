@@ -48,7 +48,6 @@ public class MenuScreenActors {
     private Label clientsConnectedLabel;
     private Semaphore waitForServerToSendStartValues = new Semaphore(1);
     private Semaphore waitForServerToSendMapPath = new Semaphore(1);
-    private Thread waitForGameSetupThread;
 
     public MenuScreenActors(RallyGame game, Stage stage) {
         this.game = game;
@@ -312,7 +311,7 @@ public class MenuScreenActors {
     }
 
     public void updateErrorLabel(TextField textField) {
-        if (textField == IPInput) {
+        if (textField.equals(IPInput)) {
             errorLabel.setText("Invalid IP address");
         } else {
             errorLabel.setText("Could not connect to " + IPInput.getText() + " on port 9000");
@@ -330,7 +329,7 @@ public class MenuScreenActors {
     }
 
     public boolean validIP(String ip) {
-        return !ip.equals("") && (ip.toLowerCase().equals("localhost") || ipAddress(ip));
+        return !"".equals(ip) && ("localhost".equals(ip.toLowerCase()) || ipAddress(ip));
     }
 
     // LAN STUFF
@@ -382,7 +381,7 @@ public class MenuScreenActors {
      * from server, so that "waiting for server to start" picture can render.
      */
     public void waitForGameSetUpAndStartGame() {
-        waitForGameSetupThread = new Thread(() -> {
+        Thread waitForGameSetupThread = new Thread(() -> {
             waitForGameSetup();
             Gdx.app.postRunnable(() -> {
                 game.setupGame();
