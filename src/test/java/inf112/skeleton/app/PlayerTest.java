@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.backends.headless.HeadlessApplication;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.math.Vector2;
+import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.objects.Flag;
 import inf112.skeleton.app.objects.player.Player;
@@ -23,7 +24,10 @@ public class PlayerTest {
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
         RallyGame game = new RallyGame();
-        game.setupGame("assets/maps/Risky Exchange.tmx");
+        game.setMapPath("assets/maps/Risky Exchange.tmx");
+        game.setupGame();
+        Deck deck = new Deck();
+        game.setDeck(deck.getDeck());
         Vector2 pos = new Vector2(0,0);
         player = new Player(pos, 1);
         game.dealCards();

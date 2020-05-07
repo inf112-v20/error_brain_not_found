@@ -36,8 +36,11 @@ public class ProgramCardTest {
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
         this.game = new RallyGame();
-        this.game.setupGame("assets/maps/Risky Exchange.tmx");
-        player = new Player(new Vector2(0, 0), 2);
+        this.game.setMapPath("assets/maps/Risky Exchange.tmx");
+        this.game.setupGame();
+        Deck deck = new Deck();
+        game.setDeck(deck.getDeck());
+        player = new Player(new Vector2(0, 0), 1);
         player.setDirection(Direction.EAST);
         Board board = game.getBoard();
         board.addPlayer(player);
@@ -59,7 +62,7 @@ public class ProgramCardTest {
     public void canChooseFiveCardsFromDrawnCardsTest() {
         player.drawCards(deck);
         player.selectCards();
-        assertEquals(5, player.getRegisters().getCardsSelected());
+        assertEquals(5, player.getRegisters().getNumberOfCardsSelected());
     }
 
     @Test
@@ -121,12 +124,14 @@ public class ProgramCardTest {
         player2.setSelectedCards(highPrioCard);
         players.add(player);
         players.add(player2);
-        players.sort(new PlayerSorter());
+        players.sort(new PlayerSorter(0));
         assertEquals(player2, players.get(0));
     }
 
+
+
     /**
-     * Starting at east, a sequence of right, left, left, uturn, right, should give west..
+     * Starting at east, a sequence of right, left, left, uturn, right, uturn, right should give south.
      */
     @Test
     public void sequenceOfRotateCardsTest() {
@@ -150,5 +155,4 @@ public class ProgramCardTest {
         }
         assertEquals(afterPosition, player.getPosition());
     }
-
 }

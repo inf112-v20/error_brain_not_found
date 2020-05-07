@@ -38,7 +38,7 @@ public class BoardTest {
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
         this.board = new Board("assets/maps/Risky Exchange.tmx", NUMBER_OF_PLAYERS_WHEN_STARTING_GAME);
-        this.boardLogic = new BoardLogic();
+        this.boardLogic = new BoardLogic(board);
         // Random position
         this.startPosition = new Vector2(5, 5);
         this.player = new Player(startPosition, 1);
@@ -58,15 +58,6 @@ public class BoardTest {
             return false;
         }
         return flag1.getFlagnr() == flag2.getFlagnr() && flag1.getPosition().equals(flag2.getPosition());
-    }
-
-    /*
-     *
-     * @return true if player is on backupPosition and has backupDirection
-     */
-    private boolean isInBackupState(Player player) {
-        return player.getPosition().equals(player.getBackupPosition()) && player.getDirection().equals(player.getBackupDirection());
-
     }
 
     @Test
@@ -106,25 +97,25 @@ public class BoardTest {
     @Test
     public void playerIsOutsideOfUpperBorderTest() {
         player.setPosition(new Vector2(0, BOARD_HEIGHT));
-        assertTrue(board.getBoardLogic().outsideBoard(player, board));
+        assertTrue(board.getBoardLogic().outsideBoard(player));
     }
 
     @Test
     public void playerIsOutsideOfRightBorderTest() {
         player.setPosition(new Vector2(BOARD_WIDTH, 0));
-        assertTrue(board.getBoardLogic().outsideBoard(player, board));
+        assertTrue(board.getBoardLogic().outsideBoard(player));
     }
 
     @Test
     public void playerIsOutsideOfLeftBorderTest() {
         player.setPosition(new Vector2(-1, 0));
-        assertTrue(board.getBoardLogic().outsideBoard(player, board));
+        assertTrue(board.getBoardLogic().outsideBoard(player));
     }
 
     @Test
     public void playerIsUnderBorderTest() {
         player.setPosition(new Vector2(0, -1));
-        assertTrue(board.getBoardLogic().outsideBoard(player, board));
+        assertTrue(board.getBoardLogic().outsideBoard(player));
     }
 
     @Test
@@ -164,7 +155,7 @@ public class BoardTest {
         for (int i = 0; i < 5; i++) {
             Vector2 holePosition = holes.get(0);
             player.setPosition(holePosition);
-            assertTrue(board.getBoardLogic().outsideBoard(player, board));
+            assertTrue(board.getBoardLogic().outsideBoard(player));
         }
     }
 
@@ -275,7 +266,20 @@ public class BoardTest {
         Player player2 = new Player(playerTwoPos, 2);
         player2.setDirection(Direction.WEST);
         board.addPlayer(player);
-        assertTrue(boardLogic.shouldPush(player2, board));
+        assertTrue(boardLogic.shouldPush(player2, player2.getDirection()));
+    }
+
+    @Test
+    public void playerPushingBackwardsTest() {
+        Vector2 playerToBePushedPosition = new Vector2(0,0);
+        player.setPosition(playerToBePushedPosition);
+        Vector2 playerTwoPos = new Vector2(1, 0);
+        Player player2 = new Player(playerTwoPos, 2);
+        // Facing away from player to be pushed
+        player2.setDirection(Direction.EAST);
+        board.addPlayer(player);
+        board.movePlayer(player2, true);
+        assertEquals(player2, board.getPlayer(playerToBePushedPosition));
     }
 
     @Test

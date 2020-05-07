@@ -18,6 +18,7 @@ public class Player {
 
     private final int playerNr;
     private final Registers registers;
+    private boolean confirmedPowerUp;
     private Vector2 backupPosition;
     private Direction backupDirection;
     private Vector2 alternativeBackupPosition;
@@ -53,6 +54,7 @@ public class Player {
         this.poweredDown = false;
         this.powerUpNextRound = false;
         this.powerDownNextRound = false;
+        this.confirmedPowerUp = false;
 
         setBackup(this.position, this.direction);
     }
@@ -78,6 +80,9 @@ public class Player {
         this.programCardsDealt = 9 - damageTokens;
     }
 
+    /**
+     * Select cards from all cards.
+     */
     public void selectCard(ProgramCard card) {
         if (!registers.contains(card) && registers.hasRegistersWithoutCard()) {
             registers.addCard(card);
@@ -90,6 +95,14 @@ public class Player {
         for (int i = 0; i < registers.getOpenRegisters(); i++) {
             registers.addCard(cardsOnHand.get(0));
         }
+    }
+
+    /**
+     * Add a card to your program if program is not full.
+     * @param card to add.
+     */
+    public void addSelectedCard(ProgramCard card) {
+        registers.addCard(card);
     }
 
     public void drawCards(Deck deck) {
@@ -115,7 +128,7 @@ public class Player {
         this.beltPushPos = position;
     }
 
-    public void discardCards(Deck deck) {
+    public ArrayList<ProgramCard> discardCards(Deck deck) {
         for (ProgramCard card : cardsOnHand) {
             if (!registers.contains(card) || registers.getRegister(card).isOpen()) {
                 deck.addCardToDiscardPile(card);
@@ -123,11 +136,7 @@ public class Player {
         }
         cardsOnHand.clear();
         registers.clear(true);
-    }
-
-    public void discardAllCards(Deck deck) {
-        deck.addCardsToDiscardPile(cardsOnHand);
-
+        return registers.getCards();
     }
 
     /**
@@ -217,7 +226,7 @@ public class Player {
         Collections.shuffle(possiblePositions);
         for (Vector2 pos : possiblePositions) {
             for (Direction dir : board.getDirectionRandomOrder()) {
-                if (boardLogic.validRespawnPosition(pos, dir, board)) {
+                if (boardLogic.validRespawnPosition(pos, dir)) {
                     setAlternativeBackup(pos, dir);
                     return;
                 }
@@ -269,11 +278,12 @@ public class Player {
     }
 
     public void pickUpFlag(Flag flag) {
+        System.out.println("Player " + playerNr + " picked up flag " + flag.getFlagnr());
         flagsCollected.add(flag);
     }
 
     public void fire(RallyGame game) {
-        if (game.getBoard().getBoardLogic().canFire(position, direction, game.board)) {
+        if (game.getBoard().getBoardLogic().canFire(position, direction)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }
@@ -282,7 +292,7 @@ public class Player {
         game.getBoard().addLaser(position, direction);
         if (game.getBoard().hasPlayer(position)) {
             game.getBoard().getPlayer(position).handleDamage();
-        } else if (game.getBoard().getBoardLogic().canFire(position, direction, game.board)) {
+        } else if (game.getBoard().getBoardLogic().canFire(position, direction)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }
@@ -346,24 +356,28 @@ public class Player {
         return powerUpNextRound;
     }
 
-    public void confirmPowerDown() {
-        if (powerUpNextRound) {
-            poweredDown = false;
-        } else if (powerDownNextRound) {
-            poweringDown = true;
-        } else if (poweringDown) {
-            poweredDown = true;
-            poweringDown = false;
-        }
-        powerUpNextRound = false;
-        powerDownNextRound = false;
+    public void setPowerDownNextRound(boolean powerDownNextRound) {
+        this.powerDownNextRound = powerDownNextRound;
+    }
+
+    public void setPowerUpNextRound(boolean powerUpNextRound) {
+        this.powerUpNextRound = powerUpNextRound;
     }
 
     public void togglePowerDownOrUpNextRound() {
         if (poweredDown) {
-            powerUpNextRound = !powerUpNextRound;
+            setPowerUpNextRound(!getPowerUpNextRound());
         } else {
-            powerDownNextRound = !powerDownNextRound;
+            setPowerDownNextRound(!getPowerDownNextRound());
         }
     }
+
+    public boolean hasConfirmedPowerUp() {
+        return confirmedPowerUp;
+    }
+
+    public void setConfirmedPowerUp(boolean confirmedPowerUp) {
+        this.confirmedPowerUp = confirmedPowerUp;
+    }
+
 }
