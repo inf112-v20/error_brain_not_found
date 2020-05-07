@@ -30,22 +30,24 @@ it should be testing, with acceptance criteria as tests to be made. This gives u
 and a great workflow because we can always see what to do next.
 
 ### Retrospective from the project  
-Project methods:  
+**Project methods:**  
 We initially started with a mix of Kanban, Scrum and Extreme Programming. We have been using a Kanban board, and most of 
 the time limited the issues in the In Progress block: In the meetings we have discussed what needs to be done until next 
-time and tried to share tasks among teammembers evenly so the progress board is limited. The visualization of tasks using 
+time and tried to share tasks among team-members evenly, so the progress board is limited. The visualization of tasks using 
 Kanban has been very valuable to us because we can see progress. Also it made it easier for the team to collaborate, 
 because every one knows what other team members do.   
 We have been using Scrum by defining clear roles and areas of responsibility in the team. Also we have worked with sprints 
 every one week (every meeting), and focused on the backlog of the project, not so much about what is in progress. We have not
-been using Daily Scrum, but have had generally good communitation between meetings. Initially we wanted to use XP to ensure 
+been using Daily Scrum, but have had generally good communication between meetings. Initially we wanted to use XP to ensure 
 testing before every commit. We have been testing new code regularly and often, but maybe not before each and every commit. 
 However we have been using other elements from XP like pair-programming, Continous integration (using Travis CI) and 
 weekly iterations (or sprints in Scrum).    
 
 We have been working mainly with defined areas of responsibility, but we have also been helping each other across the 
-roles that we have. This have been beneficitial to us because we can easilier adopt our code to match the other ones needs,
+roles that we have. This has been beneficial to us because we can easier adopt our code to match the other ones needs,
 and often think about other members should use your code.   
+
+**The project:**
 
 ### Project board
 ![Project board form github]()
