@@ -50,8 +50,6 @@ public class GameClientThread extends Thread {
     @Override
     public void run() {
 
-        //getStartValues();
-
         while (true) {
             String message = getMessage();
             if (message == null) {
@@ -182,16 +180,6 @@ public class GameClientThread extends Thread {
         game.quitPlaying();
         close();
     }
-    /**
-     * Wait for server to send your playernumber and how many players are in the game.
-     * Give the values to {@link RallyGame} so it can be initialized.
-     */
-    public void getStartValues() {
-        this.myPlayerNumber = Integer.parseInt(getMessage());
-        this.numberOfPlayers = Integer.parseInt(getMessage());
-        game.setPlayerNumber(myPlayerNumber);
-        game.setNumberOfPlayers(numberOfPlayers);
-    }
 
     /**
      * Wait for doTurn to realease in game.
@@ -251,22 +239,6 @@ public class GameClientThread extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     *
-     * @return playerNumber given from server
-     */
-    public int getMyPlayerNumber() {
-        return this.myPlayerNumber;
-    }
-
-    /**
-     *
-     * @return number of players server says is in game
-     */
-    public int getNumberOfPlayers() {
-        return this.numberOfPlayers;
     }
 
     /**

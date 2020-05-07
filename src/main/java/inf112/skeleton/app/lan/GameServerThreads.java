@@ -58,7 +58,6 @@ public class GameServerThreads extends Thread {
                 if (message == null) {
                     break;
                 }
-                System.out.println(message);
                 if (message.equals(Messages.STOP_THREAD.toString())) {
                     return;
                 }
@@ -79,11 +78,7 @@ public class GameServerThreads extends Thread {
                         player.setConfirmedPowerUp(true);
                         if (allPoweredDownClientsHaveConfirmed()) {
                             if (server.serverHasConfirmed()) {
-                                server.setAllPoweredDownClientsHaveConfirmed(false);
-                                server.setServerHasConfirmed(false);
-                                server.sendToAll(Messages.CONTINUE_TURN.toString());
-                                game.continueTurn();
-                                waitForTurnToFinish();
+                                continueTurn();
                             } else {
                                 server.setAllPoweredDownClientsHaveConfirmed(true);
                             }
@@ -96,11 +91,7 @@ public class GameServerThreads extends Thread {
                         server.sendToAllExcept(player, message);
                         if (allPoweredDownClientsHaveConfirmed()) {
                             if (server.serverHasConfirmed()) {
-                                server.setAllPoweredDownClientsHaveConfirmed(false);
-                                server.setServerHasConfirmed(false);
-                                server.sendToAll(Messages.CONTINUE_TURN.toString());
-                                game.continueTurn();
-                                waitForTurnToFinish();
+                                continueTurn();
                             } else {
                                 server.setAllPoweredDownClientsHaveConfirmed(true);
                             }
@@ -131,6 +122,20 @@ public class GameServerThreads extends Thread {
     }
 
     /**
+     * Continue the turn with {@link RallyGame#continueTurn()} when players have confirmed power up or power down.
+     * Tell the other clients to continue turn also, and set {@link GameServer#setServerHasConfirmed(boolean)} and
+     * {@link GameServer#setAllPoweredDownClientsHaveConfirmed(boolean)} to false.
+     *
+     */
+    public void continueTurn() {
+        server.setAllPoweredDownClientsHaveConfirmed(false);
+        server.setServerHasConfirmed(false);
+        server.sendToAll(Messages.CONTINUE_TURN.toString());
+        game.continueTurn();
+        waitForTurnToFinish();
+    }
+
+    /**
      *
      * @param player to end connection with
      */
@@ -140,8 +145,6 @@ public class GameServerThreads extends Thread {
         server.disconnect(playerNumber);
         server.remove(playerNumber);
     }
-
-
 
     /**
      *

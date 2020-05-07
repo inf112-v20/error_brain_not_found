@@ -173,25 +173,6 @@ public class MenuScreenActors {
                 // Defaul port is 9000
                 game.setUpHost(9000);
                 toggleVisibilityCreateClick();
-                /*
-                if (joinGameButton.isVisible()) {
-                    toggleVisibilityCreateFirstClick();
-                } else {
-                    //if (isValidNumberOfPlayers(numOfPlayers.getText())) {
-                        game.setIsServerToTrue();
-                        // Defaul port is 9000
-                        game.setUpHost(9000);
-                        toggleVisibilityCreateClick();
-                        //waitForClients.setVisible(true);
-                        //createGameButton.setVisible(false);
-                        //numOfPlayers.setVisible(false);
-                        //startButton.setVisible(true);
-                        //selectMap.setVisible(true);
-                        //waitForAllClientsToConnectBeforeStartingGame();
-                   // }  else {
-                        //updateErrorLabel(numOfPlayers);
-                   // }
-                }*/
             }
 
             @Override

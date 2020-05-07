@@ -72,7 +72,7 @@ public class GameServerTest {
         // after 2 seconds, gives 2 connected clients.
         gameServer.setWaitBetweenEachConnection(1000);
         gameServer.setConnectingToClientsTimeout(2000);
-        assertEquals(2, gameServer.getConnectedClients());
+        assertEquals(2, gameServer.getNumberOfConnectedClients());
     }
 
     @Test

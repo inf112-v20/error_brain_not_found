@@ -22,7 +22,6 @@ public class GameServer {
     private Converter converter;
     private boolean allClientsHaveSelectedCardsOrIsPoweredDown;
     private Deck deck;
-    private HashMap<GameServerThreads, Boolean> haveSentMapPath;
     private boolean serverHasConfirmed;
     private ServerSocket serverSocket;
     private boolean allPoweredDownClientsHaveConfirmed;
@@ -34,7 +33,6 @@ public class GameServer {
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
-        this.haveSentMapPath = new HashMap<>();
         this.game = game;
         this.converter = new Converter();
         this.deck = new Deck();
@@ -74,7 +72,7 @@ public class GameServer {
     }
 
     /**
-     * Establish a connection waiting for number of clients to connect. Create a new thread for each client.
+     * Establish a connection waiting for clients to connect. Create a new thread for each client.
      * If no serverSocket is made by {@link #setServerSocket(ServerSocket)} or {@link #createServerSocket(int)} then
      * a default serversocket will be made on port 9000. Close socket after connection.
      *
@@ -85,7 +83,6 @@ public class GameServer {
             if (this.serverSocket == null) {
                 createServerSocket(9000);
             }
-            // Connect to several clients
             connectedClients = 0;
             while (connectingToClients) {
                 if (connectedClients >= maxNumberOfClients) {
@@ -96,7 +93,7 @@ public class GameServer {
                     Socket socket = serverSocket.accept();
                     System.out.println("Got timeout or client connected");
                     // Server is player 1
-                    int playerNumber = connectedClients +2;
+                    int playerNumber = getNewPlayerNumber(connected);
                     GameServerThreads client = new GameServerThreads(this, game, socket, playerNumber);
                     System.out.println("I have connected to player" + playerNumber);
                     client.start();
@@ -107,10 +104,10 @@ public class GameServer {
                         waitForNextConnection(waitForNextConnectionMilliSeconds);
                     }
                 } catch (SocketException error) {
-                    System.out.println("Closed socket");
+                    System.out.println("Closed connection.");
                 }
             }
-            this.numberOfPlayers = getConnectedClients()+1;
+            this.numberOfPlayers = getNumberOfConnectedClients()+1;
             game.setNumberOfPlayers(numberOfPlayers);
             System.out.println("Connected! :D");
             sendToAll(converter.createNumberOfPlayersMessage(numberOfPlayers));
@@ -124,6 +121,21 @@ public class GameServer {
         }
     }
 
+    /**
+     * The server has playernumber 1, so a new player needs to start
+     * at playerNumber 2. Also, since number of connected players start at 0,
+     * playernumber becomes connected+2.
+     *
+     * @param connected number of already connected clients
+     * @return a new playerNumber for newly connected client
+     */
+    public int getNewPlayerNumber(int connected) {
+        return (connected+1)+1;
+    }
+
+    /**
+     * Open serversocket to wait for maximum 7 clients to connect. Uses {@link #connect(int)}
+     */
     public void connect() {
         connect(7);
     }
@@ -140,7 +152,7 @@ public class GameServer {
      * Create a new deck, but remove the locked cards.
      * Update deck in {@link RallyGame} and send this deck to the other players.
      *
-     * The player hosting the game sends all of the players locked cards.
+     * The player hosting the game gives all of the players locked cards.
      */
     public void createAndSendDeckToAll(ArrayList<ProgramCard> lockedCards) {
         this.deck = new Deck();
@@ -309,10 +321,6 @@ public class GameServer {
         }
     }
 
-    public boolean getStopConnectingToClients() {
-        return this.connectingToClients;
-    }
-
     /***
      *
      * @param milliseconds time before connection is ended
@@ -358,7 +366,7 @@ public class GameServer {
      *
      * @return numberOfClients if server has ended connection, -1 if still connecting.
      */
-    public int getConnectedClients() {
+    public int getNumberOfConnectedClients() {
         if (!connectingToClients) {
             return clients.size();
         }

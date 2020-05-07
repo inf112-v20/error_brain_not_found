@@ -124,21 +124,6 @@ public class Registers {
         return cards;
     }
 
-    public void openOneRegister() {
-        for (Register register : registers) {
-            if (!register.isOpen()) {
-                register.setOpen(true);
-                return;
-            }
-        }
-    }
-
-    public void openAllRegisters() {
-        for (Register register : registers) {
-            register.setOpen(true);
-        }
-    }
-
     public void updateRegisters(int damageToken) {
         int lockedRegisters = Math.max(damageToken - 4, 0);
         for (int i = 0; i < 5; i++) {
