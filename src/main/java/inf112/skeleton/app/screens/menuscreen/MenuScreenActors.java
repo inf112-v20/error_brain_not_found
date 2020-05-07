@@ -41,10 +41,9 @@ public class MenuScreenActors {
     private ImageButton createGameButton;
     private ImageButton joinGameButton;
     private TextField IPInput;
-    private TextField numOfPlayers;
     private Label waitForHost;
     private Label IPLabel;
-    private Label invalidInputLabel;
+    private Label errorLabel;
     private Semaphore waitForServerToSendStartValues = new Semaphore(1);
     private Semaphore waitForServerToSendMapPath = new Semaphore(1);
     private Thread waitForGameSetupThread;
@@ -175,6 +174,11 @@ public class MenuScreenActors {
              */
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                game.setIsServerToTrue();
+                // Defaul port is 9000
+                game.setUpHost(9000);
+                toggleVisibilityCreateClick();
+                /*
                 if (joinGameButton.isVisible()) {
                     toggleVisibilityCreateFirstClick();
                 } else {
@@ -182,7 +186,7 @@ public class MenuScreenActors {
                         game.setIsServerToTrue();
                         // Defaul port is 9000
                         game.setUpHost(9000);
-                        toggleVisibilityCreateSecondClick();
+                        toggleVisibilityCreateClick();
                         //waitForClients.setVisible(true);
                         //createGameButton.setVisible(false);
                         //numOfPlayers.setVisible(false);
@@ -190,9 +194,9 @@ public class MenuScreenActors {
                         //selectMap.setVisible(true);
                         //waitForAllClientsToConnectBeforeStartingGame();
                    // }  else {
-                        //updateInvalidInputLabel(numOfPlayers);
+                        //updateErrorMessageLabel(numOfPlayers);
                    // }
-                }
+                }*/
             }
 
             @Override
@@ -243,10 +247,10 @@ public class MenuScreenActors {
                             toggleVisibilityJoinSecondClick();
                             waitForGameSetUpAndStartGame();
                         } else {
-                            updateInvalidInputLabel(null);
+                            updateErrorMessageLabel(null);
                         }
                     } else {
-                        updateInvalidInputLabel(IPInput);
+                        updateErrorMessageLabel(IPInput);
                     }
                 }
             }
@@ -292,16 +296,6 @@ public class MenuScreenActors {
         stage.addActor(IPInput);
     }
 
-    public void initializeNumOfPlayersInput() {
-        numOfPlayers = new TextField("", game.getDefaultSkin());
-        numOfPlayers.setMessageText("Number of players");
-        numOfPlayers.setWidth(BUTTON_WIDTH * .87f);
-        numOfPlayers.setPosition(screenWidth / 2f - (BUTTON_WIDTH * .87f ) / 2f, TEXT_INPUT_Y);
-        numOfPlayers.setVisible(false);
-        numOfPlayers.setTextFieldFilter(new NumOfPlayersInputFilter());
-        stage.addActor(numOfPlayers);
-    }
-
     public void initializeWaitForHostLabel() {
         waitForHost = new Label("Wait for host to start game", game.getDefaultSkin());
         waitForHost.setPosition(CENTERED_BUTTON_X, TOP_BUTTON_Y);
@@ -322,19 +316,13 @@ public class MenuScreenActors {
         stage.addActor(waitForClients);
     }
 
-    public void toggleVisibilityCreateFirstClick() {
-        joinGameButton.setVisible(false);
-        createGameButton.setPosition(CENTERED_BUTTON_X, TOP_BUTTON_Y);
-        numOfPlayers.setVisible(true);
-    }
-
-    public void toggleVisibilityCreateSecondClick() {
+    public void toggleVisibilityCreateClick() {
         createGameButton.setVisible(false);
-        numOfPlayers.setVisible(false);
+        joinGameButton.setVisible(false);
         selectMap.setVisible(true);
         startButton.setVisible(true);
         IPLabel.setVisible(true);
-        invalidInputLabel.setVisible(false);
+        errorLabel.setVisible(false);
     }
 
     public void toggleVisibilityJoinFirstClick() {
@@ -347,7 +335,7 @@ public class MenuScreenActors {
         joinGameButton.setVisible(false);
         IPInput.setVisible(false);
         waitForHost.setVisible(true);
-        invalidInputLabel.setVisible(false);
+        errorLabel.setVisible(false);
     }
 
     public void initializeIPLabel() {
@@ -366,25 +354,21 @@ public class MenuScreenActors {
     }
 
     public void initializeInvalidInputLabel() {
-        invalidInputLabel = new Label("", game.getDefaultSkin());
-        invalidInputLabel.setPosition(CENTERED_BUTTON_X, TEXT_INPUT_Y + selectMap.getHeight());
-        invalidInputLabel.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-        invalidInputLabel.setAlignment(Align.center);
-        invalidInputLabel.setFontScale(1.5f);
-        stage.addActor(invalidInputLabel);
+        errorLabel = new Label("", game.getDefaultSkin());
+        errorLabel.setPosition(CENTERED_BUTTON_X, TEXT_INPUT_Y + selectMap.getHeight());
+        errorLabel.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        errorLabel.setAlignment(Align.center);
+        errorLabel.setFontScale(1.5f);
+        stage.addActor(errorLabel);
     }
 
-    public void updateInvalidInputLabel(TextField textField) {
-        if (textField == numOfPlayers) {
-            invalidInputLabel.setText("Number of players should be between 2 and 8");
-            numOfPlayers.setText("");
-        } else if (textField == IPInput) {
-            invalidInputLabel.setText("Invalid IP number");
-            IPInput.setText("");
+    public void updateErrorMessageLabel(TextField textField) {
+        if (textField == IPInput) {
+            errorLabel.setText("Invalid IP number");
         } else {
-            invalidInputLabel.setText("Could not connect to " + IPInput.getText() + " on port 9000");
-            IPInput.setText("");
+            errorLabel.setText("Could not connect to " + IPInput.getText() + " on port 9000");
         }
+        IPInput.setText("");
     }
 
     /**
@@ -452,7 +436,7 @@ public class MenuScreenActors {
     public void waitForAllClientsToConnectBeforeStartingGame() {
         waitForAllClients = new Thread(() -> {
             waitForAllClientsToConnect();
-            toggleVisibilityCreateSecondClick();
+            toggleVisibilityCreateClick();
             waitForClients.setVisible(false);
         });
         waitForAllClients.start();

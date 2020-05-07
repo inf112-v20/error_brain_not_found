@@ -19,7 +19,6 @@ public class MenuScreen extends StandardScreen {
         actors.initializeCreateGame();
         actors.initializeJoinGame();
         actors.initializeIPInput();
-        actors.initializeNumOfPlayersInput();
         actors.initializeWaitForHostLabel();
         actors.initializeIPLabel();
         actors.initializeInvalidInputLabel();
