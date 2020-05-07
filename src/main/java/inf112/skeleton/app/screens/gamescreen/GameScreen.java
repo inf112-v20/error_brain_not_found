@@ -25,16 +25,20 @@ public class GameScreen extends StandardScreen {
         actors.initializePriorityLabels();
         actors.initializeLockedLabels();
         actors.initializePowerDownButton();
+        actors.initializeInfoLabel();
 
         float tilePx = 300f;
         float unitScale = ((float) Gdx.graphics.getHeight() / game.getBoard().getHeight()) / tilePx;
 
-        this.mapRenderer = new OrthogonalTiledMapRenderer(game.getBoard().getTiledMap(), unitScale, batch);
+        this.mapRenderer = new OrthogonalTiledMapRenderer(game.getBoard().getTiledMap(), unitScale*0.9f, batch);
         this.mapRenderer.setView(camera);
     }
 
     @Override
     public void render(float v) {
+        if (!actors.infoLabel.isAnimated()) {
+            actors.infoLabel.animate();
+        }
         actors.updateButtons();
         super.render(v);
         mapRenderer.render();
