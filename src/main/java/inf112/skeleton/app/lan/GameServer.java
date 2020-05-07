@@ -86,8 +86,7 @@ public class GameServer {
                 try {
                     Socket socket = serverSocket.accept();
                     System.out.println("Got timeout or client connected");
-                    // Server is player 1
-                    int playerNumber = connected+2;
+                    int playerNumber = getNewPlayerNumber(connected);
                     GameServerThreads client = new GameServerThreads(this, game, socket, playerNumber);
                     System.out.println("I have connected to player" + playerNumber);
                     client.start();
@@ -98,18 +97,17 @@ public class GameServer {
                         waitForNextConnection(waitForNextConnectionMilliSeconds);
                     }
                 } catch (SocketException error) {
-                    System.out.println("Closed socket");
+                    System.out.println("Closed connection.");
                 }
             }
-            this.numberOfPlayers = getConnectedClients()+1;
+            this.numberOfPlayers = getNumberOfConnectedClients()+1;
             game.setNumberOfPlayers(numberOfPlayers);
-            game.getMenuScreenActors().allClientsHaveConnected();
-            sendToAll(Messages.SHOW_SCREEN.toString());
             System.out.println("Connected! :D");
             sendToAll(converter.createNumberOfPlayersMessage(numberOfPlayers));
             if (mapPath!=null) {
                 sendToAll(converter.createMapPathMessage(mapPath));
             }
+            sendToAll(Messages.SHOW_SCREEN.toString());
             serverSocket.close();
 
         } catch (IOException e) {
@@ -117,6 +115,21 @@ public class GameServer {
         }
     }
 
+    /**
+     * The server has playernumber 1, so a new player needs to start
+     * at playerNumber 2. Also, since number of connected players start at 0,
+     * playernumber becomes connected+2.
+     *
+     * @param connected number of already connected clients
+     * @return a new playerNumber for newly connected client
+     */
+    public int getNewPlayerNumber(int connected) {
+        return (connected+1)+1;
+    }
+
+    /**
+     *
+     */
     public void connect() {
         connect(7);
     }
@@ -302,10 +315,6 @@ public class GameServer {
         }
     }
 
-    public boolean getStopConnectingToClients() {
-        return this.connectingToClients;
-    }
-
     /***
      *
      * @param milliseconds time before connection is ended
@@ -351,7 +360,7 @@ public class GameServer {
      *
      * @return numberOfClients if server has ended connection, -1 if still connecting.
      */
-    public int getConnectedClients() {
+    public int getNumberOfConnectedClients() {
         if (!connectingToClients) {
             return clients.size();
         }

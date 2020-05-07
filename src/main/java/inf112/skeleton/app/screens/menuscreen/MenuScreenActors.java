@@ -446,34 +446,6 @@ public class MenuScreenActors {
     }
 
     /**
-     * Create own thread to wait for {@link #waitForAllClientsToConnect()} so all clients have connected
-     * before starting game screen.
-     */
-    public void waitForAllClientsToConnectBeforeStartingGame() {
-        waitForAllClients = new Thread(() -> {
-            waitForAllClientsToConnect();
-            toggleVisibilityCreateSecondClick();
-            waitForClients.setVisible(false);
-        });
-        waitForAllClients.start();
-    }
-
-    public void waitForAllClientsToConnect() {
-        try {
-            waitForAllClientsToConnect.acquire();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Release {@link #waitForAllClientsToConnect()} so that tha game can begin.
-     */
-    public void allClientsHaveConnected() {
-        waitForAllClientsToConnect.release();
-    }
-
-    /**
      * Release Semaphore waitForServerToSendShowGameScreen {@link #waitForGameSetup()} can be released.
      */
     public void showGameScreen() {

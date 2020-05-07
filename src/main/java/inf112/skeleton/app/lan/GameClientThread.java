@@ -50,8 +50,6 @@ public class GameClientThread extends Thread {
     @Override
     public void run() {
 
-        //getStartValues();
-
         while (true) {
             String message = getMessage();
             if (message == null) {
