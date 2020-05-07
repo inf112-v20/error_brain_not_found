@@ -93,7 +93,6 @@ public class RallyGame extends Game {
         this.textSkin = new Skin(Gdx.files.internal("assets/skins/number-cruncher-ui.json"));
         this.defaultSkin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
         this.setScreen(new MenuScreen(this));
-
         startMusic();
     }
 
@@ -318,10 +317,6 @@ public class RallyGame extends Game {
 
     public float getSoundVolume(){
         return soundVolume;
-    }
-
-    private void cardsReady() {
-        waitForCards.release();
     }
 
     /**
