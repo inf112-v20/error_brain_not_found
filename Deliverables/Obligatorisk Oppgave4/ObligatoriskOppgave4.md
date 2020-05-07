@@ -5,10 +5,13 @@ Team: error_no_brain_found
 ### Meeting minutes
 
 [Meeting 8](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-8)  
-[Meeting 9](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-9)
+[Meeting 9](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-9)  
 [Meeting 10](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-10)  
 [Meeting 11](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-11)  
-[Meeting 12](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-12)
+[Meeting 12](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-12)  
+[Meeting 12.5](https://github.com/inf112-v20/error_brain_not_found/wiki/Møte-12.5), this was not meant as a meeting just
+catchup before the presentation.
+
 
 ### Roles
 The roles in the team is fine. The team leader have the over all control over the team. He is making sure everyone
