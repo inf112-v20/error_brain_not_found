@@ -112,7 +112,6 @@ public class GameServer {
             }
             this.numberOfPlayers = getConnectedClients()+1;
             game.setNumberOfPlayers(numberOfPlayers);
-            sendToAll(Messages.SHOW_SCREEN.toString());
             System.out.println("Connected! :D");
             sendToAll(converter.createNumberOfPlayersMessage(numberOfPlayers));
             if (mapPath!=null) {

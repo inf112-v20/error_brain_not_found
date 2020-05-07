@@ -81,10 +81,6 @@ public class GameClientThread extends Thread {
             else if (message.equals(Messages.DECK_END.toString())){
                 giveDeckToGameAndTellStartValuesAreReceived();
             }
-            else if (message.equals(Messages.SHOW_SCREEN.toString())) {
-                game.getMenuScreenActors().showGameScreen();
-                System.out.println(message);
-            }
             else if (message.contains(Messages.YOUR_NUMBER.toString())) {
                 game.setPlayerNumber(converter.getMyPlayerNumber(message));
             }
