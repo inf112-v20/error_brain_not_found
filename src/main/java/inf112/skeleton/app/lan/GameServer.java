@@ -9,6 +9,7 @@ import inf112.skeleton.app.objects.player.Player;
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.*;
 
 /**
@@ -81,17 +82,23 @@ public class GameServer {
                 if (connected >= maxNumberOfClients) {
                     break;
                 }
-                Socket socket = serverSocket.accept();
-                // Server is player 1
-                int playerNumber = connected+2;
-                GameServerThreads client = new GameServerThreads(this, game, socket, playerNumber);
-                System.out.println("I have connected to player" + playerNumber);
-                client.start();
-                sendPlayerNumberAndDeck(client, playerNumber, this.deck);
-                clients.add(client);
-                connected++;
-                if (waitForNextConnectionMilliSeconds != 0) {
-                    waitForNextConnection(waitForNextConnectionMilliSeconds);
+                System.out.println("Waiting for client to connect");
+                try {
+                    Socket socket = serverSocket.accept();
+                    System.out.println("Got timeout or client connected");
+                    // Server is player 1
+                    int playerNumber = connected+2;
+                    GameServerThreads client = new GameServerThreads(this, game, socket, playerNumber);
+                    System.out.println("I have connected to player" + playerNumber);
+                    client.start();
+                    sendPlayerNumberAndDeck(client, playerNumber, this.deck);
+                    clients.add(client);
+                    connected++;
+                    if (waitForNextConnectionMilliSeconds != 0) {
+                        waitForNextConnection(waitForNextConnectionMilliSeconds);
+                    }
+                } catch (SocketException error) {
+                    System.out.println("Closed socket");
                 }
             }
             this.numberOfPlayers = getConnectedClients()+1;
@@ -280,8 +287,19 @@ public class GameServer {
         this.allPoweredDownClientsHaveConfirmed = allPoweredDownClientsHaveConfirmed;
     }
 
+    /**
+     * Stop while loop and close serversockt if false.
+     * @param connectingToClients
+     */
     public void setConnectingToClients(boolean connectingToClients) {
         this.connectingToClients = connectingToClients;
+        if (connectingToClients == false) {
+            try {
+                serverSocket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     public boolean getStopConnectingToClients() {
@@ -299,6 +317,11 @@ public class GameServer {
             e.printStackTrace();
         }
         setConnectingToClients(false);
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /***
@@ -344,4 +367,5 @@ public class GameServer {
         this.mapPath = mapPath;
         game.setMapPath(mapPath);
     }
+
 }
