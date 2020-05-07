@@ -120,5 +120,11 @@ public class GameServerTest {
         assertEquals(1, gameServer.getClients().size());
     }
 
+    @Test
+    public void maxNumberOfPlayersTest() {
+        gameServer.connect(8);
+        assertEquals(8, gameServer.getNumberOfConnectedClients());
+    }
+
 
 }
