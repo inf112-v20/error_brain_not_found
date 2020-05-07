@@ -36,8 +36,6 @@ public class MenuScreenActors {
     public final float EXIT_BUTTON_Y;
     public final float SETTINGS_BUTTON_Y;
 
-    public float BUTTON_WIDTH;
-    public float BUTTON_HEIGHT;
     public float TOP_BUTTON_Y;
     public float BOTTOM_BUTTON_Y;
     public float TEXT_INPUT_Y;
@@ -67,14 +65,12 @@ public class MenuScreenActors {
 
         BUTTON_WIDTH = (float) (screenWidth * 0.25);
         BUTTON_HEIGHT = (float) (screenHeight * 0.25);
+
         START_BUTTON_Y = (float) (screenHeight * 0.5);
         EXIT_BUTTON_Y = (float) (screenHeight * 0.5 - BUTTON_HEIGHT);
         SETTINGS_BUTTON_Y = (float) (screenHeight * 0.5 - (BUTTON_HEIGHT *2));
         BUTTON_X = (BUTTON_WIDTH * 1);
         BUTTON_Y = (BUTTON_WIDTH * 2);
-
-    }
-
 
 
         TOP_BUTTON_Y = (float) (screenHeight * 0.5);
@@ -134,7 +130,6 @@ public class MenuScreenActors {
 
         ImageButton exitButton = new ImageButton(exitButtonStyle);
         exitButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-
         exitButton.setPosition(CENTERED_BUTTON_X, BOTTOM_BUTTON_Y);
         exitButton.addListener(new InputListener() {
             @Override
@@ -156,7 +151,7 @@ public class MenuScreenActors {
 
         ImageButton settingsButton = new ImageButton(settingsButtonStyle);
         settingsButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-        settingsButton.setPosition(BUTTON_X, EXIT_BUTTON_Y);
+        settingsButton.setPosition(LEFT_BUTTON_X, BOTTOM_BUTTON_Y);
         settingsButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {

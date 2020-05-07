@@ -23,7 +23,8 @@ public class Board extends BoardLayers {
 
 
     private final Sound scream;
-    private final Sound wallImpact;
+    private final Sound wall_Collision;
+    private final Sound robotCollide;
 
     private final BoardLogic boardLogic;
 
@@ -34,8 +35,9 @@ public class Board extends BoardLayers {
         this.players = new ArrayList<>();
 
         this.scream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
-        this.wallImpact = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/ImpactWall.mp3"));
-        
+        this.robotCollide = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/robotCollide.mp3"));
+        this.wall_Collision = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/robotCollide.mp3"));
+
         this.boardLogic = new BoardLogic(this);
 
         addPlayersToStartPositions(numberOfPlayers);
@@ -229,7 +231,7 @@ public class Board extends BoardLayers {
         Direction direction = backUp ? player.getDirection().turnAround() : player.getDirection();
 
         if (!boardLogic.canGo(position, direction)) {
-            wallImpact.play(RallyGame.volume);
+            wall_Collision.play(RallyGame.soundVolume);
 
             addPlayer(player);
             return;
@@ -238,7 +240,7 @@ public class Board extends BoardLayers {
             Player enemyPlayer = getPlayer(getNeighbourPosition(player.getPosition(), direction));
 
             if (boardLogic.canPush(enemyPlayer, direction)) {
-              robotCollide.play(game.getSoundVolume());
+               robotCollide.play(RallyGame.soundVolume);
                 boardLogic.pushPlayer(enemyPlayer, direction);
             } else {
                 addPlayer(player);
@@ -342,7 +344,7 @@ public class Board extends BoardLayers {
     public void respawnPlayers() {
         for (Player player : players) {
             if (boardLogic.outsideBoard(player)) {
-                scream.play(RallyGame.volume);
+                scream.play(RallyGame.soundVolume);
                 player.decrementLifeTokens();
                 respawn(player);
             }
@@ -455,8 +457,9 @@ public class Board extends BoardLayers {
      *
      */
     public void dispose() {
-        wallCollision.dispose();
-        WilhelmScream.dispose();
+
+        wall_Collision.dispose();
+        scream.dispose();
         tiledMap.dispose();
     }
 }

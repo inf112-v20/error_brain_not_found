@@ -27,6 +27,7 @@ import inf112.skeleton.app.screens.gamescreen.GameScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
 
+import inf112.skeleton.app.screens.standardscreen.SettingsScreen;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
 import java.io.IOException;
@@ -62,7 +63,6 @@ public class RallyGame extends Game {
 
     public boolean waitingForCards;
     public boolean waitingForPowerUp;
-    public Sound laserSound;
 
     public Music gameMusic;
 
@@ -81,6 +81,7 @@ public class RallyGame extends Game {
 
 
     public static float volume = 0.5f;
+    public static float soundVolume = 0.5f;
     private String mapPath;
     public Semaphore waitForPowerUp;
     private ArrayList<Player> poweredDownPlayers;
@@ -93,7 +94,7 @@ public class RallyGame extends Game {
         this.defaultSkin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
         this.setScreen(new MenuScreen(this));
 
-        //startMusic();
+        startMusic();
     }
 
     /**
@@ -918,8 +919,7 @@ public class RallyGame extends Game {
         } catch (Exception ignored) {
         }
         try {
-            laserSound.dispose();
-             walledLaserSound.dispose();
+            walledLaserSound.dispose();
             repairRobotSound.dispose();
             firstBeltStartUp.dispose();
             secondBeltStartUp.dispose();
