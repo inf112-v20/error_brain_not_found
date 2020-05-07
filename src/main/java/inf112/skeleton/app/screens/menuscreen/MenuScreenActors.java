@@ -48,9 +48,7 @@ public class MenuScreenActors {
     private Semaphore waitForServerToSendMapPath = new Semaphore(1);
     private Thread waitForGameSetupThread;
     private Semaphore waitForAllClientsToConnect = new Semaphore(1);
-    private Thread waitForAllClients;
     private Label waitForClients;
-    private int clientsConnected;
     private Semaphore waitForServerToSendShowGameScreen = new Semaphore(1);
 
     public MenuScreenActors(RallyGame game, Stage stage) {
@@ -188,14 +186,6 @@ public class MenuScreenActors {
     }
 
     /**
-     * @param numberOfPlayers
-     * @return true og port and numberOfPlayers are not empty and in valid range
-     */
-    public boolean isValidNumberOfPlayers(String numberOfPlayers) {
-        return (!"".equals(numberOfPlayers)&& isNumber(numberOfPlayers)&& numberOfPlayersInValidRange(Integer.parseInt(numberOfPlayers)));
-    }
-
-    /**
      *
      * @param numberOfPLayers
      * @return True if players between 2 and 8.
@@ -255,15 +245,6 @@ public class MenuScreenActors {
             return false;
         }
         return true;
-    }
-
-    /**
-     *
-     * @param port to check
-     * @return True if portnumber is registered but not well-known
-     */
-    public boolean portInValidRange(int port) {
-        return port >= 1024 &&port <= 49151;
     }
 
     public void initializeIPInput() {

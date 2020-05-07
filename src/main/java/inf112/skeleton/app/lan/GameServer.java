@@ -22,7 +22,6 @@ public class GameServer {
     private Converter converter;
     private boolean allClientsHaveSelectedCardsOrIsPoweredDown;
     private Deck deck;
-    private HashMap<GameServerThreads, Boolean> haveSentMapPath;
     private boolean serverHasConfirmed;
     private ServerSocket serverSocket;
     private boolean allPoweredDownClientsHaveConfirmed;
@@ -33,7 +32,6 @@ public class GameServer {
 
     public GameServer(RallyGame game) {
         this.clients = new ArrayList<>();
-        this.haveSentMapPath = new HashMap<>();
         this.game = game;
         this.converter = new Converter();
         this.deck = new Deck();
@@ -65,7 +63,7 @@ public class GameServer {
     }
 
     /**
-     * Establish a connection waiting for number of clients to connect. Create a new thread for each client.
+     * Establish a connection waiting for clients to connect. Create a new thread for each client.
      * If no serverSocket is made by {@link #setServerSocket(ServerSocket)} or {@link #createServerSocket(int)} then
      * a default serversocket will be made on port 9000. Close socket after connection.
      *
@@ -76,7 +74,6 @@ public class GameServer {
             if (this.serverSocket == null) {
                 createServerSocket(9000);
             }
-            // Connect to several clients
             int connected = 0;
             while (connectingToClients) {
                 if (connected >= maxNumberOfClients) {
@@ -107,7 +104,6 @@ public class GameServer {
             if (mapPath!=null) {
                 sendToAll(converter.createMapPathMessage(mapPath));
             }
-            sendToAll(Messages.SHOW_SCREEN.toString());
             serverSocket.close();
 
         } catch (IOException e) {
@@ -128,7 +124,7 @@ public class GameServer {
     }
 
     /**
-     *
+     * Open serversocket to wait for maximum 7 clients to connect. Uses {@link #connect(int)}
      */
     public void connect() {
         connect(7);
@@ -146,7 +142,7 @@ public class GameServer {
      * Create a new deck, but remove the locked cards.
      * Update deck in {@link RallyGame} and send this deck to the other players.
      *
-     * The player hosting the game sends all of the players locked cards.
+     * The player hosting the game gives all of the players locked cards.
      */
     public void createAndSendDeckToAll(ArrayList<ProgramCard> lockedCards) {
         this.deck = new Deck();
