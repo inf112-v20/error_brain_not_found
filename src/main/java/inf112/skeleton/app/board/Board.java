@@ -19,9 +19,9 @@ public class Board extends BoardLayers {
 
     private final ArrayList<Player> players;
 
-    RallyGame game = new RallyGame();
 
     private final BoardLogic boardLogic = new BoardLogic();
+    private final RallyGame game = new RallyGame();
 
     public Board(String mapPath, int numberOfPlayers) {
         super(mapPath);
