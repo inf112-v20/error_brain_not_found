@@ -85,6 +85,10 @@ public class MenuScreenActors {
         startButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         startButton.setPosition(CENTERED_BUTTON_X, TOP_BUTTON_Y);
         startButton.addListener(new InputListener() {
+            /**
+             *
+             * Is activated only if {@link #touchDown(InputEvent, float, float, int, int)} is true
+             */
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.getServer().setMapPath("assets/maps/" + selectMap.getSelected() + ".tmx");
