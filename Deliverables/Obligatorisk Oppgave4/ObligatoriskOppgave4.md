@@ -49,6 +49,22 @@ roles that we have. This has been beneficial to us because we can easier adopt o
 and often think about other members should use your code.   
 
 **The project:**  
+This project we learned a lot. None of us was used to using git in such a way. We had to work on our own branch and merge
+it in to the main branch (develop) when a feature/test/refactoring was finished. Our teamwork has also gotten better with time.
+Now if someone meet a problem they send someone a message explaining the problem then the person gets help. This means the 
+project is working much more proactive and don't waste time on headbutting a wall. We said from the start we didn't want to 
+many meetings in the week, we wanted people to work on the project instead of being in meetings where we were less proactive.
+So we used the meeting for catching up, that way everyone could start the week on the same place. When we got to near the end
+we decided to have more meetings, since we saw that there was so much code written every day. So instead of having a to long 
+meeting where we had to go through a lot of code we spread it out. Through the project there has been one member of the group that
+has lacked behind, this is something we should have take better care of earlier. If we were to start-over this is one thing we
+would have looked for earlier. There are still members of the group that aren't sure how `libGDX` work. This has slowed 
+down the project a bit when it came to the to last sprints. 
+
+#### Improvement points if we were to start over
+*   Better focusing on helping everyone of the group at the second they fall behind.
+*   Make everyone comfortable in the framework we are working in.
+*   Knowing even a change that might look easy, may take time to implement.
 
 ### Project board
 ![Project board form github](ScreenshotProdjectBoard.png)
