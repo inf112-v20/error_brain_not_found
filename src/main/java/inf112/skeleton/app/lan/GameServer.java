@@ -93,7 +93,7 @@ public class GameServer {
                     Socket socket = serverSocket.accept();
                     System.out.println("Got timeout or client connected");
                     // Server is player 1
-                    int playerNumber = getNewPlayerNumber(connected);
+                    int playerNumber = getNewPlayerNumber(connectedClients);
                     GameServerThreads client = new GameServerThreads(this, game, socket, playerNumber);
                     System.out.println("I have connected to player" + playerNumber);
                     client.start();
@@ -366,12 +366,13 @@ public class GameServer {
      *
      * @return numberOfClients if server has ended connection, -1 if still connecting.
      */
+    /*
     public int getNumberOfConnectedClients() {
         if (!connectingToClients) {
             return clients.size();
         }
         return -1;
-    }
+    }*/
 
     /**
      * When server has pressed start, mappath should be set.
