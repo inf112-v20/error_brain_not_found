@@ -848,11 +848,21 @@ public class RallyGame extends Game {
         }
         try {
             gameMusic.dispose();
+        } catch (Exception ignored) {
+        }
+        try {
             laserSound.dispose();
+        } catch (Exception ignored) {
+        }
+        try {
             screen.dispose();
+        } catch (Exception ignored) {
+        }
+        try {
             board.dispose();
         } catch (Exception ignored) {
         }
+
     }
 
     /**
