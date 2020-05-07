@@ -52,6 +52,7 @@ public class ActorImages {
         atlas.addRegion("Settings over", SettingsOver);
         atlas.addRegion("Back", backButton);
         atlas.addRegion("Back over", backButtonOver);
+        atlas.addRegion("Back over", backButtonOver);
         atlas.addRegion("Screen Toggle", screenToggler);
         atlas.addRegion("Screen Toggle over", screenTogglerOver);
         atlas.addRegion("Power down active", powerDownActive);

@@ -130,7 +130,7 @@ public class MenuScreenActors {
 
         ImageButton exitButton = new ImageButton(exitButtonStyle);
         exitButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-        exitButton.setPosition(CENTERED_BUTTON_X, BOTTOM_BUTTON_Y);
+        exitButton.setPosition(RIGHT_BUTTON_X, BOTTOM_BUTTON_Y);
         exitButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
