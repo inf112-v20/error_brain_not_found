@@ -30,9 +30,22 @@ public class SettingsInput extends InputAdapter {
             case Input.Keys.F:
                 game.fullscreen();
                 break;
+            case Input.Keys.D:
+                // Test if player dies
+                for (int i = 0; i < 10; i++) {
+                    game.getBoard().getPlayer(2).handleDamage();
+                }
+                game.decreaseLives();
+                game.respawnPlayers();
+                game.removeDeadPlayers();
+                break;
+            case Input.Keys.G:
+                game.waitForPowerUp.release();
+                System.out.println("Start game loop again");
+                break;
             default:
                 // Fuck u Codacy
         }
-        return false;
+        return true;
     }
 }

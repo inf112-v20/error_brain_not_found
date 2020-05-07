@@ -15,6 +15,10 @@ public class Deck {
         shuffleDeck();
     }
 
+    public void removeCards(ArrayList<ProgramCard> cards) {
+        deck.removeAll(cards);
+    }
+
     /**
      * Make all the programCards and put them in the stack
      */
@@ -23,14 +27,6 @@ public class Deck {
         discardPile = new Stack<>();
         makeRotateCards();
         makeMoveCards();
-    }
-
-    /**
-     * Takes the given ArrayList and adds the cards to the discard pile
-     * @param programCards List of cards to be added to the discard pile
-     */
-    public void addCardsToDiscardPile(ArrayList<ProgramCard> programCards) {
-        discardPile.addAll(programCards);
     }
 
     /**
@@ -109,5 +105,21 @@ public class Deck {
                 deck.push(new ProgramCard(priority * 10 + startPriority, 1, Rotate.NONE, "Move 1"));
             }
         }
+    }
+
+    /**
+     *
+     * @return the stack of cards in the deck
+     */
+    public Stack<ProgramCard> getDeck() {
+        return deck;
+    }
+
+    /**
+     *
+     * @param stack new stack for this deck
+     */
+    public void setDeck(Stack<ProgramCard> stack) {
+        this.deck = stack;
     }
 }

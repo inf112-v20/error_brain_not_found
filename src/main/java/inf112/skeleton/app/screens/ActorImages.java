@@ -12,6 +12,11 @@ public class ActorImages {
     public ActorImages() {
         TextureAtlas atlas = new TextureAtlas();
 
+        TextureRegion createGame = new TextureRegion(new Texture("assets/images/Create game active.png"));
+        TextureRegion createGameOver = new TextureRegion(new Texture("assets/images/Create game Inactive.png"));
+        TextureRegion joinGame = new TextureRegion(new Texture("assets/images/Join game active.png"));
+        TextureRegion joinGameOver = new TextureRegion(new Texture("assets/images/Join game inactive.png"));
+
         TextureRegion confirmReady = new TextureRegion(new Texture("assets/images/ConfirmButton.png"));
         TextureRegion confirmNotReady = new TextureRegion(new Texture("assets/images/ConfirmButtonNotReady.png"));
         TextureRegion Exit = new TextureRegion(new Texture("assets/images/Exit button active.png"));
@@ -60,6 +65,10 @@ public class ActorImages {
         atlas.addRegion("You lost background", youLostBackground);
         atlas.addRegion("Damage token", damageToken);
         atlas.addRegion("Life token", lifeToken);
+        atlas.addRegion("Create game", createGame);
+        atlas.addRegion("Create game over", createGameOver);
+        atlas.addRegion("Join game", joinGame);
+        atlas.addRegion("Join game over", joinGameOver);
 
         this.skin = new Skin(atlas);
     }
