@@ -38,19 +38,9 @@ public class Board extends BoardLayers {
     }
 
     private TiledMapTile getRobotTile(Player player) {
-        TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("robots");
-        switch (player.getDirection()) {
-            case SOUTH:
-                return tileSet.getTile(TileID.PLAYER_SOUTH.getId());
-            case NORTH:
-                return tileSet.getTile(TileID.PLAYER_NORTH.getId());
-            case EAST:
-                return tileSet.getTile(TileID.PLAYER_EAST.getId());
-            case WEST:
-                return tileSet.getTile(TileID.PLAYER_WEST.getId());
-            default:
-                return null;
-        }
+        return tiledMap.getTileSets()
+                       .getTileSet(player.getPlayerNr())
+                       .getTile(player.getTileInt());
     }
 
     /**

@@ -83,7 +83,7 @@ public class Registers {
     public int getOpenRegisters() {
         int open = 0;
         for (Register register : registers) {
-            if (!register.isOpen()) {
+            if (register.isOpen()) {
                 open++;
             }
         }

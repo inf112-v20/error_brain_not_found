@@ -67,12 +67,11 @@ public class RallyGame extends Game {
     }
 
     public void setupGame(String mapPath) {
-        this.board = new Board(mapPath, 1);
+        this.board = new Board(mapPath, 8);
         this.deck = new Deck();
         this.players = board.getPlayers();
         this.mainPlayer = board.getPlayer1();
         this.respawnPlayers = new ArrayList<>();
-
 
         this.waitForCards = new Semaphore(1);
         this.waitForCards.tryAcquire();
@@ -91,13 +90,16 @@ public class RallyGame extends Game {
         new Thread(this::doTurn).start();
 
         dealCards();
+        players.forEach(Player::selectCards);
+        players.forEach(player -> player.getCardsOnHand().forEach(card -> System.out.println(player.getPlayerNr() + ": " + card.toString())));
     }
 
     public void fullscreen() {
         if (Gdx.graphics.isFullscreen()) {
             Gdx.graphics.setWindowedMode(1280, 720);
         } else {
-            Gdx.graphics.setFullscreenMode(Gdx.graphics.getDisplayMode());
+            Gdx.graphics
+                    .setFullscreenMode(Gdx.graphics.getDisplayMode());
         }
     }
 
