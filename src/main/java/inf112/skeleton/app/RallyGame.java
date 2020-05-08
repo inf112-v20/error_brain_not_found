@@ -30,6 +30,7 @@ import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
 import inf112.skeleton.app.screens.standardscreen.SettingsScreen;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
+import javax.naming.directory.DirContext;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -780,20 +781,32 @@ public class RallyGame extends Game {
         sleep(500);
         validateBeltPushPos();
         updatePositionsAfterBeltPush();
+        updateBoardAfterBeltPush();
     }
 
-    private void updateBoard() {
+    private void updateBoardAfterBeltPush() {
         board.removePlayersFromBoard();
-        updatePositionsAfterBeltPush();
         board.updateBoard();
     }
 
     public void validateBeltPushPos() {
+        player:
         for (Player player : players) {
             for (Player otherPlayer : players) {
-                if (player.getBeltPushPos() != null && !player.equals(otherPlayer) && player.getBeltPushPos().equals(otherPlayer.getBeltPushPos())) {
-                    player.setBeltPushPos(null);
-                    otherPlayer.setBeltPushPos(null);
+                if (player.getBeltPushPos() != null && !player.equals(otherPlayer)) {
+                    if (player.getBeltPushPos().equals(otherPlayer.getBeltPushPos())) {
+                        player.setBeltPushPos(null);
+                        otherPlayer.setBeltPushPos(null);
+                        continue player;
+                    }
+                    if (board.shouldPush(player, player.getBeltPushDir())) {
+                        Player enemyPlayer = board.getPlayer(board.getNeighbourPosition(player.getPosition(), player.getBeltPushDir()));
+                        if (enemyPlayer.getBeltPushPos() == null &&
+                            !board.canPush(enemyPlayer, player.getBeltPushDir())) {
+                                player.setBeltPushPos(null);
+                                continue player;
+                        }
+                    }
                 }
             }
         }
@@ -802,6 +815,13 @@ public class RallyGame extends Game {
     public void updatePositionsAfterBeltPush() {
         for (Player player : players) {
             if (player.getBeltPushPos() != null) {
+                Direction dir = player.getBeltPushDir();
+                if (board.shouldPush(player, dir)) {
+                    Player enemyPlayer = board.getPlayer(board.getNeighbourPosition(player.getPosition(), dir));
+                    if (board.canPush(enemyPlayer, dir)) {
+                        board.pushPlayer(enemyPlayer, dir);
+                    }
+                }
                 player.setPosition(player.getBeltPushPos());
                 player.setBeltPushPos(null);
             }
@@ -868,7 +888,6 @@ public class RallyGame extends Game {
         for (Player player : players) {
             for (Vector2 repairTilePos : board.getRepairTiles()) {
                 if (player.getPosition().equals(repairTilePos)) {
-                    player.resetDamageTokens();
                     player.setBackup(repairTilePos, player.getDirection());
                     if (repair) {
                         player.decrementDamageTokens();
