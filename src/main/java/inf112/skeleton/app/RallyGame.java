@@ -853,13 +853,6 @@ public class RallyGame extends Game {
         this.numberOfPlayers = numberOfPlayers;
     }
 
-    /**
-     * Let game know it hosts the game
-     */
-    public void setIsServerToTrue() {
-        this.isServer = true;
-    }
-
     public void setMapPath(String mapPath) {
         this.mapPath = mapPath;
     }

@@ -181,7 +181,7 @@ public class MenuScreenActors {
              */
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setIsServerToTrue();
+                game.setIsServer(true);
                 // Defaul port is 9000
                 game.setUpHost(9000);
                 toggleVisibilityCreateClick();
