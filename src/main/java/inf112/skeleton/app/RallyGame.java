@@ -800,9 +800,8 @@ public class RallyGame extends Game {
                         continue player;
                     }
                     if (board.shouldPush(player, player.getBeltPushDir())) {
-                        Player enemyPlayer = board.getPlayer(board.getNeighbourPosition(player.getPosition(), player.getBeltPushDir()));
-                        if (enemyPlayer.getBeltPushPos() == null &&
-                            !board.canPush(enemyPlayer, player.getBeltPushDir())) {
+                        if (otherPlayer.getBeltPushPos() == null &&
+                            !board.canPush(otherPlayer, player.getBeltPushDir())) {
                                 player.setBeltPushPos(null);
                                 continue player;
                         }

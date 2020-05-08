@@ -199,8 +199,10 @@ public class GameTest {
         player1.setPosition(endBeltPosition);
         Vector2 playerToBePushedPosition = new Vector2(9, 5);
         player2.setPosition(playerToBePushedPosition);
+        Vector2 positionAfterPush = new Vector2(10, 5);
+        game.addPlayer(player2);
         game.activateBelts(false);
-        assertNotEquals(playerToBePushedPosition, player2.getPosition());
+        assertEquals(player2.getPosition(), positionAfterPush);
     }
 
     @Test

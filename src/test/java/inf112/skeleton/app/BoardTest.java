@@ -363,8 +363,11 @@ public class BoardTest {
 
     @Test
     public void maxNumberOfPlayersTest() {
-        Board board = new Board("assets/maps/Risky Exchange.tmx", 8);
-        assertEquals(8, board.getPlayers().size());
+        RallyGame game = new RallyGame();
+        game.setNumberOfPlayers(8);
+        game.setMapPath("assets/maps/Risky Exchange.tmx");
+        game.setupGame();
+        assertEquals(8, game.getBoard().getPlayers().size());
     }
 
 }
