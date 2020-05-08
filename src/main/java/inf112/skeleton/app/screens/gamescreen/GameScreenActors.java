@@ -471,8 +471,12 @@ public class GameScreenActors {
                     return;
                 }
 
-                //font.draw(batch, text, getX() + deltaX * elapsed / 1000f, getY() + deltaY * elapsed / 1000f);
-                font.draw(batch, text, getX() + deltaX * elapsed / 1000f, getY() + deltaY * elapsed / 1000f);
+                float x = getX();
+                if (System.currentTimeMillis() - animationStart < 2) {
+                    elapsed = 0;
+                }
+
+                font.draw(batch, text, getX() + deltaX * elapsed / 1000f, getY());
             }
         }
 
