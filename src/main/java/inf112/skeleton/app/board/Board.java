@@ -39,33 +39,8 @@ public class Board extends BoardLayers {
      * @return {@link TiledMapTile} with robot
      */
     private TiledMapTile getRobotTile(Player player) {
-        /*if (player.equals(mainPlayer)) {
-            TiledMapTileSet set = tiledMap.getTileSets().getTileSet("7");
-            switch (player.getDirection()) {
-                case SOUTH:
-                    return set.getTile(161);
-                case NORTH:
-                    return set.getTile(162);
-                case EAST:
-                    return set.getTile(163);
-                case WEST:
-                    return set.getTile(164);
-            }
-        } else {
-            TiledMapTileSet set = tiledMap.getTileSets().getTileSet("4");
-            switch (player.getDirection()) {
-                case SOUTH:
-                    return set.getTile(149);
-                case NORTH:
-                    return set.getTile(150);
-                case EAST:
-                    return set.getTile(151);
-                case WEST:
-                    return set.getTile(152);
-            }
-        }*/
         return tiledMap.getTileSets()
-                       .getTileSet(player.getPlayerNumber())
+                .getTileSet(player.getColor().replace(" ", ""))
                        .getTile(player.getTileInt());
     }
 

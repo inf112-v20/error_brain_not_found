@@ -123,9 +123,10 @@ public class RallyGame extends Game {
 
     public ArrayList<Player> makePlayersAndAddToBoard(int numberOfPlayers) {
         ArrayList<Player> players = new ArrayList<>();
+        String[] colors = new String[]{"blue", "brown", "dark green", "light green", "pink", "purple", "red", "yellow"};
         for (int playerNumber = 1; playerNumber <= numberOfPlayers; playerNumber++) {
             Vector2 startPos = board.getStartPosition(playerNumber);
-            Player player = new Player(startPos, playerNumber);
+            Player player = new Player(startPos, playerNumber, colors[playerNumber - 1]);
             if (this.myPlayerNumber == playerNumber) {
                 this.mainPlayer = player;
             }
@@ -282,7 +283,7 @@ public class RallyGame extends Game {
         StringBuilder stringBuilder = new StringBuilder("Player ");
         for (Player player : players) {
             if (player.isPoweringDown()) {
-                stringBuilder.append(player.getPlayerNr()).append(", ");
+                stringBuilder.append(player.getPlayerNumber()).append(", ");
             }
         }
         stringBuilder.deleteCharAt(stringBuilder.length() - 2);

@@ -41,7 +41,12 @@ public class Player {
     private int lifeTokens;
     private final String color;
 
-    public Player(int playerNumber) {
+    public Player(Vector2 position, int playerNumber) {
+        this(position, playerNumber, "white");
+    }
+
+    public Player(Vector2 position, int playerNumber, String color) {
+        this.position = position;
         this.direction = Direction.EAST;
         this.playerNumber = playerNumber;
         this.flagsCollected = new ArrayList<>();
@@ -56,34 +61,10 @@ public class Player {
         this.poweredDown = false;
         this.powerUpNextRound = false;
         this.powerDownNextRound = false;
-    }
-
-    public Player(Vector2 position, int playerNr, String color) {
-        this.position = position;
-        this.direction = Direction.EAST;
-        this.playerNumber = playerNr;
-        this.flagsCollected = new ArrayList<>();
-        this.registers = new Registers();
-        this.cardsOnHand = new ArrayList<>();
-        this.damageTokens = 0;
-        this.lifeTokens = 3;
-        this.beltPushDir = null;
-        this.beltPushPos = null;
-        this.programCardsDealt = 9;
-        this.poweringDown = false;
-        this.poweredDown = false;
-        this.powerUpNextRound = false;
-        this.powerDownNextRound = false;
-        this.tiles = TileID.getRobotId(playerNr);
+        this.tiles = TileID.getRobotId(color);
         this.confirmedPowerUpOrContinuePowerDown = false;
         this.color = color;
 
-        setBackup(this.position, this.direction);
-    }
-
-    public void setStartPosition(Vector2 position) {
-        this.position = position;
-        this.direction = Direction.EAST;
         setBackup(this.position, this.direction);
     }
 

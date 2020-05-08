@@ -3,50 +3,50 @@ package inf112.skeleton.app.enums;
 import java.util.HashMap;
 
 public enum TileID {
-    PLAYER_1_SOUTH(137),
-    PLAYER_1_NORTH(138),
-    PLAYER_1_EAST(139),
-    PLAYER_1_WEST(140),
+    PLAYER_BLUE_SOUTH(137),
+    PLAYER_BLUE_NORTH(138),
+    PLAYER_BLUE_EAST(139),
+    PLAYER_BLUE_WEST(140),
 
-    PLAYER_2_SOUTH(141),
-    PLAYER_2_NORTH(142),
-    PLAYER_2_EAST(143),
-    PLAYER_2_WEST(144),
+    PLAYER_BROWN_SOUTH(141),
+    PLAYER_BROWN_NORTH(142),
+    PLAYER_BROWN_EAST(143),
+    PLAYER_BROWN_WEST(144),
 
-    PLAYER_3_SOUTH(145),
-    PLAYER_3_NORTH(146),
-    PLAYER_3_EAST(147),
-    PLAYER_3_WEST(148),
+    PLAYER_DARKGREEN_SOUTH(145),
+    PLAYER_DARKGREEN_NORTH(146),
+    PLAYER_DARKGREEN_EAST(147),
+    PLAYER_DARKGREEN_WEST(148),
 
-    PLAYER_4_SOUTH(149),
-    PLAYER_4_NORTH(150),
-    PLAYER_4_EAST(151),
-    PLAYER_4_WEST(152),
+    PLAYER_LIGHTGREEN_SOUTH(149),
+    PLAYER_LIGHTGREEN_NORTH(150),
+    PLAYER_LIGHTGREEN_EAST(151),
+    PLAYER_LIGHTGREEN_WEST(152),
 
-    PLAYER_5_SOUTH(153),
-    PLAYER_5_NORTH(154),
-    PLAYER_5_EAST(155),
-    PLAYER_5_WEST(156),
+    PLAYER_PINK_SOUTH(153),
+    PLAYER_PINK_NORTH(154),
+    PLAYER_PINK_EAST(155),
+    PLAYER_PINK_WEST(156),
 
-    PLAYER_6_SOUTH(157),
-    PLAYER_6_NORTH(158),
-    PLAYER_6_EAST(159),
-    PLAYER_6_WEST(160),
+    PLAYER_PURPLE_SOUTH(157),
+    PLAYER_PURPLE_NORTH(158),
+    PLAYER_PURPLE_EAST(159),
+    PLAYER_PURPLE_WEST(160),
 
-    PLAYER_7_SOUTH(161),
-    PLAYER_7_NORTH(162),
-    PLAYER_7_EAST(163),
-    PLAYER_7_WEST(164),
+    PLAYER_RED_SOUTH(161),
+    PLAYER_RED_NORTH(162),
+    PLAYER_RED_EAST(163),
+    PLAYER_RED_WEST(164),
 
-    PLAYER_8_SOUTH(165),
-    PLAYER_8_NORTH(166),
-    PLAYER_8_EAST(167),
-    PLAYER_8_WEST(168),
+    PLAYER_YELLOW_SOUTH(165),
+    PLAYER_YELLOW_NORTH(166),
+    PLAYER_YELLOW_EAST(167),
+    PLAYER_YELLOW_WEST(168),
 
-    PLAYER_SOUTH(169),
-    PLAYER_NORTH(170),
-    PLAYER_EAST(171),
-    PLAYER_WEST(172),
+    PLAYER_WHITE_SOUTH(169),
+    PLAYER_WHITE_NORTH(170),
+    PLAYER_WHITE_EAST(171),
+    PLAYER_WHITE_WEST(172),
 
     START_POS1(121),
     START_POS2(122),
@@ -174,16 +174,16 @@ public enum TileID {
         return this.id;
     }
 
-    public static HashMap<Direction, Integer> getRobotId(int playerNumber) {
+    public static HashMap<Direction, Integer> getRobotId(String color) {
         HashMap<Direction, Integer> IDs = new HashMap<>();
         for (int i = 0; i < 36; i++) {
-            if (values()[i].toString().equals("PLAYER_" + playerNumber + "_SOUTH")) {
+            if (values()[i].toString().equals("PLAYER_" + color.toUpperCase().replace(" ", "") + "_SOUTH")) {
                 IDs.put(Direction.SOUTH, values()[i].getId());
-            } else if (values()[i].toString().equals("PLAYER_" + playerNumber + "_NORTH")) {
+            } else if (values()[i].toString().equals("PLAYER_" + color.toUpperCase().replace(" ", "") + "_NORTH")) {
                 IDs.put(Direction.NORTH, values()[i].getId());
-            } else if (values()[i].toString().equals("PLAYER_" + playerNumber + "_EAST")) {
+            } else if (values()[i].toString().equals("PLAYER_" + color.toUpperCase().replace(" ", "") + "_EAST")) {
                 IDs.put(Direction.EAST, values()[i].getId());
-            } else if (values()[i].toString().equals("PLAYER_" + playerNumber + "_WEST")) {
+            } else if (values()[i].toString().equals("PLAYER_" + color.toUpperCase().replace(" ", "") + "_WEST")) {
                 IDs.put(Direction.WEST, values()[i].getId());
             }
         }
