@@ -364,6 +364,10 @@ public class RallyGame extends Game {
                 activateBeltsAndRotatePads();
                 fireAllLasers();
                 updateBackupAndPickUpFlagsAndRepair(false);
+                if (someoneWon()) {
+                    endGame();
+                    return;
+                }
                 sleep(1000);
             }
             updateBackupAndPickUpFlagsAndRepair(true);
@@ -388,6 +392,17 @@ public class RallyGame extends Game {
         }
     }
 
+    /**
+     * End game if a player has picked up all flags
+     */
+    public boolean someoneWon() {
+        for (Player player : players) {
+            if (player.hasAllFlags(board.getFlags().size())) {
+                return true;
+            }
+        }
+        return false;
+    }
     /**
      * Discard all players cards using {@link #discardCards()}.
      *
@@ -843,6 +858,10 @@ public class RallyGame extends Game {
         this.deck.setDeck(stack);
     }
 
+    public void endGame() {
+        setScreen(new GifScreen(this));
+    }
+
     /**
      * Activate the repair keys and pick up flags. Thread sleeps between each method call
      */
@@ -867,7 +886,7 @@ public class RallyGame extends Game {
                 }
             }
             repairRobotSound.play(soundVolume);
-            sleep(2000);
+            sleep(500);
         }
     }
 
