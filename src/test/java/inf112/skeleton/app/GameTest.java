@@ -193,6 +193,17 @@ public class GameTest {
     }
 
     @Test
+    public void beltPushingPlayerOntoAnotherPlayerPushesTheOtherPlayerTest() {
+        // Found position in Risky Exhange. Belt goes east
+        Vector2 endBeltPosition = new Vector2(8, 5);
+        player1.setPosition(endBeltPosition);
+        Vector2 playerToBePushedPosition = new Vector2(9, 5);
+        player2.setPosition(playerToBePushedPosition);
+        game.activateBelts(false);
+        assertNotEquals(playerToBePushedPosition, player2.getPosition());
+    }
+
+    @Test
     public void repairTileResetsDamageTokensToZeroWhenOneDamageToken() {
         Vector2 repairTilePosition = game.getBoard().getRepairTiles().get(0);
         player1.handleDamage();
