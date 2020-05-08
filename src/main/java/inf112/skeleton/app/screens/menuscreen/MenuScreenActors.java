@@ -48,7 +48,10 @@ public class MenuScreenActors {
     private SelectBox<String> selectMap;
     private ImageButton startButton;
     private ImageButton createGameButton;
+    private ImageButton exitButton;
+    private ImageButton settingsButton;
     private ImageButton joinGameButton;
+    private ImageButton backButton;
     private TextField IPInput;
     private Label IPLabel;
     private Label errorLabel;
@@ -123,12 +126,35 @@ public class MenuScreenActors {
         stage.addActor(startButton);
     }
 
+    public void initializeBackButton(){
+        ImageButton.ImageButtonStyle backButtonStyle = new ImageButton.ImageButtonStyle();
+        backButtonStyle.up = game.actorImages.getSkin().getDrawable("Back");
+        backButtonStyle.over = game.actorImages.getSkin().getDrawable("Back over");
+
+        backButton = new ImageButton(backButtonStyle);
+        backButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        backButton.setPosition(RIGHT_BUTTON_X, BOTTOM_BUTTON_Y);
+        backButton.addListener(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                toggleVisibilityBackClick();
+            }
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+        stage.addActor(backButton);
+
+    }
+
     public void initializeExitButton() {
         ImageButton.ImageButtonStyle exitButtonStyle = new ImageButton.ImageButtonStyle();
         exitButtonStyle.up = game.actorImages.getSkin().getDrawable("Exit");
         exitButtonStyle.over = game.actorImages.getSkin().getDrawable("Exit over");
 
-        ImageButton exitButton = new ImageButton(exitButtonStyle);
+        exitButton = new ImageButton(exitButtonStyle);
         exitButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         exitButton.setPosition(RIGHT_BUTTON_X, BOTTOM_BUTTON_Y);
         exitButton.addListener(new InputListener() {
@@ -149,7 +175,7 @@ public class MenuScreenActors {
         settingsButtonStyle.up = game.actorImages.getSkin().getDrawable("Settings");
         settingsButtonStyle.over = game.actorImages.getSkin().getDrawable("Settings over");
 
-        ImageButton settingsButton = new ImageButton(settingsButtonStyle);
+        settingsButton = new ImageButton(settingsButtonStyle);
         settingsButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
         settingsButton.setPosition(LEFT_BUTTON_X, BOTTOM_BUTTON_Y);
         settingsButton.addListener(new InputListener() {
@@ -311,11 +337,28 @@ public class MenuScreenActors {
         clientsConnectedLabel.setText(connected + (connected == 1 ? " client": " clients") + " connected");
     }
 
+    public void toggleVisibilityBackClick() {
+        initializeExitButton();
+        initializeSettingsButton();
+        initializeCreateGame();
+        initializeJoinGame();
+        startButton.setVisible(false);
+        backButton.setVisible(false);
+        selectMap.setVisible(false);
+        IPLabel.setVisible(false);
+        clientsConnectedLabel.setVisible(false);
+    }
+
     public void toggleVisibilityCreateClick() {
         initializeSelectMap();
         initializeStartButton();
         initializeIPLabel();
         initializeClientsConnectedLabel();
+        initializeBackButton();
+        backButton.setVisible(true);
+        backButton.setPosition(CENTERED_BUTTON_X, BOTTOM_BUTTON_Y);
+        settingsButton.setVisible(false);
+        exitButton.setVisible(false);
         createGameButton.setVisible(false);
         joinGameButton.setVisible(false);
         selectMap.setVisible(true);
