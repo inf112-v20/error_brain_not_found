@@ -1,14 +1,12 @@
 package inf112.skeleton.app;
 
 import com.badlogic.gdx.math.Vector2;
-import inf112.skeleton.app.lan.Converter;
-import inf112.skeleton.app.lan.GameClientThread;
-import inf112.skeleton.app.lan.NotProgramCardException;
 import inf112.skeleton.app.board.Board;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.enums.Rotate;
-import inf112.skeleton.app.lan.PlayerAndProgramCard;
+import inf112.skeleton.app.lan.Converter;
+import inf112.skeleton.app.lan.GameClientThread;
 import inf112.skeleton.app.objects.player.Player;
 import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
 import org.junit.Before;
@@ -17,11 +15,15 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.net.Socket;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -122,13 +124,7 @@ public class ClientTest {
         }
         client.start();
         waitForThread(client);
-        String programCardAndPlayer = client.getMessage();
-        try {
-            PlayerAndProgramCard playerAndCard = converter.getSentCardFromPlayer(programCardAndPlayer);
-            assertEquals(1, playerAndCard.getPlayerNumber());
-        } catch (NotProgramCardException e) {
-            e.printStackTrace();
-        }
+        assertEquals(programcard.toString(), player1.getRegisters().getCard(0).toString());
 
     }
 

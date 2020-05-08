@@ -1,23 +1,21 @@
 package inf112.skeleton.app;
 
+import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Messages;
+import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.lan.Converter;
 import inf112.skeleton.app.lan.NotProgramCardException;
-import inf112.skeleton.app.cards.ProgramCard;
-import inf112.skeleton.app.enums.Rotate;
-import inf112.skeleton.app.lan.PlayerAndProgramCard;
 import org.junit.Test;
-
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertEquals;
 
 public class ConverterTest {
 
-    private Converter converter = new Converter();
+    private final Converter converter = new Converter();
 
     /**
      * Check if card1 and card2 are equal
@@ -63,8 +61,9 @@ public class ConverterTest {
         ProgramCard card = new ProgramCard(10, 0, Rotate.RIGHT, "Right rotate");
         String cardString = "1 10 0 RIGHT Right rotate";
         try {
-            PlayerAndProgramCard playerAndCard = converter.getSentCardFromPlayer(cardString);
-            assertTrue("\n Expected: " + cardInfo(card) + "\n" + "Actual: " + cardInfo(playerAndCard.getProgramCard()), isEqualCards(card, playerAndCard.getProgramCard()));
+            String messageFromPlayer = converter.getMessageFromPlayer(cardString);
+            ProgramCard convertedcard = converter.convertToCard(messageFromPlayer);
+            assertTrue("\n Expected: " + cardInfo(card) + "\n" + "Actual: " + cardInfo(convertedcard), isEqualCards(card, convertedcard));
         } catch (NotProgramCardException e) {
             e.printStackTrace();
         }
@@ -75,8 +74,9 @@ public class ConverterTest {
         ProgramCard card = new ProgramCard(20, 3, Rotate.NONE, "Move 3");
         String cardString = "1 20 3 NONE Move 3";
         try {
-            PlayerAndProgramCard playerAndCard = converter.getSentCardFromPlayer(cardString);
-            assertTrue("\n Expected: " + cardInfo(card) + "\n" + "Actual: " + cardInfo(playerAndCard.getProgramCard()), isEqualCards(card, playerAndCard.getProgramCard()));
+            String messageFromPlayer = converter.getMessageFromPlayer(cardString);
+            ProgramCard convertedcard = converter.convertToCard(messageFromPlayer);
+            assertTrue("\n Expected: " + cardInfo(card) + "\n" + "Actual: " + cardInfo(convertedcard), isEqualCards(card, convertedcard));
         } catch (NotProgramCardException e) {
             e.printStackTrace();
         }
@@ -87,12 +87,6 @@ public class ConverterTest {
     public void throwsExceptionWhenNotACardTest() throws NotProgramCardException {
         String notACardsString = "This is not a card";
         converter.convertToCard(notACardsString);
-    }
-
-    @Test(expected = NotProgramCardException.class)
-    public void throwsExceptionWhenNotACardAndPlayerTest() throws NotProgramCardException {
-        String notACardsString = "This is not a card";
-        converter.getSentCardFromPlayer(notACardsString);
     }
 
     @Test(expected = NotProgramCardException.class)

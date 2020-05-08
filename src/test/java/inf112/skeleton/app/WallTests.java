@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.board.Board;
-import inf112.skeleton.app.board.BoardLogic;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.TileID;
 import inf112.skeleton.app.objects.player.Player;
@@ -20,7 +19,6 @@ import static org.mockito.Mockito.mock;
 
 public class WallTests {
     private Board board;
-    private BoardLogic boardLogic;
     private Player player;
     private ArrayList<Vector2> allNorthWalls;
     private ArrayList<Vector2> allSouthWalls;
@@ -34,8 +32,7 @@ public class WallTests {
         Gdx.gl = mock(GL20.class);
         //Make a headless application in order to initialize the board. Does not show.
         new HeadlessApplication(new EmptyApplication());
-        this.board = new Board("assets/maps/Risky Exchange.tmx", 0);
-        this.boardLogic = new BoardLogic(board);
+        this.board = new Board("assets/maps/Risky Exchange.tmx");
         this.player = new Player(new Vector2(0, 0), 1);
         allNorthWalls = new ArrayList<>();
         allSouthWalls = new ArrayList<>();
@@ -50,7 +47,7 @@ public class WallTests {
      * @return true if position is on tile before border
      */
     private boolean onEastBorder(Vector2 position) {
-        return position.x >= board.getWidth()-1;
+        return position.x >= board.getBoardWidth()-1;
     }
 
     /**
@@ -77,7 +74,7 @@ public class WallTests {
      * @return true if position is on tile before border
      */
     private boolean onNorthBorder(Vector2 position) {
-        return position.y >= board.getHeight()-1;
+        return position.y >= board.getBoardHeight()-1;
     }
 
     /**
@@ -212,16 +209,16 @@ public class WallTests {
         ArrayList<Vector2> wallsCopy = (ArrayList<Vector2>) listOfWalls.clone();
         for (Vector2 wallPosition : listOfWalls) {
             TiledMapTileLayer.Cell wallCell = board.getWallLayer().getCell((int) wallPosition.x, (int) wallPosition.y);
-            if (onEastBorder(wallPosition) && boardLogic.hasEastWall(wallCell)) {
+            if (onEastBorder(wallPosition) && board.hasEastWall(wallCell)) {
                 wallsCopy.remove(wallPosition);
             }
-            if (onSouthBorder(wallPosition) && boardLogic.hasSouthWall(wallCell)) {
+            if (onSouthBorder(wallPosition) && board.hasSouthWall(wallCell)) {
                 wallsCopy.remove(wallPosition);
             }
-            if (onWestBorder((wallPosition)) && boardLogic.hasWestWall(wallCell)) {
+            if (onWestBorder((wallPosition)) && board.hasWestWall(wallCell)) {
                 wallsCopy.remove(wallPosition);
             }
-            if (onNorthBorder(wallPosition) && boardLogic.hasNorthWall(wallCell)) {
+            if (onNorthBorder(wallPosition) && board.hasNorthWall(wallCell)) {
                 wallsCopy.remove(wallPosition);
             }
         }
@@ -233,20 +230,20 @@ public class WallTests {
      */
     private void putPositionsToWallsInLists() {
         TiledMapTileLayer wallLayer = board.getWallLayer();
-        for (int x = 0; x < board.getWidth(); x++) {
-            for (int y = 0; y < board.getHeight(); y++) {
+        for (int x = 0; x < board.getBoardWidth(); x++) {
+            for (int y = 0; y < board.getBoardHeight(); y++) {
                 Vector2 pos = new Vector2(x, y);
                 TiledMapTileLayer.Cell wall = wallLayer.getCell(x, y);
-                if (boardLogic.hasSouthWall(wall)) {
+                if (board.hasSouthWall(wall)) {
                     allSouthWalls.add(pos);
                 }
-                if (boardLogic.hasNorthWall(wall)) {
+                if (board.hasNorthWall(wall)) {
                     allNorthWalls.add(pos);
                 }
-                if (boardLogic.hasEastWall(wall)) {
+                if (board.hasEastWall(wall)) {
                     allEastWalls.add(pos);
                 }
-                if (boardLogic.hasWestWall(wall)) {
+                if (board.hasWestWall(wall)) {
                     allWestWalls.add(pos);
                 }
             }
@@ -280,7 +277,7 @@ public class WallTests {
         player.setPosition(new Vector2(2, 0));
         TiledMapTileLayer wallLayer = board.getWallLayer();
         TiledMapTileLayer.Cell playerCell = wallLayer.getCell((int) player.getPosition().x, (int) player.getPosition().y);
-        assertTrue(boardLogic.hasNorthWall(playerCell));
+        assertTrue(board.hasNorthWall(playerCell));
     }
 
     @Test
@@ -289,7 +286,7 @@ public class WallTests {
         player.setPosition(new Vector2(11, 7));
         TiledMapTileLayer wallLayer = board.getWallLayer();
         TiledMapTileLayer.Cell playerCell = wallLayer.getCell((int) player.getPosition().x, (int) player.getPosition().y);
-        assertTrue(boardLogic.hasWestWall(playerCell));
+        assertTrue(board.hasWestWall(playerCell));
     }
 
     @Test
@@ -298,30 +295,30 @@ public class WallTests {
         player.setPosition(new Vector2(3, 2));
         TiledMapTileLayer wallLayer = board.getWallLayer();
         TiledMapTileLayer.Cell playerCell = wallLayer.getCell((int) player.getPosition().x, (int) player.getPosition().y);
-        assertTrue(boardLogic.hasEastWall(playerCell));
+        assertTrue(board.hasEastWall(playerCell));
     }
 
     @Test
     public void playerFacingNorthWallCanNotGoTest() {
-        assertFalse(boardLogic.canGo(allNorthWalls.get(0), Direction.NORTH));
+        assertFalse(board.canGo(allNorthWalls.get(0), Direction.NORTH));
 
     }
 
     @Test
     public void playerFacingEastWallCanNotGoTest() {
-        assertFalse(boardLogic.canGo(allEastWalls.get(0), Direction.EAST));
+        assertFalse(board.canGo(allEastWalls.get(0), Direction.EAST));
 
     }
 
     @Test
     public void playerFacingSouthWallCanNotGoTest() {
-        assertFalse(boardLogic.canGo(allSouthWalls.get(0), Direction.SOUTH));
+        assertFalse(board.canGo(allSouthWalls.get(0), Direction.SOUTH));
 
     }
 
     @Test
     public void playerFacingWestWallCanNotGoTest() {
-        assertFalse(boardLogic.canGo(allWestWalls.get(0), Direction.WEST));
+        assertFalse(board.canGo(allWestWalls.get(0), Direction.WEST));
 
     }
 

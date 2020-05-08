@@ -37,7 +37,7 @@ public class LaserTest {
         this.board = game.getBoard();
         this.lasers = board.getLasers();
         this.player = new Player(new Vector2(0,0), 5);
-        board.addPlayer(player);
+        game.addPlayer(player);
     }
 
     /**
@@ -101,11 +101,14 @@ public class LaserTest {
     @Test
     public void playerTakesDamageWhenOtherPlayerFiresAtPlayerTest() {
         Vector2 neighbourPosition = board.getNeighbourPosition(player.getPosition(), Direction.EAST);
+
         Player firePlayer = new Player(neighbourPosition, 6);
         firePlayer.setDirection(Direction.WEST);
-        board.addPlayer(firePlayer);
+        game.addPlayer(firePlayer);
         int damageBefore = player.getDamageTokens();
         game.firePlayerLaser();
+        System.out.println(firePlayer.getPosition());
+        System.out.println(player.getPosition());
         assertEquals(damageBefore+1, player.getDamageTokens());
     }
 

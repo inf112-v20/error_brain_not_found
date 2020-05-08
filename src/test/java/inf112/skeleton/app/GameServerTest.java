@@ -70,7 +70,7 @@ public class GameServerTest {
         new Thread(gameServer::connect).start();
         // Make server wait for each new connection for 1 second, and stop connecting
         // after 2 seconds, gives 2 connected clients.
-        gameServer.setWaitBetweenEachConnection(1000);
+        gameServer.setWaitBetweenEachConnection(1100);
         gameServer.setConnectingToClientsTimeout(2000);
         assertEquals(2, gameServer.getNumberOfConnectedClients());
     }
@@ -118,6 +118,12 @@ public class GameServerTest {
         gameServer.connect(2);
         gameServer.remove(2);
         assertEquals(1, gameServer.getClients().size());
+    }
+
+    @Test
+    public void maxNumberOfPlayersTest() {
+        gameServer.connect(8);
+        assertEquals(8, gameServer.getNumberOfConnectedClients());
     }
 
 

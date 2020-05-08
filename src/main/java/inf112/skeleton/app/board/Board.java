@@ -9,13 +9,9 @@ import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.enums.Direction;
 import inf112.skeleton.app.enums.TileID;
-import inf112.skeleton.app.objects.Flag;
 import inf112.skeleton.app.objects.player.Player;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class Board extends BoardLayers {
 
@@ -26,10 +22,7 @@ public class Board extends BoardLayers {
     private final Sound wall_Collision;
     private final Sound robotCollide;
 
-    private final BoardLogic boardLogic;
-
-
-    public Board(String mapPath, int numberOfPlayers) {
+    public Board(String mapPath) {
         super(mapPath);
 
         this.players = new ArrayList<>();
@@ -37,10 +30,6 @@ public class Board extends BoardLayers {
         this.scream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
         this.robotCollide = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/robotCollide.mp3"));
         this.wall_Collision = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/robotCollide.mp3"));
-
-        this.boardLogic = new BoardLogic(this);
-
-        addPlayersToStartPositions(numberOfPlayers);
     }
 
     /**
@@ -50,23 +39,8 @@ public class Board extends BoardLayers {
      */
     private TiledMapTile getRobotTile(Player player) {
         return tiledMap.getTileSets()
-                       .getTileSet(player.getPlayerNr())
+                       .getTileSet(player.getPlayerNumber())
                        .getTile(player.getTileInt());
-    }
-
-    /**
-     * Make new {@link Player} and add player to game and board
-     *
-     * @param x            coordinate
-     * @param y            coordinate
-     * @param playerNumber of player
-     */
-    public void addPlayer(int x, int y, int playerNumber) {
-        if (!boardLogic.validPlayerNumber(playerNumber, players)) {
-            return;
-        }
-        Player player = new Player(new Vector2(x, y), playerNumber);
-        addPlayer(player);
     }
 
     /**
@@ -84,7 +58,6 @@ public class Board extends BoardLayers {
         }
     }
 
-    //TODO: might move to boardLayer
     public Vector2 getStartPosition(int number) {
         for (int x = 0; x < groundLayer.getWidth(); x++) {
             for (int y = 0; y < groundLayer.getHeight(); y++) {
@@ -110,22 +83,6 @@ public class Board extends BoardLayers {
             }
         }
         return null;
-    }
-
-    /**
-     * Check all cells on map for start positions with {@link TileID} and add a new player to that
-     * position based on number of players
-     *
-     * @param numPlayers number of robots playing, between 1-8
-     */
-    public void addPlayersToStartPositions(int numPlayers) {
-        if (numPlayers == 0) {
-            return;
-        }
-        for (int playerNr = 1; playerNr <= numPlayers; playerNr++) {
-            Vector2 position = getStartPosition(playerNr);
-            addPlayer((int) position.x, (int) position.y, playerNr);
-        }
     }
 
     /**
@@ -157,17 +114,6 @@ public class Board extends BoardLayers {
     }
 
     /**
-     * Try to pick up {@link Flag} for all players on board
-     */
-    public void pickUpFlags() {
-        for (Player player : players) {
-            if (hasFlag(player.getPosition())) {
-                tryToPickUpFlag(player);
-            }
-        }
-    }
-
-    /**
      * Places a {@link Player} in backup position or alternative position
      *
      * @param player to respawn
@@ -175,7 +121,7 @@ public class Board extends BoardLayers {
     public void respawn(Player player) {
         removePlayerFromBoard(player);
         if (hasPlayer(player.getBackupPosition())) {
-            player.chooseAlternativeBackupPosition(this, player.getBackupPosition(), boardLogic);
+            player.chooseAlternativeBackupPosition(this, player.getBackupPosition());
             player.setPosition(new Vector2(player.getAlternativeBackupPosition().x, player.getAlternativeBackupPosition().y));
             player.setDirection(player.getAlternativeBackupDirection());
         } else {
@@ -183,28 +129,6 @@ public class Board extends BoardLayers {
             player.setDirection(player.getBackupDirection());
         }
         addPlayer(player);
-    }
-
-    /**
-     * Get list of {@link Direction} in random order
-     * @return list of direction
-     */
-    public List<Direction> getDirectionRandomOrder() {
-        List<Direction> directions = Arrays.asList(Direction.values());
-        Collections.shuffle(directions);
-        return directions;
-    }
-
-    /**
-     * @return Player given the player number
-     */
-    public Player getPlayer(int playerNumber) {
-        for (Player player : players) {
-            if (player.getPlayerNr() == playerNumber) {
-                return player;
-            }
-        }
-        return null;
     }
 
     /**
@@ -220,18 +144,15 @@ public class Board extends BoardLayers {
         Vector2 position = player.getPosition();
         Direction direction = backUp ? player.getDirection().turnAround() : player.getDirection();
 
-        if (!boardLogic.canGo(position, direction)) {
+        if (!canGo(position, direction)) {
             wall_Collision.play(RallyGame.soundVolume);
-
             addPlayer(player);
             return;
         }
-        if (boardLogic.shouldPush(player, direction)) {
+        if (shouldPush(player, direction)) {
             Player enemyPlayer = getPlayer(getNeighbourPosition(player.getPosition(), direction));
-
-            if (boardLogic.canPush(enemyPlayer, direction)) {
-               robotCollide.play(RallyGame.soundVolume);
-                boardLogic.pushPlayer(enemyPlayer, direction);
+            if (canPush(enemyPlayer, direction)) {
+                pushPlayer(enemyPlayer, direction);
             } else {
                 addPlayer(player);
                 return;
@@ -328,22 +249,11 @@ public class Board extends BoardLayers {
         return neighbourPosition;
     }
 
-
-    // TODO: DENNE KAN SLETTES
-    public void respawnPlayers() {
-        for (Player player : players) {
-            if (boardLogic.outsideBoard(player)) {
-                scream.play(RallyGame.soundVolume);
-                player.decrementLifeTokens();
-                respawn(player);
-            }
-        }
-    }
-
     /**
+     * Return true if there is a player in that position
      *
-     * @param position
-     * @return true if position
+     * @param position to check
+     * @return true if position has player
      */
     public boolean hasPlayer(Vector2 position) {
         for (Player enemyPlayer : players) {
@@ -369,6 +279,15 @@ public class Board extends BoardLayers {
         return null;
     }
 
+    public Player getPlayer(int playerNumber) {
+        for (Player player : players) {
+            if (player.getPlayerNumber() == playerNumber) {
+                return player;
+            }
+        }
+        return null;
+    }
+
     /**
      * Remove player from board
      *
@@ -378,34 +297,6 @@ public class Board extends BoardLayers {
         playerLayer.setCell((int) player.getPosition().x, (int) player.getPosition().y, null);
     }
 
-    public boolean hasFlag(Vector2 position) {
-        return flagLayer.getCell((int) position.x, (int) position.y) != null;
-    }
-
-    public Flag getFlag(Vector2 position) {
-        for (Flag flag : flags) {
-            if (flag.getPosition().equals(position)) {
-                return flag;
-            }
-        }
-        return null;
-    }
-
-    public void tryToPickUpFlag(Player player) {
-        Flag flag = getFlag(player.getPosition());
-        if (player.shouldPickUpFlag(flag)) {
-            player.pickUpFlag(flag);
-        }
-    }
-
-    public BoardLogic getBoardLogic() {
-        return boardLogic;
-    }
-
-    public ArrayList<Flag> getFlags() {
-        return flags;
-    }
-
     /**
      * @return list of all players
      */
@@ -413,39 +304,244 @@ public class Board extends BoardLayers {
         return players;
     }
 
-    /**
-     * @return {@link TiledMapTileLayer} of laser layer
-     */
-    public TiledMapTileLayer getLaserLayer() {
-        return laserLayer;
-    }
-
-    /**
-     * @return {@link TiledMapTileLayer} of wall layer
-     */
-    public TiledMapTileLayer getWallLayer() {
-        return wallLayer;
-    }
-
-    /**
-     * @return width of the board
-     */
-    public int getWidth() {
-        return boardWidth;
-    }
-
-    /**
-     * @return height of the board
-     */
-    public int getHeight() {
-        return boardHeight;
-    }
-
-
     public void dispose() {
 
         wall_Collision.dispose();
-        scream.dispose();
         tiledMap.dispose();
+    }
+
+    /**
+     * Check respawn position according to RoboRally rules
+     *
+     * @param position  to check for respawn
+     * @param direction after respawn
+     * @return true of position is valid
+     */
+    public boolean validRespawnPosition(Vector2 position, Direction direction) {
+        Vector2 currPos = position;
+        for (int step = 0; step < 3; step++) {
+            if (hasPlayer(currPos)) {
+                return false;
+            }
+            currPos = getNeighbourPosition(currPos, direction);
+        }
+        return !hasHole(position);
+    }
+
+    /**
+     * Checks if a position is outside the map
+     *
+     * @param position the position to check
+     * @return true if the position is outside of the board
+     */
+    public boolean outsideBoard(Vector2 position) {
+        return position.x < 0 ||
+                position.x >= boardWidth ||
+                position.y < 0 ||
+                position.y >= boardHeight;
+    }
+
+    /**
+     * Check if player is outside of board
+     *
+     * @param player to check
+     */
+    public boolean outsideBoard(Player player) {
+        return outsideBoard(player.getPosition()) || hasHole(player.getPosition());
+    }
+
+    /**
+     * Checks if player moves on to a hole
+     *
+     * @param position that is checked
+     * @return true if the position contains a hole
+     */
+    public boolean hasHole(Vector2 position) {
+        for (Vector2 vector : getHoles()) {
+            if (vector.equals(position)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Tells if there is possible to move in the intended {@link Direction} direction
+     *
+     * @param position  to go from
+     * @param direction to go in
+     * @return true if there is no wall blocking the way
+     */
+    public boolean canGo(Vector2 position, Direction direction) {
+        TiledMapTileLayer.Cell cell = getWallLayer().getCell((int) position.x, (int) position.y);
+        TiledMapTileLayer.Cell northCell = getWallLayer().getCell((int) position.x, (int) position.y + 1);
+        TiledMapTileLayer.Cell southCell = getWallLayer().getCell((int) position.x, (int) position.y - 1);
+        TiledMapTileLayer.Cell eastCell = getWallLayer().getCell((int) position.x + 1, (int) position.y);
+        TiledMapTileLayer.Cell westCell = getWallLayer().getCell((int) position.x - 1, (int) position.y);
+
+        switch (direction) {
+            case NORTH:
+                if (hasNorthWall(cell) || hasSouthWall(northCell)) {
+                    return false;
+                }
+                break;
+            case SOUTH:
+                if (hasSouthWall(cell) || hasNorthWall(southCell)) {
+                    return false;
+                }
+                break;
+            case EAST:
+                if (hasEastWall(cell) || hasWestWall(eastCell)) {
+                    return false;
+                }
+                break;
+            case WEST:
+                if (hasWestWall(cell) || hasEastWall(westCell)) {
+                    return false;
+                }
+                break;
+            default:
+                break;
+        }
+        return true;
+    }
+
+    /**
+     * Checks is there is a wall to the west of a given {@link TiledMapTileLayer.Cell} cell}.
+     *
+     * @param cell to check for wall
+     * @return true if cell has a wall on west side
+     */
+    public boolean hasWestWall(TiledMapTileLayer.Cell cell) {
+        if (cell != null) {
+            int tileID = cell.getTile().getId();
+            return tileID == TileID.WEST_WALL.getId() ||
+                    tileID == TileID.NORTHWEST_WALL.getId() ||
+                    tileID == TileID.SOUTHWEST_WALL.getId() ||
+                    tileID == TileID.WEST_LASER_WALL.getId();
+        }
+        return false;
+    }
+
+    /**
+     * Checks is there is a wall to the east of a given {@link TiledMapTileLayer.Cell cell}.
+     *
+     * @param cell to check for wall
+     * @return true if cell has a wall on east side
+     */
+    public boolean hasEastWall(TiledMapTileLayer.Cell cell) {
+        if (cell != null) {
+            int tileID = cell.getTile().getId();
+            return tileID == TileID.EAST_WALL.getId() ||
+                    tileID == TileID.NORTHEAST_WALL.getId() ||
+                    tileID == TileID.SOUTHEAST_WALL.getId() ||
+                    tileID == TileID.EAST_LASER_WALL.getId();
+        }
+        return false;
+    }
+
+    /**
+     * Checks is there is a wall to the south of a given {@link TiledMapTileLayer.Cell cell}.
+     *
+     * @param cell to check for wall
+     * @return true if cell has a wall on south side
+     */
+    public boolean hasSouthWall(TiledMapTileLayer.Cell cell) {
+        if (cell != null) {
+            int tileID = cell.getTile().getId();
+            return tileID == TileID.SOUTH_WALL.getId() ||
+                    tileID == TileID.SOUTHWEST_WALL.getId() ||
+                    tileID == TileID.SOUTHEAST_WALL.getId() ||
+                    tileID == TileID.SOUTH_LASER_WALL.getId();
+        }
+        return false;
+    }
+
+    /**
+     * Checks is there is a wall to the north of a given {@link TiledMapTileLayer.Cell cell}.
+     *
+     * @param cell to check for wall
+     * @return true if cell has a wall on north side
+     */
+    public boolean hasNorthWall(TiledMapTileLayer.Cell cell) {
+        if (cell != null) {
+            int tileID = cell.getTile().getId();
+            return tileID == TileID.NORTH_WALL.getId() ||
+                    tileID == TileID.NORTHWEST_WALL.getId() ||
+                    tileID == TileID.NORTHEAST_WALL.getId() ||
+                    tileID == TileID.NORTH_LASER_WALL.getId();
+        }
+        return false;
+    }
+
+    /**
+     * Check if the moving player should try to push another player
+     *
+     * @param player trying to move
+     * @return true if player should push another player to move
+     */
+    public boolean shouldPush(Player player, Direction direction) {
+        return hasPlayer(getNeighbourPosition(player.getPosition(), direction));
+    }
+
+    /**
+     * Push all players in a row
+     * Remove player from board
+     * Update player position according to direction
+     * Add player to cell that corresponds to player position
+     *
+     * @param player    that should be pushed
+     * @param direction to push player in
+     */
+    public void pushPlayer(Player player, Direction direction) {
+        player.setBeltPushDir(null);
+        if (hasPlayer(getNeighbourPosition(player.getPosition(), direction))) {
+            pushPlayer(getPlayer(getNeighbourPosition(player.getPosition(), direction)), direction);
+        }
+        removePlayerFromBoard(player);
+        switch (direction) {
+            case SOUTH:
+                player.setPosition(new Vector2(player.getPosition().x, player.getPosition().y - 1));
+                break;
+            case WEST:
+                player.setPosition(new Vector2(player.getPosition().x - 1, player.getPosition().y));
+                break;
+            case EAST:
+                player.setPosition(new Vector2(player.getPosition().x + 1, player.getPosition().y));
+                break;
+            case NORTH:
+                player.setPosition(new Vector2(player.getPosition().x, player.getPosition().y + 1));
+                break;
+            default:
+                break;
+        }
+        addPlayer(player);
+        player.setBeltPushDir(null);
+    }
+
+    /**
+     * Checks if there is possible to push a player.
+     *
+     * @param player    that should be pushed
+     * @param direction to push in
+     * @return true if it is possible to push all enemies in a row.
+     */
+    public boolean canPush(Player player, Direction direction) {
+        if (hasPlayer(getNeighbourPosition(player.getPosition(), direction))) {
+            return canGo(player.getPosition(), direction) &&
+                    canPush(getPlayer(getNeighbourPosition(player.getPosition(), direction)), direction);
+        }
+        return canGo(player.getPosition(), direction);
+    }
+
+    /**
+     * Checks if there is possible to fire in the direction and position
+     *
+     * @param position  the tile in question.
+     * @param direction the way the fire is happening
+     * @return true if {@link #canGo(Vector2, Direction) canGo} is true and if not {@link #outsideBoard(Vector2) outsideBoard} is true.
+     */
+    public boolean canFire(Vector2 position, Direction direction) {
+        return canGo(position, direction) && !outsideBoard(getNeighbourPosition(position, direction));
     }
 }

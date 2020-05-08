@@ -6,7 +6,10 @@ import inf112.skeleton.app.enums.Messages;
 import inf112.skeleton.app.objects.player.Player;
 import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Stack;
 import java.util.concurrent.Semaphore;
@@ -16,13 +19,13 @@ import java.util.concurrent.Semaphore;
  */
 public class GameClientThread extends Thread {
 
-    private Socket clientSideSocket;
+    private final Socket clientSideSocket;
     private int myPlayerNumber;
     private PrintWriter writer;
     private BufferedReader reader;
-    private RallyGame game;
-    private Converter converter;
-    private Semaphore continueListening;
+    private final RallyGame game;
+    private final Converter converter;
+    private final Semaphore continueListening;
     private Stack<ProgramCard> stack;
     private boolean receivingDeck;
 
@@ -98,6 +101,7 @@ public class GameClientThread extends Thread {
                 }
                 if (messageFromPlayer.equals(Messages.POWERING_DOWN.toString())) {
                     player.setPoweringDown(true);
+                    System.out.println("Player " + playerNumber + " announces power down!");
                 }
                 else if (messageFromPlayer.equals(Messages.POWER_UP.toString())) {
                     player.setPoweredDown(false);
@@ -105,8 +109,7 @@ public class GameClientThread extends Thread {
                 }
                 else {
                     try {
-                        PlayerAndProgramCard playerAndCard = converter.getSentCardFromPlayer(message);
-                        ProgramCard card = playerAndCard.getProgramCard();
+                        ProgramCard card = converter.convertToCard(messageFromPlayer);
                         // Your player have already selected cards
                         if (myPlayerNumber != playerNumber) {
                             player.addSelectedCard(card);
@@ -248,5 +251,4 @@ public class GameClientThread extends Thread {
     public Stack<ProgramCard> getStackOfDeck() {
         return stack;
     }
-
 }

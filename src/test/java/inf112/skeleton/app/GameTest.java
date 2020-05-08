@@ -77,10 +77,10 @@ public class GameTest {
         this.game.setScreen(screen);
         Board board = game.getBoard();
         player1 = new Player(new Vector2(0, 0), 1);
-        player2 = new Player(new Vector2(0, 1), 2);
-        player3 = new Player(new Vector2(0, 2), 3);
+        player2 = new Player(new Vector2(0, 0), 2);
+        player3 = new Player(new Vector2(0, 0), 3);
         game.setPlayers(player1, player2, player3);
-        board.addPlayer(player1);
+        game.addPlayer(player1);
         this.belts = board.getBelts();
         this.converter = new Converter();
 
@@ -193,23 +193,36 @@ public class GameTest {
     }
 
     @Test
-    public void repairTileResetsDamageTokensToZeroWhenOneDamageToken() {
+    public void beltPushingPlayerOntoAnotherPlayerPushesTheOtherPlayerTest() {
+        // Found position in Risky Exhange. Belt goes east
+        Vector2 endBeltPosition = new Vector2(8, 5);
+        player1.setPosition(endBeltPosition);
+        Vector2 playerToBePushedPosition = new Vector2(9, 5);
+        player2.setPosition(playerToBePushedPosition);
+        Vector2 positionAfterPush = new Vector2(10, 5);
+        game.addPlayer(player2);
+        game.activateBelts(false);
+        assertEquals(player2.getPosition(), positionAfterPush);
+    }
+
+    @Test
+    public void repairTileDecrementsDamageTokensToZeroWhenOneDamageToken() {
         Vector2 repairTilePosition = game.getBoard().getRepairTiles().get(0);
         player1.handleDamage();
         player1.setPosition(repairTilePosition);
-        game.activateRepairTiles();
+        game.updateBackupAndPickUpFlagsAndRepair(true);
         assertEquals(0, player1.getDamageTokens());
     }
 
     @Test
-    public void repairTileResetsDamageTokenToZeroWhenTenDamageTokens() {
+    public void repairTileDecrementsDamageTokenToNineWhenTenDamageTokens() {
         Vector2 repairTilePosition = game.getBoard().getRepairTiles().get(0);
         for (int i = 0; i < 10; i++) {
             player1.handleDamage();
         }
         player1.setPosition(repairTilePosition);
-        game.activateRepairTiles();
-        assertEquals(0, player1.getDamageTokens());
+        game.updateBackupAndPickUpFlagsAndRepair(true);
+        assertEquals(9, player1.getDamageTokens());
     }
 
     @Test
@@ -255,7 +268,7 @@ public class GameTest {
     @Test
     public void confirmingCardsSendToClientsTest() {
         game.setServerThread(serverThread);
-        game.setIsServerToTrue();
+        game.setIsServer(true);
         when(mainPlayer.getRegisters().hasRegistersWithoutCard()).thenReturn(false);
         when(server.allClientsHaveSelectedCardsOrIsPoweredDown()).thenReturn(true);
         game.confirm();
@@ -275,16 +288,16 @@ public class GameTest {
     @Test
     public void sendPowerUpMessageToServer() {
         game.setClient(client);
-        when(mainPlayer.getPlayerNr()).thenReturn(2);
+        when(mainPlayer.getPlayerNumber()).thenReturn(2);
         game.sendPowerUpMessage();
         verify(client).sendMessage(converter.createMessageFromPlayer(2, Messages.POWER_UP));
     }
 
     @Test
     public void sendPowerUpMessageToClient() {
-        game.setIsServerToTrue();
+        game.setIsServer(true);
         game.setServerThread(serverThread);
-        when(mainPlayer.getPlayerNr()).thenReturn(1);
+        when(mainPlayer.getPlayerNumber()).thenReturn(1);
         game.sendPowerUpMessage();
         verify(server).sendToAll(converter.createMessageFromPlayer(1, Messages.POWER_UP));
 
@@ -310,7 +323,7 @@ public class GameTest {
         when(mainPlayer.isPoweredDown()).thenReturn(true);
         when(mainPlayer.getRegisters().hasRegistersWithoutCard()).thenReturn(true);
         when(mainPlayer.getPowerUpNextRound()).thenReturn(false);
-        when(mainPlayer.getPlayerNr()).thenReturn(2);
+        when(mainPlayer.getPlayerNumber()).thenReturn(2);
         game.confirm();
         verify(client).sendMessage(converter.createMessageFromPlayer(2, Messages.CONTINUE_POWER_DOWN));
     }
@@ -347,5 +360,4 @@ public class GameTest {
         game.serverGetReadyForNextRound();
         verify(server).setAllClientsHaveSelectedCardsOrIsPoweredDown(true);
     }
-
 }

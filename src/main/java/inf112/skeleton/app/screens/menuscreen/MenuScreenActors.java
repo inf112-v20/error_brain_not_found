@@ -112,7 +112,7 @@ public class MenuScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.getServer().setMapPath("assets/maps/" + selectMap.getSelected() + ".tmx");
-                game.getServer().setConnectingToClients(false);
+                game.getServer().stopConnectingToClients();
                 game.setupGame();
                 game.setScreen(new GameScreen(game));
             }
@@ -124,29 +124,6 @@ public class MenuScreenActors {
         });
         startButton.setVisible(false);
         stage.addActor(startButton);
-    }
-
-    public void initializeBackButton(){
-        ImageButton.ImageButtonStyle backButtonStyle = new ImageButton.ImageButtonStyle();
-        backButtonStyle.up = game.actorImages.getSkin().getDrawable("Back");
-        backButtonStyle.over = game.actorImages.getSkin().getDrawable("Back over");
-
-        backButton = new ImageButton(backButtonStyle);
-        backButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-        backButton.setPosition(RIGHT_BUTTON_X, BOTTOM_BUTTON_Y);
-        backButton.addListener(new InputListener() {
-            @Override
-            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                toggleVisibilityBackClick();
-            }
-
-            @Override
-            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
-                return true;
-            }
-        });
-        stage.addActor(backButton);
-
     }
 
     public void initializeExitButton() {
@@ -207,7 +184,7 @@ public class MenuScreenActors {
              */
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setIsServerToTrue();
+                game.setIsServer(true);
                 // Defaul port is 9000
                 game.setUpHost(9000);
                 toggleVisibilityCreateClick();
@@ -409,6 +386,36 @@ public class MenuScreenActors {
 
     public boolean validIP(String ip) {
         return !"".equals(ip) && ("localhost".equals(ip.toLowerCase()) || ipAddress(ip));
+    }
+
+    public void initializeBackButton(){
+        ImageButton.ImageButtonStyle backButtonStyle = new ImageButton.ImageButtonStyle();
+        backButtonStyle.up = game.actorImages.getSkin().getDrawable("Back");
+        backButtonStyle.over = game.actorImages.getSkin().getDrawable("Back over");
+
+        backButton = new ImageButton(backButtonStyle);
+        backButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        joinGameButton.setPosition(RIGHT_BUTTON_X, TOP_BUTTON_Y);
+        backButton.addListener(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if (game.isServer()) {
+                    game.getServer().stopConnectingToClients();
+                    game.setIsServer(false);
+                    toggleVisibilityBackClick();
+                } else {
+                    // Client has not made the client yet
+                    toggleVisibilityBackClick();
+                }
+            }
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+        stage.addActor(backButton);
+
     }
 
     // LAN STUFF
