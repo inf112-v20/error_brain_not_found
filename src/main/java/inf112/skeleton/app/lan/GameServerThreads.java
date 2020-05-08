@@ -99,8 +99,7 @@ public class GameServerThreads extends Thread {
                         }
                     }
                     else {
-                        PlayerAndProgramCard playerAndCard = converter.getSentCardFromPlayer(message);
-                        ProgramCard card = playerAndCard.getProgramCard();
+                        ProgramCard card = converter.convertToCard(messageFromPlayer);
                         addSelectedCard(player, card);
                         System.out.println(card);
                         if (allPlayersHaveSelectedCardsOrInPowerDown() && server.serverHasConfirmed()) {

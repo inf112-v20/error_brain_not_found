@@ -22,6 +22,7 @@ import java.net.Socket;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -122,13 +123,7 @@ public class ClientTest {
         }
         client.start();
         waitForThread(client);
-        String programCardAndPlayer = client.getMessage();
-        try {
-            PlayerAndProgramCard playerAndCard = converter.getSentCardFromPlayer(programCardAndPlayer);
-            assertEquals(1, playerAndCard.getPlayerNumber());
-        } catch (NotProgramCardException e) {
-            e.printStackTrace();
-        }
+        assertEquals(programcard.toString(), player1.getRegisters().getCard(0).toString());
 
     }
 

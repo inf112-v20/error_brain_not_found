@@ -63,8 +63,9 @@ public class ConverterTest {
         ProgramCard card = new ProgramCard(10, 0, Rotate.RIGHT, "Right rotate");
         String cardString = "1 10 0 RIGHT Right rotate";
         try {
-            PlayerAndProgramCard playerAndCard = converter.getSentCardFromPlayer(cardString);
-            assertTrue("\n Expected: " + cardInfo(card) + "\n" + "Actual: " + cardInfo(playerAndCard.getProgramCard()), isEqualCards(card, playerAndCard.getProgramCard()));
+            String messageFromPlayer = converter.getMessageFromPlayer(cardString);
+            ProgramCard convertedcard = converter.convertToCard(messageFromPlayer);
+            assertTrue("\n Expected: " + cardInfo(card) + "\n" + "Actual: " + cardInfo(convertedcard), isEqualCards(card, convertedcard));
         } catch (NotProgramCardException e) {
             e.printStackTrace();
         }
@@ -75,8 +76,9 @@ public class ConverterTest {
         ProgramCard card = new ProgramCard(20, 3, Rotate.NONE, "Move 3");
         String cardString = "1 20 3 NONE Move 3";
         try {
-            PlayerAndProgramCard playerAndCard = converter.getSentCardFromPlayer(cardString);
-            assertTrue("\n Expected: " + cardInfo(card) + "\n" + "Actual: " + cardInfo(playerAndCard.getProgramCard()), isEqualCards(card, playerAndCard.getProgramCard()));
+            String messageFromPlayer = converter.getMessageFromPlayer(cardString);
+            ProgramCard convertedcard = converter.convertToCard(messageFromPlayer);
+            assertTrue("\n Expected: " + cardInfo(card) + "\n" + "Actual: " + cardInfo(convertedcard), isEqualCards(card, convertedcard));
         } catch (NotProgramCardException e) {
             e.printStackTrace();
         }
@@ -87,12 +89,6 @@ public class ConverterTest {
     public void throwsExceptionWhenNotACardTest() throws NotProgramCardException {
         String notACardsString = "This is not a card";
         converter.convertToCard(notACardsString);
-    }
-
-    @Test(expected = NotProgramCardException.class)
-    public void throwsExceptionWhenNotACardAndPlayerTest() throws NotProgramCardException {
-        String notACardsString = "This is not a card";
-        converter.getSentCardFromPlayer(notACardsString);
     }
 
     @Test(expected = NotProgramCardException.class)

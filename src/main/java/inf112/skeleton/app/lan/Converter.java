@@ -78,24 +78,6 @@ public class Converter {
     }
 
     /**
-     * Convert a string to a corresponding programcard with a player.
-     *
-     * @param string
-     * @return PlayerAndProgramCard a tuple with playerNumber and card
-     * @throws NotProgramCardException
-     */
-    public PlayerAndProgramCard getSentCardFromPlayer(String string) throws NotProgramCardException {
-        try {
-            int playerNumber = Character.getNumericValue(string.charAt(0));
-            String card = string.substring(2);
-            ProgramCard programCard = convertToCard(card);
-            return new PlayerAndProgramCard(playerNumber, programCard);
-        } catch (NumberFormatException error) {
-            throw new NotProgramCardException("This is not a programcard with a player: " + string);
-        }
-    }
-
-    /**
      * Put words separated by spaces in a list.
      * So "This is an example" becomes ["This", "is", "an", "example"].
      * @param string

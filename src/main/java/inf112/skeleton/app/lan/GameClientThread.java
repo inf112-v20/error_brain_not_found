@@ -106,8 +106,7 @@ public class GameClientThread extends Thread {
                 }
                 else {
                     try {
-                        PlayerAndProgramCard playerAndCard = converter.getSentCardFromPlayer(message);
-                        ProgramCard card = playerAndCard.getProgramCard();
+                        ProgramCard card = converter.convertToCard(messageFromPlayer);
                         // Your player have already selected cards
                         if (myPlayerNumber != playerNumber) {
                             player.addSelectedCard(card);
