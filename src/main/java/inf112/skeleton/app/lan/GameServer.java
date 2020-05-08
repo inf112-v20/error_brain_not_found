@@ -100,6 +100,10 @@ public class GameServer {
                     System.out.println("Closed connection.");
                 }
             }
+            if (connectedClients == 0) {
+                System.out.println("Stopping host");
+                return;
+            }
             int numberOfPlayers = getNumberOfConnectedClients() + 1;
             game.setNumberOfPlayers(numberOfPlayers);
             System.out.println("Connected! :D");
@@ -315,17 +319,22 @@ public class GameServer {
     }
 
     /**
-     * Stop while loop and close serversocket if false.
+     * Stop while loop
      * @param connectingToClients
      */
     public void setConnectingToClients(boolean connectingToClients) {
         this.connectingToClients = connectingToClients;
-        if (!connectingToClients) {
-            try {
-                serverSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    }
+
+    /**
+     * Stop while loop with {@link #setConnectingToClients(boolean)} and close socket.
+     */
+    public void stopConnectingToClients() {
+        setConnectingToClients(false);
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -339,12 +348,7 @@ public class GameServer {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        setConnectingToClients(false);
-        try {
-            serverSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        stopConnectingToClients();
     }
 
     /***
