@@ -250,4 +250,7 @@ public class GameClientThread extends Thread {
         return stack;
     }
 
+    public void endConnection() {
+
+    }
 }

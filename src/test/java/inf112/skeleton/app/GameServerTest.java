@@ -62,7 +62,7 @@ public class GameServerTest {
         this.gameServer = new GameServer(game);
         this.converter = new Converter();
         gameServer.setServerSocket(serverSocket);
-        gameServer.setConnectingToClients(true);
+        gameServer.stopConnectingToClients();
     }
 
     @Test

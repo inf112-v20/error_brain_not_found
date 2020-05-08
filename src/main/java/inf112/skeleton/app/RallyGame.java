@@ -23,8 +23,10 @@ import inf112.skeleton.app.objects.player.Player;
 import inf112.skeleton.app.objects.player.PlayerSorter;
 import inf112.skeleton.app.screens.ActorImages;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
+import inf112.skeleton.app.screens.gifscreen.GifScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
+import inf112.skeleton.app.screens.standardscreen.SettingsScreen;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
 import java.io.IOException;
@@ -39,14 +41,27 @@ public class RallyGame extends Game {
 
     public Board board;
     public Deck deck;
+    public Screen lastScreen;
 
     public ArrayList<Player> players;
     public ArrayList<Player> respawnPlayers;
     public boolean playing;
     public boolean waitingForCards;
     public boolean waitingForPowerUp;
-    public Sound laserSound;
+
+    public Sound walledLaserSound;
+    public Sound robotLaserSound;
+    public Sound firstBeltStartUp;
+    public Sound secondBeltStartUp;
+    public Sound repairRobotSound;
+    public Sound hitByLaser;
+    public Sound robotDestroyed;
+    public Sound wallCollision;
+    public Sound WilhelmScream;
+    public Sound robotCollide;
+
     public Music gameMusic;
+
     public Player mainPlayer;
     private int numberOfPlayers;
     private int myPlayerNumber;
@@ -60,7 +75,9 @@ public class RallyGame extends Game {
     public Skin defaultSkin;
     public ActorImages actorImages;
 
+
     public static float volume = 0.5f;
+    public static float soundVolume = 0.5f;
     private String mapPath;
     public Semaphore waitForPowerUp;
     private ArrayList<Player> poweredDownPlayers;
@@ -71,7 +88,7 @@ public class RallyGame extends Game {
         this.textSkin = new Skin(Gdx.files.internal("assets/skins/number-cruncher-ui.json"));
         this.defaultSkin = new Skin(Gdx.files.internal("assets/skins/uiskin.json"));
         this.setScreen(new MenuScreen(this));
-        //startMusic();
+        startMusic();
     }
 
     /**
@@ -94,7 +111,14 @@ public class RallyGame extends Game {
         this.waitingForCards = true;
         this.waitingForPowerUp = false;
 
-        this.laserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
+        this.walledLaserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserShot.mp3"));
+        this.robotLaserSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/laser.mp3"));
+        this.firstBeltStartUp = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/firstBeltStartUp.mp3"));
+        this.secondBeltStartUp = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/secondBeltStartUp.mp3"));
+        this.repairRobotSound = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/Repair.mp3"));
+        this.hitByLaser = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/LaserHit.mp3"));
+        this.robotDestroyed = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/Destroyed.mp3"));
+
 
         new Thread(this::doTurn).start();
 
@@ -237,10 +261,25 @@ public class RallyGame extends Game {
                 !mainPlayer.getRegisters().hasRegistersWithoutCard() : isWaitingForPowerUp();
     }
 
+    public void returnToLastScreen() {
+        if (this.screen instanceof SettingsScreen) {
+            if (lastScreen instanceof GameScreen) {
+                setScreen(new GameScreen(this));
+            } else if (lastScreen instanceof MenuScreen) {
+                setScreen(lastScreen);
+            }
+        } else {
+            setScreen(new SettingsScreen(this));
+        }
+    }
+
     @Override
     public void setScreen(Screen screen) {
-        if (this.screen != null) {
+        if (this.screen != null && !(this.screen instanceof MenuScreen)) {
             this.screen.dispose();
+        }
+        if (!(screen instanceof SettingsScreen)) {
+            this.lastScreen = screen;
         }
         super.setScreen(screen);
     }
@@ -254,7 +293,7 @@ public class RallyGame extends Game {
     }
 
     public void muteSounds() {
-        volume = volume == 0 ? 0.5f : 0;
+        soundVolume = soundVolume == 0 ? 0.5f : 0;
     }
 
     public void loadMusic() {
@@ -263,9 +302,13 @@ public class RallyGame extends Game {
 
     public void startMusic() {
         loadMusic();
-        gameMusic.setVolume(0.5f);
+        gameMusic.setVolume(soundVolume);
         gameMusic.setLooping(true);
         gameMusic.play();
+    }
+
+    public float getSoundVolume(){
+        return soundVolume;
     }
 
     /**
@@ -373,8 +416,10 @@ public class RallyGame extends Game {
      * {@link #decreaseLives()} at the end
      */
     public void activateBeltsAndRotatePads() {
-        activateBelts(true);
-        sleep(250);
+      if (!board.getExpressBelts().isEmpty()) {
+                    activateBelts(true);
+                    sleep(1000);
+                }
         decreaseLives();
         activateBelts(false);
         sleep(250);
@@ -548,7 +593,10 @@ public class RallyGame extends Game {
     public void decreaseLives() {
         ArrayList<Player> removedPlayers = new ArrayList<>();
         for (Player player : players) {
+
             if (player.getDamageTokens() >= 10 || board.getBoardLogic().outsideBoard(player)) {
+
+                robotDestroyed.play(soundVolume);
                 player.decrementLifeTokens();
                 player.resetDamageTokens();
                 board.removePlayerFromBoard(player);
@@ -637,6 +685,10 @@ public class RallyGame extends Game {
         deck.addCardToDiscardPile(card);
     }
 
+    public void setWinScreen() {
+        setScreen(new GifScreen(this));
+    }
+
     public void removeLasers() {
         for (int y = 0; y < board.getHeight(); y++) {
             for (int x = 0; x < board.getWidth(); x++) {
@@ -650,7 +702,7 @@ public class RallyGame extends Game {
             for (Player player : players) {
                 player.fire(this);
             }
-            laserSound.play(volume);
+            robotLaserSound.play(soundVolume);
         }
     }
 
@@ -659,7 +711,7 @@ public class RallyGame extends Game {
             for (Laser laser : board.getLasers()) {
                 laser.fire(this);
             }
-            laserSound.play(volume);
+            walledLaserSound.play(soundVolume);
         }
     }
 
@@ -686,6 +738,7 @@ public class RallyGame extends Game {
      * @param onlyExpress if true then the pool of belts should be set to expressBelts
      */
     public void activateBelts(boolean onlyExpress) {
+
         ArrayList<Belt> belts = onlyExpress ? board.getExpressBelts() : board.getBelts();
         for (Player player : board.getPlayers()) {
             for (Belt belt : belts) {
@@ -694,6 +747,13 @@ public class RallyGame extends Game {
                 }
             }
         }
+        if (!onlyExpress){
+            firstBeltStartUp.play(soundVolume);
+        }
+        else {
+            secondBeltStartUp.play(soundVolume);
+        }
+        sleep(500);
         validateBeltPushPos();
         updateBoard();
     }
@@ -777,6 +837,7 @@ public class RallyGame extends Game {
         for (Player player : players) {
             for (Vector2 repairTilePos : board.getRepairTiles()) {
                 if (player.getPosition().equals(repairTilePos)) {
+                    repairRobotSound.play(soundVolume);
                     player.resetDamageTokens();
                     player.setBackup(repairTilePos, player.getDirection());
                 }
@@ -790,13 +851,6 @@ public class RallyGame extends Game {
 
     public void setNumberOfPlayers ( int numberOfPlayers){
         this.numberOfPlayers = numberOfPlayers;
-    }
-
-    /**
-     * Let game know it hosts the game
-     */
-    public void setIsServerToTrue() {
-        this.isServer = true;
     }
 
     public void setMapPath(String mapPath) {
@@ -846,10 +900,16 @@ public class RallyGame extends Game {
         } catch (Exception ignored) {
         }
         try {
-            laserSound.dispose();
+            walledLaserSound.dispose();
+            repairRobotSound.dispose();
+            firstBeltStartUp.dispose();
+            secondBeltStartUp.dispose();
+            robotDestroyed.dispose();
+            robotLaserSound.dispose();
         } catch (Exception ignored) {
         }
         try {
+
             screen.dispose();
         } catch (Exception ignored) {
         }
@@ -857,7 +917,6 @@ public class RallyGame extends Game {
             board.dispose();
         } catch (Exception ignored) {
         }
-
     }
 
     /**

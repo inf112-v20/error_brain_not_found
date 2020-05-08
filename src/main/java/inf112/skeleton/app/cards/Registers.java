@@ -83,7 +83,7 @@ public class Registers {
     public int getOpenRegisters() {
         int open = 0;
         for (Register register : registers) {
-            if (!register.isOpen()) {
+            if (register.isOpen()) {
                 open++;
             }
         }
@@ -93,7 +93,7 @@ public class Registers {
     public int getNumberOfCardsSelected() {
         int cards = 0;
         for (Register register : registers) {
-            if (!register.hasCard()) {
+            if (register.hasCard()) {
                 cards++;
             }
         }

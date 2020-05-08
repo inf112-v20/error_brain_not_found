@@ -255,7 +255,7 @@ public class GameTest {
     @Test
     public void confirmingCardsSendToClientsTest() {
         game.setServerThread(serverThread);
-        game.setIsServerToTrue();
+        game.setIsServer(true);
         when(mainPlayer.getRegisters().hasRegistersWithoutCard()).thenReturn(false);
         when(server.allClientsHaveSelectedCardsOrIsPoweredDown()).thenReturn(true);
         game.confirm();
@@ -282,7 +282,7 @@ public class GameTest {
 
     @Test
     public void sendPowerUpMessageToClient() {
-        game.setIsServerToTrue();
+        game.setIsServer(true);
         game.setServerThread(serverThread);
         when(mainPlayer.getPlayerNr()).thenReturn(1);
         game.sendPowerUpMessage();

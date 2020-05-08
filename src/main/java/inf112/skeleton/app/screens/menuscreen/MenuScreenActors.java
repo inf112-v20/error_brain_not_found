@@ -4,15 +4,16 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
+import inf112.skeleton.app.screens.standardscreen.SettingsScreen;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -27,8 +28,12 @@ public class MenuScreenActors {
     public float screenWidth;
     public float screenHeight;
 
-    public float BUTTON_WIDTH;
-    public float BUTTON_HEIGHT;
+    public final float BUTTON_WIDTH;
+    public final float BUTTON_HEIGHT;
+    public final float START_BUTTON_Y;
+    public final float EXIT_BUTTON_Y;
+    public final float SETTINGS_BUTTON_Y;
+
     public float TOP_BUTTON_Y;
     public float BOTTOM_BUTTON_Y;
     public float TEXT_INPUT_Y;
@@ -37,11 +42,16 @@ public class MenuScreenActors {
     public float RIGHT_BUTTON_X;
     public float LABEL_Y;
     public float FONT_SCALE;
+    public final float BUTTON_X;
+    public final float BUTTON_Y;
 
     private SelectBox<String> selectMap;
     private ImageButton startButton;
     private ImageButton createGameButton;
+    private ImageButton exitButton;
+    private ImageButton settingsButton;
     private ImageButton joinGameButton;
+    private ImageButton backButton;
     private TextField IPInput;
     private Label IPLabel;
     private Label errorLabel;
@@ -58,6 +68,12 @@ public class MenuScreenActors {
 
         BUTTON_WIDTH = (float) (screenWidth * 0.25);
         BUTTON_HEIGHT = (float) (screenHeight * 0.25);
+
+        START_BUTTON_Y = (float) (screenHeight * 0.5);
+        EXIT_BUTTON_Y = (float) (screenHeight * 0.5 - BUTTON_HEIGHT);
+        SETTINGS_BUTTON_Y = (float) (screenHeight * 0.5 - (BUTTON_HEIGHT *2));
+        BUTTON_X = (BUTTON_WIDTH * 1);
+        BUTTON_Y = (BUTTON_WIDTH * 2);
 
         TOP_BUTTON_Y = (float) (screenHeight * 0.5);
         BOTTOM_BUTTON_Y = (float) (screenHeight * 0.5 - BUTTON_HEIGHT);
@@ -78,6 +94,7 @@ public class MenuScreenActors {
         }
     }
 
+
     // BUTTONS
     public void initializeStartButton() {
         ImageButton.ImageButtonStyle startButtonStyle = new ImageButton.ImageButtonStyle();
@@ -95,7 +112,7 @@ public class MenuScreenActors {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 game.getServer().setMapPath("assets/maps/" + selectMap.getSelected() + ".tmx");
-                game.getServer().setConnectingToClients(false);
+                game.getServer().stopConnectingToClients();
                 game.setupGame();
                 game.setScreen(new GameScreen(game));
             }
@@ -114,9 +131,9 @@ public class MenuScreenActors {
         exitButtonStyle.up = game.actorImages.getSkin().getDrawable("Exit");
         exitButtonStyle.over = game.actorImages.getSkin().getDrawable("Exit over");
 
-        ImageButton exitButton = new ImageButton(exitButtonStyle);
+        exitButton = new ImageButton(exitButtonStyle);
         exitButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-        exitButton.setPosition(CENTERED_BUTTON_X, BOTTOM_BUTTON_Y);
+        exitButton.setPosition(RIGHT_BUTTON_X, BOTTOM_BUTTON_Y);
         exitButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
@@ -129,6 +146,27 @@ public class MenuScreenActors {
             }
         });
         stage.addActor(exitButton);
+    }
+    public void initializeSettingsButton() {
+        ImageButton.ImageButtonStyle settingsButtonStyle = new ImageButton.ImageButtonStyle();
+        settingsButtonStyle.up = game.actorImages.getSkin().getDrawable("Settings");
+        settingsButtonStyle.over = game.actorImages.getSkin().getDrawable("Settings over");
+
+        settingsButton = new ImageButton(settingsButtonStyle);
+        settingsButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        settingsButton.setPosition(LEFT_BUTTON_X, BOTTOM_BUTTON_Y);
+        settingsButton.addListener(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                game.setScreen(new SettingsScreen(game));
+            }
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+        stage.addActor(settingsButton);
     }
 
     public void initializeCreateGame() {
@@ -146,7 +184,7 @@ public class MenuScreenActors {
              */
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setIsServerToTrue();
+                game.setIsServer(true);
                 // Defaul port is 9000
                 game.setUpHost(9000);
                 toggleVisibilityCreateClick();
@@ -204,6 +242,7 @@ public class MenuScreenActors {
         selectMap.setItems(getMaps());
         selectMap.setSelected("Risky Exchange");
         selectMap.setWidth(BUTTON_WIDTH * .87f);
+
         selectMap.setPosition(screenWidth / 2f - selectMap.getWidth() / 2f, TEXT_INPUT_Y);
         selectMap.setVisible(false);
         stage.addActor(selectMap);
@@ -275,11 +314,28 @@ public class MenuScreenActors {
         clientsConnectedLabel.setText(connected + (connected == 1 ? " client": " clients") + " connected");
     }
 
+    public void toggleVisibilityBackClick() {
+        initializeExitButton();
+        initializeSettingsButton();
+        initializeCreateGame();
+        initializeJoinGame();
+        startButton.setVisible(false);
+        backButton.setVisible(false);
+        selectMap.setVisible(false);
+        IPLabel.setVisible(false);
+        clientsConnectedLabel.setVisible(false);
+    }
+
     public void toggleVisibilityCreateClick() {
         initializeSelectMap();
         initializeStartButton();
         initializeIPLabel();
         initializeClientsConnectedLabel();
+        initializeBackButton();
+        backButton.setVisible(true);
+        backButton.setPosition(CENTERED_BUTTON_X, BOTTOM_BUTTON_Y);
+        settingsButton.setVisible(false);
+        exitButton.setVisible(false);
         createGameButton.setVisible(false);
         joinGameButton.setVisible(false);
         selectMap.setVisible(true);
@@ -311,10 +367,10 @@ public class MenuScreenActors {
     }
 
     public void updateErrorLabel(TextField textField) {
-        if (textField.equals(IPInput)) {
-            errorLabel.setText("Invalid IP address");
-        } else {
+        if (textField == null) {
             errorLabel.setText("Could not connect to " + IPInput.getText() + " on port 9000");
+        } else if (textField.equals(IPInput)) {
+            errorLabel.setText("Invalid IP address");
         }
         IPInput.setText("");
     }
@@ -330,6 +386,36 @@ public class MenuScreenActors {
 
     public boolean validIP(String ip) {
         return !"".equals(ip) && ("localhost".equals(ip.toLowerCase()) || ipAddress(ip));
+    }
+
+    public void initializeBackButton(){
+        ImageButton.ImageButtonStyle backButtonStyle = new ImageButton.ImageButtonStyle();
+        backButtonStyle.up = game.actorImages.getSkin().getDrawable("Back");
+        backButtonStyle.over = game.actorImages.getSkin().getDrawable("Back over");
+
+        backButton = new ImageButton(backButtonStyle);
+        backButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        joinGameButton.setPosition(RIGHT_BUTTON_X, TOP_BUTTON_Y);
+        backButton.addListener(new InputListener() {
+            @Override
+            public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                if (game.isServer()) {
+                    game.getServer().stopConnectingToClients();
+                    game.setIsServer(false);
+                    toggleVisibilityBackClick();
+                } else {
+                    // Client has not made the client yet
+                    toggleVisibilityBackClick();
+                }
+            }
+
+            @Override
+            public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                return true;
+            }
+        });
+        stage.addActor(backButton);
+
     }
 
     // LAN STUFF
