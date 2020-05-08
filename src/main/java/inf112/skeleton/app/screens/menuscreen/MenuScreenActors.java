@@ -333,6 +333,7 @@ public class MenuScreenActors {
         initializeIPLabel();
         initializeClientsConnectedLabel();
         initializeBackButton();
+        initializeExitButton();
         backButton.setVisible(true);
         settingsButton.setVisible(false);
         exitButton.setVisible(false);
@@ -344,6 +345,8 @@ public class MenuScreenActors {
     }
 
     public void toggleVisibilityJoinFirstClick() {
+        initializeBackButton();
+        backButton.setVisible(true);
         createGameButton.setVisible(false);
         joinGameButton.setPosition(CENTERED_BUTTON_X, TOP_BUTTON_Y);
         initializeIPInput();
@@ -395,6 +398,7 @@ public class MenuScreenActors {
 
         backButton = new ImageButton(backButtonStyle);
         backButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
+        backButton.setPosition(LEFT_BUTTON_X, BOTTOM_BUTTON_Y);
         joinGameButton.setPosition(RIGHT_BUTTON_X, TOP_BUTTON_Y);
         backButton.addListener(new InputListener() {
             @Override
@@ -405,7 +409,12 @@ public class MenuScreenActors {
                     toggleVisibilityBackClick();
                 } else {
                     // Client has not made the client yet
-                    toggleVisibilityBackClick();
+                    joinGameButton.setVisible(false);
+                    initializeExitButton();
+                    initializeSettingsButton();
+                    initializeCreateGame();
+                    initializeJoinGame();
+                    backButton.setVisible(false);
                 }
             }
 
