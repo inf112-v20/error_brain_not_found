@@ -295,9 +295,8 @@ Server:
 *   Allow parallel processes to run in "Run/Debug Configurations". Start a new game, press Create. Press start game. The 
 game should not start because no clients have connected. Start another process and this time press Join. Type in "localhost" 
 and press join. The host should have you registered on the screen. Press Start on the host screen. The game should start.  
-*     Allow parallel processes to run in "Run/Debug Configurations". Start a new game, press Create. Join with several other 
-processes and make sure that the "number of clients connected" is increased.  
-
+*    Allow parallel processes to run in "Run/Debug Configurations". Start a new game, press Create. Join with several other 
+processes and make sure that the "number of clients connected" is increased.    
 
 Client:  
 *   Allow parallel processes to run in "Run/Debug Configurations". Start a new game, and press join. Type in "localhost" and press 
@@ -307,9 +306,9 @@ select Create. Go back to the client and type in "localhost" and join game. The 
 
 #### MenuScreen  
 *   Start a game and press Create. Then press Back. The server should be terminated and you can press 
-Create again to start it again. Or you can press join and join another game.  
+Create again to start it again. Or you can press join and join another game.    
 *   Start a game and press Join. Then press Back. You should now be able to choose between hosting a game 
-or joining one.  
+or joining one.    
 *   Press the settings button. You should see a slider for Music and Sound. Also a button for Fullscreen option. Adjust 
 the parameters and press Back, you can now continue hosting/joining the game.
 
