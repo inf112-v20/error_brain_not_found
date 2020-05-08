@@ -82,15 +82,14 @@ public class GameServer {
             if (this.serverSocket == null) {
                 createServerSocket(9000);
             }
+            System.out.println("connecting");
             connectedClients = 0;
             while (connectingToClients) {
                 if (connectedClients >= maxNumberOfClients) {
                     break;
                 }
-                System.out.println("Waiting for client to connect");
                 try {
                     Socket socket = serverSocket.accept();
-                    System.out.println("Got timeout or client connected");
                     createThreadForCommunicatingWithClientAndSendStartValues(connectedClients, socket);
                     connectedClients++;
                     if (waitForNextConnectionMilliSeconds != 0) {
@@ -99,6 +98,10 @@ public class GameServer {
                 } catch (SocketException error) {
                     System.out.println("Closed connection.");
                 }
+            }
+            if (connectedClients == 0) {
+                System.out.println("Stopping host");
+                return;
             }
             int numberOfPlayers = getNumberOfConnectedClients() + 1;
             game.setNumberOfPlayers(numberOfPlayers);
@@ -187,7 +190,7 @@ public class GameServer {
      */
     public void sendToAllExcept(Player player, String message) {
         for (GameServerThreads thread : clients) {
-            if (thread.getPlayerNumber() != player.getPlayerNr()) {
+            if (thread.getPlayerNumber() != player.getPlayerNumber()) {
                 thread.sendMessage(message);
             }
         }
@@ -315,17 +318,22 @@ public class GameServer {
     }
 
     /**
-     * Stop while loop and close serversocket if false.
+     * Stop while loop
      * @param connectingToClients
      */
     public void setConnectingToClients(boolean connectingToClients) {
         this.connectingToClients = connectingToClients;
-        if (!connectingToClients) {
-            try {
-                serverSocket.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    }
+
+    /**
+     * Stop while loop with {@link #setConnectingToClients(boolean)} and close socket.
+     */
+    public void stopConnectingToClients() {
+        setConnectingToClients(false);
+        try {
+            serverSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -339,12 +347,7 @@ public class GameServer {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        setConnectingToClients(false);
-        try {
-            serverSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        stopConnectingToClients();
     }
 
     /***

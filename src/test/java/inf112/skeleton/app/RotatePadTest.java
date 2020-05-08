@@ -38,7 +38,7 @@ public class RotatePadTest {
         Board board = game.getBoard();
         this.rotatePads = board.getRotatePads();
         player = new Player(new Vector2(0,0), 5);
-        board.addPlayer(player);
+        game.addPlayer(player);
     }
 
     /**

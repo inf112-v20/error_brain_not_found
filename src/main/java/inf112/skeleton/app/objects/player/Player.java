@@ -4,7 +4,6 @@ package inf112.skeleton.app.objects.player;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.board.Board;
-import inf112.skeleton.app.board.BoardLogic;
 import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.cards.Registers;
@@ -18,14 +17,14 @@ import java.util.HashMap;
 
 public class Player {
 
-    private final int playerNr;
+    private final int playerNumber;
     private final Registers registers;
-    private boolean confirmedPowerUp;
+    private boolean confirmedPowerUpOrContinuePowerDown;
     private Vector2 backupPosition;
     private Direction backupDirection;
     private Vector2 alternativeBackupPosition;
     private Direction alternativeBackupDirection;
-    private final Vector2 position;
+    private Vector2 position;
     private Direction direction;
     private final ArrayList<Flag> flagsCollected;
     private final ArrayList<ProgramCard> cardsOnHand;
@@ -42,10 +41,27 @@ public class Player {
     private int lifeTokens;
     private final String color;
 
+    public Player(int playerNumber) {
+        this.direction = Direction.EAST;
+        this.playerNumber = playerNumber;
+        this.flagsCollected = new ArrayList<>();
+        this.registers = new Registers();
+        this.cardsOnHand = new ArrayList<>();
+        this.damageTokens = 0;
+        this.lifeTokens = 3;
+        this.beltPushDir = null;
+        this.beltPushPos = null;
+        this.programCardsDealt = 9;
+        this.poweringDown = false;
+        this.poweredDown = false;
+        this.powerUpNextRound = false;
+        this.powerDownNextRound = false;
+    }
+
     public Player(Vector2 position, int playerNr, String color) {
         this.position = position;
         this.direction = Direction.EAST;
-        this.playerNr = playerNr;
+        this.playerNumber = playerNr;
         this.flagsCollected = new ArrayList<>();
         this.registers = new Registers();
         this.cardsOnHand = new ArrayList<>();
@@ -59,9 +75,15 @@ public class Player {
         this.powerUpNextRound = false;
         this.powerDownNextRound = false;
         this.tiles = TileID.getRobotId(playerNr);
-        this.confirmedPowerUp = false;
+        this.confirmedPowerUpOrContinuePowerDown = false;
         this.color = color;
 
+        setBackup(this.position, this.direction);
+    }
+
+    public void setStartPosition(Vector2 position) {
+        this.position = position;
+        this.direction = Direction.EAST;
         setBackup(this.position, this.direction);
     }
 
@@ -162,6 +184,10 @@ public class Player {
         this.damageTokens = 0;
     }
 
+    public void decrementDamageTokens() {
+        this.damageTokens--;
+    }
+
     public int getLifeTokens() {
         return lifeTokens;
     }
@@ -231,28 +257,28 @@ public class Player {
     }
 
 
-    public void chooseAlternativeBackupPosition(Board board, Vector2 position, BoardLogic boardLogic) {
+    public void chooseAlternativeBackupPosition(Board board, Vector2 position) {
         ArrayList<Vector2> possiblePositions = board.getNeighbourhood(position);
         Collections.shuffle(possiblePositions);
         for (Vector2 pos : possiblePositions) {
-            for (Direction dir : board.getDirectionRandomOrder()) {
-                if (boardLogic.validRespawnPosition(pos, dir)) {
+            for (Direction dir : Direction.getDirectionRandomOrder()) {
+                if (board.validRespawnPosition(pos, dir)) {
                     setAlternativeBackup(pos, dir);
                     return;
                 }
             }
         }
-        setAlternativeBackup(board.getStartPosition(getPlayerNr()), Direction.EAST);
-        if (board.hasPlayer(board.getStartPosition(getPlayerNr()))) {
-            chooseAlternativeBackupPosition(board, alternativeBackupPosition, boardLogic);
+        setAlternativeBackup(board.getStartPosition(getPlayerNumber()), Direction.EAST);
+        if (board.hasPlayer(board.getStartPosition(getPlayerNumber()))) {
+            chooseAlternativeBackupPosition(board, alternativeBackupPosition);
         }
     }
 
     /**
      * @return number of player
      */
-    public int getPlayerNr() {
-        return playerNr;
+    public int getPlayerNumber() {
+        return playerNumber;
     }
 
     /**
@@ -266,7 +292,7 @@ public class Player {
      * Set's the position to the player
      */
     public void setPosition(Vector2 pos) {
-        this.position.set(pos.x, pos.y);
+        this.position = new Vector2(pos);
     }
 
     /**
@@ -288,12 +314,18 @@ public class Player {
     }
 
     public void pickUpFlag(Flag flag) {
-        System.out.println("Player " + playerNr + " picked up flag " + flag.getFlagnr());
+        System.out.println("Player " + playerNumber + " picked up flag " + flag.getFlagnr());
         flagsCollected.add(flag);
     }
 
+    public void tryToPickUpFlag(Flag flag) {
+        if (shouldPickUpFlag(flag)) {
+            pickUpFlag(flag);
+        }
+    }
+
     public void fire(RallyGame game) {
-        if (game.getBoard().getBoardLogic().canFire(position, direction)) {
+        if (game.getBoard().canFire(position, direction)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }
@@ -303,7 +335,7 @@ public class Player {
         if (game.getBoard().hasPlayer(position)) {
             game.hitByLaser.play(game.getSoundVolume());
             game.getBoard().getPlayer(position).handleDamage();
-        } else if (game.getBoard().getBoardLogic().canFire(position, direction)) {
+        } else if (game.getBoard().canFire(position, direction)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }
@@ -328,7 +360,7 @@ public class Player {
     }
 
     public boolean equals(Player other) {
-        return this.getPlayerNr() == other.getPlayerNr();
+        return this.getPlayerNumber() == other.getPlayerNumber();
     }
 
     /**
@@ -340,7 +372,7 @@ public class Player {
     }
 
     public String toString() {
-        return "Player " + getPlayerNr();
+        return "Player " + getPlayerNumber();
     }
 
     public boolean isPoweringDown() {
@@ -383,12 +415,12 @@ public class Player {
         }
     }
 
-    public boolean hasConfirmedPowerUp() {
-        return confirmedPowerUp;
+    public boolean hasConfirmedPowerUpOrContinuePowerDown() {
+        return confirmedPowerUpOrContinuePowerDown;
     }
 
-    public void setConfirmedPowerUp(boolean confirmedPowerUp) {
-        this.confirmedPowerUp = confirmedPowerUp;
+    public void setConfirmedPowerUpOrContinuePowerDown(boolean confirmedPowerUpOrContinuePowerDown) {
+        this.confirmedPowerUpOrContinuePowerDown = confirmedPowerUpOrContinuePowerDown;
     }
 
     public String getColor() {

@@ -28,7 +28,7 @@ public class GameScreen extends StandardScreen {
         actors.initializeInfoLabel();
 
         float tilePx = 300f;
-        float unitScale = ((float) Gdx.graphics.getHeight() / game.getBoard().getHeight()) / tilePx;
+        float unitScale = ((float) Gdx.graphics.getHeight() / game.getBoard().getBoardHeight()) / tilePx;
 
         this.mapRenderer = new OrthogonalTiledMapRenderer(game.getBoard().getTiledMap(), unitScale, batch);
         this.mapRenderer.setView(camera);

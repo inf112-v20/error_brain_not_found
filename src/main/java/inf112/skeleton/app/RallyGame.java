@@ -17,6 +17,7 @@ import inf112.skeleton.app.lan.GameClientThread;
 import inf112.skeleton.app.lan.GameServer;
 import inf112.skeleton.app.lan.ServerThread;
 import inf112.skeleton.app.objects.Belt;
+import inf112.skeleton.app.objects.Flag;
 import inf112.skeleton.app.objects.Laser;
 import inf112.skeleton.app.objects.RotatePad;
 import inf112.skeleton.app.objects.player.Player;
@@ -92,10 +93,9 @@ public class RallyGame extends Game {
      *
      */
     public void setupGame() {
-        this.board = new Board(mapPath, this.numberOfPlayers);
-        this.players = new ArrayList<>();
-        this.players = board.getPlayers();
-        this.mainPlayer = board.getPlayer(this.myPlayerNumber);
+        this.board = new Board(mapPath);
+        this.deck = new Deck();
+        this.players = makePlayersAndAddToBoard(this.numberOfPlayers);
         this.respawnPlayers = new ArrayList<>();
         this.poweredDownPlayers = new ArrayList<>();
         this.waitForPowerUp = new Semaphore(1);
@@ -119,6 +119,28 @@ public class RallyGame extends Game {
         new Thread(this::doTurn).start();
 
         dealCards();
+    }
+
+    public ArrayList<Player> makePlayersAndAddToBoard(int numberOfPlayers) {
+        ArrayList<Player> players = new ArrayList<>();
+        for (int playerNumber = 1; playerNumber <= numberOfPlayers; playerNumber++) {
+            Vector2 startPos = board.getStartPosition(playerNumber);
+            Player player = new Player(startPos, playerNumber);
+            if (this.myPlayerNumber == playerNumber) {
+                this.mainPlayer = player;
+            }
+            players.add(player);
+            board.addPlayer(player);
+        }
+        return players;
+    }
+
+    public void addPlayer(Player player) {
+        if (!players.contains(player)) {
+            players.add(player);
+        }
+        board.removePlayerFromBoard(player);
+        board.addPlayer(player);
     }
 
     /**
@@ -162,7 +184,7 @@ public class RallyGame extends Game {
     public void sendSelectedCardsToServer() {
         if (!isServer) {
             for (ProgramCard card : mainPlayer.getRegisters().getCards()) {
-                client.sendMessage(converter.convertToString(mainPlayer.getPlayerNr(), card));
+                client.sendMessage(converter.convertToString(mainPlayer.getPlayerNumber(), card));
             }
         }
     }
@@ -371,9 +393,14 @@ public class RallyGame extends Game {
                 allPlayersPlayCard(cardNumber);
                 activateBeltsAndRotatePads();
                 fireAllLasers();
-                activateRepairAndPickUpFlags();
+                updateBackupAndPickUpFlagsAndRepair(false);
+                if (someoneWon()) {
+                    endGame();
+                    return;
+                }
                 sleep(1000);
             }
+            updateBackupAndPickUpFlagsAndRepair(true);
             if (!respawnPlayers.isEmpty()) {
                 respawnPlayers();
             }
@@ -397,6 +424,17 @@ public class RallyGame extends Game {
     }
 
     /**
+     * End game if a player has picked up all flags
+     */
+    public boolean someoneWon() {
+        for (Player player : players) {
+            if (player.hasAllFlags(board.getFlags().size())) {
+                return true;
+            }
+        }
+        return false;
+    }
+    /**
      * Discard all players cards using {@link #discardCards()}.
      *
      * If isServer and there is not enough cards left in deck, create a new deck,
@@ -407,16 +445,6 @@ public class RallyGame extends Game {
         if (isServer && deck.deckSize() < numberOfDealtCards()) {
             serverThread.getServer().createAndSendDeckToAll(lockedCards);
         }
-    }
-
-    /**
-     * Activate the repair keys and pick up flags. Thread sleeps between each method call
-     */
-    public void activateRepairAndPickUpFlags() {
-        activateRepairTiles();
-        sleep(500);
-        pickUpFlags();
-        sleep(500);
     }
 
     /**
@@ -589,10 +617,6 @@ public class RallyGame extends Game {
         }
     }
 
-    private void pickUpFlags() {
-        board.pickUpFlags();
-    }
-
     private void sleep(int milliseconds) {
         try {
             Thread.sleep(milliseconds);
@@ -625,7 +649,7 @@ public class RallyGame extends Game {
         ArrayList<Player> removedPlayers = new ArrayList<>();
         for (Player player : players) {
 
-            if (player.getDamageTokens() >= 10 || board.getBoardLogic().outsideBoard(player)) {
+            if (player.getDamageTokens() >= 10 || board.outsideBoard(player)) {
 
                 robotDestroyed.play(soundVolume);
                 player.decrementLifeTokens();
@@ -646,8 +670,8 @@ public class RallyGame extends Game {
                 board.removePlayerFromBoard(player);
                 players.remove(player);
                 if (isServer) {
-                    serverThread.getServer().remove(player.getPlayerNr());
-                    serverThread.getServer().disconnect(player.getPlayerNr());
+                    serverThread.getServer().remove(player.getPlayerNumber());
+                    serverThread.getServer().disconnect(player.getPlayerNumber());
                 }
             }
         }
@@ -721,8 +745,8 @@ public class RallyGame extends Game {
     }
 
     public void removeLasers() {
-        for (int y = 0; y < board.getHeight(); y++) {
-            for (int x = 0; x < board.getWidth(); x++) {
+        for (int y = 0; y < board.getBoardHeight(); y++) {
+            for (int x = 0; x < board.getBoardWidth(); x++) {
                 board.getLaserLayer().setCell(x, y, null);
             }
         }
@@ -747,7 +771,7 @@ public class RallyGame extends Game {
     }
 
     public void activateRotatePads() {
-        for (Player player : board.getPlayers()) {
+        for (Player player : players) {
             for (RotatePad pad : board.getRotatePads()) {
                 Vector2 playerPosition = player.getPosition();
                 Vector2 padPosition = pad.getPosition();
@@ -771,7 +795,7 @@ public class RallyGame extends Game {
     public void activateBelts(boolean onlyExpress) {
 
         ArrayList<Belt> belts = onlyExpress ? board.getExpressBelts() : board.getBelts();
-        for (Player player : board.getPlayers()) {
+        for (Player player : players) {
             for (Belt belt : belts) {
                 if (player.getPosition().equals(belt.getPosition())) {
                     beltPush(player, belt);
@@ -786,21 +810,31 @@ public class RallyGame extends Game {
         }
         sleep(500);
         validateBeltPushPos();
-        updateBoard();
+        updatePositionsAfterBeltPush();
+        updateBoardAfterBeltPush();
     }
 
-    private void updateBoard() {
+    private void updateBoardAfterBeltPush() {
         board.removePlayersFromBoard();
-        updatePositionsAfterBeltPush();
         board.updateBoard();
     }
 
     public void validateBeltPushPos() {
+        player:
         for (Player player : players) {
             for (Player otherPlayer : players) {
-                if (player.getBeltPushPos() != null && !player.equals(otherPlayer) && player.getBeltPushPos().equals(otherPlayer.getBeltPushPos())) {
-                    player.setBeltPushPos(null);
-                    otherPlayer.setBeltPushPos(null);
+                if (player.getBeltPushPos() != null && !player.equals(otherPlayer)) {
+                    if (player.getBeltPushPos().equals(otherPlayer.getBeltPushPos())) {
+                        player.setBeltPushPos(null);
+                        otherPlayer.setBeltPushPos(null);
+                        continue player;
+                    }
+                    if (board.shouldPush(player, player.getBeltPushDir()) &&
+                            otherPlayer.getBeltPushPos() == null &&
+                            !board.canPush(otherPlayer, player.getBeltPushDir())) {
+                        player.setBeltPushPos(null);
+                        continue player;
+                    }
                 }
             }
         }
@@ -809,6 +843,13 @@ public class RallyGame extends Game {
     public void updatePositionsAfterBeltPush() {
         for (Player player : players) {
             if (player.getBeltPushPos() != null) {
+                Direction dir = player.getBeltPushDir();
+                if (board.shouldPush(player, dir)) {
+                    Player enemyPlayer = board.getPlayer(board.getNeighbourPosition(player.getPosition(), dir));
+                    if (board.canPush(enemyPlayer, dir)) {
+                        board.pushPlayer(enemyPlayer, dir);
+                    }
+                }
                 player.setPosition(player.getBeltPushPos());
                 player.setBeltPushPos(null);
             }
@@ -864,15 +905,34 @@ public class RallyGame extends Game {
         this.deck.setDeck(stack);
     }
 
-    public void activateRepairTiles() {
+    public void endGame() {
+        setScreen(new GifScreen(this));
+    }
+
+    /**
+     * Activate the repair keys and pick up flags. Thread sleeps between each method call
+     */
+    public void updateBackupAndPickUpFlagsAndRepair(boolean repair) {
         for (Player player : players) {
             for (Vector2 repairTilePos : board.getRepairTiles()) {
                 if (player.getPosition().equals(repairTilePos)) {
-                    repairRobotSound.play(soundVolume);
-                    player.resetDamageTokens();
                     player.setBackup(repairTilePos, player.getDirection());
+                    if (repair) {
+                        player.decrementDamageTokens();
+                    }
                 }
             }
+            for (Flag flag : board.getFlags()) {
+                if (player.getPosition().equals(flag.getPosition())) {
+                    player.setBackup(flag.getPosition(), player.getDirection());
+                    player.tryToPickUpFlag(flag);
+                    if (repair) {
+                        player.decrementDamageTokens();
+                    }
+                }
+            }
+            repairRobotSound.play(soundVolume);
+            sleep(500);
         }
     }
 
@@ -882,13 +942,6 @@ public class RallyGame extends Game {
 
     public void setNumberOfPlayers ( int numberOfPlayers){
         this.numberOfPlayers = numberOfPlayers;
-    }
-
-    /**
-     * Let game know it hosts the game
-     */
-    public void setIsServerToTrue() {
-        this.isServer = true;
     }
 
     public void setMapPath(String mapPath) {
@@ -985,9 +1038,9 @@ public class RallyGame extends Game {
      */
     public void sendPowerUpMessage() {
         if (isServer) {
-            serverThread.getServer().sendToAll(converter.createMessageFromPlayer(mainPlayer.getPlayerNr(), Messages.POWER_UP));
+            serverThread.getServer().sendToAll(converter.createMessageFromPlayer(mainPlayer.getPlayerNumber(), Messages.POWER_UP));
         } else {
-            client.sendMessage(converter.createMessageFromPlayer(mainPlayer.getPlayerNr(), Messages.POWER_UP));
+            client.sendMessage(converter.createMessageFromPlayer(mainPlayer.getPlayerNumber(), Messages.POWER_UP));
         }
     }
 
@@ -996,15 +1049,15 @@ public class RallyGame extends Game {
      */
     public void sendPoweringDownMessage() {
         if (isServer) {
-            serverThread.getServer().sendToAll(converter.createMessageFromPlayer(mainPlayer.getPlayerNr(), Messages.POWERING_DOWN));
+            serverThread.getServer().sendToAll(converter.createMessageFromPlayer(mainPlayer.getPlayerNumber(), Messages.POWERING_DOWN));
         } else {
-            client.sendMessage(converter.createMessageFromPlayer(mainPlayer.getPlayerNr(), Messages.POWERING_DOWN));
+            client.sendMessage(converter.createMessageFromPlayer(mainPlayer.getPlayerNumber(), Messages.POWERING_DOWN));
         }
     }
 
     public boolean serverIsOnlyOneInPowerDown() {
         for (Player player : players) {
-            if (player.getPlayerNr() != 1 && player.isPoweredDown() && !player.hasConfirmedPowerUp()) {
+            if (player.getPlayerNumber() != 1 && player.isPoweredDown() && !player.hasConfirmedPowerUpOrContinuePowerDown()) {
                 return false;
             }
         }
@@ -1018,7 +1071,7 @@ public class RallyGame extends Game {
         if (isServer) {
             serverThread.getServer().setServerHasConfirmed(true);
         } else {
-            client.sendMessage(converter.createMessageFromPlayer(mainPlayer.getPlayerNr(), Messages.CONTINUE_POWER_DOWN));
+            client.sendMessage(converter.createMessageFromPlayer(mainPlayer.getPlayerNumber(), Messages.CONTINUE_POWER_DOWN));
         }
     }
 
@@ -1060,7 +1113,7 @@ public class RallyGame extends Game {
     }
 
     public void resetConfirmPowerUp() {
-        players.forEach(player -> player.setConfirmedPowerUp(false));
+        players.forEach(player -> player.setConfirmedPowerUpOrContinuePowerDown(false));
     }
 
     public void setPlayers(Player... players) {
