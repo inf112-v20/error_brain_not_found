@@ -19,7 +19,7 @@ public class Player {
 
     private final int playerNumber;
     private final Registers registers;
-    private boolean confirmedPowerUp;
+    private boolean confirmedPowerUpOrContinuePowerDown;
     private Vector2 backupPosition;
     private Direction backupDirection;
     private Vector2 alternativeBackupPosition;
@@ -74,7 +74,7 @@ public class Player {
         this.powerUpNextRound = false;
         this.powerDownNextRound = false;
         this.tiles = TileID.getRobotId(playerNr);
-        this.confirmedPowerUp = false;
+        this.confirmedPowerUpOrContinuePowerDown = false;
 
         setBackup(this.position, this.direction);
     }
@@ -413,12 +413,12 @@ public class Player {
         }
     }
 
-    public boolean hasConfirmedPowerUp() {
-        return confirmedPowerUp;
+    public boolean hasConfirmedPowerUpOrContinuePowerDown() {
+        return confirmedPowerUpOrContinuePowerDown;
     }
 
-    public void setConfirmedPowerUp(boolean confirmedPowerUp) {
-        this.confirmedPowerUp = confirmedPowerUp;
+    public void setConfirmedPowerUpOrContinuePowerDown(boolean confirmedPowerUpOrContinuePowerDown) {
+        this.confirmedPowerUpOrContinuePowerDown = confirmedPowerUpOrContinuePowerDown;
     }
 
 }

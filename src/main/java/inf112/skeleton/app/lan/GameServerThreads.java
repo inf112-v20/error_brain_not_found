@@ -16,14 +16,14 @@ import java.util.concurrent.Semaphore;
  */
 public class GameServerThreads extends Thread {
 
-    private Socket serverSideSocket;
-    private int playerNumber;
-    private GameServer server;
+    private final Socket serverSideSocket;
+    private final int playerNumber;
+    private final GameServer server;
     private PrintWriter writer;
     private BufferedReader reader;
-    private RallyGame game;
-    private Converter converter;
-    private Semaphore continueListening;
+    private final RallyGame game;
+    private final Converter converter;
+    private final Semaphore continueListening;
     private String sentMessage;
 
     public GameServerThreads(GameServer server, RallyGame game, Socket serverSideSocket, int playerNumber) {
@@ -76,7 +76,7 @@ public class GameServerThreads extends Thread {
                         System.out.println("Player " + playerNumber + " announces power down!");
                     }
                     else if (messageFromPlayer.equals(Messages.CONTINUE_POWER_DOWN.toString())) {
-                        player.setConfirmedPowerUp(true);
+                        player.setConfirmedPowerUpOrContinuePowerDown(true);
                         if (allPoweredDownClientsHaveConfirmed()) {
                             if (server.serverHasConfirmed()) {
                                 continueTurn();
@@ -87,7 +87,7 @@ public class GameServerThreads extends Thread {
                     }
                     else if (messageFromPlayer.equals(Messages.POWER_UP.toString())) {
                         player.setPoweredDown(false);
-                        player.setConfirmedPowerUp(true);
+                        player.setConfirmedPowerUpOrContinuePowerDown(true);
                         game.removePoweredDownPlayer(player);
                         server.sendToAllExcept(player, message);
                         if (allPoweredDownClientsHaveConfirmed()) {
@@ -267,7 +267,7 @@ public class GameServerThreads extends Thread {
 
     public boolean allPoweredDownClientsHaveConfirmed() {
         for (Player player : game.getPoweredDownRobots()) {
-            if (player.getPlayerNumber() != 1 && !player.hasConfirmedPowerUp()) {
+            if (player.getPlayerNumber() != 1 && !player.hasConfirmedPowerUpOrContinuePowerDown()) {
                 return false;
             }
         }

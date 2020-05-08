@@ -1023,7 +1023,7 @@ public class RallyGame extends Game {
 
     public boolean serverIsOnlyOneInPowerDown() {
         for (Player player : players) {
-            if (player.getPlayerNumber() != 1 && player.isPoweredDown() && !player.hasConfirmedPowerUp()) {
+            if (player.getPlayerNumber() != 1 && player.isPoweredDown() && !player.hasConfirmedPowerUpOrContinuePowerDown()) {
                 return false;
             }
         }
@@ -1079,7 +1079,7 @@ public class RallyGame extends Game {
     }
 
     public void resetConfirmPowerUp() {
-        players.forEach(player -> player.setConfirmedPowerUp(false));
+        players.forEach(player -> player.setConfirmedPowerUpOrContinuePowerDown(false));
     }
 
     public void setPlayers(Player... players) {
