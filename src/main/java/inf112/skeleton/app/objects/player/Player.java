@@ -9,10 +9,12 @@ import inf112.skeleton.app.cards.Deck;
 import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.cards.Registers;
 import inf112.skeleton.app.enums.Direction;
+import inf112.skeleton.app.enums.TileID;
 import inf112.skeleton.app.objects.Flag;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class Player {
 
@@ -34,6 +36,7 @@ public class Player {
     private boolean poweredDown;
     private boolean powerDownNextRound;
     private boolean powerUpNextRound;
+    private HashMap<Direction, Integer> tiles;
 
     private int damageTokens;
     private int lifeTokens;
@@ -54,9 +57,14 @@ public class Player {
         this.poweredDown = false;
         this.powerUpNextRound = false;
         this.powerDownNextRound = false;
+        this.tiles = TileID.getRobotId(playerNr);
         this.confirmedPowerUp = false;
 
         setBackup(this.position, this.direction);
+    }
+
+    public int getTileInt() {
+        return tiles.get(direction);
     }
 
     public ArrayList<ProgramCard> getCardsOnHand() {
@@ -93,7 +101,7 @@ public class Player {
 
     public void selectCards() {
         for (int i = 0; i < registers.getOpenRegisters(); i++) {
-            registers.addCard(cardsOnHand.get(0));
+            registers.addCard(cardsOnHand.get(i));
         }
     }
 
@@ -291,6 +299,7 @@ public class Player {
     public void fire(RallyGame game, Vector2 position) {
         game.getBoard().addLaser(position, direction);
         if (game.getBoard().hasPlayer(position)) {
+            game.hitByLaser.play(game.getSoundVolume());
             game.getBoard().getPlayer(position).handleDamage();
         } else if (game.getBoard().getBoardLogic().canFire(position, direction)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));

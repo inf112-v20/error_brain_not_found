@@ -21,10 +21,13 @@ public class Board extends BoardLayers {
 
     private final ArrayList<Player> players;
 
+
     private final Sound scream;
-    private final Sound wallImpact;
+    private final Sound wall_Collision;
+    private final Sound robotCollide;
 
     private final BoardLogic boardLogic;
+
 
     public Board(String mapPath, int numberOfPlayers) {
         super(mapPath);
@@ -32,7 +35,9 @@ public class Board extends BoardLayers {
         this.players = new ArrayList<>();
 
         this.scream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
-        this.wallImpact = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/ImpactWall.mp3"));
+        this.robotCollide = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/robotCollide.mp3"));
+        this.wall_Collision = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/robotCollide.mp3"));
+
         this.boardLogic = new BoardLogic(this);
 
         addPlayersToStartPositions(numberOfPlayers);
@@ -44,19 +49,9 @@ public class Board extends BoardLayers {
      * @return {@link TiledMapTile} with robot
      */
     private TiledMapTile getRobotTile(Player player) {
-        TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("robots");
-        switch (player.getDirection()) {
-            case SOUTH:
-                return tileSet.getTile(TileID.PLAYER_SOUTH.getId());
-            case NORTH:
-                return tileSet.getTile(TileID.PLAYER_NORTH.getId());
-            case EAST:
-                return tileSet.getTile(TileID.PLAYER_EAST.getId());
-            case WEST:
-                return tileSet.getTile(TileID.PLAYER_WEST.getId());
-            default:
-                return null;
-        }
+        return tiledMap.getTileSets()
+                       .getTileSet(player.getPlayerNr())
+                       .getTile(player.getTileInt());
     }
 
     /**
@@ -226,19 +221,21 @@ public class Board extends BoardLayers {
         Direction direction = backUp ? player.getDirection().turnAround() : player.getDirection();
 
         if (!boardLogic.canGo(position, direction)) {
-            wallImpact.play(RallyGame.volume);
+            wall_Collision.play(RallyGame.soundVolume);
+
             addPlayer(player);
             return;
         }
         if (boardLogic.shouldPush(player, direction)) {
             Player enemyPlayer = getPlayer(getNeighbourPosition(player.getPosition(), direction));
+
             if (boardLogic.canPush(enemyPlayer, direction)) {
+               robotCollide.play(RallyGame.soundVolume);
                 boardLogic.pushPlayer(enemyPlayer, direction);
             } else {
                 addPlayer(player);
                 return;
             }
-
         }
 
         removePlayerFromBoard(player);
@@ -266,6 +263,7 @@ public class Board extends BoardLayers {
     }
 
     /**
+
      * Add all players to board to make sure they're facing the correct direction
      */
     public void updateBoard() {
@@ -275,6 +273,7 @@ public class Board extends BoardLayers {
     }
 
     /**
+
      * Remove all {@link Player} from board
      */
     public void removePlayersFromBoard() {
@@ -284,6 +283,7 @@ public class Board extends BoardLayers {
     }
 
     /**
+
      * Get all neighbour cells for a position
      * @param position to find neighbours from
      * @return list of {@link Vector2} positions
@@ -328,17 +328,23 @@ public class Board extends BoardLayers {
         return neighbourPosition;
     }
 
+
     // TODO: DENNE KAN SLETTES
     public void respawnPlayers() {
         for (Player player : players) {
             if (boardLogic.outsideBoard(player)) {
-                scream.play(RallyGame.volume);
+                scream.play(RallyGame.soundVolume);
                 player.decrementLifeTokens();
                 respawn(player);
             }
         }
     }
 
+    /**
+     *
+     * @param position
+     * @return true if position
+     */
     public boolean hasPlayer(Vector2 position) {
         for (Player enemyPlayer : players) {
             if (enemyPlayer.getPosition().equals(position)) {
@@ -435,13 +441,10 @@ public class Board extends BoardLayers {
         return boardHeight;
     }
 
-    @Override
-    public ArrayList<Vector2> getRepairTiles() {
-        return super.getRepairTiles();
-    }
 
     public void dispose() {
-        wallImpact.dispose();
+
+        wall_Collision.dispose();
         scream.dispose();
         tiledMap.dispose();
     }
