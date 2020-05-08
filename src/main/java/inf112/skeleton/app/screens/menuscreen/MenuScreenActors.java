@@ -333,7 +333,6 @@ public class MenuScreenActors {
         initializeClientsConnectedLabel();
         initializeBackButton();
         backButton.setVisible(true);
-        //backButton.setPosition(CENTERED_BUTTON_X, BOTTOM_BUTTON_Y);
         settingsButton.setVisible(false);
         exitButton.setVisible(false);
         createGameButton.setVisible(false);
