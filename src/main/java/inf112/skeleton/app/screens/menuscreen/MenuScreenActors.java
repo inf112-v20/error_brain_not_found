@@ -13,7 +13,6 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
-import inf112.skeleton.app.screens.standardscreen.SettingsScreen;
 
 import java.io.File;
 import java.net.InetAddress;
