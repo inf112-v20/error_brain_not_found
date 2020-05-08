@@ -39,4 +39,8 @@ public class GameScreen extends StandardScreen {
         super.render(v);
         mapRenderer.render();
     }
+
+    public void updateCards() {
+        actors.updateCards();
+    }
 }

@@ -2,7 +2,15 @@
 <map version="1.2" tiledversion="1.3.2" orientation="orthogonal" renderorder="right-down" compressionlevel="0"
      width="16" height="12" tilewidth="300" tileheight="300" infinite="0" nextlayerid="6" nextobjectid="1">
   <tileset firstgid="1" source="tiles.tsx"/>
-  <tileset firstgid="137" source="robots.tsx"/>
+  <tileset firstgid="137" source="robots\blueRobot.tsx"/>
+  <tileset firstgid="141" source="robots\brownRobot.tsx"/>
+  <tileset firstgid="145" source="robots\darkGreenRobot.tsx"/>
+  <tileset firstgid="149" source="robots\greenRobot.tsx"/>
+  <tileset firstgid="153" source="robots\pinkRobot.tsx"/>
+  <tileset firstgid="157" source="robots\purpleRobot.tsx"/>
+  <tileset firstgid="161" source="robots\redRobot.tsx"/>
+  <tileset firstgid="165" source="robots\yellowRobot.tsx"/>
+  <tileset firstgid="169" source="robots\whiteRobot.tsx"/>
   <layer id="1" name="Ground" width="16" height="12" locked="1">
     <data encoding="csv">
       5,50,5,131,5,5,5,5,5,5,5,5,5,5,5,5,

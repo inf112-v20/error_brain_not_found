@@ -17,32 +17,39 @@ public class Board extends BoardLayers {
 
     private final ArrayList<Player> players;
 
-    private final Sound wallImpact = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/ImpactWall.mp3"));
+
+    private final Sound scream;
+    private final Sound wall_Collision;
+    private final Sound robotCollide;
 
     public Board(String mapPath) {
         super(mapPath);
 
+        this.players = new ArrayList<>();
+
+        this.scream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
+        this.robotCollide = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/robotCollide.mp3"));
+        this.wall_Collision = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/robotCollide.mp3"));
+
+        this.boardLogic = new BoardLogic(this);
+
+        addPlayersToStartPositions(numberOfPlayers);
         players = new ArrayList<>();
     }
 
+    /**
+     * Get robot tile according to player direction
+     * @param player to get tile for
+     * @return {@link TiledMapTile} with robot
+     */
     private TiledMapTile getRobotTile(Player player) {
-        TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("robots");
-        switch (player.getDirection()) {
-            case SOUTH:
-                return tileSet.getTile(TileID.PLAYER_SOUTH.getId());
-            case NORTH:
-                return tileSet.getTile(TileID.PLAYER_NORTH.getId());
-            case EAST:
-                return tileSet.getTile(TileID.PLAYER_EAST.getId());
-            case WEST:
-                return tileSet.getTile(TileID.PLAYER_WEST.getId());
-            default:
-                return null;
-        }
+        return tiledMap.getTileSets()
+                       .getTileSet(player.getPlayerNr())
+                       .getTile(player.getTileInt());
     }
 
     /**
-     * Add a player to the player layer in coordinate (x, y) and
+     * Add a {@link Player} to the player layer in coordinate (x, y) and
      * add that player to the list of players
      *
      * @param player to add to game and board
@@ -112,7 +119,7 @@ public class Board extends BoardLayers {
     }
 
     /**
-     * Places a player in backup position or alternative position
+     * Places a {@link Player} in backup position or alternative position
      *
      * @param player to respawn
      */
@@ -136,14 +143,14 @@ public class Board extends BoardLayers {
      * Update player position according to direction
      * Add player to cell that corresponds to player position
      *
-     * @param player that is suppose to move
+     * @param player that is supposed to move
      */
     public void movePlayer(Player player, boolean backUp) {
         Vector2 position = player.getPosition();
         Direction direction = backUp ? player.getDirection().turnAround() : player.getDirection();
 
         if (!canGo(position, direction)) {
-            wallImpact.play(RallyGame.volume);
+            wall_Collision.play(RallyGame.soundVolume);
             addPlayer(player);
             return;
         }
@@ -181,18 +188,32 @@ public class Board extends BoardLayers {
         player.setBeltPushDir(null);
     }
 
+    /**
+
+     * Add all players to board to make sure they're facing the correct direction
+     */
     public void updateBoard() {
         for (Player player : players) {
             addPlayer(player);
         }
     }
 
+    /**
+
+     * Remove all {@link Player} from board
+     */
     public void removePlayersFromBoard() {
         for (Player player : players) {
             removePlayerFromBoard(player);
         }
     }
 
+    /**
+
+     * Get all neighbour cells for a position
+     * @param position to find neighbours from
+     * @return list of {@link Vector2} positions
+     */
     public ArrayList<Vector2> getNeighbourhood(Vector2 position) {
         ArrayList<Vector2> positions = new ArrayList<>();
         for (int yi = -1; yi <= 1; yi++) {
@@ -209,7 +230,7 @@ public class Board extends BoardLayers {
 
     /**
      * @param position  to go from
-     * @param direction to go in
+     * @param direction to go
      * @return neighbour position in direction from position
      */
     public Vector2 getNeighbourPosition(Vector2 position, Direction direction) {
@@ -280,7 +301,8 @@ public class Board extends BoardLayers {
     }
 
     public void dispose() {
-        wallImpact.dispose();
+
+        wall_Collision.dispose();
         tiledMap.dispose();
     }
 
