@@ -49,19 +49,9 @@ public class Board extends BoardLayers {
      * @return {@link TiledMapTile} with robot
      */
     private TiledMapTile getRobotTile(Player player) {
-        TiledMapTileSet tileSet = tiledMap.getTileSets().getTileSet("robots");
-        switch (player.getDirection()) {
-            case SOUTH:
-                return tileSet.getTile(TileID.PLAYER_SOUTH.getId());
-            case NORTH:
-                return tileSet.getTile(TileID.PLAYER_NORTH.getId());
-            case EAST:
-                return tileSet.getTile(TileID.PLAYER_EAST.getId());
-            case WEST:
-                return tileSet.getTile(TileID.PLAYER_WEST.getId());
-            default:
-                return null;
-        }
+        return tiledMap.getTileSets()
+                       .getTileSet(player.getPlayerNr())
+                       .getTile(player.getTileInt());
     }
 
     /**
@@ -126,7 +116,7 @@ public class Board extends BoardLayers {
      * Check all cells on map for start positions with {@link TileID} and add a new player to that
      * position based on number of players
      *
-         * @param numPlayers number of robots playing, between 1-8
+     * @param numPlayers number of robots playing, between 1-8
      */
     public void addPlayersToStartPositions(int numPlayers) {
         if (numPlayers == 0) {
@@ -246,7 +236,6 @@ public class Board extends BoardLayers {
                 addPlayer(player);
                 return;
             }
-
         }
 
         removePlayerFromBoard(player);
@@ -354,7 +343,7 @@ public class Board extends BoardLayers {
     /**
      *
      * @param position
-     * @return true if enemy position 
+     * @return true if position
      */
     public boolean hasPlayer(Vector2 position) {
         for (Player enemyPlayer : players) {
@@ -453,9 +442,6 @@ public class Board extends BoardLayers {
     }
 
 
-    /**
-     *
-     */
     public void dispose() {
 
         wall_Collision.dispose();

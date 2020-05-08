@@ -1,6 +1,53 @@
 package inf112.skeleton.app.enums;
 
+import java.util.HashMap;
+
 public enum TileID {
+    PLAYER_1_SOUTH(137),
+    PLAYER_1_NORTH(138),
+    PLAYER_1_EAST(139),
+    PLAYER_1_WEST(140),
+
+    PLAYER_2_SOUTH(141),
+    PLAYER_2_NORTH(142),
+    PLAYER_2_EAST(143),
+    PLAYER_2_WEST(144),
+
+    PLAYER_3_SOUTH(145),
+    PLAYER_3_NORTH(146),
+    PLAYER_3_EAST(147),
+    PLAYER_3_WEST(148),
+
+    PLAYER_4_SOUTH(149),
+    PLAYER_4_NORTH(150),
+    PLAYER_4_EAST(151),
+    PLAYER_4_WEST(152),
+
+    PLAYER_5_SOUTH(153),
+    PLAYER_5_NORTH(154),
+    PLAYER_5_EAST(155),
+    PLAYER_5_WEST(156),
+
+    PLAYER_6_SOUTH(157),
+    PLAYER_6_NORTH(158),
+    PLAYER_6_EAST(159),
+    PLAYER_6_WEST(160),
+
+    PLAYER_7_SOUTH(161),
+    PLAYER_7_NORTH(162),
+    PLAYER_7_EAST(163),
+    PLAYER_7_WEST(164),
+
+    PLAYER_8_SOUTH(165),
+    PLAYER_8_NORTH(166),
+    PLAYER_8_EAST(167),
+    PLAYER_8_WEST(168),
+
+    PLAYER_SOUTH(169),
+    PLAYER_NORTH(170),
+    PLAYER_EAST(171),
+    PLAYER_WEST(172),
+
     START_POS1(121),
     START_POS2(122),
     START_POS3(123),
@@ -8,7 +55,7 @@ public enum TileID {
     START_POS5(129),
     START_POS6(130),
     START_POS7(131),
-    START_POS8(133),
+    START_POS8(132),
 
     EAST_WALL(23),
     SOUTH_WALL(29),
@@ -49,11 +96,6 @@ public enum TileID {
 
     WRENCH(15),
     DOUBLE_WRENCH(7),
-
-    PLAYER_SOUTH(137),
-    PLAYER_NORTH(138),
-    PLAYER_EAST(139),
-    PLAYER_WEST(140),
 
     FLAG_1(55),
     FLAG_2(63),
@@ -130,6 +172,22 @@ public enum TileID {
 
     public int getId() {
         return this.id;
+    }
+
+    public static HashMap<Direction, Integer> getRobotId(int playerNumber) {
+        HashMap<Direction, Integer> IDs = new HashMap<>();
+        for (int i = 0; i < 36; i++) {
+            if (values()[i].toString().equals("PLAYER_" + playerNumber + "_SOUTH")) {
+                IDs.put(Direction.SOUTH, values()[i].getId());
+            } else if (values()[i].toString().equals("PLAYER_" + playerNumber + "_NORTH")) {
+                IDs.put(Direction.NORTH, values()[i].getId());
+            } else if (values()[i].toString().equals("PLAYER_" + playerNumber + "_EAST")) {
+                IDs.put(Direction.EAST, values()[i].getId());
+            } else if (values()[i].toString().equals("PLAYER_" + playerNumber + "_WEST")) {
+                IDs.put(Direction.WEST, values()[i].getId());
+            }
+        }
+        return IDs;
     }
 }
 

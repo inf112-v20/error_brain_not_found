@@ -23,10 +23,9 @@ import inf112.skeleton.app.objects.player.Player;
 import inf112.skeleton.app.objects.player.PlayerSorter;
 import inf112.skeleton.app.screens.ActorImages;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
-
+import inf112.skeleton.app.screens.gifscreen.GifScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreen;
 import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
-
 import inf112.skeleton.app.screens.standardscreen.SettingsScreen;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
@@ -47,8 +46,8 @@ public class RallyGame extends Game {
     public ArrayList<Player> players;
     public ArrayList<Player> respawnPlayers;
     public boolean playing;
-
-    public boolean shouldPickCards;
+    public boolean waitingForCards;
+    public boolean waitingForPowerUp;
 
     public Sound walledLaserSound;
     public Sound robotLaserSound;
@@ -60,9 +59,6 @@ public class RallyGame extends Game {
     public Sound wallCollision;
     public Sound WilhelmScream;
     public Sound robotCollide;
-
-    public boolean waitingForCards;
-    public boolean waitingForPowerUp;
 
     public Music gameMusic;
 
@@ -86,7 +82,6 @@ public class RallyGame extends Game {
     public Semaphore waitForPowerUp;
     private ArrayList<Player> poweredDownPlayers;
     private Semaphore waitForCards;
-
 
     public void create() {
         this.actorImages = new ActorImages();
@@ -261,29 +256,26 @@ public class RallyGame extends Game {
         }
     }
 
+    public boolean readyToConfirm() {
+        return isWaitingForCards() ?
+                !mainPlayer.getRegisters().hasRegistersWithoutCard() : isWaitingForPowerUp();
+    }
+
     public void returnToLastScreen() {
-
         if (this.screen instanceof SettingsScreen) {
-
             if (lastScreen instanceof GameScreen) {
                 setScreen(new GameScreen(this));
             } else if (lastScreen instanceof MenuScreen) {
-                setScreen(new MenuScreen(this));
+                setScreen(lastScreen);
             }
         } else {
             setScreen(new SettingsScreen(this));
         }
-}
-
-    public boolean readyToConfirm() {
-        return isWaitingForCards() ?
-                !mainPlayer.getRegisters().hasRegistersWithoutCard() : isWaitingForPowerUp();
-
     }
 
     @Override
     public void setScreen(Screen screen) {
-        if (this.screen != null) {
+        if (this.screen != null && !(this.screen instanceof MenuScreen)) {
             this.screen.dispose();
         }
         if (!(screen instanceof SettingsScreen)) {
@@ -397,7 +389,6 @@ public class RallyGame extends Game {
         sleep(500);
     }
 
-
     /**
      * First fire player lasers and then wall lasers. Wall lasers are only
      * activated if there are any wall lasers on the board. Make thread sleep after each methodcall.
@@ -499,7 +490,6 @@ public class RallyGame extends Game {
         }
     }
 
-
     /**
      *
      * @return True if only player is powered up
@@ -509,7 +499,6 @@ public class RallyGame extends Game {
         return getPoweredDownRobots().size() == (players.size()-1) && !getPoweredDownRobots().contains(hostPlayer);
     }
 
-
     /**
      *
      * @return True if every player in the game is in power down
@@ -517,7 +506,6 @@ public class RallyGame extends Game {
     private boolean everyOneIsPoweredDown() {
         return getPoweredDownRobots().size() == players.size();
     }
-
 
     public void waitForCards() {
         try {
@@ -609,6 +597,7 @@ public class RallyGame extends Game {
 
             if (player.getDamageTokens() >= 10 || board.getBoardLogic().outsideBoard(player)) {
 
+                robotDestroyed.play(soundVolume);
                 player.decrementLifeTokens();
                 player.resetDamageTokens();
                 board.removePlayerFromBoard(player);
@@ -695,6 +684,10 @@ public class RallyGame extends Game {
         }
         board.addPlayer(player);
         deck.addCardToDiscardPile(card);
+    }
+
+    public void setWinScreen() {
+        setScreen(new GifScreen(this));
     }
 
     public void removeLasers() {
@@ -932,7 +925,6 @@ public class RallyGame extends Game {
             board.dispose();
         } catch (Exception ignored) {
         }
-
     }
 
     /**
