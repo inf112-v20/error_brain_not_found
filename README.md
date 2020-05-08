@@ -13,7 +13,8 @@ Then open the repo and go to `src/main/java/inf112/skeleton/app/Main.java` and r
 
 ## How to set up the game  
 Multiplayer:  
-The game runs over local area networks with IPv4. If you want to start a game, you press "Create". Your IP address will be displayed 
+The game runs over local area networks with IPv4, so you need to be connected to the same network in order to play. 
+If you want to start a game, you press "Create". Your IP address will be displayed 
  to you. If you do not want to host the game you can go back and press "Join" instead. There needs to be one person 
  hosting the game before anyone can join.  
  If you are hosting the game give your IP address to you friend(s) and tell them to 
