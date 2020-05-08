@@ -192,16 +192,6 @@ public class BoardTest {
         assertEquals(neighbourPosition, board.getNeighbourPosition(startPosition, Direction.NORTH));
     }
 
-    // TODO: Board::hasFlag finnes ikke lenger
-    @Test
-    public void flagIsOnFlagPositionOnBoardTest() {
-        for (int i = 0; i < 5; i++) {
-            Flag flag = flags.get(0);
-            Vector2 flagPosition = flag.getPosition();
-            //assertTrue(board.hasFlag(flagPosition));
-        }
-    }
-
     @Test
     public void playerPicksUpFirstFlagTest() {
         Flag flag = flags.get(0);
