@@ -123,7 +123,7 @@ public class RallyGame extends Game {
 
     public ArrayList<Player> makePlayersAndAddToBoard(int numberOfPlayers) {
         ArrayList<Player> players = new ArrayList<>();
-        String[] colors = new String[]{"blue", "brown", "dark green", "light green", "pink", "purple", "red", "yellow"};
+        String[] colors = new String[]{"Blue", "Brown", "Dark green", "Light green", "Pink", "Purple", "Red", "Yellow"};
         for (int playerNumber = 1; playerNumber <= numberOfPlayers; playerNumber++) {
             Vector2 startPos = board.getStartPosition(playerNumber);
             Player player = new Player(startPos, playerNumber, colors[playerNumber - 1]);
@@ -275,39 +275,6 @@ public class RallyGame extends Game {
         }
     }
 
-    public void displayMessage(String message) {
-        ((GameScreen) screen).actors.displayMessage(message);
-    }
-
-    public void displayPlayersPoweringDown() {
-        StringBuilder stringBuilder = new StringBuilder("Player ");
-        for (Player player : players) {
-            if (player.isPoweringDown()) {
-                stringBuilder.append(player.getPlayerNumber()).append(", ");
-            }
-        }
-        stringBuilder.deleteCharAt(stringBuilder.length() - 2);
-        stringBuilder.append("is powering down");
-        displayMessage(stringBuilder.toString());
-    }
-
-    public void displayPlayerStats() {
-        StringBuilder stringBuilder = new StringBuilder();
-        for (Player player : players) {
-            stringBuilder.append(player.toString())
-                    .append(": ")
-                    .append(player.getDamageTokens())
-                    .append(" damage token")
-                    .append(player.getDamageTokens() > 1 ? "s, " : ", ")
-                    .append(player.getLifeTokens())
-                    .append(" life token")
-                    .append(player.getLifeTokens() > 1 ? "s" : "")
-                         .append(" --- ");
-        }
-        stringBuilder.delete(stringBuilder.length() - 6, stringBuilder.length() - 1);
-        displayMessage(stringBuilder.toString());
-    }
-
     public boolean readyToConfirm() {
         return isWaitingForCards() ?
                 !mainPlayer.getRegisters().hasRegistersWithoutCard() : isWaitingForPowerUp();
@@ -359,20 +326,71 @@ public class RallyGame extends Game {
         gameMusic.play();
     }
 
-    public float getSoundVolume(){
+    public float getSoundVolume() {
         return soundVolume;
     }
 
+    public void displayMessage(String message) {
+        if (screen instanceof GameScreen) {
+            ((GameScreen) screen).actors.displayMessage(message);
+        }
+    }
+
+    public void displayPlayersPoweringDown() {
+        StringBuilder stringBuilder = new StringBuilder();
+        int count = 0;
+        for (Player player : players) {
+            if (player.isPoweringDown()) {
+                count++;
+                stringBuilder.append(player.getColor()).append(", ");
+            }
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 2);
+        stringBuilder.append("robot");
+        if (count > 1) {
+            int lastComma = stringBuilder.lastIndexOf(",");
+            stringBuilder.replace(lastComma, lastComma + 1, " and");
+            stringBuilder.append("s are");
+        } else {
+            stringBuilder.append(" is");
+        }
+        stringBuilder.append(" powering down");
+        displayMessage(stringBuilder.toString());
+    }
+
+    public void displayPlayerStats() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Player player : players) {
+            stringBuilder.append(player.getColor())
+                    .append(" robot is powered ")
+                    .append(player.isPoweredDown() ? "down" : "up")
+                    .append(" with ")
+                    .append(player.getDamageTokens())
+                    .append(" damage token")
+                    .append(player.getDamageTokens() > 1 ? "s" : "")
+                    .append(" and ")
+                    .append(player.getLifeTokens())
+                    .append(" life token")
+                    .append(player.getLifeTokens() > 1 ? "s" : "")
+                    .append(" --- ");
+        }
+        stringBuilder.delete(stringBuilder.length() - 6, stringBuilder.length() - 1);
+        displayMessage(stringBuilder.toString());
+    }
+
+    public void displayColor() {
+        displayMessage("Your color is " + mainPlayer.getColor());
+    }
 
     /**
-    1. Deal the Program cards.
-    2. Arrange your Program cards face down among your
-       five registers.
-    3. Announce intent to power down or continue running
-       NEXT turn.
-    4. Complete each register in order:
-            A. Reveal Program Cards
-            B. Robots Move
+     1. Deal the Program cards.
+     2. Arrange your Program cards face down among your
+     five registers.
+     3. Announce intent to power down or continue running
+     NEXT turn.
+     4. Complete each register in order:
+     A. Reveal Program Cards
+     B. Robots Move
             C. board Elements Move (Gears, Express belt, normal belt)
                 1. Express conveyor belts move 1 space in the direction of the arrows.
                 2. Express conveyor belts and normal conveyor belts move 1 space in the

@@ -56,8 +56,8 @@ public class MenuScreenActors {
     private Label IPLabel;
     private Label errorLabel;
     private Label clientsConnectedLabel;
-    private Semaphore waitForServerToSendStartValues = new Semaphore(1);
-    private Semaphore waitForServerToSendMapPath = new Semaphore(1);
+    private final Semaphore waitForServerToSendStartValues = new Semaphore(1);
+    private final Semaphore waitForServerToSendMapPath = new Semaphore(1);
 
     public MenuScreenActors(RallyGame game, Stage stage) {
         this.game = game;
@@ -115,6 +115,7 @@ public class MenuScreenActors {
                 game.getServer().stopConnectingToClients();
                 game.setupGame();
                 game.setScreen(new GameScreen(game));
+                game.displayColor();
             }
 
             @Override
@@ -471,6 +472,7 @@ public class MenuScreenActors {
             Gdx.app.postRunnable(() -> {
                 game.setupGame();
                 game.setScreen(new GameScreen(game));
+                game.displayColor();
             });
         });
         waitForGameSetupThread.start();

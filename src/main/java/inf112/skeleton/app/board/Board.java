@@ -39,9 +39,10 @@ public class Board extends BoardLayers {
      * @return {@link TiledMapTile} with robot
      */
     private TiledMapTile getRobotTile(Player player) {
+        System.out.println(player.getColor());
         return tiledMap.getTileSets()
-                .getTileSet(player.getColor().replace(" ", ""))
-                       .getTile(player.getTileInt());
+                .getTileSet(player.getColor().toLowerCase().replace(" ", ""))
+                .getTile(player.getTileInt());
     }
 
     /**

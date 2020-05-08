@@ -408,7 +408,7 @@ public class GameScreenActors {
     }
 
     public void initializeInfoLabel() {
-        this.infoLabel = new InfoLabel("");
+        this.infoLabel = new InfoLabel("Your color is");
         stage.addActor(infoLabel);
     }
 
@@ -421,15 +421,17 @@ public class GameScreenActors {
 
         private String text;
 
-        private final BitmapFont font = game.getTextSkin().getFont("title");
+        private final BitmapFont font = game.getTextSkin().getFont("button");
         private final GlyphLayout layout = new GlyphLayout();
         private float textWidth;
         private float textHeight;
         public InfoLabel(String text) {
             this.text = text;
             font.setColor(Color.RED);
-            font.getData().setScale(labelFontScale * 0.9f);
-            displayText("Your color is " + game.mainPlayer);
+            font.getData().setScale(labelFontScale * .9f);
+            layout.setText(font, text);
+            textWidth = layout.width;
+            textHeight = layout.height;
             setPosition(Gdx.graphics.getWidth(), lifeTokenSize * 2.2f + textHeight);
             setDeltaX(-120);
         }
