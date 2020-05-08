@@ -282,7 +282,7 @@ start the turn.
 *   Start a turn and wait for all players to move. Then the playerLasers should fire. Then the lasers from wall should fire.
 
 #### Laser (blocking)
-*   Stear your player in front of a laser. The laser should be stopped by a player.   
+*   Enter debug mode and stear your player in front of a laser. The laser should be stopped by a player.   
 
 #### Menu-screen  
 *   Aa screen with a roll-down menu and start and exit buttons should show.   
@@ -298,11 +298,21 @@ start the turn.
 *   Press the "m" button. The sound should be muted. 
 
 #### LAN  
-*   Allow parallel processes to run in "Run/Debug Configurations". Start a new game, press Create. Then give the portnumber
-to establish the connection on, and how many players that will play the game. Open a new game-process. Press Join, and input the 
-same port number as before and "localhost" (because host is running on your computer). Press Join again. The screen should freeze until 
-the host has started the game. Press Start in the game thats hosting the game. Both windows should now show two players on the map.  
-If a turn is played, the players should move at the same time.  
+Server:  
+*   Allow parallel processes to run in "Run/Debug Configurations". Start a new game, press Create. Press start game. The 
+game should not start because no clients have connected. Start another process and this time press Join. Type in "localhost" 
+and press join. The host should have you registered on the screen. Press Start on the host screen. The game should start.  
+*     Allow parallel processes to run in "Run/Debug Configurations". Start a new game, press Create. Join with several other 
+processes and make sure that the "number of clients connected" is increased.  
+
+
+Client:  
+*   Allow parallel processes to run in "Run/Debug Configurations". Start a new game, and press join. Type in "localhost" and press 
+join. The game should end because there is no host to connect to.   
+*   Allow parallel processes to run in "Run/Debug Configurations". Start a new game, and press join. Start a new process and
+select Create. Go back to the client and type in "localhost" and join game. The game should start.   
+
+
 
 #### Choosing screen  
 *   The server chooses the screen. Start a new host and choose a map. Start a new client and join the game. The two screens 
