@@ -6,8 +6,8 @@ import inf112.skeleton.app.enums.Direction;
 
 public class Laser {
 
-    final Vector2 startPosition;
-    final Direction direction;
+    private final Vector2 startPosition;
+    private final Direction direction;
 
     public Laser(int x, int y, Direction direction) {
         this.startPosition = new Vector2(x, y);
@@ -21,8 +21,9 @@ public class Laser {
     public void fire(RallyGame game, Vector2 position) {
         game.getBoard().addLaser(position, direction);
         if (game.getBoard().hasPlayer(position)) {
+            game.hitByLaser.play(game.getSoundVolume());
             game.getBoard().getPlayer(position).handleDamage();
-        } else if (game.getBoard().canGo(position, this.direction)) {
+        } else if (game.getBoard().canFire(position, this.direction)) {
             fire(game, game.getBoard().getNeighbourPosition(position, direction));
         }
     }

@@ -7,10 +7,13 @@ public class Main {
     public static void main(String[] args) {
 
         LwjglApplicationConfiguration cfg = new LwjglApplicationConfiguration();
-        cfg.title = "robo-rally";
+        cfg.title = "Robo Rally by error_brain_not_found";
         cfg.width = 960;
         cfg.height = 540;
+        //cfg.resizable = false;
+        cfg.vSyncEnabled = true;
         //cfg.fullscreen = true;
+
 
         new LwjglApplication(new RallyGame(), cfg);
     }
