@@ -140,7 +140,7 @@ public class GameServerThreads extends Thread {
      * @param player to end connection with
      */
     private void endConnectionWithPlayerAndTellOtherPlayersThatThisPlayerLeft(Player player) {
-        server.sendToAllExcept(player, converter.createQuitMessage(player.getPlayerNr()));
+        server.sendToAllExcept(player, converter.createQuitMessage(player.getPlayerNumber()));
         System.out.println("Player " + playerNumber + " is leaving...");
         server.disconnect(playerNumber);
         server.remove(playerNumber);
@@ -170,7 +170,7 @@ public class GameServerThreads extends Thread {
      */
     public boolean allClientsHaveSelectedCardsOrInPowerDown() {
         for (Player player : game.getBoard().getPlayers()) {
-            if (player.getPlayerNr() != 1 && (player.getRegisters().hasRegistersWithoutCard() && !player.isPoweredDown())) {
+            if (player.getPlayerNumber() != 1 && (player.getRegisters().hasRegistersWithoutCard() && !player.isPoweredDown())) {
                 return false;
             }
         }
@@ -226,7 +226,7 @@ public class GameServerThreads extends Thread {
     public void sendSelectedCards(Player player) {
         if (!player.isPoweredDown()) {
             for (Register register : player.getRegisters().getRegisters()) {
-                sendMessage(converter.convertToString(player.getPlayerNr(), register.getProgramCard()));
+                sendMessage(converter.convertToString(player.getPlayerNumber(), register.getProgramCard()));
             }
         }
     }
@@ -267,7 +267,7 @@ public class GameServerThreads extends Thread {
 
     public boolean allPoweredDownClientsHaveConfirmed() {
         for (Player player : game.getPoweredDownRobots()) {
-            if (player.getPlayerNr() != 1 && !player.hasConfirmedPowerUp()) {
+            if (player.getPlayerNumber() != 1 && !player.hasConfirmedPowerUp()) {
                 return false;
             }
         }

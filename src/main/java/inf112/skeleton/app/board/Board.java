@@ -30,11 +30,6 @@ public class Board extends BoardLayers {
         this.scream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
         this.robotCollide = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/robotCollide.mp3"));
         this.wall_Collision = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/robotCollide.mp3"));
-
-        this.boardLogic = new BoardLogic(this);
-
-        addPlayersToStartPositions(numberOfPlayers);
-        players = new ArrayList<>();
     }
 
     /**
@@ -44,7 +39,7 @@ public class Board extends BoardLayers {
      */
     private TiledMapTile getRobotTile(Player player) {
         return tiledMap.getTileSets()
-                       .getTileSet(player.getPlayerNr())
+                       .getTileSet(player.getPlayerNumber())
                        .getTile(player.getTileInt());
     }
 
@@ -154,7 +149,7 @@ public class Board extends BoardLayers {
             addPlayer(player);
             return;
         }
-        if (shouldPush(player)) {
+        if (shouldPush(player, direction)) {
             Player enemyPlayer = getPlayer(getNeighbourPosition(player.getPosition(), direction));
             if (canPush(enemyPlayer, direction)) {
                 pushPlayer(enemyPlayer, direction);
@@ -279,6 +274,15 @@ public class Board extends BoardLayers {
         for (Player enemyPlayer : players) {
             if (enemyPlayer.getPosition().equals(position)) {
                 return enemyPlayer;
+            }
+        }
+        return null;
+    }
+
+    public Player getPlayer(int playerNumber) {
+        for (Player player : players) {
+            if (player.getPlayerNumber() == playerNumber) {
+                return player;
             }
         }
         return null;
@@ -476,8 +480,8 @@ public class Board extends BoardLayers {
      * @param player trying to move
      * @return true if player should push another player to move
      */
-    public boolean shouldPush(Player player) {
-        return hasPlayer(getNeighbourPosition(player.getPosition(), player.getDirection()));
+    public boolean shouldPush(Player player, Direction direction) {
+        return hasPlayer(getNeighbourPosition(player.getPosition(), direction));
     }
 
     /**

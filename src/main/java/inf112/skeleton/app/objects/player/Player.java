@@ -312,7 +312,7 @@ public class Player {
     }
 
     public void pickUpFlag(Flag flag) {
-        System.out.println("Player " + playerNr + " picked up flag " + flag.getFlagnr());
+        System.out.println("Player " + playerNumber + " picked up flag " + flag.getFlagnr());
         flagsCollected.add(flag);
     }
 

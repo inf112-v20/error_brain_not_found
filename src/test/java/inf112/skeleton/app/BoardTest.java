@@ -264,7 +264,7 @@ public class BoardTest {
         Player player2 = new Player(playerTwoPos, 2);
         player2.setDirection(Direction.WEST);
         board.addPlayer(player);
-        assertTrue(board.shouldPush(player2, player2.getDirection()));
+        assertTrue(board.shouldPush(player2, Direction.WEST));
     }
 
     @Test

@@ -187,7 +187,7 @@ public class GameServer {
      */
     public void sendToAllExcept(Player player, String message) {
         for (GameServerThreads thread : clients) {
-            if (thread.getPlayerNumber() != player.getPlayerNr()) {
+            if (thread.getPlayerNumber() != player.getPlayerNumber()) {
                 thread.sendMessage(message);
             }
         }

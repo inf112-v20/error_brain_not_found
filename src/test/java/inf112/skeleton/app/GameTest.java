@@ -139,6 +139,7 @@ public class GameTest {
         Vector2 beltPosition = belt.getPosition();
         player1.setPosition(beltPosition);
         game.activateBelts(false);
+        game.updatePositionsAfterBeltPush();
         assertNotEquals(beltPosition, player1.getPosition());
     }
 
@@ -275,7 +276,7 @@ public class GameTest {
     @Test
     public void sendPowerUpMessageToServer() {
         game.setClient(client);
-        when(mainPlayer.getPlayerNr()).thenReturn(2);
+        when(mainPlayer.getPlayerNumber()).thenReturn(2);
         game.sendPowerUpMessage();
         verify(client).sendMessage(converter.createMessageFromPlayer(2, Messages.POWER_UP));
     }
@@ -284,7 +285,7 @@ public class GameTest {
     public void sendPowerUpMessageToClient() {
         game.setIsServerToTrue();
         game.setServerThread(serverThread);
-        when(mainPlayer.getPlayerNr()).thenReturn(1);
+        when(mainPlayer.getPlayerNumber()).thenReturn(1);
         game.sendPowerUpMessage();
         verify(server).sendToAll(converter.createMessageFromPlayer(1, Messages.POWER_UP));
 
@@ -310,7 +311,7 @@ public class GameTest {
         when(mainPlayer.isPoweredDown()).thenReturn(true);
         when(mainPlayer.getRegisters().hasRegistersWithoutCard()).thenReturn(true);
         when(mainPlayer.getPowerUpNextRound()).thenReturn(false);
-        when(mainPlayer.getPlayerNr()).thenReturn(2);
+        when(mainPlayer.getPlayerNumber()).thenReturn(2);
         game.confirm();
         verify(client).sendMessage(converter.createMessageFromPlayer(2, Messages.CONTINUE_POWER_DOWN));
     }
