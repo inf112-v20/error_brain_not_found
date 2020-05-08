@@ -360,4 +360,20 @@ public class GameTest {
         game.serverGetReadyForNextRound();
         verify(server).setAllClientsHaveSelectedCardsOrIsPoweredDown(true);
     }
+
+    @Test
+    public void removeDamageTokenIfOnFlagAtEndOfRoundTest() {
+        Vector2 flag = game.getBoard().getFlags().get(0).getPosition();
+        player1.setPosition(flag);
+        player1.handleDamage();
+        game.updateBackupAndPickUpFlagsAndRepair(true);
+        assertEquals(0, player1.getDamageTokens());
+    }
+
+    @Test
+    public void playerWinsTest() {
+        when(mainPlayer.hasAllFlags(3)).thenReturn(true);
+        game.setPlayers(mainPlayer, player2);
+        assertTrue(game.someoneWon());
+    }
 }
