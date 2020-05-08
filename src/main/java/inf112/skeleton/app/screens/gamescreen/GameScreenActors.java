@@ -78,11 +78,10 @@ public class GameScreenActors {
     }
 
     public void updateButtons() {
-        if (game.isWaitingForCards()) {
-            moveLockedCards();
-            updateLockedLabels();
-            updateCards();
-        }
+        moveLockedCards();
+        updateLockedLabels();
+        updateCards();
+        updatePriorityLabels();
         updateConfirm();
         updatePowerDownButton();
         updateLifeTokenLabel();
@@ -141,7 +140,6 @@ public class GameScreenActors {
                 cardButton.setVisible(false);
             }
         }
-        updatePriorityLabels();
     }
 
     public void moveLockedCards() {
