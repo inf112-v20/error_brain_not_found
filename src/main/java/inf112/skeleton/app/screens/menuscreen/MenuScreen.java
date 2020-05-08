@@ -17,7 +17,6 @@ public class MenuScreen extends StandardScreen {
         actors.initializeSettingsButton();
         actors.initializeCreateGame();
         actors.initializeJoinGame();
-        actors.initializeBackButton();
     }
 
     public MenuScreenActors getActors() {
