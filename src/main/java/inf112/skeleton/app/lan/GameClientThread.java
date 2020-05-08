@@ -136,7 +136,9 @@ public class GameClientThread extends Thread {
         this.receivingDeck = false;
         game.setDeck(this.stack);
         System.out.println("Received deck.");
-        game.getMenuScreenActors().haveReceivedStartValues();
+        if (game.getMenuScreenActors() != null) {
+            game.getMenuScreenActors().haveReceivedStartValues();
+        }
     }
 
     /**
