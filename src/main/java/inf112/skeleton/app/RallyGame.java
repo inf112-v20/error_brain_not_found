@@ -73,7 +73,6 @@ public class RallyGame extends Game {
     public ActorImages actorImages;
 
 
-    public static float volume = 0.5f;
     public static float soundVolume = 0.5f;
     private String mapPath;
     public Semaphore waitForPowerUp;
