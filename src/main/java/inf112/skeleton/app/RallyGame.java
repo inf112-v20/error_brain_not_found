@@ -57,9 +57,6 @@ public class RallyGame extends Game {
     public Sound repairRobotSound;
     public Sound hitByLaser;
     public Sound robotDestroyed;
-    public Sound wallCollision;
-    public Sound WilhelmScream;
-    public Sound robotCollide;
 
     public Music gameMusic;
 
@@ -77,7 +74,6 @@ public class RallyGame extends Game {
     public ActorImages actorImages;
 
 
-    public static float volume = 0.5f;
     public static float soundVolume = 0.5f;
     private String mapPath;
     public Semaphore waitForPowerUp;
@@ -333,6 +329,7 @@ public class RallyGame extends Game {
         return soundVolume;
     }
 
+
     /**
     1. Deal the Program cards.
     2. Arrange your Program cards face down among your
@@ -424,15 +421,15 @@ public class RallyGame extends Game {
      */
     private void fireAllLasers() {
         firePlayerLaser();
-        sleep(250);
+        sleep(350);
         removeLasers();
-        sleep(500);
+        sleep(600);
         decreaseLives();
         if (!board.getLasers().isEmpty()) {
             fireLasers();
-            sleep(250);
+            sleep(350);
             removeLasers();
-            sleep(500);
+            sleep(600);
             decreaseLives();
         }
     }
@@ -446,11 +443,11 @@ public class RallyGame extends Game {
     public void activateBeltsAndRotatePads() {
       if (!board.getExpressBelts().isEmpty()) {
                     activateBelts(true);
-                    sleep(1000);
+                    sleep(1300);
                 }
         decreaseLives();
         activateBelts(false);
-        sleep(250);
+        sleep(800);
         activateRotatePads();
         sleep(250);
         decreaseLives();
