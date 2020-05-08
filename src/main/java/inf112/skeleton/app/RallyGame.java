@@ -776,12 +776,12 @@ public class RallyGame extends Game {
         }
         sleep(500);
         validateBeltPushPos();
-        updatePositionsAfterBeltPush();
         updateBoardAfterBeltPush();
     }
 
     private void updateBoardAfterBeltPush() {
         board.removePlayersFromBoard();
+        updatePositionsAfterBeltPush();
         board.updateBoard();
     }
 

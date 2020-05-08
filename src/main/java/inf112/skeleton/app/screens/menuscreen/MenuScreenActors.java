@@ -332,6 +332,7 @@ public class MenuScreenActors {
         initializeIPLabel();
         initializeClientsConnectedLabel();
         initializeBackButton();
+        initializeExitButton();
         backButton.setVisible(true);
         settingsButton.setVisible(false);
         exitButton.setVisible(false);
