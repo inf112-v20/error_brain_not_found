@@ -56,9 +56,6 @@ public class RallyGame extends Game {
     public Sound repairRobotSound;
     public Sound hitByLaser;
     public Sound robotDestroyed;
-    public Sound wallCollision;
-    public Sound WilhelmScream;
-    public Sound robotCollide;
 
     public Music gameMusic;
 
