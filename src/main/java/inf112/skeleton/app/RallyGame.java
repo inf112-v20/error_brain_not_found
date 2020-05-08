@@ -30,7 +30,6 @@ import inf112.skeleton.app.screens.menuscreen.MenuScreenActors;
 import inf112.skeleton.app.screens.standardscreen.SettingsScreen;
 import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 
-import javax.naming.directory.DirContext;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -799,12 +798,11 @@ public class RallyGame extends Game {
                         otherPlayer.setBeltPushPos(null);
                         continue player;
                     }
-                    if (board.shouldPush(player, player.getBeltPushDir())) {
-                        if (otherPlayer.getBeltPushPos() == null &&
+                    if (board.shouldPush(player, player.getBeltPushDir()) &&
+                            otherPlayer.getBeltPushPos() == null &&
                             !board.canPush(otherPlayer, player.getBeltPushDir())) {
-                                player.setBeltPushPos(null);
-                                continue player;
-                        }
+                        player.setBeltPushPos(null);
+                        continue player;
                     }
                 }
             }
