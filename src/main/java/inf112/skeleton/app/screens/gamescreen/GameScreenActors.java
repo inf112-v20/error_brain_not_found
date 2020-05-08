@@ -71,8 +71,8 @@ public class GameScreenActors {
         mapRightPx = (screenHeight / mapHeight) * mapWidth;
 
         programCardWidth = (screenWidth - mapRightPx) / 3f;
-        programCardHeight = programCardWidth / programCardRatio * .9f;
-        lifeTokenSize = screenHeight * (65f / 540f);
+        programCardHeight = programCardWidth / programCardRatio * .92f;
+        lifeTokenSize = screenHeight * (68f / 540f);
         confirmButtonSize = lifeTokenSize;
         damageTokenSize = lifeTokenSize;
 
@@ -428,12 +428,12 @@ public class GameScreenActors {
         public InfoLabel(String text) {
             this.text = text;
             font.setColor(Color.RED);
-            font.getData().setScale(labelFontScale * .9f);
+            font.getData().setScale(labelFontScale * .7f);
             layout.setText(font, text);
             textWidth = layout.width;
             textHeight = layout.height;
-            setPosition(Gdx.graphics.getWidth(), lifeTokenSize * 2.2f + textHeight);
-            setDeltaX(-120);
+            setPosition(Gdx.graphics.getWidth(), lifeTokenSize * 2.1f + textHeight);
+            setDeltaX(-100);
         }
 
         public void setDeltaX(float deltaX) {
