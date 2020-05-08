@@ -281,10 +281,6 @@ start the turn.
 #### Laser (fire)  
 *   Start a turn and wait for all players to move. Then the playerLasers should fire. Then the lasers from wall should fire.
 
-#### Menu-screen  
-*   Aa screen with a roll-down menu and start and exit buttons should show.   
-*   Choose your board by choosing from the roll-down menu then click start. The board should show with players on it.
-
 #### Showing cards
 *   Nine cards should be displayed to you when you start the game.
 
