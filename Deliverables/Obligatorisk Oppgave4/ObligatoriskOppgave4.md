@@ -281,9 +281,6 @@ start the turn.
 #### Laser (fire)  
 *   Start a turn and wait for all players to move. Then the playerLasers should fire. Then the lasers from wall should fire.
 
-#### Laser (blocking)
-*   Enter debug mode and stear your player in front of a laser. The laser should be stopped by a player.   
-
 #### Menu-screen  
 *   Aa screen with a roll-down menu and start and exit buttons should show.   
 *   Choose your board by choosing from the roll-down menu then click start. The board should show with players on it.
@@ -312,7 +309,13 @@ join. The game should end because there is no host to connect to.
 *   Allow parallel processes to run in "Run/Debug Configurations". Start a new game, and press join. Start a new process and
 select Create. Go back to the client and type in "localhost" and join game. The game should start.   
 
-
+#### MenuScreen  
+*   Start a game and press Create. Then press Back. The server should be terminated and you can press 
+Create again to start it again. Or you can press join and join another game.  
+*   Start a game and press Join. Then press Back. You should now be able to choose between hosting a game 
+or joining one.  
+*   Press the settings button. You should see a slider for Music and Sound. Also a button for Fullscreen option. Adjust 
+the parameters and press Back, you can now continue hosting/joining the game.
 
 #### Choosing screen  
 *   The server chooses the screen. Start a new host and choose a map. Start a new client and join the game. The two screens 
