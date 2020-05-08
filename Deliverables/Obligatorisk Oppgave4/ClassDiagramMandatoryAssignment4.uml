@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>inf112.skeleton.app</OriginalElement>
+  <nodes>
+    <node x="171.0" y="192.0">inf112.skeleton.app.RallyGame</node>
+    <node x="157.0" y="288.0">inf112.skeleton.app.Main</node>
+    <node x="0.0" y="0.0">inf112.skeleton.app.objects</node>
+    <node x="0.0" y="96.0">inf112.skeleton.app.enums</node>
+    <node x="171.0" y="96.0">inf112.skeleton.app.board</node>
+    <node x="0.0" y="288.0">inf112.skeleton.app.lan</node>
+    <node x="186.0" y="0.0">inf112.skeleton.app.screens</node>
+    <node x="0.0" y="192.0">inf112.skeleton.app.cards</node>
+  </nodes>
+  <notes />
+  <edges />
+  <settings layout="Hierarchic Group" zoom="1.0" x="302.5" y="313.5" />
+  <SelectedNodes>
+    <node>inf112.skeleton.app.RallyGame</node>
+  </SelectedNodes>
+  <Categories />
+  <SCOPE>Production</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

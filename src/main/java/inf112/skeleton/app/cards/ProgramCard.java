@@ -20,6 +20,12 @@ public class ProgramCard {
         return priority;
     }
 
+    public boolean equals(ProgramCard other) {
+        return this.priority == other.priority &&
+                this.distance == other.distance &&
+                this.rotate == other.rotate;
+    }
+
     public int getDistance() {
         return distance;
     }
@@ -31,4 +37,6 @@ public class ProgramCard {
     public String toString() {
         return name + ": " + priority;
     }
+
+    public String getName(){return name;}
 }
