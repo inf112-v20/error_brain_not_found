@@ -429,15 +429,15 @@ public class RallyGame extends Game {
      */
     private void fireAllLasers() {
         firePlayerLaser();
-        sleep(250);
+        sleep(350);
         removeLasers();
-        sleep(500);
+        sleep(600);
         decreaseLives();
         if (!board.getLasers().isEmpty()) {
             fireLasers();
-            sleep(250);
+            sleep(350);
             removeLasers();
-            sleep(500);
+            sleep(600);
             decreaseLives();
         }
     }
@@ -451,11 +451,11 @@ public class RallyGame extends Game {
     public void activateBeltsAndRotatePads() {
       if (!board.getExpressBelts().isEmpty()) {
                     activateBelts(true);
-                    sleep(1000);
+                    sleep(1300);
                 }
         decreaseLives();
         activateBelts(false);
-        sleep(250);
+        sleep(800);
         activateRotatePads();
         sleep(250);
         decreaseLives();
