@@ -82,15 +82,14 @@ public class GameServer {
             if (this.serverSocket == null) {
                 createServerSocket(9000);
             }
+            System.out.println("connecting");
             connectedClients = 0;
             while (connectingToClients) {
                 if (connectedClients >= maxNumberOfClients) {
                     break;
                 }
-                System.out.println("Waiting for client to connect");
                 try {
                     Socket socket = serverSocket.accept();
-                    System.out.println("Got timeout or client connected");
                     createThreadForCommunicatingWithClientAndSendStartValues(connectedClients, socket);
                     connectedClients++;
                     if (waitForNextConnectionMilliSeconds != 0) {

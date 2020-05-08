@@ -62,7 +62,7 @@ public class GameServerTest {
         this.gameServer = new GameServer(game);
         this.converter = new Converter();
         gameServer.setServerSocket(serverSocket);
-        gameServer.stopConnectingToClients();
+        gameServer.setConnectingToClients(true);
     }
 
     @Test
@@ -70,7 +70,7 @@ public class GameServerTest {
         new Thread(gameServer::connect).start();
         // Make server wait for each new connection for 1 second, and stop connecting
         // after 2 seconds, gives 2 connected clients.
-        gameServer.setWaitBetweenEachConnection(1000);
+        gameServer.setWaitBetweenEachConnection(1100);
         gameServer.setConnectingToClientsTimeout(2000);
         assertEquals(2, gameServer.getNumberOfConnectedClients());
     }
