@@ -133,7 +133,7 @@ public class MenuScreenActors {
 
         backButton = new ImageButton(backButtonStyle);
         backButton.setSize(BUTTON_WIDTH, BUTTON_HEIGHT);
-        backButton.setPosition(RIGHT_BUTTON_X, BOTTOM_BUTTON_Y);
+        backButton.setPosition(CENTERED_BUTTON_X, BOTTOM_BUTTON_Y);
         backButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
@@ -181,7 +181,7 @@ public class MenuScreenActors {
         settingsButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new SettingsScreen(game));
+                game.returnToLastScreen();
             }
 
             @Override
@@ -338,15 +338,15 @@ public class MenuScreenActors {
     }
 
     public void toggleVisibilityBackClick() {
-        initializeExitButton();
-        initializeSettingsButton();
-        initializeCreateGame();
-        initializeJoinGame();
+        exitButton.setVisible(true);
+        joinGameButton.setVisible(true);
+        createGameButton.setVisible(true);
+        settingsButton.setVisible(true);
+        clientsConnectedLabel.setVisible(false);
         startButton.setVisible(false);
         backButton.setVisible(false);
         selectMap.setVisible(false);
         IPLabel.setVisible(false);
-        clientsConnectedLabel.setVisible(false);
     }
 
     public void toggleVisibilityCreateClick() {
@@ -356,7 +356,6 @@ public class MenuScreenActors {
         initializeClientsConnectedLabel();
         initializeBackButton();
         backButton.setVisible(true);
-        backButton.setPosition(CENTERED_BUTTON_X, BOTTOM_BUTTON_Y);
         settingsButton.setVisible(false);
         exitButton.setVisible(false);
         createGameButton.setVisible(false);
