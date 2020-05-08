@@ -1,6 +1,11 @@
 package inf112.skeleton.app.screens.gamescreen;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.g2d.Batch;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -45,6 +50,7 @@ public class GameScreenActors {
     private final RallyGame game;
     private final Stage stage;
     private final ProgramCardSkin cardSkin;
+    public InfoLabel infoLabel;
 
 
     public GameScreenActors(RallyGame game, Stage stage) {
@@ -63,8 +69,8 @@ public class GameScreenActors {
         mapRightPx = (screenHeight / mapHeight) * mapWidth;
 
         programCardWidth = (screenWidth - mapRightPx) / 3f;
-        programCardHeight = programCardWidth / programCardRatio;
-        lifeTokenSize = (screenHeight - 3 * programCardHeight * 1.18f) * 0.5f;
+        programCardHeight = programCardWidth / programCardRatio * .92f;
+        lifeTokenSize = screenHeight * (68f / 540f);
         confirmButtonSize = lifeTokenSize;
         damageTokenSize = lifeTokenSize;
 
@@ -386,6 +392,76 @@ public class GameScreenActors {
     public void updateLockedLabels() {
         for (int registerIndex = 0; registerIndex < 5; registerIndex++) {
             lockedLabels.get(registerIndex).setVisible(!game.mainPlayer.getRegisters().getRegister(registerIndex).isOpen());
+        }
+    }
+
+    // INFO LABEL
+
+    public void displayMessage(String text) {
+        infoLabel.displayText(text);
+    }
+
+    public void stopDisplayingMessage() {
+        infoLabel.stopAnimation();
+    }
+
+    public void initializeInfoLabel() {
+        this.infoLabel = new InfoLabel("Your color is");
+        stage.addActor(infoLabel);
+    }
+
+    class InfoLabel extends Actor {
+
+        private boolean animated = false;
+        private long animationStart;
+
+        private float deltaX;
+
+        private String text;
+
+        private final BitmapFont font = game.getTextSkin().getFont("button");
+        private final GlyphLayout layout = new GlyphLayout();
+        private float textWidth;
+        private float textHeight;
+        public InfoLabel(String text) {
+            this.text = text;
+            font.setColor(Color.RED);
+            font.getData().setScale(labelFontScale * .7f);
+            layout.setText(font, text);
+            textWidth = layout.width;
+            textHeight = layout.height;
+            setPosition(Gdx.graphics.getWidth(), lifeTokenSize * 2.1f + textHeight);
+            setDeltaX(-100);
+        }
+
+        public void setDeltaX(float deltaX) {
+            this.deltaX = deltaX;
+        }
+
+        public void displayText(String text) {
+            this.text = text;
+            layout.setText(font, text);
+            textWidth = layout.width;
+            textHeight = layout.height;
+            animationStart = System.currentTimeMillis();
+            animated = true;
+        }
+
+        @Override
+        public void draw(Batch batch, float parentAlpha) {
+            if (animated) {
+
+                float elapsed = System.currentTimeMillis() - animationStart;
+
+                if (textWidth + getX() + deltaX * elapsed / 1000f < mapRightPx) {
+                    animationStart = System.currentTimeMillis();
+                }
+                font.draw(batch, text, getX() + deltaX * elapsed / 1000f, getY());
+            }
+        }
+
+        public void stopAnimation() {
+            animated = false;
         }
     }
 }

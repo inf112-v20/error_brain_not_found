@@ -13,7 +13,6 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Array;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.screens.gamescreen.GameScreen;
-import inf112.skeleton.app.screens.standardscreen.SettingsScreen;
 
 import java.io.File;
 import java.net.InetAddress;
@@ -56,8 +55,8 @@ public class MenuScreenActors {
     private Label IPLabel;
     private Label errorLabel;
     private Label clientsConnectedLabel;
-    private Semaphore waitForServerToSendStartValues = new Semaphore(1);
-    private Semaphore waitForServerToSendMapPath = new Semaphore(1);
+    private final Semaphore waitForServerToSendStartValues = new Semaphore(1);
+    private final Semaphore waitForServerToSendMapPath = new Semaphore(1);
 
     public MenuScreenActors(RallyGame game, Stage stage) {
         this.game = game;
@@ -115,6 +114,7 @@ public class MenuScreenActors {
                 game.getServer().stopConnectingToClients();
                 game.setupGame();
                 game.setScreen(new GameScreen(game));
+                game.displayColor();
             }
 
             @Override
@@ -158,7 +158,7 @@ public class MenuScreenActors {
         settingsButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.setScreen(new SettingsScreen(game));
+                game.returnToLastScreen();
             }
 
             @Override
@@ -315,15 +315,15 @@ public class MenuScreenActors {
     }
 
     public void toggleVisibilityBackClick() {
-        initializeExitButton();
-        initializeSettingsButton();
-        initializeCreateGame();
-        initializeJoinGame();
+        exitButton.setVisible(true);
+        joinGameButton.setVisible(true);
+        createGameButton.setVisible(true);
+        settingsButton.setVisible(true);
+        clientsConnectedLabel.setVisible(false);
         startButton.setVisible(false);
         backButton.setVisible(false);
         selectMap.setVisible(false);
         IPLabel.setVisible(false);
-        clientsConnectedLabel.setVisible(false);
     }
 
     public void toggleVisibilityCreateClick() {
@@ -480,6 +480,7 @@ public class MenuScreenActors {
             Gdx.app.postRunnable(() -> {
                 game.setupGame();
                 game.setScreen(new GameScreen(game));
+                game.displayColor();
             });
         });
         waitForGameSetupThread.start();

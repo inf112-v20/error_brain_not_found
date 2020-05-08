@@ -9,7 +9,7 @@ import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 public class GameScreen extends StandardScreen {
 
     private final TiledMapRenderer mapRenderer;
-    private final GameScreenActors actors;
+    public final GameScreenActors actors;
 
     public GameScreen(final RallyGame game) {
         super(game);
@@ -25,6 +25,7 @@ public class GameScreen extends StandardScreen {
         actors.initializePriorityLabels();
         actors.initializeLockedLabels();
         actors.initializePowerDownButton();
+        actors.initializeInfoLabel();
 
         float tilePx = 300f;
         float unitScale = ((float) Gdx.graphics.getHeight() / game.getBoard().getBoardHeight()) / tilePx;

@@ -5,7 +5,7 @@
  <tileset firstgid="137" source="robots\blueRobot.tsx"/>
  <tileset firstgid="141" source="robots\brownRobot.tsx"/>
  <tileset firstgid="145" source="robots\darkGreenRobot.tsx"/>
- <tileset firstgid="149" source="robots\greenRobot.tsx"/>
+ <tileset firstgid="149" source="robots\lightGreenRobot.tsx"/>
  <tileset firstgid="153" source="robots\pinkRobot.tsx"/>
  <tileset firstgid="157" source="robots\purpleRobot.tsx"/>
  <tileset firstgid="161" source="robots\redRobot.tsx"/>
