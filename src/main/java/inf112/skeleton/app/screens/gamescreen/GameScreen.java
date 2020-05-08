@@ -9,7 +9,7 @@ import inf112.skeleton.app.screens.standardscreen.StandardScreen;
 public class GameScreen extends StandardScreen {
 
     private final TiledMapRenderer mapRenderer;
-    private final GameScreenActors actors;
+    public final GameScreenActors actors;
 
     public GameScreen(final RallyGame game) {
         super(game);
@@ -36,9 +36,6 @@ public class GameScreen extends StandardScreen {
 
     @Override
     public void render(float v) {
-        if (!actors.infoLabel.isAnimated()) {
-            actors.infoLabel.animate();
-        }
         actors.updateButtons();
         super.render(v);
         mapRenderer.render();

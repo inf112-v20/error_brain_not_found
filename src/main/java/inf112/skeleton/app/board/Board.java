@@ -5,6 +5,7 @@ import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.maps.tiled.TiledMapTile;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileSet;
+import com.badlogic.gdx.maps.tiled.TiledMapTileSets;
 import com.badlogic.gdx.math.Vector2;
 import inf112.skeleton.app.RallyGame;
 import inf112.skeleton.app.enums.Direction;
@@ -21,19 +22,16 @@ public class Board extends BoardLayers {
 
     private final ArrayList<Player> players;
 
-
     private final Sound scream;
     private final Sound wall_Collision;
     private final Sound robotCollide;
 
     private final BoardLogic boardLogic;
 
-
     public Board(String mapPath, int numberOfPlayers) {
         super(mapPath);
 
         this.players = new ArrayList<>();
-
         this.scream = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/WilhelmScream.mp3"));
         this.robotCollide = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/robotCollide.mp3"));
         this.wall_Collision = Gdx.audio.newSound(Gdx.files.internal("assets/Sound/robotCollide.mp3"));
@@ -49,6 +47,31 @@ public class Board extends BoardLayers {
      * @return {@link TiledMapTile} with robot
      */
     private TiledMapTile getRobotTile(Player player) {
+        /*if (player.equals(mainPlayer)) {
+            TiledMapTileSet set = tiledMap.getTileSets().getTileSet("7");
+            switch (player.getDirection()) {
+                case SOUTH:
+                    return set.getTile(161);
+                case NORTH:
+                    return set.getTile(162);
+                case EAST:
+                    return set.getTile(163);
+                case WEST:
+                    return set.getTile(164);
+            }
+        } else {
+            TiledMapTileSet set = tiledMap.getTileSets().getTileSet("4");
+            switch (player.getDirection()) {
+                case SOUTH:
+                    return set.getTile(149);
+                case NORTH:
+                    return set.getTile(150);
+                case EAST:
+                    return set.getTile(151);
+                case WEST:
+                    return set.getTile(152);
+            }
+        }*/
         return tiledMap.getTileSets()
                        .getTileSet(player.getPlayerNr())
                        .getTile(player.getTileInt());

@@ -98,6 +98,7 @@ public class GameClientThread extends Thread {
                 }
                 if (messageFromPlayer.equals(Messages.POWERING_DOWN.toString())) {
                     player.setPoweringDown(true);
+                    game.displayPlayersPoweringDown();
                 }
                 else if (messageFromPlayer.equals(Messages.POWER_UP.toString())) {
                     player.setPoweredDown(false);

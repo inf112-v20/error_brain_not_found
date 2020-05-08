@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.DistanceFieldFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -398,10 +399,15 @@ public class GameScreenActors {
 
     // INFO LABEL
 
+    public void displayMessage(String text) {
+        infoLabel.displayText(text);
+    }
+
     public void initializeInfoLabel() {
-        this.infoLabel = new InfoLabel("Dette er en info label", TimeUnit.SECONDS.toMillis(5));
-             infoLabel.setPosition(Gdx.graphics.getWidth(), Gdx.graphics.getHeight() - 20);
-             infoLabel.setDeltaX(-100);
+        float y = Gdx.graphics.getHeight();
+        this.infoLabel = new InfoLabel("");
+             infoLabel.setPosition(Gdx.graphics.getWidth(), y);
+             infoLabel.setDeltaX(-200);
 
              stage.addActor(infoLabel);
     }
@@ -414,15 +420,15 @@ public class GameScreenActors {
         private float deltaX;
         private float deltaY;
 
-        private final String text;
-        private final long animationDuration;
+        private String text;
 
-        private final BitmapFont font = game.getTextSkin().getFont("title");
+        private final BitmapFont font = game.getTextSkin().getFont("button");
         private final GlyphLayout layout = new GlyphLayout();
         private float textWidth;
-        public InfoLabel(String text, long animationDuration) {
+        public InfoLabel(String text) {
             this.text = text;
-            this.animationDuration = animationDuration;
+            font.setColor(Color.RED);
+            font.getData().setScale(1f);
             layout.setText(font, text);
             textWidth = layout.width;
         }
@@ -435,9 +441,17 @@ public class GameScreenActors {
             this.deltaY = deltaY;
         }
 
-        public void animate() {
-            animated = true;
+        public void displayText(String text) {
+            this.text = text;
+            layout.setText(font, text);
+            textWidth = layout.width;
             animationStart = System.currentTimeMillis();
+            animated = true;
+        }
+
+        public void animate() {
+            animationStart = System.currentTimeMillis();
+            animated = true;
         }
 
         public boolean isAnimated() {
@@ -451,20 +465,15 @@ public class GameScreenActors {
                 float elapsed = System.currentTimeMillis() - animationStart;
 
                 if (textWidth + getX() + deltaX * elapsed / 1000f < 0) {
-                    animationStart = System.currentTimeMillis();
-                    elapsed = 0;
+                    //animationStart = System.currentTimeMillis();
+                    animationStart = 0;
+                    animated = false;
+                    return;
                 }
 
                 //font.draw(batch, text, getX() + deltaX * elapsed / 1000f, getY() + deltaY * elapsed / 1000f);
                 font.draw(batch, text, getX() + deltaX * elapsed / 1000f, getY() + deltaY * elapsed / 1000f);
             }
-        }
-
-        /**
-         * @return true is the animation has finished.
-         */
-        private boolean isDisposable() {
-            return animationStart + animationDuration < System.currentTimeMillis();
         }
 
         /**

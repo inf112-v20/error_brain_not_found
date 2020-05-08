@@ -256,6 +256,37 @@ public class RallyGame extends Game {
         }
     }
 
+    public void displayMessage(String message) {
+        ((GameScreen) screen).actors.displayMessage(message);
+    }
+
+    public void displayPlayersPoweringDown() {
+        StringBuilder stringBuilder = new StringBuilder("Player ");
+        for (Player player : players) {
+            if (player.isPoweringDown()) {
+                stringBuilder.append(player.getPlayerNr()).append(", ");
+            }
+        }
+        stringBuilder.deleteCharAt(stringBuilder.length() - 2);
+        stringBuilder.append("is powering down");
+        displayMessage(stringBuilder.toString());
+    }
+
+    public void displayPlayerStats() {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (Player player : players) {
+            stringBuilder.append(player.toString())
+                         .append(": ")
+                         .append(player.getDamageTokens())
+                         .append(" damage tokens, ")
+                         .append(player.getLifeTokens())
+                         .append(" life tokens")
+                         .append(" --- ");
+        }
+        stringBuilder.delete(stringBuilder.length() - 6, stringBuilder.length() - 1);
+        displayMessage(stringBuilder.toString());
+    }
+
     public boolean readyToConfirm() {
         return isWaitingForCards() ?
                 !mainPlayer.getRegisters().hasRegistersWithoutCard() : isWaitingForPowerUp();
@@ -356,6 +387,7 @@ public class RallyGame extends Game {
             resetConfirmPowerUp();
             powerDown();
             dealCards();
+            displayPlayerStats();
             ((GameScreen) screen).updateCards();
             serverResetConfirms();
             setWaitingForCards(!mainPlayer.isPoweredDown());
