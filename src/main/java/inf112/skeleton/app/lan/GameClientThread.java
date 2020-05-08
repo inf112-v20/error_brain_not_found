@@ -98,6 +98,7 @@ public class GameClientThread extends Thread {
                 }
                 if (messageFromPlayer.equals(Messages.POWERING_DOWN.toString())) {
                     player.setPoweringDown(true);
+                    System.out.println("Player " + playerNumber + " announces power down!");
                 }
                 else if (messageFromPlayer.equals(Messages.POWER_UP.toString())) {
                     player.setPoweredDown(false);
@@ -105,8 +106,7 @@ public class GameClientThread extends Thread {
                 }
                 else {
                     try {
-                        PlayerAndProgramCard playerAndCard = converter.getSentCardFromPlayer(message);
-                        ProgramCard card = playerAndCard.getProgramCard();
+                        ProgramCard card = converter.convertToCard(messageFromPlayer);
                         // Your player have already selected cards
                         if (myPlayerNumber != playerNumber) {
                             player.addSelectedCard(card);
@@ -249,4 +249,7 @@ public class GameClientThread extends Thread {
         return stack;
     }
 
+    public void endConnection() {
+
+    }
 }

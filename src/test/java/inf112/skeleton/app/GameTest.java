@@ -193,6 +193,17 @@ public class GameTest {
     }
 
     @Test
+    public void beltPushingPlayerOntoAnotherPlayerPushesTheOtherPlayerTest() {
+        // Found position in Risky Exhange. Belt goes east
+        Vector2 endBeltPosition = new Vector2(8, 5);
+        player1.setPosition(endBeltPosition);
+        Vector2 playerToBePushedPosition = new Vector2(9, 5);
+        player2.setPosition(playerToBePushedPosition);
+        game.activateBelts(false);
+        assertNotEquals(playerToBePushedPosition, player2.getPosition());
+    }
+
+    @Test
     public void repairTileDecrementsDamageTokensToZeroWhenOneDamageToken() {
         Vector2 repairTilePosition = game.getBoard().getRepairTiles().get(0);
         player1.handleDamage();
@@ -255,7 +266,7 @@ public class GameTest {
     @Test
     public void confirmingCardsSendToClientsTest() {
         game.setServerThread(serverThread);
-        game.setIsServerToTrue();
+        game.setIsServer(true);
         when(mainPlayer.getRegisters().hasRegistersWithoutCard()).thenReturn(false);
         when(server.allClientsHaveSelectedCardsOrIsPoweredDown()).thenReturn(true);
         game.confirm();
@@ -282,7 +293,7 @@ public class GameTest {
 
     @Test
     public void sendPowerUpMessageToClient() {
-        game.setIsServerToTrue();
+        game.setIsServer(true);
         game.setServerThread(serverThread);
         when(mainPlayer.getPlayerNumber()).thenReturn(1);
         game.sendPowerUpMessage();

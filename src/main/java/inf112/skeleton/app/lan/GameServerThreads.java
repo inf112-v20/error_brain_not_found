@@ -73,6 +73,7 @@ public class GameServerThreads extends Thread {
                     if (messageFromPlayer.equals(Messages.POWERING_DOWN.toString())) {
                         player.setPoweringDown(true);
                         server.sendToAllExcept(player, message);
+                        System.out.println("Player " + playerNumber + " announces power down!");
                     }
                     else if (messageFromPlayer.equals(Messages.CONTINUE_POWER_DOWN.toString())) {
                         player.setConfirmedPowerUp(true);
@@ -98,8 +99,7 @@ public class GameServerThreads extends Thread {
                         }
                     }
                     else {
-                        PlayerAndProgramCard playerAndCard = converter.getSentCardFromPlayer(message);
-                        ProgramCard card = playerAndCard.getProgramCard();
+                        ProgramCard card = converter.convertToCard(messageFromPlayer);
                         addSelectedCard(player, card);
                         System.out.println(card);
                         if (allPlayersHaveSelectedCardsOrInPowerDown() && server.serverHasConfirmed()) {
