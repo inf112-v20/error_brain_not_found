@@ -379,11 +379,17 @@ public class MenuScreenActors {
         backButton.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
-                game.getServer().stopConnectingToClients();
-                game.setIsServer(false);
-                startButton.setVisible(false);
-                createGameButton.setVisible(true);
-                joinGameButton.setVisible(true);
+                if (game.isServer()) {
+                    game.getServer().stopConnectingToClients();
+                    game.setIsServer(false);
+                    startButton.setVisible(false);
+                    createGameButton.setVisible(true);
+                    joinGameButton.setVisible(true);
+                } else {
+                    // Client has not made the client yet
+                    createGameButton.setVisible(true);
+                    joinGameButton.setVisible(true);
+                }
             }
 
             @Override
