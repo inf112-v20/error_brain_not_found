@@ -272,11 +272,13 @@ public class RallyGame extends Game {
         StringBuilder stringBuilder = new StringBuilder();
         for (Player player : players) {
             stringBuilder.append(player.toString())
-                         .append(": ")
-                         .append(player.getDamageTokens())
-                         .append(" damage tokens, ")
-                         .append(player.getLifeTokens())
-                         .append(" life tokens")
+                    .append(": ")
+                    .append(player.getDamageTokens())
+                    .append(" damage token")
+                    .append(player.getDamageTokens() > 1 ? "s, " : ", ")
+                    .append(player.getLifeTokens())
+                    .append(" life token")
+                    .append(player.getLifeTokens() > 1 ? "s" : "")
                          .append(" --- ");
         }
         stringBuilder.delete(stringBuilder.length() - 6, stringBuilder.length() - 1);

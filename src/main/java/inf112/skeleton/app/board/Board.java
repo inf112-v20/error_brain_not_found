@@ -88,7 +88,7 @@ public class Board extends BoardLayers {
         if (!boardLogic.validPlayerNumber(playerNumber, players)) {
             return;
         }
-        Player player = new Player(new Vector2(x, y), playerNumber);
+        Player player = new Player(new Vector2(x, y), playerNumber, "Blue");
         addPlayer(player);
     }
 

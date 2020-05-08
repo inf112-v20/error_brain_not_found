@@ -36,12 +36,13 @@ public class Player {
     private boolean poweredDown;
     private boolean powerDownNextRound;
     private boolean powerUpNextRound;
-    private HashMap<Direction, Integer> tiles;
+    private final HashMap<Direction, Integer> tiles;
 
     private int damageTokens;
     private int lifeTokens;
+    private final String color;
 
-    public Player(Vector2 position, int playerNr) {
+    public Player(Vector2 position, int playerNr, String color) {
         this.position = position;
         this.direction = Direction.EAST;
         this.playerNr = playerNr;
@@ -59,6 +60,7 @@ public class Player {
         this.powerDownNextRound = false;
         this.tiles = TileID.getRobotId(playerNr);
         this.confirmedPowerUp = false;
+        this.color = color;
 
         setBackup(this.position, this.direction);
     }
@@ -389,4 +391,7 @@ public class Player {
         this.confirmedPowerUp = confirmedPowerUp;
     }
 
+    public String getColor() {
+        return this.color;
+    }
 }

@@ -71,8 +71,8 @@ public class GameScreenActors {
         mapRightPx = (screenHeight / mapHeight) * mapWidth;
 
         programCardWidth = (screenWidth - mapRightPx) / 3f;
-        programCardHeight = programCardWidth / programCardRatio;
-        lifeTokenSize = (screenHeight - 3 * programCardHeight * 1.18f) * 0.5f;
+        programCardHeight = programCardWidth / programCardRatio * .9f;
+        lifeTokenSize = screenHeight * (65f / 540f);
         confirmButtonSize = lifeTokenSize;
         damageTokenSize = lifeTokenSize;
 
@@ -403,13 +403,13 @@ public class GameScreenActors {
         infoLabel.displayText(text);
     }
 
-    public void initializeInfoLabel() {
-        float y = Gdx.graphics.getHeight();
-        this.infoLabel = new InfoLabel("");
-             infoLabel.setPosition(Gdx.graphics.getWidth(), y);
-             infoLabel.setDeltaX(-200);
+    public void stopDisplayingMessage() {
+        infoLabel.stopAnimation();
+    }
 
-             stage.addActor(infoLabel);
+    public void initializeInfoLabel() {
+        this.infoLabel = new InfoLabel("");
+        stage.addActor(infoLabel);
     }
 
     class InfoLabel extends Actor {
@@ -418,44 +418,33 @@ public class GameScreenActors {
         private long animationStart;
 
         private float deltaX;
-        private float deltaY;
 
         private String text;
 
-        private final BitmapFont font = game.getTextSkin().getFont("button");
+        private final BitmapFont font = game.getTextSkin().getFont("title");
         private final GlyphLayout layout = new GlyphLayout();
         private float textWidth;
+        private float textHeight;
         public InfoLabel(String text) {
             this.text = text;
             font.setColor(Color.RED);
-            font.getData().setScale(1f);
-            layout.setText(font, text);
-            textWidth = layout.width;
+            font.getData().setScale(labelFontScale * 0.9f);
+            displayText("Your color is " + game.mainPlayer);
+            setPosition(Gdx.graphics.getWidth(), lifeTokenSize * 2.2f + textHeight);
+            setDeltaX(-120);
         }
 
         public void setDeltaX(float deltaX) {
             this.deltaX = deltaX;
         }
 
-        public void setDeltaY(float deltaY) {
-            this.deltaY = deltaY;
-        }
-
         public void displayText(String text) {
             this.text = text;
             layout.setText(font, text);
             textWidth = layout.width;
+            textHeight = layout.height;
             animationStart = System.currentTimeMillis();
             animated = true;
-        }
-
-        public void animate() {
-            animationStart = System.currentTimeMillis();
-            animated = true;
-        }
-
-        public boolean isAnimated() {
-            return animated;
         }
 
         @Override
@@ -464,29 +453,15 @@ public class GameScreenActors {
 
                 float elapsed = System.currentTimeMillis() - animationStart;
 
-                if (textWidth + getX() + deltaX * elapsed / 1000f < 0) {
-                    //animationStart = System.currentTimeMillis();
-                    animationStart = 0;
-                    animated = false;
-                    return;
+                if (textWidth + getX() + deltaX * elapsed / 1000f < mapRightPx) {
+                    animationStart = System.currentTimeMillis();
                 }
-
-                float x = getX();
-                if (System.currentTimeMillis() - animationStart < 2) {
-                    elapsed = 0;
-                }
-
                 font.draw(batch, text, getX() + deltaX * elapsed / 1000f, getY());
             }
         }
 
-        /**
-         * Dispose the component. <b>Note that all the children components also should
-         * be disposed otherwise a memory leak will occur.</b>
-         */
-        private void dispose() {
-            font.dispose();
-            remove();
+        public void stopAnimation() {
+            animated = false;
         }
     }
 }
