@@ -1,23 +1,19 @@
 package inf112.skeleton.app;
 
+import inf112.skeleton.app.cards.ProgramCard;
 import inf112.skeleton.app.enums.Messages;
+import inf112.skeleton.app.enums.Rotate;
 import inf112.skeleton.app.lan.Converter;
 import inf112.skeleton.app.lan.NotProgramCardException;
-import inf112.skeleton.app.cards.ProgramCard;
-import inf112.skeleton.app.enums.Rotate;
-import inf112.skeleton.app.lan.PlayerAndProgramCard;
 import org.junit.Test;
-
 
 import java.util.ArrayList;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class ConverterTest {
 
-    private Converter converter = new Converter();
+    private final Converter converter = new Converter();
 
     /**
      * Check if card1 and card2 are equal
