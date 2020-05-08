@@ -767,7 +767,6 @@ public class RallyGame extends Game {
         for (Player player : players) {
             for (Belt belt : belts) {
                 if (player.getPosition().equals(belt.getPosition())) {
-                    System.out.println("Spiller ble pushet");
                     beltPush(player, belt);
                 }
             }
@@ -780,7 +779,7 @@ public class RallyGame extends Game {
         }
         sleep(500);
         validateBeltPushPos();
-        updateBoard();
+        updatePositionsAfterBeltPush();
     }
 
     private void updateBoard() {

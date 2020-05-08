@@ -77,8 +77,8 @@ public class GameTest {
         this.game.setScreen(screen);
         Board board = game.getBoard();
         player1 = new Player(new Vector2(0, 0), 1);
-        player2 = new Player(new Vector2(0, 1), 2);
-        player3 = new Player(new Vector2(0, 2), 3);
+        player2 = new Player(new Vector2(0, 0), 2);
+        player3 = new Player(new Vector2(0, 0), 3);
         game.setPlayers(player1, player2, player3);
         game.addPlayer(player1);
         this.belts = board.getBelts();
@@ -139,7 +139,6 @@ public class GameTest {
         Vector2 beltPosition = belt.getPosition();
         player1.setPosition(beltPosition);
         game.activateBelts(false);
-        game.updatePositionsAfterBeltPush();
         assertNotEquals(beltPosition, player1.getPosition());
     }
 
