@@ -269,7 +269,7 @@ public class MenuScreenActors {
     // LABELS AND TEXTFIELD
 
     public void initializeIPInput() {
-        IPInput = new TextField("localhost", game.getDefaultSkin());
+        IPInput = new TextField("", game.getDefaultSkin());
         IPInput.setMessageText("IP address");
         IPInput.setWidth(BUTTON_WIDTH * .87f);
         IPInput.setPosition(CENTERED_BUTTON_X + (BUTTON_WIDTH * .065f), TEXT_INPUT_Y);
